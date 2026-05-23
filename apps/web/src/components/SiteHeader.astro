@@ -1,0 +1,28 @@
+---
+import type { ShellLink } from "../lib/home-scaffold";
+
+type Props = {
+	nav: readonly ShellLink[];
+};
+
+const { nav } = Astro.props;
+---
+
+<header class="site-header">
+	<a class="brand-lockup" href="/" aria-label="HumanKaylee home">
+		<span class="brand-mark" aria-hidden="true">HK</span>
+		<span>
+			<span class="brand-title">HumanKaylee</span>
+			<span class="brand-subtitle">Systems Atelier</span>
+		</span>
+	</a>
+	<nav class="primary-nav" aria-label="Primary navigation">
+		{
+			nav.map((item) => (
+				<a data-touch-target="true" href={item.href}>
+					{item.label}
+				</a>
+			))
+		}
+	</nav>
+</header>

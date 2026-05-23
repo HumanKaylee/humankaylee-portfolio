@@ -1,0 +1,25 @@
+---
+import type { ShellLink } from "../lib/home-scaffold";
+
+type Props = {
+	nav: readonly ShellLink[];
+};
+
+const { nav } = Astro.props;
+---
+
+<footer class="site-footer">
+	<p>
+		Static-first portfolio shell. Interactive systems maps and Rust telemetry are
+		progressive enhancements, not content dependencies.
+	</p>
+	<nav aria-label="Footer navigation">
+		{
+			nav.map((item) => (
+				<a data-touch-target="true" href={item.href}>
+					{item.label}
+				</a>
+			))
+		}
+	</nav>
+</footer>

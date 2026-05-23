@@ -1,166 +1,85 @@
 ---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BuildTelemetryStrip from "../components/BuildTelemetryStrip.astro";
+import CtaCluster from "../components/CtaCluster.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { homeScaffold } from "../lib/home-scaffold";
 
 const scaffold = homeScaffold();
+type ProjectEntry = CollectionEntry<"projects">;
+const allProjects = (await getCollection("projects")) as ProjectEntry[];
+const projects = allProjects
+	.filter(
+		(project: ProjectEntry) => project.data.publicationStatus === "publish",
+	)
+	.slice(0, 3);
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HumanKaylee Portfolio Scaffold</title>
-    <meta
-      name="description"
-      content="Phase 0 foundation scaffold for the HumanKaylee portfolio."
-    />
-  </head>
-  <body>
-    <main class="shell">
-      <section class="hero" aria-labelledby="hero-title">
-        <p class="kicker">{scaffold.kicker}</p>
-        <h1 id="hero-title">{scaffold.heroTitle}</h1>
-        <p class="lede">{scaffold.intro}</p>
-        <p class="note">{scaffold.note}</p>
-        <p class="no-js-note">{scaffold.noJsNote}</p>
-        <nav class="actions" aria-label="Primary actions">
-          <a class="button button-strong" href={scaffold.resumeCta.href}>{scaffold.resumeCta.label}</a>
-          <a class="button" href={scaffold.primaryCta.href}>{scaffold.primaryCta.label}</a>
-          <a class="button" href={scaffold.secondaryCta.href}>{scaffold.secondaryCta.label}</a>
-        </nav>
-      </section>
+<BaseLayout
+	title="HumanKaylee | Systems Atelier"
+	description="A static-first portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and creative web work."
+	canonicalPath="/"
+>
+	<section class="hero-shell" aria-labelledby="hero-title">
+		<div class="hero-copy">
+			<p class="section-kicker">{scaffold.kicker}</p>
+			<h1 id="hero-title">{scaffold.heroTitle}</h1>
+			<p class="lede">{scaffold.intro}</p>
+			<p class="body-copy">{scaffold.noJsNote}</p>
+			<CtaCluster items={scaffold.ctas} />
+		</div>
+		<aside class="paper-panel" aria-labelledby="atelier-note">
+			<p class="eyebrow">Phase 2 static shell</p>
+			<h2 id="atelier-note">Readable before the spectacle.</h2>
+			<p>
+				This page intentionally puts resume, projects, and contact paths ahead of
+				interactive polish. The later systems map can impress without becoming a
+				requirement for understanding the work.
+			</p>
+		</aside>
+	</section>
 
-      <section id="resume" class="panel" aria-labelledby="resume-title">
-        <h2 id="resume-title">Resume placeholder</h2>
-        <p>
-          The production resume page and PDF link will arrive in later phases. For now this
-          section keeps the CTA honest and readable.
-        </p>
-      </section>
+	<BuildTelemetryStrip items={scaffold.telemetry} />
 
-      <section id="projects" class="panel" aria-labelledby="projects-title">
-        <h2 id="projects-title">Project placeholders</h2>
-        <p>
-          Case studies, project atlas interactions, and launch proof are intentionally absent from
-          this foundation scaffold.
-        </p>
-      </section>
+	<section class="content-section" aria-labelledby="paths-title">
+		<p class="section-kicker">Audience paths</p>
+		<h2 id="paths-title">Two fast reads, one evidence trail.</h2>
+		<div class="path-grid">
+			<article class="path-card">
+				<p class="eyebrow">Recruiter path</p>
+				<h3>Skills, scope, resume, contact.</h3>
+				<p>
+					A quick scan of practical strengths, current resume workflow, selected
+					projects, and a direct fallback contact route.
+				</p>
+			</article>
+			<article class="path-card">
+				<p class="eyebrow">Engineer path</p>
+				<h3>Architecture, verification, operations.</h3>
+				<p>
+					Project cards and case-study outlines emphasize constraints, evidence,
+					and operational judgment over unsupported claims.
+				</p>
+			</article>
+			<article class="path-card">
+				<p class="eyebrow">Static baseline</p>
+				<h3>No API dependency for core content.</h3>
+				<p>
+					The home page, project index, resume workflow, and contact page remain
+					useful when JavaScript, WebGL, or the Rust API is unavailable.
+				</p>
+			</article>
+		</div>
+	</section>
 
-      <section id="contact" class="panel" aria-labelledby="contact-title">
-        <h2 id="contact-title">Contact placeholder</h2>
-        <p>
-          Contact wiring will be added after the backend and contact UX phases are in place.
-        </p>
-      </section>
-    </main>
-  </body>
-</html>
-
-<style>
-  :root {
-    color-scheme: light;
-    --bg: #f4efe4;
-    --fg: #171412;
-    --muted: #5f564d;
-    --line: rgba(23, 20, 18, 0.14);
-    --accent: #926f34;
-  }
-
-  html,
-  body {
-    margin: 0;
-    min-height: 100%;
-    background:
-      radial-gradient(circle at top, rgba(146, 111, 52, 0.14), transparent 45%),
-      linear-gradient(180deg, #f8f3ea 0%, var(--bg) 100%);
-    color: var(--fg);
-    font-family: Georgia, "Times New Roman", serif;
-  }
-
-  .shell {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding: 4rem 1.25rem 5rem;
-  }
-
-  .hero {
-    display: grid;
-    gap: 1rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .kicker {
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--accent);
-    font: 700 0.78rem/1.2 system-ui, sans-serif;
-  }
-
-  h1,
-  h2 {
-    margin: 0;
-    line-height: 0.96;
-    font-weight: 700;
-  }
-
-  h1 {
-    max-width: 12ch;
-    font-size: clamp(3rem, 10vw, 6.5rem);
-  }
-
-  .lede,
-  .note,
-  .panel p {
-    margin: 0;
-    max-width: 68ch;
-    color: var(--muted);
-    font: 400 1rem/1.7 system-ui, sans-serif;
-  }
-
-  .note {
-    color: #8b1e2d;
-  }
-
-  .no-js-note {
-    color: #24573d;
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    padding-top: 0.5rem;
-  }
-
-  .button {
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    color: var(--fg);
-    padding: 0.8rem 1rem;
-    text-decoration: none;
-    font: 600 0.95rem/1 system-ui, sans-serif;
-    background: rgba(255, 255, 255, 0.4);
-  }
-
-  .button-strong {
-    background: var(--fg);
-    color: var(--bg);
-  }
-
-  .panel {
-    padding: 1.5rem 0 0;
-  }
-
-  .panel + .panel {
-    border-top: 1px solid var(--line);
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-  }
-
-  .panel h2 {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    margin-bottom: 0.5rem;
-  }
-</style>
+	<section class="content-section" aria-labelledby="featured-projects">
+		<p class="section-kicker">Featured projects</p>
+		<h2 id="featured-projects">Selected proof without private leakage.</h2>
+		<div class="artifact-grid">
+			{projects.map((project: ProjectEntry) => <ProjectCard project={project} />)}
+		</div>
+	</section>
+</BaseLayout>

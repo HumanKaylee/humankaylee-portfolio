@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const [resume] = await getCollection("resume");
+const data = resume.data;
+type WorkflowStep = (typeof data.workflowSteps)[number];
+---
+
+<BaseLayout
+	title="Resume | HumanKaylee"
+	description="HTML resume entry point and PDF source workflow for HumanKaylee."
+	canonicalPath="/resume/"
+>
+	<section class="page-shell" aria-labelledby="resume-title">
+		<header class="page-header">
+			<p class="section-kicker">Resume</p>
+			<h1 id="resume-title">Resume path with honest PDF source workflow.</h1>
+			<p class="page-intro">
+				The final downloadable resume is intentionally gated on approved source
+				copy. This static page keeps the recruiter path reachable without
+				inventing final resume claims.
+			</p>
+		</header>
+
+		<article class="paper-panel">
+			<p class="eyebrow">PDF source workflow</p>
+			<h2>{data.title}</h2>
+			<p>
+				Source status: {data.sourceStatus}. Approval state: {data.approvalState}.
+				Download path reserved for {data.pdfDownloadPath}.
+			</p>
+			<ul class="workflow-list">
+				{
+					data.workflowSteps.map((step: WorkflowStep) => (
+						<li>
+							<span>{step.step}</span>
+							<strong>{step.status}</strong>
+						</li>
+					))
+				}
+			</ul>
+		</article>
+	</section>
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+import type { TelemetryItem } from "../lib/home-scaffold";
+
+type Props = {
+	items: readonly TelemetryItem[];
+};
+
+const { items } = Astro.props;
+---
+
+<aside class="telemetry-strip" aria-label="Static build telemetry">
+	<p class="section-kicker">Static evidence until API integration</p>
+	<div class="telemetry-grid">
+		{
+			items.map((item) => (
+				<article class="evidence-panel" aria-label={`${item.label}: ${item.value}`}>
+					<p>{item.label}</p>
+					<strong>{item.value}</strong>
+					<span>{item.detail}</span>
+				</article>
+			))
+		}
+	</div>
+</aside>

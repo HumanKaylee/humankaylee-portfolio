@@ -1,0 +1,53 @@
+---
+import "@fontsource/fraunces/400.css";
+import "@fontsource/fraunces/700.css";
+import "@fontsource/archivo-narrow/400.css";
+import "@fontsource/archivo-narrow/700.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/700.css";
+
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { homeScaffold } from "../lib/home-scaffold";
+import "../styles/global.css";
+
+type Props = {
+	title: string;
+	description: string;
+	canonicalPath?: string;
+};
+
+const { title, description, canonicalPath = "/" } = Astro.props;
+const scaffold = homeScaffold();
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalPath} />
+		<meta name="twitter:card" content="summary_large_image" />
+	</head>
+	<body data-enhancement="static-first" data-webgl="optional">
+		<a class="skip-link" href="#main">Skip to content</a>
+		<noscript>
+			<p class="noscript-banner">
+				Core content is available without JavaScript or WebGL.
+			</p>
+		</noscript>
+		<SiteHeader nav={scaffold.primaryNav} />
+		<p class="static-fallback-note">
+			Core content is available without JavaScript or WebGL.
+		</p>
+		<main id="main" class="site-main" tabindex="-1">
+			<slot />
+		</main>
+		<SiteFooter nav={scaffold.primaryNav} />
+	</body>
+</html>

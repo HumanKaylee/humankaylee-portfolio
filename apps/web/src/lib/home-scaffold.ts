@@ -1,39 +1,85 @@
-export type HomeAction = Readonly<{
+export type ShellLink = Readonly<{
 	label: string;
 	href: string;
+	eyebrow?: string;
+}>;
+
+export type TelemetryItem = Readonly<{
+	label: string;
+	value: string;
+	detail: string;
 }>;
 
 export type HomeScaffold = Readonly<{
+	visualDirection: string;
+	palette: readonly string[];
 	kicker: string;
 	heroTitle: string;
 	intro: string;
-	note: string;
 	noJsNote: string;
-	primaryCta: HomeAction;
-	secondaryCta: HomeAction;
-	resumeCta: HomeAction;
+	primaryNav: readonly ShellLink[];
+	ctas: readonly ShellLink[];
+	telemetry: readonly TelemetryItem[];
 }>;
 
 export function homeScaffold(): HomeScaffold {
 	return {
-		kicker: "Phase 0 scaffold stage",
-		heroTitle: "HumanKaylee portfolio foundation",
+		visualDirection: "The Systems Atelier",
+		palette: [
+			"warm off-black",
+			"paper cream",
+			"tungsten amber",
+			"signal green",
+			"oxidized blue",
+		],
+		kicker: "The Systems Atelier",
+		heroTitle:
+			"HumanKaylee's systems atelier for practical AI-assisted systems.",
 		intro:
-			"This repository is the minimal, honest starting point for the portfolio implementation. It proves the command contract, static rendering path, and test harness before any launch claims.",
-		note: "This is not the launch version and does not claim the PRD features are complete.",
+			"A static-first portfolio for automation, infrastructure, backend services, creative web systems, and the evidence that proves they work.",
 		noJsNote:
-			"No JavaScript required: this scaffold is intentionally readable as static HTML before any interactive portfolio features are added.",
-		resumeCta: {
-			label: "Resume placeholder",
-			href: "#resume",
-		},
-		primaryCta: {
-			label: "Project placeholders",
-			href: "#projects",
-		},
-		secondaryCta: {
-			label: "Contact placeholder",
-			href: "#contact",
-		},
+			"Core content is available without JavaScript or WebGL. Interactive systems maps will enhance this shell later without replacing it.",
+		primaryNav: [
+			{ label: "Home", href: "/" },
+			{ label: "Projects", href: "/projects/" },
+			{ label: "Resume", href: "/resume/" },
+			{ label: "Contact", href: "/contact/" },
+		],
+		ctas: [
+			{
+				label: "For recruiters",
+				href: "/resume/",
+				eyebrow: "Resume, scope, proof",
+			},
+			{
+				label: "For engineers",
+				href: "/projects/",
+				eyebrow: "Systems, tradeoffs, verification",
+			},
+			{
+				label: "Contact",
+				href: "/contact/",
+				eyebrow: "Static mailto fallback",
+			},
+		],
+		telemetry: [
+			{
+				label: "Rendering",
+				value: "Static-first",
+				detail:
+					"HTML carries the core story before JavaScript, WebGL, or API calls.",
+			},
+			{
+				label: "Evidence",
+				value: "Schema-backed",
+				detail:
+					"Case studies, projects, resume workflow, and metadata are typed.",
+			},
+			{
+				label: "Backend",
+				value: "Rust-ready",
+				detail: "API telemetry remains optional until integration phases.",
+			},
+		],
 	};
 }

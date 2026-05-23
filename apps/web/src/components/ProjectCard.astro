@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+	project: CollectionEntry<"projects">;
+};
+
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<article class="project-card" id={data.slug}>
+	<p class="project-category">{data.category}</p>
+	<h2>{data.name}</h2>
+	<p>{data.summary}</p>
+	<p class="proof-line">{data.proof}</p>
+	<a
+		data-touch-target="true"
+		href={`/projects/#${data.slug}`}
+		aria-label={`View static proof for ${data.name}`}
+	>
+		View static proof for {data.name}
+	</a>
+</article>

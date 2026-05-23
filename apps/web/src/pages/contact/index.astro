@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+	title="Contact | HumanKaylee"
+	description="Static contact route with a visible mailto fallback before API integration."
+	canonicalPath="/contact/"
+>
+	<section class="page-shell" aria-labelledby="contact-title">
+		<header class="page-header">
+			<p class="section-kicker">Contact</p>
+			<h1 id="contact-title">Contact route with visible mailto fallback.</h1>
+			<p class="page-intro">
+				The API-backed form arrives later. This route stays useful now with a
+				mailto fallback, a privacy note, and direct navigation back to projects
+				and resume.
+			</p>
+		</header>
+
+		<article class="paper-panel">
+			<p class="eyebrow">Static fallback</p>
+			<h2>Start with the public contact path.</h2>
+			<p>
+				Use the mailto fallback while the Rust-backed form is still out of scope
+				for Phase 2. This placeholder address must be replaced with an approved
+				public contact address before launch.
+			</p>
+			<a
+				class="contact-link"
+				data-touch-target="true"
+				href="mailto:contact-pending@humankaylee.example"
+			>
+				contact-pending@humankaylee.example
+			</a>
+		</article>
+	</section>
+</BaseLayout>
