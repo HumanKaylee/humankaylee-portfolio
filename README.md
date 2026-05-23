@@ -12,6 +12,7 @@ Planning and execution repository for a private, resume-ready personal portfolio
 - Implementation and test plan: [docs/IMPLEMENTATION_AND_TEST_PLAN.md](docs/IMPLEMENTATION_AND_TEST_PLAN.md)
 - Operations runbook: [docs/OPERATIONS.md](docs/OPERATIONS.md)
 - Deployment runbook: [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md)
+- Content update and redaction runbook: [runbooks/CONTENT_UPDATE_AND_REDACTION.md](runbooks/CONTENT_UPDATE_AND_REDACTION.md)
 - Content strategy: [docs/CONTENT_STRATEGY.md](docs/CONTENT_STRATEGY.md)
 
 ## Working Decision

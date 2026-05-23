@@ -1491,6 +1491,13 @@ Acceptance criteria:
 Verification evidence:
 
 - Runbook used to add or review one existing content item.
+- `runbooks/CONTENT_UPDATE_AND_REDACTION.md` now documents project,
+  case-study, note/build-log, resume, and site metadata update paths; preserves
+  the approved-only launch gate; and uses Creative Web Systems Atlas Demo as a
+  reviewed-but-not-approved example.
+- `scripts/content-runbook-contract.test.mjs` verifies the runbook covers the
+  required workflows, schema field names, redaction guide/status links, privacy
+  rule, review example, and verification commands.
 
 ### B-062: Write rollback and incident runbook
 

@@ -168,6 +168,14 @@ that WebGL is already implemented. Treat the semantic atlas fallback and static
 systems-map poster as the current proof, then require a separate scope approval
 before building any heavier interactive layer.
 
+### Content runbooks need executable contracts
+
+Redaction guidance is easy to weaken accidentally when it lives only as prose.
+The content update runbook now has a Node contract test that pins the approved
+only launch gate, schema field names, privacy rule, and verification commands
+so future copy or content changes cannot silently soften the publication
+workflow.
+
 ### QA tags should match launch gates
 
 The plan's cross-phase matrix named keyboard and accessibility checks, but CI

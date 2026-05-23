@@ -39,6 +39,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a content redaction status runbook that keeps every case-study
   candidate out of launch approval until its guide checklist and public-safe
   evidence are complete.
+- Added a content update and redaction runbook with an executable contract test
+  covering project, case-study, notes/build-log, schema field, redaction
+  checklist, publication review, and verification-command expectations.
 - Published the approved downloadable resume PDF and linked it from the home recruiter path and resume page.
 - Added case-study index and detail routes for current `publicationStatus: publish` entries while preserving redaction statuses.
 - Added a safe evidence drawer section for case-study pages using existing sanitized frontmatter.
