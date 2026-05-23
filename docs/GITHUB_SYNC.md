@@ -41,3 +41,28 @@ gh label create agent-strong --color F97316 --description "Requires strong model
 
 Create issues from `docs/BACKLOG.md` after the backlog is finalized.
 
+## Deployment Sync Notes
+
+Cloudflare Pages should use the repository's selected production branch for the
+static frontend. Required GitHub-side assumptions:
+
+- CI must pass before production deployment is promoted.
+- Preview deployments should remain enabled for pull requests or branch checks.
+- Provider deploy tokens belong in GitHub repository or environment secrets,
+  never in committed files.
+- Deployment IDs, URLs, and smoke-check evidence belong in
+  `runbooks/LAUNCH_EVIDENCE.md`, not in issue comments that might expose
+  provider account details.
+
+Required secret names if CI later deploys directly:
+
+| Secret name             | Used by                                   | Notes                                                      |
+| ----------------------- | ----------------------------------------- | ---------------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | Cloudflare Pages direct upload            | Token value stays in GitHub Actions secrets.               |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Pages direct upload            | Account identifier; avoid publishing in logs.              |
+| `SHUTTLE_API_KEY`       | Shuttle API deploy, if CI deploys backend | Prefer manual deploy until Shuttle CI access is confirmed. |
+| `FLY_API_TOKEN`         | Fly.io fallback deploy                    | Fallback only.                                             |
+| `RAILWAY_TOKEN`         | Railway fallback deploy                   | Fallback only.                                             |
+
+Exact provider commands and rollback steps are maintained in
+`runbooks/DEPLOYMENT.md`.

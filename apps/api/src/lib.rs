@@ -1,15 +1,22 @@
 pub mod config;
+pub mod contact;
+pub mod events;
 pub mod health;
 pub mod projects;
 pub mod state;
 
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use state::AppState;
 
 pub fn app(state: AppState) -> Router {
     Router::new()
         .route("/api/health", get(health::health_handler))
         .route("/api/projects/live", get(projects::projects_live_handler))
+        .route("/api/contact", post(contact::contact_handler))
+        .route("/api/events", post(events::events_handler))
         .with_state(state)
 }
 

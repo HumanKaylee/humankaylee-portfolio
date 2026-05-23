@@ -7,6 +7,7 @@ use humankaylee_api::{
     config::{AppConfig, ContactDeliveryMode, RateLimitConfig},
     state::AppState,
 };
+use serde_json::json;
 use serde_json::Value;
 use std::time::{Duration, Instant};
 use tower::ServiceExt;
@@ -26,7 +27,37 @@ async fn get_json(state: AppState, uri: &str) -> (StatusCode, Value) {
     let body = to_bytes(response.into_body(), usize::MAX)
         .await
         .expect("body");
-    let json = serde_json::from_slice(&body).expect("json");
+    let json = if body.is_empty() {
+        Value::Null
+    } else {
+        serde_json::from_slice(&body).expect("json")
+    };
+
+    (status, json)
+}
+
+async fn post_json(state: AppState, uri: &str, payload: Value) -> (StatusCode, Value) {
+    let response = app(state)
+        .oneshot(
+            Request::builder()
+                .method("POST")
+                .uri(uri)
+                .header("content-type", "application/json")
+                .body(Body::from(payload.to_string()))
+                .expect("request"),
+        )
+        .await
+        .expect("response");
+
+    let status = response.status();
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("body");
+    let json = if body.is_empty() {
+        Value::Null
+    } else {
+        serde_json::from_slice(&body).expect("json")
+    };
 
     (status, json)
 }
@@ -104,4 +135,167 @@ fn config_parses_typed_environment_values_without_secrets() {
         }
     );
     assert_eq!(config.version, "2026.05.23-test");
+}
+
+#[tokio::test]
+async fn contact_store_mode_accepts_valid_submission_without_echoing_private_message() {
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        ..AppConfig::default()
+    });
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "Kaylee Example",
+            "email": "kaylee@example.com",
+            "subject": "Portfolio inquiry",
+            "message": "This private message body must not be echoed in the response.",
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::ACCEPTED);
+    assert_eq!(json["status"], "accepted");
+    assert_eq!(json["delivery"], "store");
+    assert_eq!(json["message"], "Message queued for follow-up.");
+    assert!(!json.to_string().contains("private message body"));
+}
+
+#[tokio::test]
+async fn contact_rejects_invalid_submission_with_structured_validation_error() {
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        ..AppConfig::default()
+    });
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "",
+            "email": "not-an-email",
+            "subject": "",
+            "message": "short",
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+    assert_eq!(json["error"]["code"], "validation_failed");
+    let fields = json["error"]["fields"].as_array().expect("fields");
+    assert!(fields.iter().any(|field| field == "name"));
+    assert!(fields.iter().any(|field| field == "email"));
+    assert!(fields.iter().any(|field| field == "subject"));
+    assert!(fields.iter().any(|field| field == "message"));
+}
+
+#[tokio::test]
+async fn contact_rejects_honeypot_submission_before_acceptance() {
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        ..AppConfig::default()
+    });
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "Kaylee Example",
+            "email": "kaylee@example.com",
+            "subject": "Portfolio inquiry",
+            "message": "This is a valid length contact message for the portfolio.",
+            "company": "spam-filled-honeypot"
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+    assert_eq!(json["error"]["code"], "spam_detected");
+}
+
+#[tokio::test]
+async fn contact_rejects_oversized_payload_before_validation() {
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        ..AppConfig::default()
+    });
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "Kaylee Example",
+            "email": "kaylee@example.com",
+            "subject": "Portfolio inquiry",
+            "message": "x".repeat(7_000),
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
+    assert_eq!(json["error"]["code"], "payload_too_large");
+}
+
+#[tokio::test]
+async fn contact_disabled_mode_returns_safe_service_unavailable_response() {
+    let (status, json) = post_json(
+        AppState::new(),
+        "/api/contact",
+        json!({
+            "name": "Kaylee Example",
+            "email": "kaylee@example.com",
+            "subject": "Portfolio inquiry",
+            "message": "This is a valid length contact message for the portfolio.",
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(json["error"]["code"], "contact_disabled");
+    assert_eq!(json["fallback"], "mailto");
+}
+
+#[tokio::test]
+async fn events_disabled_by_default_return_structured_disabled_response() {
+    let (status, json) = post_json(
+        AppState::new(),
+        "/api/events",
+        json!({
+            "event": "contact_form_viewed",
+            "path": "/contact/",
+            "session_id": null
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(json["error"]["code"], "events_disabled");
+}
+
+#[tokio::test]
+async fn events_enabled_rejects_unallowlisted_event_names() {
+    let state = AppState::with_config(AppConfig {
+        event_logging_enabled: true,
+        ..AppConfig::default()
+    });
+
+    let (status, json) = post_json(
+        state,
+        "/api/events",
+        json!({
+            "event": "freeform_tracking_payload",
+            "path": "/contact/",
+            "session_id": null
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::BAD_REQUEST);
+    assert_eq!(json["error"]["code"], "validation_failed");
 }

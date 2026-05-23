@@ -75,16 +75,28 @@ Astro's development server injects source-file attributes, local paths, font mod
 
 The project atlas should start as keyboard-reachable HTML with category filters and stable links. WebGL or scroll-linked motion can enhance that model later, but the static atlas is the accessibility, no-JS, and reduced-motion source of truth.
 
+### API enhancement copy must preserve static route markers
+
+The contact page can evolve from a static placeholder to an API-enhanced form, but shared route-quality tests still rely on visible static-first markers such as "mailto fallback." Preserve those public markers when replacing placeholder copy so no-JS, reduced-motion, and route-coverage contracts continue to validate the actual user fallback.
+
+### A contact API is not production delivery by itself
+
+The Rust route can validate, reject honeypots, enforce request-size limits, and return structured errors, but production enablement still needs durable delivery or storage plus stateful rate limiting and CORS middleware. Until then, the mailto fallback remains the reliable contact path and the enhanced API should stay disabled outside controlled integration checks.
+
+### Deployment runbooks must mirror implemented environment names
+
+Provider docs often use generic variables, but this API currently reads `HK_API_*` names. Runbooks should name the variables the binary actually parses, otherwise a deployment can appear configured while the process silently falls back to defaults.
+
 ## Risks To Revisit During Implementation
 
-| Risk | Control |
-| --- | --- |
+| Risk                                                    | Control                                                                   |
+| ------------------------------------------------------- | ------------------------------------------------------------------------- |
 | The site looks impressive but does not prove capability | Write the flagship case studies before over-investing in ornamental pages |
-| 3D or animation harms performance | Lazy-load heavy scenes, provide poster fallbacks, and keep text in HTML |
-| Recruiters miss the strongest story | Keep resume, top skills, top projects, and contact visible early |
-| Published artifacts expose sensitive details | Run a redaction checklist before any case study ships |
-| Rust API adds avoidable downtime | Keep core content static and document API fallback behavior |
-| Content scope becomes too broad | Launch with 4 strong case studies instead of many shallow entries |
+| 3D or animation harms performance                       | Lazy-load heavy scenes, provide poster fallbacks, and keep text in HTML   |
+| Recruiters miss the strongest story                     | Keep resume, top skills, top projects, and contact visible early          |
+| Published artifacts expose sensitive details            | Run a redaction checklist before any case study ships                     |
+| Rust API adds avoidable downtime                        | Keep core content static and document API fallback behavior               |
+| Content scope becomes too broad                         | Launch with 4 strong case studies instead of many shallow entries         |
 
 ## Open Review Questions
 

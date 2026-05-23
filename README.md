@@ -11,6 +11,7 @@ Planning and execution repository for a private, resume-ready personal portfolio
 - Backlog: [docs/BACKLOG.md](docs/BACKLOG.md)
 - Implementation and test plan: [docs/IMPLEMENTATION_AND_TEST_PLAN.md](docs/IMPLEMENTATION_AND_TEST_PLAN.md)
 - Operations runbook: [docs/OPERATIONS.md](docs/OPERATIONS.md)
+- Deployment runbook: [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md)
 - Content strategy: [docs/CONTENT_STRATEGY.md](docs/CONTENT_STRATEGY.md)
 
 ## Working Decision

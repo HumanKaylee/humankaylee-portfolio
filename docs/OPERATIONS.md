@@ -2,7 +2,8 @@
 
 Date: 2026-05-23
 Status: Target operations runbook for implementation planning
-Sources: `docs/PRD.md`, `docs/RESEARCH.md`, `docs/ARCHITECTURE.md`
+Sources: `docs/PRD.md`, `docs/RESEARCH.md`, `docs/ARCHITECTURE.md`,
+`runbooks/DEPLOYMENT.md`
 
 ## 1. Operating Principle
 
@@ -35,13 +36,13 @@ Planned components:
 
 Core production URLs should be documented after domain selection:
 
-| Component | URL | Owner | Notes |
-| --- | --- | --- | --- |
-| Public site | Pending final domain selection | HumanKaylee | Custom domain pending. |
-| Frontend preview | Pending host setup | HumanKaylee | Usually Cloudflare Pages branch deploy. |
-| API production | Pending backend host selection | HumanKaylee | Shuttle/Fly/Railway endpoint. |
-| API health | `/api/health` | HumanKaylee | Public, safe, non-secret response. |
-| Source repo | Pending publication decision | HumanKaylee | Public or private decision pending. |
+| Component        | URL                            | Owner       | Notes                                   |
+| ---------------- | ------------------------------ | ----------- | --------------------------------------- |
+| Public site      | Pending final domain selection | HumanKaylee | Custom domain pending.                  |
+| Frontend preview | Pending host setup             | HumanKaylee | Usually Cloudflare Pages branch deploy. |
+| API production   | Pending backend host selection | HumanKaylee | Shuttle/Fly/Railway endpoint.           |
+| API health       | `/api/health`                  | HumanKaylee | Public, safe, non-secret response.      |
+| Source repo      | Pending publication decision   | HumanKaylee | Public or private decision pending.     |
 
 ## 3. Environments
 
@@ -107,30 +108,29 @@ Rules:
 
 Public frontend variables are safe to expose in generated client assets.
 
-| Variable | Secret | Required | Example purpose |
-| --- | --- | --- | --- |
-| `PUBLIC_SITE_URL` | No | Yes | Canonical URL, sitemap, Open Graph. |
-| `PUBLIC_API_BASE_URL` | No | Yes if API enabled | Runtime API calls. |
-| `PUBLIC_ANALYTICS_ENABLED` | No | No | Enables privacy-safe event posting. |
-| `PUBLIC_RELEASE_VERSION` | No | No | Display or diagnostics. |
+| Variable                   | Secret | Required           | Example purpose                     |
+| -------------------------- | ------ | ------------------ | ----------------------------------- |
+| `PUBLIC_SITE_URL`          | No     | Yes                | Canonical URL, sitemap, Open Graph. |
+| `PUBLIC_API_BASE_URL`      | No     | Yes if API enabled | Runtime API calls.                  |
+| `PUBLIC_ANALYTICS_ENABLED` | No     | No                 | Enables privacy-safe event posting. |
+| `PUBLIC_RELEASE_VERSION`   | No     | No                 | Display or diagnostics.             |
 
 ### 4.2 Backend Configuration
 
 Backend variables may contain secrets and must be configured in the backend host.
 
-| Variable | Secret | Required | Purpose |
-| --- | --- | --- | --- |
-| `APP_ENV` | No | Yes | `local`, `preview`, or `production`. |
-| `APP_VERSION` | No | Recommended | Release version or build label. |
-| `GIT_COMMIT_SHA` | No | Recommended | Health response and diagnostics. |
-| `RUST_LOG` | No | Recommended | Structured logging verbosity. |
-| `ALLOWED_ORIGINS` | No | Yes | CORS allowlist. |
-| `CONTACT_PROVIDER_API_KEY` | Yes | If contact API enabled | Contact delivery provider auth. |
-| `CONTACT_TO` | Usually | If contact API enabled | Destination mailbox or route. |
-| `CONTACT_FROM` | Usually | If contact API enabled | Verified sender identity. |
-| `DATABASE_URL` | Yes | If DB enabled | SQLite/Postgres connection. |
-| `GITHUB_TOKEN` | Yes | If needed | Higher-limit metadata fetches. |
-| `EVENTS_ENABLED` | No | No | Enables/disables event ingestion. |
+| Variable                                | Secret | Required    | Purpose                                                    |
+| --------------------------------------- | ------ | ----------- | ---------------------------------------------------------- |
+| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                        |
+| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                             |
+| `HK_API_ALLOWED_ORIGINS`                | No     | Before CORS | Comma-separated frontend origins for future CORS plumbing. |
+| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | `disabled` by default; `store` is integration-only.        |
+| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Enables gated privacy-safe events when set true.           |
+| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed request-limit setting for future middleware.        |
+| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Parsed contact-limit setting for future middleware.        |
+| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                             |
+| `RUST_LOG`                              | No     | Recommended | Structured logging verbosity.                              |
+| Future provider/database variables      | Yes    | Future only | Add only when durable contact delivery/storage lands.      |
 
 ### 4.3 Secret Storage Locations
 
@@ -218,8 +218,10 @@ Critical route tests:
 - `GET /api/health` returns expected shape.
 - `GET /api/projects/live` handles fresh cache, stale cache, and upstream
   failure.
-- `POST /api/contact` handles valid input, invalid input, honeypot, rate
-  limiting, and provider failure.
+- `POST /api/contact` handles valid input, invalid input, honeypot, oversized
+  payloads, disabled mode, and safe acceptance without echoing private text.
+  Stateful rate limiting and provider/storage failure tests remain blocked until
+  durable delivery/storage middleware exists.
 - `POST /api/events` rejects unknown event types and behaves safely when
   disabled.
 
@@ -237,6 +239,9 @@ Do not promote to production if:
 
 ## 7. Deployment Runbook
 
+Use `runbooks/DEPLOYMENT.md` as the exact Phase 8 deployment command source.
+This section keeps the operator-level summary and incident context.
+
 ### 7.1 Frontend: Cloudflare Pages
 
 Recommended production path:
@@ -251,13 +256,14 @@ Recommended production path:
 8. Deploy from main after CI passes.
 9. Run production smoke checks.
 
-Expected smoke checks:
+Expected smoke checks are maintained in `runbooks/DEPLOYMENT.md`. Current
+minimum checks:
 
 ```bash
-xh -h https://example.com/
-xh -h https://example.com/sitemap.xml
-xh -h https://example.com/robots.txt
-xh -h https://example.com/rss.xml
+xh -h "$FRONTEND_ORIGIN/"
+xh -h "$FRONTEND_ORIGIN/sitemap-index.xml"
+xh -h "$FRONTEND_ORIGIN/robots.txt"
+xh -h "$FRONTEND_ORIGIN/rss.xml"
 ```
 
 Browser checks:
@@ -281,11 +287,12 @@ Recommended launch path:
 6. Redeploy frontend if the API base URL changed.
 7. Run contact and metadata smoke checks.
 
-Expected smoke checks:
+Expected smoke checks are maintained in `runbooks/DEPLOYMENT.md`. Current
+minimum checks:
 
 ```bash
-xh https://api.example.com/api/health
-xh https://api.example.com/api/projects/live
+xh "$API_ORIGIN/api/health"
+xh "$API_ORIGIN/api/projects/live"
 ```
 
 Contact smoke check:
@@ -534,7 +541,8 @@ Checks:
 - Submit a test message from production.
 - Inspect API logs for validation, rate-limit, or provider errors.
 - Confirm mailto fallback is visible.
-- Confirm `ALLOWED_ORIGINS` includes the production frontend origin.
+- Confirm `HK_API_ALLOWED_ORIGINS` includes the production frontend origin once
+  CORS middleware is enabled.
 
 Likely causes:
 
@@ -603,19 +611,23 @@ Recovery:
 
 ## 11. Rollback Runbook
 
+Use `runbooks/DEPLOYMENT.md` for exact provider rollback commands and current
+provider behavior. This section captures rollback triggers and the generic
+decision flow.
+
 ### 11.1 Frontend Rollback
 
 Preferred path:
 
 1. Open Cloudflare Pages deployment history.
 2. Select the last known-good production deployment.
-3. Roll back or promote it according to Cloudflare Pages workflow.
+3. Roll back to it according to Cloudflare Pages workflow.
 4. Smoke-test home, projects, resume, sitemap, and contact fallback.
 5. Confirm Open Graph assets still resolve.
 
-Command-line fallback must be recorded during Phase 8 after the deploy CLI and
-provider account are confirmed. Until then, use provider dashboard rollback and
-record the deployment ID in the launch evidence matrix.
+Cloudflare Pages rollback only targets successful production deployments; use
+deployment-list commands in `runbooks/DEPLOYMENT.md` to record deployment IDs.
+Preview deployments are not rollback targets.
 
 Rollback triggers:
 
@@ -630,7 +642,8 @@ Rollback triggers:
 Preferred path:
 
 1. Identify the last known-good backend release.
-2. Redeploy that release through Shuttle, Fly.io, Railway, or chosen host.
+2. Redeploy that release through Shuttle, Fly.io, Railway, or the chosen host
+   using `runbooks/DEPLOYMENT.md`.
 3. Confirm required secrets are still present.
 4. Smoke-test `/api/health`.
 5. Smoke-test contact and project metadata.
@@ -743,23 +756,23 @@ Privacy-safe analytics:
 
 ## 15. Failure Mode Matrix
 
-| Failure | User impact | Detection | Recovery |
-| --- | --- | --- | --- |
-| Cloudflare Pages deploy fails | New release blocked; old site likely remains live | Deploy status, CI | Fix build, redeploy. |
-| Bad frontend deploy | Pages broken or visual regression | Smoke tests, browser check | Roll back Pages deployment. |
-| DNS/TLS failure | Site unreachable or certificate warning | Browser, `xh -h` | Fix DNS/TLS, verify custom domain. |
-| API host down | Live metadata/contact API unavailable | Health check | Keep static site live, roll back or move API. |
-| Missing backend secret | API startup or provider call fails | Logs, health check | Restore secret and redeploy/restart. |
-| CORS misconfigured | Browser API calls fail | Browser console, logs | Update `ALLOWED_ORIGINS`. |
-| Contact provider down | Contact form fails | Contact test, logs | Show mailto fallback, retry later. |
-| Rate limit too strict | Legitimate contact blocked | Logs, support report | Adjust thresholds, redeploy. |
-| GitHub API rate-limited | Live metadata stale | Cache age, logs | Use token, reduce refresh, static fallback. |
-| WebGL unsupported | Atlas unavailable | Browser testing | Poster and HTML project list. |
-| JS disabled | Interactive features unavailable | Manual test | Static content remains available. |
-| Motion accessibility issue | Users uncomfortable or blocked | QA, accessibility check | Respect reduced motion, disable scene. |
-| Secret exposed in content | Security/privacy incident | Review, report | Remove, purge, rotate, document. |
-| Case study leaks private detail | Reputational/security risk | Review, report | Remove, redact, purge cache. |
-| Database migration fails | API feature broken | CI/deploy logs | Restore backup or roll back compatible app. |
+| Failure                         | User impact                                       | Detection                  | Recovery                                      |
+| ------------------------------- | ------------------------------------------------- | -------------------------- | --------------------------------------------- |
+| Cloudflare Pages deploy fails   | New release blocked; old site likely remains live | Deploy status, CI          | Fix build, redeploy.                          |
+| Bad frontend deploy             | Pages broken or visual regression                 | Smoke tests, browser check | Roll back Pages deployment.                   |
+| DNS/TLS failure                 | Site unreachable or certificate warning           | Browser, `xh -h`           | Fix DNS/TLS, verify custom domain.            |
+| API host down                   | Live metadata/contact API unavailable             | Health check               | Keep static site live, roll back or move API. |
+| Missing backend secret          | API startup or provider call fails                | Logs, health check         | Restore secret and redeploy/restart.          |
+| CORS misconfigured              | Browser API calls fail                            | Browser console, logs      | Update `HK_API_ALLOWED_ORIGINS`.              |
+| Contact provider down           | Contact form fails                                | Contact test, logs         | Show mailto fallback, retry later.            |
+| Rate limit too strict           | Legitimate contact blocked                        | Logs, support report       | Adjust thresholds, redeploy.                  |
+| GitHub API rate-limited         | Live metadata stale                               | Cache age, logs            | Use token, reduce refresh, static fallback.   |
+| WebGL unsupported               | Atlas unavailable                                 | Browser testing            | Poster and HTML project list.                 |
+| JS disabled                     | Interactive features unavailable                  | Manual test                | Static content remains available.             |
+| Motion accessibility issue      | Users uncomfortable or blocked                    | QA, accessibility check    | Respect reduced motion, disable scene.        |
+| Secret exposed in content       | Security/privacy incident                         | Review, report             | Remove, purge, rotate, document.              |
+| Case study leaks private detail | Reputational/security risk                        | Review, report             | Remove, redact, purge cache.                  |
+| Database migration fails        | API feature broken                                | CI/deploy logs             | Restore backup or roll back compatible app.   |
 
 ## 16. Launch Checklist
 
@@ -788,7 +801,8 @@ Backend:
 - Axum API deployed.
 - `/api/health` returns version and uptime.
 - `/api/projects/live` has safe stale/failure behavior.
-- `/api/contact` validates, rate-limits, and uses configured provider.
+- `/api/contact` validates input, rejects honeypot and oversized payloads, and
+  stays disabled in production until durable delivery/storage is configured.
 - `/api/events` disabled or privacy-reviewed.
 - Structured tracing/logging enabled.
 - Integration tests pass.
@@ -864,7 +878,9 @@ The site is production-ready only when a clean operator can:
 The implementation must create these runbook artifacts before launch:
 
 - `runbooks/PREFLIGHT.md`: local versions, GitHub auth account, repo remote, package manager, Rust toolchain, and missing-tool notes.
-- `runbooks/DEPLOYMENT.md`: exact provider commands, provider CLI versions, environment variable names, deployment IDs, and rollback steps.
+- `runbooks/DEPLOYMENT.md`: exact provider commands, provider CLI version
+  checks, environment variable names, domain/DNS/TLS/cache guidance, smoke
+  checks, fallback host steps, and rollback steps.
 - `runbooks/LAUNCH_EVIDENCE.md`: final verification matrix with command, date, target URL, result, and artifact path.
 - `docs/CONTENT_REDACTION_GUIDE.md`: public-safety checklist used by every case study.
 
