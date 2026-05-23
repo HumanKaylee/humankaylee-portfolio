@@ -1,0 +1,18 @@
+{
+	"name": "Creative Web Systems Atlas Demo",
+	"slug": "creative-web-systems-atlas-demo",
+	"category": "creative web",
+	"summary": "Accessible project atlas concept with a progressive visual enhancement layer.",
+	"bestFor": ["recruiter", "senior-engineer"],
+	"proof": "Static category model prepared for future Systems Map Hero and atlas work.",
+	"links": {
+		"docs": "/case-studies/creative-web-systems-atlas-demo/"
+	},
+	"publicationStatus": "publish",
+	"seo": {
+		"title": "Creative Web Systems Atlas Demo",
+		"description": "A project summary for the portfolio systems atlas demo.",
+		"canonicalPath": "/projects/creative-web-systems-atlas-demo/",
+		"ogImage": "/social/projects/creative-web-systems-atlas-demo.png"
+	}
+}

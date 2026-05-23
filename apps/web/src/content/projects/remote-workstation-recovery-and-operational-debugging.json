@@ -1,0 +1,18 @@
+{
+	"name": "Remote Workstation Recovery and Operational Debugging",
+	"slug": "remote-workstation-recovery-and-operational-debugging",
+	"category": "operations",
+	"summary": "Evidence-first recovery workflow for remote workstation and session failures.",
+	"bestFor": ["senior-engineer", "recruiter"],
+	"proof": "Redacted incident flow and recovery checklist.",
+	"links": {
+		"docs": "/case-studies/remote-workstation-recovery-and-operational-debugging/"
+	},
+	"publicationStatus": "publish",
+	"seo": {
+		"title": "Remote Workstation Recovery and Operational Debugging",
+		"description": "A project summary for remote workstation recovery and debugging.",
+		"canonicalPath": "/projects/remote-workstation-recovery-and-operational-debugging/",
+		"ogImage": "/social/projects/remote-workstation-recovery-and-operational-debugging.png"
+	}
+}

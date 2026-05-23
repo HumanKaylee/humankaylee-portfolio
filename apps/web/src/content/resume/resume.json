@@ -1,0 +1,35 @@
+{
+	"title": "HumanKaylee Resume",
+	"slug": "resume",
+	"pdfSourcePath": "pending-approved-resume-source",
+	"pdfDownloadPath": "/downloads/humankaylee-resume.pdf",
+	"sourceStatus": "placeholder",
+	"workflowState": "awaiting-redaction-review",
+	"pdfStatus": "not-generated",
+	"sourceAsset": "pending-approved-resume-source",
+	"approvalState": "pending",
+	"workflowSteps": [
+		{
+			"step": "collect approved source bullets",
+			"status": "pending"
+		},
+		{
+			"step": "redact private employers, paths, and sensitive details",
+			"status": "pending"
+		},
+		{
+			"step": "format the final resume source document",
+			"status": "pending"
+		},
+		{
+			"step": "export the PDF and verify the public link",
+			"status": "pending"
+		}
+	],
+	"seo": {
+		"title": "HumanKaylee Resume",
+		"description": "HTML resume and future downloadable PDF entry point for recruiter review.",
+		"canonicalPath": "/resume/",
+		"ogImage": "/social/resume.png"
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"name": "HumanKaylee Portfolio Build",
+	"slug": "humankaylee-portfolio-build",
+	"category": "creative web",
+	"summary": "Static-first portfolio system with Rust API proof, content contracts, and launch verification.",
+	"bestFor": ["recruiter", "senior-engineer", "collaborator"],
+	"proof": "Command contract, Lighthouse evidence, Playwright no-JS tests, and Rust health endpoint.",
+	"links": {
+		"docs": "/case-studies/humankaylee-portfolio-build/"
+	},
+	"publicationStatus": "publish",
+	"seo": {
+		"title": "HumanKaylee Portfolio Build",
+		"description": "A project summary for building the HumanKaylee portfolio.",
+		"canonicalPath": "/projects/humankaylee-portfolio-build/",
+		"ogImage": "/social/projects/humankaylee-portfolio-build.png"
+	}
+}
