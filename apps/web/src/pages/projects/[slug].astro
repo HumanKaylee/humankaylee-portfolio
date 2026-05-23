@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type ProjectEntry = CollectionEntry<"projects">;
+type CaseStudyEntry = CollectionEntry<"caseStudies">;
+
+export async function getStaticPaths() {
+	const projects = ((await getCollection("projects")) as ProjectEntry[]).filter(
+		(project) => project.data.publicationStatus === "publish",
+	);
+
+	return projects.map((project) => ({
+		params: { slug: project.data.slug },
+		props: { project },
+	}));
+}
+
+type Props = {
+	project: ProjectEntry;
+};
+
+const { project } = Astro.props as Props;
+const { data } = project;
+const relatedCaseStudySlug = data.links?.docs?.match(
+	/^\/case-studies\/([^/]+)\/$/,
+)?.[1];
+const publishedCaseStudies = (
+	(await getCollection("caseStudies")) as CaseStudyEntry[]
+).filter((caseStudy) => caseStudy.data.publicationStatus === "publish");
+const relatedCaseStudy = publishedCaseStudies.find(
+	(caseStudy) => caseStudy.data.slug === relatedCaseStudySlug,
+);
+const relatedCaseStudyTitle = relatedCaseStudy?.data.title ?? data.name;
+---
+
+<BaseLayout
+	title={`${data.seo.title} | HumanKaylee`}
+	description={data.seo.description}
+	canonicalPath={data.seo.canonicalPath}
+>
+	<article class="case-study-detail" aria-labelledby="project-detail-title">
+		<header class="page-header">
+			<p class="section-kicker">Project detail</p>
+			<h1 id="project-detail-title">{data.name}</h1>
+			<p class="page-intro">{data.summary}</p>
+			<p class="body-copy">
+				This page stays readable without JavaScript or API access and keeps the
+				current atlas anchor links intact.
+			</p>
+			<div class="detail-actions">
+				<a data-touch-target="true" href="/projects/" aria-label="Back to project atlas">
+					Back to project atlas
+				</a>
+				<a
+					data-touch-target="true"
+					href={`/projects/#${data.slug}`}
+					aria-label={`Jump to project atlas card for ${data.name}`}
+				>
+					Open atlas card
+				</a>
+			</div>
+		</header>
+
+		<section class="case-study-section" aria-labelledby="evidence-title">
+			<h2 id="evidence-title">Evidence snapshot</h2>
+			<p>{data.proof}</p>
+		</section>
+
+		<section class="case-study-section" aria-labelledby="best-for-title">
+			<h2 id="best-for-title">Best for</h2>
+			<ul>
+				{data.bestFor.map((audience: string) => <li>{audience}</li>)}
+			</ul>
+		</section>
+
+		<section class="case-study-section" aria-labelledby="static-note-title">
+			<h2 id="static-note-title">Static-first notes</h2>
+			<ul>
+				<li>No JavaScript is required to read the summary, proof, or links.</li>
+				<li>No API dependency is required for the core content.</li>
+				<li>The project atlas still uses the existing anchor links on the index.</li>
+			</ul>
+		</section>
+
+		{data.links?.docs ? (
+			<section class="case-study-section" aria-labelledby="related-case-study-title">
+				<h2 id="related-case-study-title">Related case study</h2>
+				<p>
+					For the fuller narrative and verified walkthrough, read the related
+					case study.
+				</p>
+				<a
+					data-touch-target="true"
+					href={data.links.docs}
+					aria-label={`Read related case study: ${relatedCaseStudyTitle}`}
+				>
+					Read related case study: {relatedCaseStudyTitle}
+				</a>
+			</section>
+		) : null}
+	</article>
+</BaseLayout>

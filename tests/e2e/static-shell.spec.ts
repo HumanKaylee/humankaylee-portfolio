@@ -226,18 +226,18 @@ test.describe("static shell @static-shell", () => {
 		expect(response.headers()["content-type"]).toContain("application/pdf");
 	});
 
-	test("labels project proof links uniquely while case-study routes are pending", async ({
+	test("labels project detail links uniquely and points cards to static routes", async ({
 		page,
 	}) => {
 		await page.goto("/projects/");
 
 		await expect(
 			page.getByRole("link", {
-				name: "View static proof for CLI Fleet Synchronization and MCP Rollout",
+				name: "View project detail for CLI Fleet Synchronization and MCP Rollout",
 			}),
 		).toHaveAttribute(
 			"href",
-			"/projects/#cli-fleet-synchronization-and-mcp-rollout",
+			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
 		);
 
 		const labels = await page
@@ -251,7 +251,7 @@ test.describe("static shell @static-shell", () => {
 				),
 			);
 
-		expect(labels).not.toContain("View static proof");
+		expect(labels).not.toContain("View project detail");
 		expect(new Set(labels).size).toBe(labels.length);
 	});
 });

@@ -6,14 +6,27 @@ type Props = {
 };
 
 const { items } = Astro.props;
+const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 ---
 
-<aside class="telemetry-strip" aria-label="Static build telemetry">
+<aside
+	class="telemetry-strip"
+	aria-label="Static build telemetry"
+	data-api-base={apiBaseUrl}
+	data-telemetry-strip
+>
 	<p class="section-kicker">Static evidence until API integration</p>
+	<p class="telemetry-status" role="status" aria-live="polite" data-telemetry-status>
+		Static telemetry fallback active until the Rust API responds.
+	</p>
 	<div class="telemetry-grid">
 		{
 			items.map((item) => (
-				<article class="evidence-panel" aria-label={`${item.label}: ${item.value}`}>
+				<article
+					class="evidence-panel"
+					aria-label={`${item.label}: ${item.value}`}
+					data-telemetry-label={item.label}
+				>
 					<p>{item.label}</p>
 					<strong>{item.value}</strong>
 					<span>{item.detail}</span>
@@ -22,3 +35,84 @@ const { items } = Astro.props;
 		}
 	</div>
 </aside>
+
+<script>
+	const telemetryStrip = document.querySelector<HTMLElement>(
+		"[data-telemetry-strip]",
+	);
+	const telemetryStatus = telemetryStrip?.querySelector<HTMLElement>(
+		"[data-telemetry-status]",
+	);
+
+	function apiEndpoint(apiBase: string, path: string) {
+		const trimmed = apiBase.trim().replace(/\/$/, "");
+		return `${trimmed}${path}`;
+	}
+
+	async function getJson(path: string) {
+		if (!telemetryStrip) {
+			throw new Error("Telemetry strip is missing.");
+		}
+
+		const response = await fetch(
+			apiEndpoint(telemetryStrip.dataset.apiBase ?? "", path),
+			{
+				headers: {
+					Accept: "application/json",
+				},
+			},
+		);
+
+		if (!response.ok) {
+			throw new Error(`Telemetry request failed with ${response.status}.`);
+		}
+
+		return response.json();
+	}
+
+	function updateBackendPanel(summary: string, detail: string) {
+		const panel = telemetryStrip?.querySelector<HTMLElement>(
+			"[data-telemetry-label='Backend']",
+		);
+		const value = panel?.querySelector("strong");
+		const body = panel?.querySelector("span");
+
+		if (value) {
+			value.textContent = summary;
+		}
+		if (body) {
+			body.textContent = detail;
+		}
+	}
+
+	async function enhanceTelemetry() {
+		try {
+			const [health, projects] = await Promise.all([
+				getJson("/api/health"),
+				getJson("/api/projects/live"),
+			]);
+			const version =
+				typeof health.version === "string" ? health.version : "unknown";
+			const projectCount = Array.isArray(projects.projects)
+				? projects.projects.length
+				: 0;
+			const freshness = projects.stale ? "stale cache" : "fresh cache";
+			const statusText = `Rust API live (${version}); ${projectCount} cached projects from ${freshness}.`;
+
+			updateBackendPanel(
+				"Rust API live",
+				`${projectCount} cached projects available without replacing the static fallback.`,
+			);
+			if (telemetryStatus) {
+				telemetryStatus.textContent = statusText;
+			}
+		} catch {
+			if (telemetryStatus) {
+				telemetryStatus.textContent =
+					"API telemetry unavailable; static fallback remains active.";
+			}
+		}
+	}
+
+	void enhanceTelemetry();
+</script>

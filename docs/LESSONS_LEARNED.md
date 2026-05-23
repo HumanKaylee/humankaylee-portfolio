@@ -79,13 +79,21 @@ The project atlas should start as keyboard-reachable HTML with category filters 
 
 The contact page can evolve from a static placeholder to an API-enhanced form, but shared route-quality tests still rely on visible static-first markers such as "mailto fallback." Preserve those public markers when replacing placeholder copy so no-JS, reduced-motion, and route-coverage contracts continue to validate the actual user fallback.
 
-### A contact API is not production delivery by itself
+### A hardened contact API is not production delivery by itself
 
-The Rust route can validate, reject honeypots, enforce request-size limits, and return structured errors, but production enablement still needs durable delivery or storage plus stateful rate limiting and CORS middleware. Until then, the mailto fallback remains the reliable contact path and the enhanced API should stay disabled outside controlled integration checks.
+The Rust route can validate, reject honeypots, enforce request-size limits, rate-limit repeat submissions, apply CORS, and return structured errors, but production enablement still needs durable delivery or storage. Until then, the mailto fallback remains the reliable contact path and the enhanced API should stay disabled outside controlled integration checks.
+
+### Replace blocker tests when the blocker is removed
+
+The route-coverage suite correctly encoded project detail pages as a 404 blocker while they did not exist. Once static project detail pages shipped, the integration work had to replace that stale negative test with positive detail-route coverage and update project-card links to the new static routes.
 
 ### Deployment runbooks must mirror implemented environment names
 
 Provider docs often use generic variables, but this API currently reads `HK_API_*` names. Runbooks should name the variables the binary actually parses, otherwise a deployment can appear configured while the process silently falls back to defaults.
+
+### Privacy docs should describe current defaults, not launch intent
+
+The privacy writeup needs to say exactly what ships now: static pages, a resume PDF asset, a contact route with validation plus mailto fallback, and events disabled by default. If a provider or storage path does not exist yet, the doc should say so plainly instead of implying a retention or analytics story that is not implemented.
 
 ## Risks To Revisit During Implementation
 

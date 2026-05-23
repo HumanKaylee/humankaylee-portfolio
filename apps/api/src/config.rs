@@ -47,7 +47,7 @@ impl Default for AppConfig {
         Self {
             host: "127.0.0.1".to_owned(),
             port: 8787,
-            allowed_origins: vec!["http://localhost:4321".to_owned()],
+            allowed_origins: Vec::new(),
             contact_delivery_mode: ContactDeliveryMode::Disabled,
             event_logging_enabled: false,
             rate_limits: RateLimitConfig {

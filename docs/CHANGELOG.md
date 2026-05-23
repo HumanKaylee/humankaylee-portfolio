@@ -14,11 +14,15 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added notes/build-log index and detail routes from the notes content collection.
 - Added `/rss.xml`, `/robots.txt`, and `/sitemap-index.xml` static crawler/feed artifacts.
 - Added canonical URLs, Open Graph/Twitter image metadata, JSON-LD Person/WebSite data, and a default social preview SVG asset.
+- Added static project detail pages for published project entries and linked project cards to those routes.
 - Added an accessible project atlas fallback with category filters, keyboard-reachable nodes, and reduced-motion poster behavior.
 - Added the Rust API typed environment config and static-safe `GET /api/projects/live` metadata endpoint.
 - Added `POST /api/contact` with JSON validation, honeypot rejection, oversized-payload rejection, disabled-mode fallback, and a safe accepted response that does not echo private message text.
+- Added backend CORS allowlist middleware, request body limits, timeout, tracing, compression, and in-memory contact rate limiting.
 - Added gated `POST /api/events` with disabled-by-default behavior and an allowlisted privacy-safe event shape.
 - Added the API-enhanced contact page form with visible mailto fallback, no-JS usefulness, API-down copy, and Playwright coverage.
+- Added API-enhanced build telemetry on the home page while preserving the static telemetry fallback.
+- Added practical privacy notes documenting current static-site behavior, resume PDF handling, contact validation versus mailto fallback, disabled-by-default events, and redaction expectations.
 - Added the Phase 8 deployment runbook for Cloudflare Pages, Shuttle, Fly.io, Railway, smoke checks, and rollback evidence.
 - Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.
 
@@ -26,8 +30,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 - Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked launch-approved.
 - Final public domain is still unresolved, so metadata currently uses the reserved configured site URL from `apps/web/src/content/site/site.json`.
-- Project detail pages remain intentionally unimplemented; project cards and atlas nodes route to safe case-study URLs or current static anchors.
-- Contact API delivery/storage, stateful rate limiting, and CORS middleware remain launch blockers before enabling the enhanced form in production.
+- Contact API durable delivery or storage remains a launch blocker before treating API form submissions as production-delivered messages.
 
 ### Planned
 

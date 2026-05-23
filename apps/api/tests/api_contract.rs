@@ -1,6 +1,6 @@
 use axum::{
     body::{to_bytes, Body},
-    http::{Request, StatusCode},
+    http::{header, Request, StatusCode},
 };
 use humankaylee_api::{
     app,
@@ -13,15 +13,14 @@ use std::time::{Duration, Instant};
 use tower::ServiceExt;
 
 async fn get_json(state: AppState, uri: &str) -> (StatusCode, Value) {
-    let response = app(state)
-        .oneshot(
-            Request::builder()
-                .uri(uri)
-                .body(Body::empty())
-                .expect("request"),
-        )
-        .await
-        .expect("response");
+    let response = request(
+        state,
+        Request::builder()
+            .uri(uri)
+            .body(Body::empty())
+            .expect("request"),
+    )
+    .await;
 
     let status = response.status();
     let body = to_bytes(response.into_body(), usize::MAX)
@@ -36,18 +35,51 @@ async fn get_json(state: AppState, uri: &str) -> (StatusCode, Value) {
     (status, json)
 }
 
-async fn post_json(state: AppState, uri: &str, payload: Value) -> (StatusCode, Value) {
-    let response = app(state)
-        .oneshot(
-            Request::builder()
-                .method("POST")
-                .uri(uri)
-                .header("content-type", "application/json")
-                .body(Body::from(payload.to_string()))
-                .expect("request"),
-        )
+async fn get_json_with_origin(
+    state: AppState,
+    uri: &str,
+    origin: &str,
+) -> (StatusCode, Value, axum::http::HeaderMap) {
+    let response = request(
+        state,
+        Request::builder()
+            .uri(uri)
+            .header(header::ORIGIN, origin)
+            .body(Body::empty())
+            .expect("request"),
+    )
+    .await;
+
+    let status = response.status();
+    let headers = response.headers().clone();
+    let body = to_bytes(response.into_body(), usize::MAX)
         .await
-        .expect("response");
+        .expect("body");
+    let json = if body.is_empty() {
+        Value::Null
+    } else {
+        serde_json::from_slice(&body).expect("json")
+    };
+
+    (status, json, headers)
+}
+
+async fn request(state: AppState, request: Request<Body>) -> axum::response::Response {
+    let response = app(state).oneshot(request).await.expect("response");
+    response
+}
+
+async fn post_json(state: AppState, uri: &str, payload: Value) -> (StatusCode, Value) {
+    let response = request(
+        state,
+        Request::builder()
+            .method("POST")
+            .uri(uri)
+            .header("content-type", "application/json")
+            .body(Body::from(payload.to_string()))
+            .expect("request"),
+    )
+    .await;
 
     let status = response.status();
     let body = to_bytes(response.into_body(), usize::MAX)
@@ -79,6 +111,38 @@ async fn health_route_returns_public_status_version_and_uptime() {
     assert!(json["uptime_seconds"].as_u64().expect("uptime") >= 12);
     assert!(json.get("service").is_some());
     assert!(json.get("commit").is_some());
+}
+
+#[tokio::test]
+async fn default_config_has_no_cors_origins_until_env_is_provided() {
+    let config = AppConfig::default();
+
+    assert!(config.allowed_origins.is_empty());
+}
+
+#[tokio::test]
+async fn health_route_allows_only_configured_origin_and_denies_unconfigured_origins() {
+    let state = AppState::with_config(AppConfig {
+        allowed_origins: vec!["https://example.com".to_owned()],
+        ..AppConfig::default()
+    });
+
+    let (status, _, headers) =
+        get_json_with_origin(state.clone(), "/api/health", "https://example.com").await;
+
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(
+        headers
+            .get(header::ACCESS_CONTROL_ALLOW_ORIGIN)
+            .and_then(|value| value.to_str().ok()),
+        Some("https://example.com")
+    );
+
+    let (status, _, headers) =
+        get_json_with_origin(state, "/api/health", "https://untrusted.example").await;
+
+    assert_eq!(status, StatusCode::OK);
+    assert!(headers.get(header::ACCESS_CONTROL_ALLOW_ORIGIN).is_none());
 }
 
 #[tokio::test]
@@ -239,6 +303,34 @@ async fn contact_rejects_oversized_payload_before_validation() {
 
     assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
     assert_eq!(json["error"]["code"], "payload_too_large");
+}
+
+#[tokio::test]
+async fn contact_rate_limits_repeat_submissions_from_the_same_sender() {
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        rate_limits: RateLimitConfig {
+            requests_per_minute: 60,
+            contact_per_hour: 1,
+        },
+        ..AppConfig::default()
+    });
+
+    let payload = json!({
+        "name": "Kaylee Example",
+        "email": "kaylee@example.com",
+        "subject": "Portfolio inquiry",
+        "message": "This is a valid length contact message for the portfolio.",
+        "company": ""
+    });
+
+    let (status, json) = post_json(state.clone(), "/api/contact", payload.clone()).await;
+    assert_eq!(status, StatusCode::ACCEPTED);
+    assert_eq!(json["status"], "accepted");
+
+    let (status, json) = post_json(state, "/api/contact", payload).await;
+    assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
+    assert_eq!(json["error"]["code"], "contact_rate_limited");
 }
 
 #[tokio::test]

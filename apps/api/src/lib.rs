@@ -3,21 +3,42 @@ pub mod contact;
 pub mod events;
 pub mod health;
 pub mod projects;
+pub mod security;
 pub mod state;
 
 use axum::{
+    http::StatusCode,
     routing::{get, post},
     Router,
 };
+use security::{cors_layer, PUBLIC_REQUEST_BODY_LIMIT_BYTES, PUBLIC_REQUEST_TIMEOUT};
 use state::AppState;
+use tower_http::{
+    compression::CompressionLayer, limit::RequestBodyLimitLayer, timeout::TimeoutLayer,
+    trace::TraceLayer,
+};
 
 pub fn app(state: AppState) -> Router {
-    Router::new()
+    let config = state.config().clone();
+    let mut app = Router::new()
         .route("/api/health", get(health::health_handler))
         .route("/api/projects/live", get(projects::projects_live_handler))
         .route("/api/contact", post(contact::contact_handler))
         .route("/api/events", post(events::events_handler))
         .with_state(state)
+        .layer(CompressionLayer::new())
+        .layer(RequestBodyLimitLayer::new(PUBLIC_REQUEST_BODY_LIMIT_BYTES))
+        .layer(TimeoutLayer::with_status_code(
+            StatusCode::REQUEST_TIMEOUT,
+            PUBLIC_REQUEST_TIMEOUT,
+        ))
+        .layer(TraceLayer::new_for_http());
+
+    if let Some(cors) = cors_layer(&config) {
+        app = app.layer(cors);
+    }
+
+    app
 }
 
 #[cfg(test)]

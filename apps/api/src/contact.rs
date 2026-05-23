@@ -1,5 +1,11 @@
 use crate::{config::ContactDeliveryMode, state::AppState};
-use axum::{body::Bytes, extract::State, http::StatusCode, response::IntoResponse, Json};
+use axum::{
+    body::Bytes,
+    extract::State,
+    http::{HeaderMap, StatusCode},
+    response::IntoResponse,
+    Json,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
@@ -40,9 +46,11 @@ struct ApiError {
     fields: Vec<&'static str>,
 }
 
-pub async fn contact_handler(State(state): State<AppState>, body: Bytes) -> impl IntoResponse {
-    // TODO(phase5-security): Add stateful rate-limit plumbing once the API has
-    // tower-http middleware; keep this handler free of provider logging.
+pub async fn contact_handler(
+    State(state): State<AppState>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> impl IntoResponse {
     if body.len() > CONTACT_REQUEST_BODY_LIMIT_BYTES {
         return error_response(
             StatusCode::PAYLOAD_TOO_LARGE,
@@ -88,6 +96,19 @@ pub async fn contact_handler(State(state): State<AppState>, body: Bytes) -> impl
         );
     }
 
+    let client_identity = contact_client_identity(&headers, &payload);
+    if !state.contact_abuse_tracker().allow_submission(
+        &client_identity,
+        state.config().rate_limits.contact_per_hour,
+    ) {
+        return error_response(
+            StatusCode::TOO_MANY_REQUESTS,
+            "contact_rate_limited",
+            "Contact submission rate limit exceeded.",
+            Vec::new(),
+        );
+    }
+
     let invalid_fields = validate_contact(&payload);
     if !invalid_fields.is_empty() {
         return error_response(
@@ -107,6 +128,42 @@ pub async fn contact_handler(State(state): State<AppState>, body: Bytes) -> impl
         }),
     )
         .into_response()
+}
+
+fn contact_client_identity(headers: &HeaderMap, payload: &ContactRequest) -> String {
+    if let Some(identity) = forwarded_client_identity(headers) {
+        return identity;
+    }
+
+    normalize_email(&payload.email).unwrap_or_else(|| "anonymous".to_owned())
+}
+
+fn forwarded_client_identity(headers: &HeaderMap) -> Option<String> {
+    let forwarded_for = headers
+        .get("x-forwarded-for")
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.split(',').next())
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .map(ToOwned::to_owned);
+
+    forwarded_for.or_else(|| {
+        headers
+            .get("x-real-ip")
+            .and_then(|value| value.to_str().ok())
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(ToOwned::to_owned)
+    })
+}
+
+fn normalize_email(value: &str) -> Option<String> {
+    let normalized = value.trim().to_ascii_lowercase();
+    if normalized.is_empty() {
+        None
+    } else {
+        Some(normalized)
+    }
 }
 
 fn error_response(

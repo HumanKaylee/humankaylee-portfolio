@@ -12,6 +12,11 @@ const implementedRoutes = [
 		marker: /CLI Fleet Synchronization/i,
 	},
 	{
+		path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
+		heading: /CLI Fleet Synchronization and MCP Rollout/i,
+		marker: /sanitized rollout matrix/i,
+	},
+	{
 		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
 		heading: /CLI Fleet Synchronization and MCP Rollout/i,
 		marker: /sanitized rollout matrix/i,
@@ -52,24 +57,21 @@ test.describe("route coverage @quality", () => {
 		});
 	}
 
-	test("encodes the current project-detail blocker instead of claiming detail coverage", async ({
+	test("links the project index to the implemented project detail route", async ({
 		page,
 		request,
 	}) => {
-		const deferredProjectDetail =
+		const projectDetail =
 			"/projects/cli-fleet-synchronization-and-mcp-rollout/";
 
-		const response = await request.get(deferredProjectDetail);
-		expect(response.status(), deferredProjectDetail).toBe(404);
+		const response = await request.get(projectDetail);
+		expect(response.status(), projectDetail).toBeLessThan(400);
 
 		await page.goto("/projects/");
 		await expect(
 			page.getByRole("link", {
-				name: "View static proof for CLI Fleet Synchronization and MCP Rollout",
+				name: "View project detail for CLI Fleet Synchronization and MCP Rollout",
 			}),
-		).toHaveAttribute(
-			"href",
-			"/projects/#cli-fleet-synchronization-and-mcp-rollout",
-		);
+		).toHaveAttribute("href", projectDetail);
 	});
 });

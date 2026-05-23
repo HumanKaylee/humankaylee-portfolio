@@ -318,6 +318,13 @@ h3 {
 	padding: clamp(2rem, 5vw, 4rem) 0;
 }
 
+.telemetry-status {
+	margin-top: 0.75rem;
+	color: rgba(243, 234, 216, 0.74);
+	font-family: var(--font-evidence);
+	font-size: 0.9rem;
+}
+
 .telemetry-grid,
 .artifact-grid,
 .path-grid {

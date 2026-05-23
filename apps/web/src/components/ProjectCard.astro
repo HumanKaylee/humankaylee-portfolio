@@ -16,9 +16,9 @@ const { data } = project;
 	<p class="proof-line">{data.proof}</p>
 	<a
 		data-touch-target="true"
-		href={`/projects/#${data.slug}`}
-		aria-label={`View static proof for ${data.name}`}
+		href={`/projects/${data.slug}/`}
+		aria-label={`View project detail for ${data.name}`}
 	>
-		View static proof for {data.name}
+		View project detail for {data.name}
 	</a>
 </article>
