@@ -8,6 +8,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a static systems-map hero poster on the home page with project links
+  and no JavaScript/WebGL dependency.
+- Added explicit Playwright `@keyboard` and `@accessibility` launch gates and
+  CI steps for those checks.
+- Added rendered Markdown body support for case-study pages and replaced the
+  CLI fleet case-study placeholder with a public-safe narrative, verification
+  matrix, and operator checklist.
 - Added a critical JavaScript bundle budget gate with CI coverage and a
   generated summary artifact.
 - Added a feature-gated Shuttle API binary, Shuttle dirty-deploy guard,

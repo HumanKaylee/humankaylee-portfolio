@@ -127,7 +127,7 @@ test.describe("quality @quality @reduced-motion", () => {
 
 test.describe("quality @quality", () => {
 	for (const route of coreRoutes) {
-		test(`has no serious or critical accessibility violations on ${route.path}`, async ({
+		test(`has no serious or critical accessibility violations on ${route.path} @accessibility`, async ({
 			page,
 		}) => {
 			await page.goto(route.path);

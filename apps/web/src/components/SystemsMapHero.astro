@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type ProjectEntry = CollectionEntry<"projects">;
+
+type Props = {
+	projects: readonly ProjectEntry[];
+};
+
+const { projects } = Astro.props;
+const featuredProjects = projects.slice(0, 4);
+---
+
+<section class="systems-map-hero" aria-label="Static systems map hero">
+	<div class="systems-map-art">
+		<svg
+			viewBox="0 0 420 420"
+			role="img"
+			aria-label="Sanitized systems map connecting HumanKaylee capabilities to project evidence routes"
+		>
+			<circle class="systems-map-orbit orbit-outer" cx="210" cy="210" r="165"
+			></circle>
+			<circle class="systems-map-orbit orbit-inner" cx="210" cy="210" r="96"
+			></circle>
+			<path class="systems-map-thread" d="M210 210 L96 118 L324 94 L332 302 L118 320 Z"
+			></path>
+			<circle class="systems-map-node-dot" cx="96" cy="118" r="8"></circle>
+			<circle class="systems-map-node-dot" cx="324" cy="94" r="8"></circle>
+			<circle class="systems-map-node-dot" cx="332" cy="302" r="8"></circle>
+			<circle class="systems-map-node-dot" cx="118" cy="320" r="8"></circle>
+			<circle class="systems-map-core-dot" cx="210" cy="210" r="22"></circle>
+		</svg>
+		<div class="systems-map-core" aria-hidden="true">
+			<span>HK</span>
+			<small>evidence core</small>
+		</div>
+	</div>
+
+	<div class="systems-map-copy">
+		<p class="eyebrow">Signature systems map</p>
+		<h2>Constellation first, canvas later.</h2>
+		<p>
+			No JavaScript required: this static poster gives the portfolio an
+			immediate systems-map moment while the heavier WebGL layer remains an
+			optional progressive enhancement.
+		</p>
+		<nav class="systems-map-links" aria-label="Systems map project routes">
+			{
+				featuredProjects.map((project) => (
+					<a
+						data-touch-target="true"
+						href={`/projects/${project.data.slug}/`}
+						aria-label={`Open ${project.data.name}`}
+					>
+						<span>{project.data.category}</span>
+						<strong>{project.data.name}</strong>
+					</a>
+				))
+			}
+		</nav>
+	</div>
+</section>

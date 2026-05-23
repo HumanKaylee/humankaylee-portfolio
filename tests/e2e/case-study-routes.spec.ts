@@ -68,6 +68,12 @@ test.describe("case-study routes @case-studies", () => {
 		await expect(
 			page.getByRole("region", { name: /evidence drawer/i }),
 		).toContainText(/sanitized rollout matrix/i);
+		await expect(
+			page.getByRole("heading", {
+				name: "Sanitized verification matrix",
+				exact: true,
+			}),
+		).toBeVisible();
 		await expect(page.getByText(/redaction review/i)).toContainText(
 			/reviewed/i,
 		);

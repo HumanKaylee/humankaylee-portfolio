@@ -43,7 +43,7 @@ test.describe("project atlas @atlas", () => {
 		await expect(atlas.getByText(/4 published nodes/i)).toBeVisible();
 	});
 
-	test("keeps atlas nodes keyboard reachable", async ({ page }) => {
+	test("keeps atlas nodes keyboard reachable @keyboard", async ({ page }) => {
 		await page.goto("/projects/");
 
 		let focusedLabel = "";

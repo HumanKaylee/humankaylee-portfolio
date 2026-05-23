@@ -4,7 +4,12 @@ Phase 7 launch gates are enforced locally and in CI.
 
 ## Local Checks
 
-- `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy, and Axe accessibility checks on the core route set.
+- `pnpm test:e2e -- --grep "@keyboard"` runs the launch keyboard
+  reachability gate for primary navigation and the project atlas.
+- `pnpm test:e2e -- --grep "@accessibility"` runs the Axe accessibility gate
+  for core routes.
+- `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
+  and route-quality checks on the core route set.
 - `pnpm lighthouse:local` builds the Astro site, serves a production-equivalent local preview on `127.0.0.1:4322`, and audits home, projects, one case study, resume, and contact.
 - `pnpm build && pnpm bundle:budget` measures executable JavaScript in built
   HTML and fails if a route exceeds the critical JavaScript budget.

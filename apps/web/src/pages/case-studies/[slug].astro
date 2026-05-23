@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 import EvidenceDrawer from "../../components/EvidenceDrawer.astro";
@@ -45,6 +45,7 @@ const verificationItems: string[] = verification;
 const operationItems: string[] = operations;
 const lessonItems: string[] = lessons;
 const safeArtifacts: string[] = links?.artifacts ?? [];
+const { Content } = await render(caseStudy);
 ---
 
 <BaseLayout
@@ -127,6 +128,10 @@ const safeArtifacts: string[] = links?.artifacts ?? [];
 					<p>No public-safe artifact labels are attached yet.</p>
 				)
 			}
+		</section>
+
+		<section class="case-study-section case-study-body" aria-label="Case study body">
+			<Content />
 		</section>
 
 		<EvidenceDrawer caseStudy={caseStudy} />

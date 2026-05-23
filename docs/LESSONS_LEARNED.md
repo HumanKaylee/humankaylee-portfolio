@@ -125,6 +125,27 @@ keeps `reviewed` separate from `approved`. A partial review, placeholder body,
 or sanitized label is useful progress, not launch evidence; approval needs a
 completed checklist plus public-safe artifacts for each case study.
 
+### Static spectacle can still be semantic
+
+The first visual upgrade does not need WebGL to improve the portfolio. A
+static systems-map poster can deliver the signature "atelier" moment, link to
+real project routes, and remain visible in no-JS contexts while the heavier
+constellation stays optional.
+
+### Case-study bodies must be rendered, not just stored
+
+Frontmatter-driven sections are useful for consistent evidence drawers, but the
+long-form case-study narrative needs Markdown body rendering. Otherwise
+placeholder replacement can look complete in source while the public page still
+lacks the deeper architecture, verification, and operator-checklist story.
+
+### QA tags should match launch gates
+
+The plan's cross-phase matrix named keyboard and accessibility checks, but CI
+only had a broad E2E job. Tagging existing Playwright coverage with
+`@keyboard` and `@accessibility` gives operators precise commands and gives CI a
+clearer failure signal without weakening the umbrella test run.
+
 ## Risks To Revisit During Implementation
 
 | Risk                                                    | Control                                                                   |

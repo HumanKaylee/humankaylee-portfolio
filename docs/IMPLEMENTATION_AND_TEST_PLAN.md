@@ -428,6 +428,7 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm test:e2e -- --grep "@atlas"
+pnpm test:e2e -- --grep "static systems map hero"
 pnpm test:e2e -- --grep "@reduced-motion"
 pnpm build
 pnpm lighthouse:local

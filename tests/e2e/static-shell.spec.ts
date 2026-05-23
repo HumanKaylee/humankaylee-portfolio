@@ -112,7 +112,32 @@ test.describe("static shell @static-shell", () => {
 		).toBeVisible();
 	});
 
-	test("keeps primary links keyboard reachable with mobile-safe touch targets", async ({
+	test("renders a static systems map hero with project links before any WebGL enhancement", async ({
+		page,
+	}) => {
+		await page.goto("/");
+
+		const mapHero = page.getByRole("region", {
+			name: "Static systems map hero",
+		});
+		await expect(mapHero).toBeVisible();
+		await expect(mapHero.getByText(/Signature systems map/i)).toBeVisible();
+		await expect(mapHero.locator("svg")).toHaveAttribute(
+			"aria-label",
+			/Sanitized systems map/i,
+		);
+		await expect(
+			mapHero.getByRole("link", {
+				name: /Open CLI Fleet Synchronization and MCP Rollout/i,
+			}),
+		).toHaveAttribute(
+			"href",
+			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
+		);
+		await expect(mapHero.getByText(/No JavaScript required/i)).toBeVisible();
+	});
+
+	test("keeps primary links keyboard reachable with mobile-safe touch targets @keyboard", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 390, height: 844 });

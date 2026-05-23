@@ -37,8 +37,8 @@ redactionReview:
   reviewedOn: "2026-05-23"
   checklistStatus: "partial"
   openItems:
-    - "Expand placeholder body with approved public evidence before launch."
-  notes: "Phase 1 outline is safe as a draft but is not launch-approved."
+    - "Complete the final approval checklist before changing status to approved."
+  notes: "Generalized public narrative is safe for route scaffolding, but final launch approval still needs a completed checklist."
 seo:
   title: "CLI Fleet Synchronization and MCP Rollout"
   description: "A sanitized operations case study about inventory, rollout, and verification discipline."
@@ -46,4 +46,57 @@ seo:
   ogImage: "/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png"
 ---
 
-Draft body placeholder. The launch version will expand this outline with sanitized diagrams, rollout evidence, and implementation notes.
+## Public-safe narrative
+
+This rollout treated the fleet as a set of target classes instead of a list of
+private machines. The public story is the operating model: inventory first,
+change second, verify each surface independently, and keep authentication state
+local to the account that owns it.
+
+The work started with a read-only discovery pass that separated installed CLI
+surfaces, configured client registrations, and account-local health checks.
+Only after that inventory existed did the rollout mutate configuration, which
+kept the work reversible and made it easier to distinguish missing tooling from
+auth, path, or shell-environment drift.
+
+## Sanitized architecture sketch
+
+```text
+operator intent
+  -> target inventory
+  -> client registration
+  -> account-local verification
+  -> final status matrix
+  -> follow-up blockers by target class
+```
+
+The important boundary is that credentials, sessions, histories, and private
+paths do not move between accounts. Each target proves its own readiness with a
+local command result, and any failed target remains a named blocker instead of
+being hidden behind a fleet-wide success statement.
+
+## Sanitized verification matrix
+
+| Target class                       | Verification focus                                | Public-safe result                                                      |
+| ---------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------- |
+| Primary workstation account        | CLI health, tool registration, local command path | Passed after local registration and verification.                       |
+| Alternate workstation account      | Account-local auth and command discovery          | Passed where auth was already valid; auth gaps stayed local.            |
+| Remote Linux account               | Remote shell environment and client availability  | Verified separately so host health was not confused with account setup. |
+| Unavailable or out-of-scope target | Reachability and install presence                 | Recorded as skipped or blocked instead of treated as success.           |
+
+## Sanitized operator checklist
+
+- Inventory the exact account and shell that will run the workflow.
+- Verify the CLI's own health and registration commands before editing files.
+- Register tools through supported CLI commands instead of copying state.
+- Preserve auth/session/history/cache material on the account where it belongs.
+- Capture a target-by-target matrix with pass, skip, or blocker status.
+- Re-run verification after any config or workflow artifact changes.
+
+## Public evidence boundary
+
+The public artifact is the method and the verification shape, not the private
+machine list. Hostnames, usernames, paths, credentials, session state, raw logs,
+and exact access details stay out of the case study. The useful lesson is the
+discipline: fleet automation is only trustworthy when every target proves the
+same contract independently.

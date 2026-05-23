@@ -811,6 +811,8 @@ Acceptance criteria:
 Verification evidence:
 
 - Network throttling screenshot showing readable hero before enhanced assets.
+- Playwright `static systems map hero` coverage proves the home page exposes a
+  no-JS systems-map poster with project links before any WebGL enhancement.
 
 ### B-033: Implement accessible project atlas fallback
 
@@ -1273,6 +1275,9 @@ Acceptance criteria:
 Verification evidence:
 
 - Playwright CI summary or trace.
+- Explicit `pnpm test:e2e -- --grep "@keyboard"` and
+  `pnpm test:e2e -- --grep "@accessibility"` launch gates run independently of
+  the umbrella E2E suite.
 
 ### B-053: Add security headers and dependency audit
 

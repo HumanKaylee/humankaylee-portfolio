@@ -5,6 +5,7 @@ import type { CollectionEntry } from "astro:content";
 import BuildTelemetryStrip from "../components/BuildTelemetryStrip.astro";
 import CtaCluster from "../components/CtaCluster.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import SystemsMapHero from "../components/SystemsMapHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { homeScaffold } from "../lib/home-scaffold";
 
@@ -32,15 +33,7 @@ const projects = allProjects
 			<p class="body-copy">{scaffold.noJsNote}</p>
 			<CtaCluster items={scaffold.ctas} />
 		</div>
-		<aside class="paper-panel" aria-labelledby="atelier-note">
-			<p class="eyebrow">Phase 2 static shell</p>
-			<h2 id="atelier-note">Readable before the spectacle.</h2>
-			<p>
-				This page intentionally puts resume, projects, and contact paths ahead of
-				interactive polish. The later systems map can impress without becoming a
-				requirement for understanding the work.
-			</p>
-		</aside>
+		<SystemsMapHero projects={allProjects} />
 	</section>
 
 	<BuildTelemetryStrip items={scaffold.telemetry} />
