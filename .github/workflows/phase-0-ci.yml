@@ -60,6 +60,9 @@ jobs:
       - name: Run accessibility gate
         run: pnpm test:e2e -- --grep "@accessibility"
 
+      - name: Run security headers gate
+        run: pnpm test:e2e -- --grep "@security"
+
       - name: Run frontend end-to-end tests
         run: pnpm test:e2e
 

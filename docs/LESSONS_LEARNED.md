@@ -146,6 +146,14 @@ only had a broad E2E job. Tagging existing Playwright coverage with
 `@keyboard` and `@accessibility` gives operators precise commands and gives CI a
 clearer failure signal without weakening the umbrella test run.
 
+### Static security headers need dual enforcement
+
+Static-host header files are the production contract, but local verification
+needs a response-level mechanism too. Mirroring the same policy through Astro
+middleware lets Playwright catch missing Content Security Policy, frame denial,
+MIME sniffing, referrer, cross-origin, and permissions headers before provider
+deployment exists.
+
 ## Risks To Revisit During Implementation
 
 | Risk                                                    | Control                                                                   |

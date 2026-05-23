@@ -1299,7 +1299,8 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Header inspection output.
+- `pnpm test:e2e -- --grep "@security"` output for local route headers.
+- Static host header config review for `apps/web/public/_headers`.
 - Audit output or documented exceptions.
 
 ### B-054: Add privacy documentation

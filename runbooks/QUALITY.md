@@ -8,6 +8,8 @@ Phase 7 launch gates are enforced locally and in CI.
   reachability gate for primary navigation and the project atlas.
 - `pnpm test:e2e -- --grep "@accessibility"` runs the Axe accessibility gate
   for core routes.
+- `pnpm test:e2e -- --grep "@security"` checks launch routes for the static
+  security header policy used by local Astro middleware and static hosting.
 - `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
   and route-quality checks on the core route set.
 - `pnpm lighthouse:local` builds the Astro site, serves a production-equivalent local preview on `127.0.0.1:4322`, and audits home, projects, one case study, resume, and contact.
@@ -33,6 +35,14 @@ The bundle gate ignores JSON-LD metadata and counts executable inline scripts
 plus same-origin Astro script assets referenced by each generated HTML route.
 The current route budget is 8 KiB of critical JavaScript per page. Reports are
 written to `test-results/bundle-budget-summary.json`.
+
+## Security Headers
+
+The frontend uses Astro middleware for local/dev responses and
+`apps/web/public/_headers` for static host responses. The local gate checks
+Content Security Policy, frame denial, MIME sniffing protection, referrer
+policy, cross-origin isolation posture, and disabled browser permissions on
+the launch route set.
 
 ## Manual Privacy Review
 

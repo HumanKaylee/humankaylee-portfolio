@@ -10,6 +10,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 - Added a static systems-map hero poster on the home page with project links
   and no JavaScript/WebGL dependency.
+- Added a static-site security header policy, Cloudflare-compatible `_headers`
+  file, and Playwright `@security` launch gate with CI coverage.
 - Added explicit Playwright `@keyboard` and `@accessibility` launch gates and
   CI steps for those checks.
 - Added rendered Markdown body support for case-study pages and replaced the
