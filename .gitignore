@@ -9,7 +9,7 @@ dist/
 .wrangler/
 
 target/
-Cargo.lock
+!apps/api/Cargo.lock
 
 .env
 .env.*
@@ -18,4 +18,3 @@ Cargo.lock
 coverage/
 playwright-report/
 test-results/
-
