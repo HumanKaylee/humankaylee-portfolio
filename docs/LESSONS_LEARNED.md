@@ -57,6 +57,16 @@ Launch is not just visual completion. The PRD requires deployable frontend and b
 - Make backend failure non-blocking for the portfolio.
 - Make privacy-safe redaction a required review step for every published artifact.
 
+## Implementation Lessons
+
+### Parallel lanes need explicit test ownership
+
+Phase 3 route work split cleanly when each worker owned a route family and its own e2e spec: notes/RSS, case-study routes, and metadata/crawler artifacts. Shared preview-server tests should run sequentially during final integration because Playwright's fixed port can collide when multiple agents run e2e checks at the same time.
+
+### Route scaffolding can advance before redaction approval
+
+Case-study pages can safely render reviewed public-safe outlines without marking them launch-approved. The content model should keep `publicationStatus` separate from `redactionStatus` so route infrastructure, navigation, metadata, and no-JS behavior can mature while the final evidence checklist remains a hard launch gate.
+
 ## Risks To Revisit During Implementation
 
 | Risk | Control |

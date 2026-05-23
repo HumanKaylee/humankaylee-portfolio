@@ -1,0 +1,48 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type CaseStudy = CollectionEntry<"caseStudies">;
+
+const caseStudies = ((await getCollection("caseStudies")) as CaseStudy[])
+	.filter((caseStudy) => caseStudy.data.publicationStatus === "publish")
+	.sort((left, right) => left.data.title.localeCompare(right.data.title));
+---
+
+<BaseLayout
+	title="Case Studies | HumanKaylee"
+	description="Public-safe case studies from HumanKaylee's systems, operations, backend, and creative web work."
+	canonicalPath="/case-studies/"
+>
+	<section class="page-shell" aria-labelledby="case-studies-title">
+		<header class="page-header">
+			<p class="section-kicker">Case studies</p>
+			<h1 id="case-studies-title">Case studies with safe evidence.</h1>
+			<p class="page-intro">
+				Published entries are filtered from the content collection. Drafts that
+				need redaction or have been deferred stay out of the public route map.
+			</p>
+		</header>
+
+		<div class="case-study-grid">
+			{
+				caseStudies.map((caseStudy) => (
+					<article class="case-study-card">
+						<p class="project-category">{caseStudy.data.category}</p>
+						<h2>{caseStudy.data.title}</h2>
+						<p>{caseStudy.data.summary}</p>
+						<a
+							data-touch-target="true"
+							href={`/case-studies/${caseStudy.data.slug}/`}
+							aria-label={`Read case study: ${caseStudy.data.title}`}
+						>
+							Read case study
+						</a>
+					</article>
+				))
+			}
+		</div>
+	</section>
+</BaseLayout>

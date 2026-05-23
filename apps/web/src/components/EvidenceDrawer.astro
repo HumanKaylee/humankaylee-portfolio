@@ -1,0 +1,60 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type CaseStudy = CollectionEntry<"caseStudies">;
+
+type Props = {
+	caseStudy: CaseStudy;
+};
+
+const { caseStudy } = Astro.props;
+const {
+	architecture,
+	verification,
+	operations,
+	lessons,
+	links,
+	redactionStatus,
+} = caseStudy.data;
+const artifacts: string[] = links?.artifacts ?? [];
+---
+
+<section
+	class="evidence-drawer"
+	aria-labelledby="evidence-drawer-title"
+	role="region"
+>
+	<p class="section-kicker">Evidence drawer</p>
+	<h2 id="evidence-drawer-title">Evidence drawer</h2>
+	<div class="evidence-drawer-grid">
+		<article class="evidence-panel">
+			<p class="eyebrow">Diagram text alternative</p>
+			<p>{architecture.diagramAlt}</p>
+		</article>
+		<article class="evidence-panel">
+			<p class="eyebrow">Verification excerpt</p>
+			<p>{verification[0]}</p>
+		</article>
+		<article class="evidence-panel">
+			<p class="eyebrow">Operational note</p>
+			<p>{operations[0]}</p>
+		</article>
+		<article class="evidence-panel">
+			<p class="eyebrow">Lesson</p>
+			<p>{lessons[0]}</p>
+		</article>
+	</div>
+	{
+		artifacts.length > 0 && (
+			<div class="safe-artifact-list" aria-label="Safe artifact labels">
+				<p class="eyebrow">Safe artifact labels</p>
+				<ul>
+					{artifacts.map((artifact) => (
+						<li>{artifact}</li>
+					))}
+				</ul>
+			</div>
+		)
+	}
+	<p class="redaction-note">Redaction review: {redactionStatus}</p>
+</section>

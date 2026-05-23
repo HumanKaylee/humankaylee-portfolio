@@ -6,6 +6,20 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ## [Unreleased]
 
+### Added
+
+- Published the approved downloadable resume PDF and linked it from the home recruiter path and resume page.
+- Added case-study index and detail routes for current `publicationStatus: publish` entries while preserving redaction statuses.
+- Added a safe evidence drawer section for case-study pages using existing sanitized frontmatter.
+- Added notes/build-log index and detail routes from the notes content collection.
+- Added `/rss.xml`, `/robots.txt`, and `/sitemap-index.xml` static crawler/feed artifacts.
+- Added canonical URLs, Open Graph/Twitter image metadata, JSON-LD Person/WebSite data, and a default social preview SVG asset.
+
+### Remaining Blockers
+
+- Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked launch-approved.
+- Final public domain is still unresolved, so metadata currently uses the reserved configured site URL from `apps/web/src/content/site/site.json`.
+
 ### Planned
 
 - Build a visually rich, static-first portfolio for HumanKaylee.
@@ -20,7 +34,6 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 ### Open Decisions
 
 - Final domain name.
-- Final resume PDF source.
 - Which existing projects are safe to publish in detail.
 - Whether the AI assistant ships in v1 or remains a v2 demo.
 - Whether Shuttle Community is sufficient for launch API hosting.

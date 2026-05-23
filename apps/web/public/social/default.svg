@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+	<title id="title">HumanKaylee Systems Atelier social preview</title>
+	<desc id="desc">Warm paper and ink portfolio preview card for practical AI-assisted systems, automation, infrastructure, backend, and creative web work.</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#201912" />
+			<stop offset="0.46" stop-color="#120f0d" />
+			<stop offset="1" stop-color="#203439" />
+		</linearGradient>
+		<radialGradient id="amber" cx="22%" cy="18%" r="55%">
+			<stop offset="0" stop-color="#c47b31" stop-opacity="0.72" />
+			<stop offset="1" stop-color="#c47b31" stop-opacity="0" />
+		</radialGradient>
+		<pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+			<path d="M 44 0 L 0 0 0 44" fill="none" stroke="#f3ead8" stroke-opacity="0.11" stroke-width="1" />
+		</pattern>
+	</defs>
+	<rect width="1200" height="630" fill="url(#bg)" />
+	<rect width="1200" height="630" fill="url(#amber)" />
+	<rect width="1200" height="630" fill="url(#grid)" />
+	<rect x="84" y="78" width="1032" height="474" rx="34" fill="#fff8ea" fill-opacity="0.1" stroke="#f3ead8" stroke-opacity="0.22" />
+	<text x="112" y="142" fill="#c47b31" font-family="Georgia, serif" font-size="32" letter-spacing="6">THE SYSTEMS ATELIER</text>
+	<text x="112" y="286" fill="#f3ead8" font-family="Georgia, serif" font-size="86" font-weight="700">HumanKaylee</text>
+	<text x="112" y="374" fill="#f3ead8" font-family="Georgia, serif" font-size="52">Practical AI-assisted systems</text>
+	<text x="112" y="452" fill="#8fe6bb" font-family="monospace" font-size="28">automation / infrastructure / backend / creative web</text>
+	<circle cx="982" cy="176" r="58" fill="#2f6d4f" fill-opacity="0.82" />
+	<circle cx="1014" cy="244" r="38" fill="#c47b31" fill-opacity="0.82" />
+	<circle cx="928" cy="260" r="28" fill="#8fe6bb" fill-opacity="0.7" />
+</svg>

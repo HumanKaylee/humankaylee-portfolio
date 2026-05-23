@@ -353,7 +353,8 @@ h3 {
 	gap: 0.9rem;
 }
 
-.project-card a {
+.project-card a,
+.case-study-card a {
 	width: fit-content;
 	border-radius: 999px;
 	background: var(--color-paper);
@@ -368,6 +369,57 @@ h3 {
 	color: var(--color-tungsten);
 	font-size: 0.82rem;
 	text-transform: uppercase;
+}
+
+.case-study-grid,
+.evidence-drawer-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.case-study-card,
+.case-study-section,
+.text-diagram,
+.evidence-drawer {
+	border: 1px solid rgba(243, 234, 216, 0.16);
+	border-radius: 1.5rem;
+	background: rgba(23, 19, 16, 0.38);
+	padding: 1.25rem;
+}
+
+.case-study-card,
+.case-study-detail,
+.case-study-section,
+.evidence-drawer {
+	display: grid;
+	gap: 1rem;
+}
+
+.case-study-section p,
+.case-study-section li,
+.case-study-card p,
+.text-diagram p,
+.evidence-drawer p,
+.evidence-drawer li {
+	color: rgba(243, 234, 216, 0.78);
+	line-height: 1.65;
+}
+
+.case-study-section ul,
+.safe-artifact-list ul {
+	display: grid;
+	gap: 0.45rem;
+	margin: 0;
+	padding-left: 1.2rem;
+}
+
+.text-diagram {
+	border-style: dashed;
+}
+
+.redaction-note {
+	font-family: var(--font-evidence);
 }
 
 .page-shell {
@@ -462,7 +514,9 @@ h3 {
 	.cta-cluster,
 	.telemetry-grid,
 	.artifact-grid,
-	.path-grid {
+	.path-grid,
+	.case-study-grid,
+	.evidence-drawer-grid {
 		grid-template-columns: 1fr;
 	}
 

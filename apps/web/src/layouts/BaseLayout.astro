@@ -6,6 +6,8 @@ import "@fontsource/archivo-narrow/700.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/700.css";
 
+import { getCollection } from "astro:content";
+
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { homeScaffold } from "../lib/home-scaffold";
@@ -15,10 +17,45 @@ type Props = {
 	title: string;
 	description: string;
 	canonicalPath?: string;
+	ogImage?: string;
 };
 
-const { title, description, canonicalPath = "/" } = Astro.props;
+function absoluteUrl(siteUrl: string, pathOrUrl: string) {
+	if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
+		return pathOrUrl;
+	}
+
+	const path = pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`;
+	return `${siteUrl.replace(/\/$/, "")}${path}`;
+}
+
+const [site] = await getCollection("site");
+const {
+	title,
+	description,
+	canonicalPath = "/",
+	ogImage = site.data.defaultOgImage,
+} = Astro.props;
 const scaffold = homeScaffold();
+const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+const canonicalUrl = absoluteUrl(siteUrl, canonicalPath);
+const socialImageUrl = absoluteUrl(siteUrl, ogImage);
+const structuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "Person",
+		name: "HumanKaylee",
+		url: siteUrl,
+		description: site.data.siteDescription,
+	},
+	{
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		name: site.data.siteName,
+		url: siteUrl,
+		description: site.data.siteDescription,
+	},
+];
 ---
 
 <!doctype html>
@@ -28,11 +65,22 @@ const scaffold = homeScaffold();
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalUrl} />
+		<meta property="og:site_name" content={site.data.siteName} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content={canonicalPath} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={socialImageUrl} />
 		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={socialImageUrl} />
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={JSON.stringify(structuredData)}
+		/>
 	</head>
 	<body data-enhancement="static-first" data-webgl="optional">
 		<a class="skip-link" href="#main">Skip to content</a>

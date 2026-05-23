@@ -2,11 +2,11 @@
 	"siteName": "HumanKaylee Portfolio",
 	"siteDescription": "A static-first systems atelier portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and polished user-facing tools.",
 	"siteUrl": "https://humankaylee.example",
-	"defaultOgImage": "/social/default.png",
+	"defaultOgImage": "/social/default.svg",
 	"seo": {
 		"title": "HumanKaylee Portfolio",
 		"description": "A static-first systems atelier portfolio for HumanKaylee.",
 		"canonicalPath": "/",
-		"ogImage": "/social/default.png"
+		"ogImage": "/social/default.svg"
 	}
 }
