@@ -17,6 +17,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added rendered Markdown body support for case-study pages and replaced the
   CLI fleet case-study placeholder with a public-safe narrative, verification
   matrix, and operator checklist.
+- Added a generalized public-safe body for the remote workstation recovery case
+  study, with route coverage and quality-gate scans while keeping its redaction
+  status `reviewed`.
 - Added a critical JavaScript bundle budget gate with CI coverage and a
   generated summary artifact.
 - Added a feature-gated Shuttle API binary, Shuttle dirty-deploy guard,

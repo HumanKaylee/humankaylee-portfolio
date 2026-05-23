@@ -79,6 +79,47 @@ test.describe("case-study routes @case-studies", () => {
 		);
 	});
 
+	test("renders the remote workstation recovery case study as a public-safe troubleshooting narrative", async ({
+		page,
+	}) => {
+		await page.goto(
+			"/case-studies/remote-workstation-recovery-and-operational-debugging/",
+		);
+
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: "Remote Workstation Recovery and Operational Debugging",
+			}),
+		).toBeVisible();
+
+		const body = page.getByRole("region", { name: "Case study body" });
+
+		for (const section of [
+			"Public-safe narrative",
+			"Failure modes",
+			"Evidence gathering",
+			"Fix path",
+			"Verification",
+			"Prevention",
+			"Safe links and artifacts",
+			"Public evidence boundary",
+		]) {
+			await expect(
+				body.getByRole("heading", { name: section, exact: true }),
+			).toBeVisible();
+		}
+
+		await expect(
+			body.getByText(/sanitized diagnostic flow/i).first(),
+		).toBeVisible();
+		await expect(
+			body.getByText(
+				/private hostnames, account names, raw logs, and exact recovery commands stay out\s+of scope/i,
+			),
+		).toBeVisible();
+	});
+
 	test("does not serve unsafe or deferred case-study routes", async ({
 		request,
 	}) => {

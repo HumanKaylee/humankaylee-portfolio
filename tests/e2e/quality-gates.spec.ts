@@ -15,6 +15,10 @@ const coreRoutes = [
 		marker: /sanitized rollout matrix/i,
 	},
 	{
+		path: "/case-studies/remote-workstation-recovery-and-operational-debugging/",
+		marker: /public-safe narrative/i,
+	},
+	{
 		path: "/resume/",
 		marker: /Download resume PDF/i,
 	},

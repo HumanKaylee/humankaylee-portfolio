@@ -125,6 +125,14 @@ keeps `reviewed` separate from `approved`. A partial review, placeholder body,
 or sanitized label is useful progress, not launch evidence; approval needs a
 completed checklist plus public-safe artifacts for each case study.
 
+### Operations stories should publish reasoning, not access procedure
+
+The remote workstation recovery case study is strongest when it shows the
+diagnostic order: reachability, role-local state, session inventory, viewer
+behavior, smallest recovery action, and verification. The public body should
+keep role labels and summarized evidence while omitting private hostnames,
+access paths, raw logs, exact command sequences, and account-specific details.
+
 ### Static spectacle can still be semantic
 
 The first visual upgrade does not need WebGL to improve the portfolio. A
