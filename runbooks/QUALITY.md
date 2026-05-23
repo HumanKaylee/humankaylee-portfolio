@@ -10,6 +10,8 @@ Phase 7 launch gates are enforced locally and in CI.
   for core routes.
 - `pnpm test:e2e -- --grep "@security"` checks launch routes for the static
   security header policy used by local Astro middleware and static hosting.
+- `pnpm test:e2e -- --grep "@api-down"` verifies representative static routes
+  and contact fallback behavior when API requests fail.
 - `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
   and route-quality checks on the core route set.
 - `pnpm lighthouse:local` builds the Astro site, serves a production-equivalent local preview on `127.0.0.1:4322`, and audits home, projects, one case study, resume, and contact.

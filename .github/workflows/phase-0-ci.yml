@@ -63,6 +63,9 @@ jobs:
       - name: Run security headers gate
         run: pnpm test:e2e -- --grep "@security"
 
+      - name: Run API outage resilience gate
+        run: pnpm test:e2e -- --grep "@api-down"
+
       - name: Run frontend end-to-end tests
         run: pnpm test:e2e
 
