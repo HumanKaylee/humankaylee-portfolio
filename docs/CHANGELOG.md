@@ -58,6 +58,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added the API-enhanced contact page form with visible mailto fallback, no-JS usefulness, API-down copy, and Playwright coverage.
 - Added API-enhanced build telemetry on the home page while preserving the static telemetry fallback.
 - Added practical privacy notes documenting current static-site behavior, resume PDF handling, contact validation versus mailto fallback, disabled-by-default events, and redaction expectations.
+- Added a privacy documentation contract test covering contact data use,
+  transient rate-limit processing, disabled analytics/events, retention limits,
+  privacy contact path, and unsupported-promise guards.
 - Added the Phase 8 deployment runbook for Cloudflare Pages, Shuttle, Fly.io, Railway, smoke checks, and rollback evidence.
 - Added the launch evidence status runbook with current PR evidence, local verification gaps, and explicit production blockers.
 - Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.

@@ -29,6 +29,10 @@ form. When a visitor sends a message, the form includes:
 - `message`
 - `company` as a hidden honeypot field
 
+HumanKaylee uses the `name`, `email`, `subject`, and `message` fields to
+review the inquiry and reply. The implementation does not use the contact form
+for newsletter signup, account creation, or analytics profiling.
+
 The `company` field is not meant for real contact data. It is present so the
 API can reject obvious spam submissions.
 
@@ -38,6 +42,12 @@ response payloads. When `HK_API_CONTACT_DELIVERY_MODE=store` is enabled, the
 API also requires `HK_API_CONTACT_STORE_PATH` before accepting messages and
 appends accepted submissions to a JSONL file at that path. The response still
 does not echo message bodies, headers, IP addresses, or honeypot values.
+
+For rate limiting, the API's in-memory rate limit tracks a temporary
+abuse-control key from forwarded client IP headers when present, or the
+normalized email address when those headers are absent. The key is used to
+evaluate an hourly rate-limit window, is kept only in running API process
+memory, and is not written to the contact JSONL record.
 
 If the API is unavailable or disabled, the page keeps the mailto fallback
 visible so visitors can still use the static contact path.
@@ -98,3 +108,20 @@ path is unavailable.
 
 If a dedicated privacy contact address is introduced later, update this doc and
 the contact route together.
+
+## Implementation Review
+
+Reviewed against current implementation on 2026-05-23:
+
+- `apps/web/src/components/ContactForm.astro` for submitted form fields, visible
+  mailto fallback, and typed text preservation when the API path fails.
+- `apps/api/src/contact.rs` for validation, honeypot rejection, request-size
+  limits, disabled mode, store mode, JSONL storage behavior, and safe responses.
+- `apps/api/src/config.rs` for disabled contact storage defaults, the
+  `HK_API_CONTACT_STORE_PATH` requirement, and disabled event logging defaults.
+- `apps/api/src/events.rs` for disabled-by-default event handling and the
+  allowlisted event names accepted when event logging is explicitly enabled.
+- `apps/api/tests/api_contract.rs` for backend coverage of contact storage,
+  disabled contact, validation, rate limiting, and disabled events.
+- `tests/e2e/contact-api.spec.ts` for frontend API enhancement behavior and
+  mailto fallback behavior.

@@ -99,6 +99,14 @@ Provider docs often use generic variables, but this API currently reads `HK_API_
 
 The privacy writeup needs to say exactly what ships now: static pages, a resume PDF asset, a contact route with validation plus mailto fallback, and events disabled by default. If a provider or storage path does not exist yet, the doc should say so plainly instead of implying a retention or analytics story that is not implemented.
 
+### Privacy claims need process-level precision
+
+Even implementation summaries can overclaim retention if they compress behavior
+too aggressively. The contact rate limiter uses a temporary in-process abuse
+key to evaluate an hourly window, but it does not run a background expiry job.
+The privacy contract should pin that distinction so future docs do not imply a
+deletion workflow that the API does not implement.
+
 ### Launch evidence must separate PR checks from production readiness
 
 Passing PR CI is useful evidence, but it is not a production launch signal by itself. The launch runbook should keep PR checks, local final verification, production smoke checks, provider deployment IDs, rollback targets, redaction approvals, and contact-delivery status in separate rows so blocked or not-run production work cannot be mistaken for launch readiness.

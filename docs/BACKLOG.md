@@ -1335,6 +1335,13 @@ Acceptance criteria:
 Verification evidence:
 
 - Privacy doc reviewed against implemented contact/events behavior.
+- `docs/PRIVACY.md` now documents the current contact form fields, contact
+  purpose, API-disabled fallback, store-mode JSONL behavior, transient
+  in-memory rate-limit key, disabled-by-default events, missing analytics
+  provider, retention posture, and privacy contact path.
+- `scripts/privacy-doc-contract.test.mjs` verifies the privacy documentation
+  stays indexed from the README, covers B-054 expectations, avoids unsupported
+  legal or deletion promises, and does not expose private local details.
 
 ### B-055: Add cross-browser and responsive QA pass
 

@@ -14,6 +14,7 @@ Planning and execution repository for a private, resume-ready personal portfolio
 - Deployment runbook: [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md)
 - Content update and redaction runbook: [runbooks/CONTENT_UPDATE_AND_REDACTION.md](runbooks/CONTENT_UPDATE_AND_REDACTION.md)
 - Content strategy: [docs/CONTENT_STRATEGY.md](docs/CONTENT_STRATEGY.md)
+- Privacy notes: [docs/PRIVACY.md](docs/PRIVACY.md)
 
 ## Working Decision
 
