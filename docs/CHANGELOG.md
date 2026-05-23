@@ -8,6 +8,15 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a critical JavaScript bundle budget gate with CI coverage and a
+  generated summary artifact.
+- Added a feature-gated Shuttle API binary, Shuttle dirty-deploy guard,
+  container fallback Dockerfile, and CI check for the Shuttle build path.
+- Added graceful shutdown handling for the standalone Rust API so container
+  hosts can stop it without falling back to SIGKILL.
+- Added a content redaction status runbook that keeps every case-study
+  candidate out of launch approval until its guide checklist and public-safe
+  evidence are complete.
 - Published the approved downloadable resume PDF and linked it from the home recruiter path and resume page.
 - Added case-study index and detail routes for current `publicationStatus: publish` entries while preserving redaction statuses.
 - Added a safe evidence drawer section for case-study pages using existing sanitized frontmatter.
@@ -32,6 +41,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 - Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked launch-approved.
 - Final public domain is still unresolved, so metadata currently uses the reserved configured site URL from `apps/web/src/content/site/site.json`.
+- Production provider projects and domains still need to be created before
+  Cloudflare Pages, Shuttle, Fly.io, or Railway deployment evidence can be
+  recorded.
 - Contact API production enablement still needs an approved persistent store path, retention policy, backup/rotation decision, or alternate delivery provider before treating API form submissions as production-handled messages.
 
 ### Planned

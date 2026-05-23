@@ -9,6 +9,7 @@
 		"test:e2e": "node scripts/playwright-with-pnpm-args.mjs",
 		"build": "astro build",
 		"preview": "astro preview --host 127.0.0.1",
+		"bundle:budget": "node scripts/bundle-budget.mjs",
 		"lighthouse:local": "pnpm build && node scripts/lighthouse-local.mjs",
 		"audit:frontend": "pnpm audit --audit-level moderate",
 		"audit:backend": "cargo audit --file apps/api/Cargo.lock",

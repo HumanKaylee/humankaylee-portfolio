@@ -1126,6 +1126,10 @@ Verification evidence:
 
 - Container build succeeds.
 - Shuttle local or deploy dry-run succeeds when credentials are available.
+- `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle`
+  proves the committed Shuttle entrypoint compiles without provider credentials.
+- `apps/api/Dockerfile` is the fallback container build contract for Fly.io,
+  Railway, or another container host.
 
 ### B-047: Integrate frontend with API fallbacks
 
@@ -1243,6 +1247,9 @@ Acceptance criteria:
 Verification evidence:
 
 - Bundle analysis output.
+- `pnpm build && pnpm bundle:budget` writes
+  `test-results/bundle-budget-summary.json` and fails if executable route
+  scripts exceed the budget.
 - Budget review note.
 
 ### B-052: Add Playwright journey smoke tests

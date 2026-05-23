@@ -72,6 +72,7 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
+pnpm bundle:budget
 pnpm preview
 pnpm lighthouse:local
 cargo fmt --manifest-path apps/api/Cargo.toml --check
@@ -87,6 +88,7 @@ Expected command meanings:
 - `pnpm test`: run frontend unit/component tests.
 - `pnpm test:e2e`: run Playwright smoke, accessibility, no-JS, reduced-motion, and contact fallback checks.
 - `pnpm build`: build the static frontend.
+- `pnpm bundle:budget`: fail when generated routes exceed the critical JavaScript budget after a build.
 - `pnpm preview`: serve the built frontend locally for manual and Lighthouse checks.
 - `pnpm lighthouse:local`: run Lighthouse against local preview routes with the PRD thresholds.
 - `cargo fmt`: enforce Rust formatting.
@@ -475,6 +477,8 @@ pnpm lighthouse:local
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
+sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api
 cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
 xh :8787/api/health
 ```
@@ -585,6 +589,7 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
+pnpm bundle:budget
 pnpm preview
 pnpm lighthouse:local
 pnpm audit --audit-level moderate
@@ -641,6 +646,7 @@ pnpm test:e2e
 pnpm build
 pnpm lighthouse:local
 cargo test --manifest-path apps/api/Cargo.toml
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
 xh https://<production-api-domain>/api/health
 xh https://<production-frontend-domain>/
 ```
@@ -688,13 +694,16 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
+pnpm bundle:budget
 pnpm preview
 pnpm lighthouse:local
 pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
 cargo test --manifest-path apps/api/Cargo.toml
 cargo audit --file apps/api/Cargo.lock
+sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api
 ```
 
 **Final Production Verification Commands:**
@@ -712,22 +721,25 @@ Replace `<production-frontend-domain>` and `<production-api-domain>` only after 
 
 ## Cross-Phase Test Matrix
 
-| Requirement                                                   | Test Type  | Command                                                                         | Owner                  |
-| ------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------- | ---------------------- |
-| Core pages build static HTML                                  | Build      | `pnpm build`                                                                    | Page Composition Agent |
-| JavaScript-disabled content remains useful                    | E2E        | `pnpm test:e2e -- --grep "@noscript"`                                           | QA Agent               |
-| Reduced motion is respected                                   | E2E        | `pnpm test:e2e -- --grep "@reduced-motion"`                                     | QA Agent               |
-| Keyboard navigation works                                     | E2E        | `pnpm test:e2e -- --grep "@keyboard"`                                           | QA Agent               |
-| Accessibility meets baseline                                  | E2E/Axe    | `pnpm test:e2e -- --grep "@accessibility"`                                      | QA Agent               |
-| Lighthouse thresholds pass                                    | Lighthouse | `pnpm lighthouse:local`                                                         | QA Agent               |
-| Content schema is valid                                       | Unit       | `pnpm test -- --run content`                                                    | Content Agent          |
-| Project atlas fallback works                                  | E2E        | `pnpm test:e2e -- --grep "@atlas"`                                              | Project Atlas Agent    |
-| Contact success and fallback work                             | E2E        | `pnpm test:e2e -- --grep "@contact"`                                            | Contact UX Agent       |
-| API-down mode preserves site usefulness                       | E2E        | `pnpm test:e2e -- --grep "@api-down"`                                           | Contact UX Agent       |
-| Rust API route behavior is tested                             | Rust tests | `cargo test --manifest-path apps/api/Cargo.toml`                                | Backend Agent          |
-| Rust code is warning-free                                     | Rust lint  | `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings` | Backend Agent          |
-| Frontend dependencies have no moderate runtime audit failures | Audit      | `pnpm audit --audit-level moderate`                                             | QA Agent               |
-| Rust dependencies have no known runtime advisory blocker      | Audit      | `cargo audit --file apps/api/Cargo.lock`                                        | QA Agent               |
+| Requirement                                                   | Test Type  | Command                                                                                            | Owner                  |
+| ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- | ---------------------- |
+| Core pages build static HTML                                  | Build      | `pnpm build`                                                                                       | Page Composition Agent |
+| JavaScript-disabled content remains useful                    | E2E        | `pnpm test:e2e -- --grep "@noscript"`                                                              | QA Agent               |
+| Reduced motion is respected                                   | E2E        | `pnpm test:e2e -- --grep "@reduced-motion"`                                                        | QA Agent               |
+| Keyboard navigation works                                     | E2E        | `pnpm test:e2e -- --grep "@keyboard"`                                                              | QA Agent               |
+| Accessibility meets baseline                                  | E2E/Axe    | `pnpm test:e2e -- --grep "@accessibility"`                                                         | QA Agent               |
+| Lighthouse thresholds pass                                    | Lighthouse | `pnpm lighthouse:local`                                                                            | QA Agent               |
+| Critical JavaScript stays within budget                       | Bundle     | `pnpm build && pnpm bundle:budget`                                                                 | QA Agent               |
+| Content schema is valid                                       | Unit       | `pnpm test -- --run content`                                                                       | Content Agent          |
+| Project atlas fallback works                                  | E2E        | `pnpm test:e2e -- --grep "@atlas"`                                                                 | Project Atlas Agent    |
+| Contact success and fallback work                             | E2E        | `pnpm test:e2e -- --grep "@contact"`                                                               | Contact UX Agent       |
+| API-down mode preserves site usefulness                       | E2E        | `pnpm test:e2e -- --grep "@api-down"`                                                              | Contact UX Agent       |
+| Rust API route behavior is tested                             | Rust tests | `cargo test --manifest-path apps/api/Cargo.toml`                                                   | Backend Agent          |
+| Rust code is warning-free                                     | Rust lint  | `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`                    | Backend Agent          |
+| Shuttle API binary builds                                     | Rust check | `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle` | Backend Agent          |
+| API container image builds                                    | Container  | `sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api`                 | Backend Agent          |
+| Frontend dependencies have no moderate runtime audit failures | Audit      | `pnpm audit --audit-level moderate`                                                                | QA Agent               |
+| Rust dependencies have no known runtime advisory blocker      | Audit      | `cargo audit --file apps/api/Cargo.lock`                                                           | QA Agent               |
 
 ## Risk Controls
 

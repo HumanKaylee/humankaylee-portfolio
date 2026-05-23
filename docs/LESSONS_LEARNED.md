@@ -103,6 +103,28 @@ The privacy writeup needs to say exactly what ships now: static pages, a resume 
 
 Passing PR CI is useful evidence, but it is not a production launch signal by itself. The launch runbook should keep PR checks, local final verification, production smoke checks, provider deployment IDs, rollback targets, redaction approvals, and contact-delivery status in separate rows so blocked or not-run production work cannot be mistaken for launch readiness.
 
+### Deployment binaries should preserve local operability
+
+The API should keep its standalone Axum binary for local smoke tests and
+container fallback while adding provider-specific entrypoints behind feature
+flags. The Shuttle binary can reuse the same router and `HK_API_*` parser
+without binding its own listener, which keeps deployment proof from changing the
+local development contract.
+
+### Container proof needs start and stop evidence
+
+Building a Docker image is not enough for deployment readiness. A portfolio API
+container also needs a health smoke check and a clean stop path, because PID 1
+signal behavior can otherwise hide until Fly.io, Railway, or another container
+host tries to terminate the service.
+
+### Reviewed content is not launch-approved content
+
+Case-study route scaffolding can use reviewed outlines, but the redaction guide
+keeps `reviewed` separate from `approved`. A partial review, placeholder body,
+or sanitized label is useful progress, not launch evidence; approval needs a
+completed checklist plus public-safe artifacts for each case study.
+
 ## Risks To Revisit During Implementation
 
 | Risk                                                    | Control                                                                   |

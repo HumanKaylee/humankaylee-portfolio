@@ -83,39 +83,45 @@ host-native secret store.
 
 Cloudflare Pages variables can be set through the dashboard. If using Wrangler
 for Pages Functions secrets, use `pages secret put`; this project should not
-need frontend secrets for a static-only launch.
+need frontend secrets for a static-only launch, and public `PUBLIC_*` build
+variables should not be stored as Pages secrets.
 
 ```bash
-pnpm exec wrangler pages secret put PUBLIC_RELEASE_VERSION \
-  --project-name "$CLOUDFLARE_PAGES_PROJECT"
+pnpm exec wrangler pages project create "$CLOUDFLARE_PAGES_PROJECT" \
+  --production-branch main
 ```
 
 ### 3.2 API: Shuttle
 
-| Name                                    | Secret | Required    | Notes                                                |
-| --------------------------------------- | ------ | ----------- | ---------------------------------------------------- |
-| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                  |
-| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                       |
-| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.    |
-| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` unless `store` has approved storage. |
-| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.         |
-| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Keep false unless privacy-reviewed.                  |
-| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Request-limit setting for API hardening.             |
-| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.     |
-| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                       |
+| Name                                    | Secret | Required    | Notes                                                                |
+| --------------------------------------- | ------ | ----------- | -------------------------------------------------------------------- |
+| `HK_API_HOST`                           | No     | No          | Standalone bind host; Shuttle binary does not bind its own listener. |
+| `HK_API_PORT`                           | No     | No          | Standalone bind port; Shuttle binary does not bind its own listener. |
+| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.                    |
+| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` unless `store` has approved storage.                 |
+| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.                         |
+| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Keep false unless privacy-reviewed.                                  |
+| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Request-limit setting for API hardening.                             |
+| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.                     |
+| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                                       |
 
-Shuttle secrets are stored in a TOML file at deploy time. Keep
+Shuttle secrets are stored in a TOML file at deploy time. The
+`humankaylee-api-shuttle` binary maps Shuttle `SecretStore` keys into the same
+`HK_API_*` configuration parser used by the standalone binary. Keep
 `Secrets*.toml` ignored and outside commits.
 
 ```bash
-shuttle deploy --name "$SHUTTLE_PROJECT" --secrets Secrets.production.toml
+shuttle deploy \
+  --working-directory apps/api \
+  --name "$SHUTTLE_PROJECT" \
+  --secrets Secrets.production.toml
 ```
 
 ### 3.3 API Fallback: Fly.io
 
 | Name                                    | Secret | Required    | Notes                                                |
 | --------------------------------------- | ------ | ----------- | ---------------------------------------------------- |
-| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                  |
+| `HK_API_HOST`                           | No     | Yes         | Set to `0.0.0.0` for container hosts.                |
 | `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                       |
 | `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.    |
 | `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` unless `store` has approved storage. |
@@ -272,6 +278,8 @@ Run local and test checks:
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
+sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api
 shuttle run --working-directory apps/api --secrets Secrets.production.toml
 ```
 
@@ -341,7 +349,9 @@ the Fly.io or Railway fallback.
 
 Use Fly.io if Shuttle access, reliability, resource limits, custom-domain needs,
 or rollback behavior are not sufficient for launch. This path requires a
-Dockerfile or Fly-compatible build setup for the API.
+Dockerfile or Fly-compatible build setup for the API. The committed
+`apps/api/Dockerfile` defaults `HK_API_HOST=0.0.0.0` so container traffic is not
+bound to loopback.
 
 ### 6.1 Deploy
 
@@ -349,7 +359,7 @@ Dockerfile or Fly-compatible build setup for the API.
 fly auth login
 fly launch --name "$FLY_APP" --no-deploy
 fly secrets list --app "$FLY_APP"
-fly deploy --app "$FLY_APP" --config fly.toml
+fly deploy --app "$FLY_APP" --dockerfile apps/api/Dockerfile
 fly status --app "$FLY_APP"
 fly logs --app "$FLY_APP"
 ```
@@ -373,7 +383,8 @@ the frontend API URL.
 
 Use Railway when simple service deployment is preferred and the cost/reliability
 tradeoff is acceptable. Railway's current deploy command for local code is
-`railway up`; `railway deploy` is for templates.
+`railway up`; `railway deploy` is for templates. Set `HK_API_HOST=0.0.0.0`
+before container launch so the service is reachable through Railway's router.
 
 ### 7.1 Deploy
 
