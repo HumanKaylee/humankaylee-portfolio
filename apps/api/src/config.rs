@@ -1,4 +1,4 @@
-use std::{collections::HashMap, env, error::Error, fmt};
+use std::{collections::HashMap, env, error::Error, fmt, path::PathBuf};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AppConfig {
@@ -6,6 +6,7 @@ pub struct AppConfig {
     pub port: u16,
     pub allowed_origins: Vec<String>,
     pub contact_delivery_mode: ContactDeliveryMode,
+    pub contact_store_path: Option<PathBuf>,
     pub event_logging_enabled: bool,
     pub rate_limits: RateLimitConfig,
     pub version: String,
@@ -49,6 +50,7 @@ impl Default for AppConfig {
             port: 8787,
             allowed_origins: Vec::new(),
             contact_delivery_mode: ContactDeliveryMode::Disabled,
+            contact_store_path: None,
             event_logging_enabled: false,
             rate_limits: RateLimitConfig {
                 requests_per_minute: 60,
@@ -92,6 +94,12 @@ impl AppConfig {
         }
         if let Some(value) = values.get("HK_API_CONTACT_DELIVERY_MODE") {
             config.contact_delivery_mode = parse_contact_delivery_mode(value)?;
+        }
+        if let Some(value) = values.get("HK_API_CONTACT_STORE_PATH") {
+            let trimmed = value.trim();
+            if !trimmed.is_empty() {
+                config.contact_store_path = Some(PathBuf::from(trimmed));
+            }
         }
         if let Some(value) = values.get("HK_API_EVENT_LOGGING_ENABLED") {
             config.event_logging_enabled = parse_bool("HK_API_EVENT_LOGGING_ENABLED", value)?;

@@ -1,3 +1,57 @@
+@font-face {
+	font-display: optional;
+	font-family: "Fraunces";
+	font-style: normal;
+	font-weight: 400;
+	src: url("@fontsource/fraunces/files/fraunces-latin-400-normal.woff2")
+		format("woff2");
+}
+
+@font-face {
+	font-display: optional;
+	font-family: "Fraunces";
+	font-style: normal;
+	font-weight: 700;
+	src: url("@fontsource/fraunces/files/fraunces-latin-700-normal.woff2")
+		format("woff2");
+}
+
+@font-face {
+	font-display: optional;
+	font-family: "Archivo Narrow";
+	font-style: normal;
+	font-weight: 400;
+	src: url("@fontsource/archivo-narrow/files/archivo-narrow-latin-400-normal.woff2")
+		format("woff2");
+}
+
+@font-face {
+	font-display: optional;
+	font-family: "Archivo Narrow";
+	font-style: normal;
+	font-weight: 700;
+	src: url("@fontsource/archivo-narrow/files/archivo-narrow-latin-700-normal.woff2")
+		format("woff2");
+}
+
+@font-face {
+	font-display: optional;
+	font-family: "JetBrains Mono";
+	font-style: normal;
+	font-weight: 400;
+	src: url("@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2")
+		format("woff2");
+}
+
+@font-face {
+	font-display: optional;
+	font-family: "JetBrains Mono";
+	font-style: normal;
+	font-weight: 700;
+	src: url("@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff2")
+		format("woff2");
+}
+
 :root {
 	color-scheme: light;
 	--color-ink: #171310;
@@ -40,6 +94,7 @@ body {
 		), linear-gradient(135deg, #201912 0%, #120f0d 42%, #203439 100%);
 	color: var(--color-paper);
 	font-family: var(--font-body);
+	font-size-adjust: 0.52;
 	text-rendering: optimizeLegibility;
 }
 
@@ -106,6 +161,8 @@ a[data-touch-target="true"] {
 	text-align: center;
 	font-family: var(--font-evidence);
 	font-size: 0.85rem;
+	line-height: 1.45;
+	min-height: 2.85rem;
 }
 
 .noscript-banner {
@@ -126,6 +183,7 @@ a[data-touch-target="true"] {
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
+	min-height: 5.2rem;
 	padding: 1.1rem 0;
 }
 
@@ -168,11 +226,13 @@ a[data-touch-target="true"] {
 
 .brand-title {
 	font-weight: 700;
+	line-height: 1.15;
 }
 
 .brand-subtitle {
 	color: rgba(243, 234, 216, 0.62);
 	font-size: 0.78rem;
+	line-height: 1.25;
 }
 
 .primary-nav {
@@ -188,6 +248,7 @@ a[data-touch-target="true"] {
 	background: rgba(243, 234, 216, 0.06);
 	font-family: var(--font-label);
 	font-weight: 700;
+	line-height: 1.2;
 	text-decoration: none;
 }
 
@@ -683,6 +744,10 @@ h3 {
 	.site-footer,
 	.hero-shell {
 		display: grid;
+	}
+
+	.site-header {
+		min-height: 9rem;
 	}
 
 	.primary-nav {

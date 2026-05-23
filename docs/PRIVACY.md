@@ -14,7 +14,9 @@ not been implemented yet.
 - The contact route uses a visible mailto fallback and an API enhancement when
   JavaScript is available.
 - Events exist behind an opt-in API flag and are disabled by default.
-- No analytics provider or storage backend is enabled by default.
+- No analytics provider is enabled by default.
+- Contact storage is disabled by default unless the API is explicitly
+  configured with durable local storage.
 
 ## What The Site Collects
 
@@ -30,11 +32,12 @@ form. When a visitor sends a message, the form includes:
 The `company` field is not meant for real contact data. It is present so the
 API can reject obvious spam submissions.
 
-The contact route currently validates input, enforces a request-size limit,
-rejects honeypot submissions, applies an in-memory rate limit, and returns safe
-response payloads. The codebase does not yet wire a durable delivery provider
-or a storage layer, so do not infer message retention guarantees from the
-current API shape.
+The contact route validates input, enforces a request-size limit, rejects
+honeypot submissions, applies an in-memory rate limit, and returns safe
+response payloads. When `HK_API_CONTACT_DELIVERY_MODE=store` is enabled, the
+API also requires `HK_API_CONTACT_STORE_PATH` before accepting messages and
+appends accepted submissions to a JSONL file at that path. The response still
+does not echo message bodies, headers, IP addresses, or honeypot values.
 
 If the API is unavailable or disabled, the page keeps the mailto fallback
 visible so visitors can still use the static contact path.
@@ -75,13 +78,17 @@ and the resume PDF source material.
 
 Current retention posture:
 
-- No durable contact storage is implemented yet.
+- Contact storage is off by default.
+- If `store` mode is enabled, accepted contact submissions are stored in the
+  configured JSONL file until that backend host or operator deletes, rotates, or
+  exports the file.
 - No analytics storage is enabled by default.
-- No deletion workflow is promised for a storage provider that does not exist
-  yet.
+- No public deletion workflow is promised until production contact handling is
+  finalized.
 
-If a future provider or database is added, document the retention and deletion
-story before turning it on.
+Before production launch, choose whether this JSONL store is acceptable for the
+selected host. If a future provider or database is added, document the retention
+and deletion story before turning it on.
 
 ## Privacy Contact
 

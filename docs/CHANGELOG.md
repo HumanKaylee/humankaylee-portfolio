@@ -18,19 +18,21 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added an accessible project atlas fallback with category filters, keyboard-reachable nodes, and reduced-motion poster behavior.
 - Added the Rust API typed environment config and static-safe `GET /api/projects/live` metadata endpoint.
 - Added `POST /api/contact` with JSON validation, honeypot rejection, oversized-payload rejection, disabled-mode fallback, and a safe accepted response that does not echo private message text.
+- Added required JSONL contact storage for enabled `store` mode via `HK_API_CONTACT_STORE_PATH`, including safe failure when storage is not configured.
 - Added backend CORS allowlist middleware, request body limits, timeout, tracing, compression, and in-memory contact rate limiting.
 - Added gated `POST /api/events` with disabled-by-default behavior and an allowlisted privacy-safe event shape.
 - Added the API-enhanced contact page form with visible mailto fallback, no-JS usefulness, API-down copy, and Playwright coverage.
 - Added API-enhanced build telemetry on the home page while preserving the static telemetry fallback.
 - Added practical privacy notes documenting current static-site behavior, resume PDF handling, contact validation versus mailto fallback, disabled-by-default events, and redaction expectations.
 - Added the Phase 8 deployment runbook for Cloudflare Pages, Shuttle, Fly.io, Railway, smoke checks, and rollback evidence.
+- Added the launch evidence status runbook with current PR evidence, local verification gaps, and explicit production blockers.
 - Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.
 
 ### Remaining Blockers
 
 - Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked launch-approved.
 - Final public domain is still unresolved, so metadata currently uses the reserved configured site URL from `apps/web/src/content/site/site.json`.
-- Contact API durable delivery or storage remains a launch blocker before treating API form submissions as production-delivered messages.
+- Contact API production enablement still needs an approved persistent store path, retention policy, backup/rotation decision, or alternate delivery provider before treating API form submissions as production-handled messages.
 
 ### Planned
 

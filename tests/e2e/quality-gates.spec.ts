@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const coreRoutes = [
@@ -125,6 +126,24 @@ test.describe("quality @quality @reduced-motion", () => {
 });
 
 test.describe("quality @quality", () => {
+	for (const route of coreRoutes) {
+		test(`has no serious or critical accessibility violations on ${route.path}`, async ({
+			page,
+		}) => {
+			await page.goto(route.path);
+
+			const accessibilityScanResults = await new AxeBuilder({ page })
+				.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+				.analyze();
+			const launchBlockingViolations =
+				accessibilityScanResults.violations.filter((violation) =>
+					["serious", "critical"].includes(violation.impact ?? ""),
+				);
+
+			expect(launchBlockingViolations).toEqual([]);
+		});
+	}
+
 	for (const route of coreRoutes) {
 		test(`does not expose private content in rendered ${route.path}`, async ({
 			page,

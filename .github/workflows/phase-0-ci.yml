@@ -48,6 +48,9 @@ jobs:
       - name: Run frontend unit tests
         run: pnpm test
 
+      - name: Run frontend dependency audit
+        run: pnpm audit:frontend
+
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 
@@ -82,3 +85,11 @@ jobs:
 
       - name: Run Rust tests
         run: cargo test --manifest-path apps/api/Cargo.toml
+
+      - name: Install cargo-audit
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+
+      - name: Run Rust dependency audit
+        run: cargo audit --file apps/api/Cargo.lock

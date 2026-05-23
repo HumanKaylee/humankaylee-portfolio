@@ -100,19 +100,19 @@ Pause if a selected tool cannot support this command contract on Linux Mint 22.3
 
 Only the listed owner may modify a path during a swarm task. If a task needs another path, it must request a handoff.
 
-| Owner | Owns | Must Not Edit |
-| --- | --- | --- |
-| Coordinator | Phase sequencing, issue splitting, final merge review, `docs/`, shared contracts | Product code unless resolving integration conflicts |
-| Foundation Agent | `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `astro.config.*`, `tsconfig*.json`, `playwright.config.*`, `vitest.config.*`, root `justfile`, root `.gitignore` | Feature components, content, Rust handlers |
-| CI and Deploy Agent | `.github/workflows/`, `infra/`, deployment config, `runbooks/` | Frontend components, content bodies, Rust route logic |
-| Visual System Agent | `apps/web/src/styles/`, `apps/web/src/layouts/`, `apps/web/src/components/chrome/`, fonts and base visual assets under `apps/web/public/` | Page route files, content collections, API code |
-| Page Composition Agent | `apps/web/src/pages/`, page-level integration wrappers, sitemap and robots route generation | Low-level visual components, atlas internals, Rust API |
-| Content Agent | `apps/web/src/content/`, `apps/web/src/data/`, redacted case-study media under `apps/web/public/content/`, resume source assets | Page shell, 3D components, backend |
-| Project Atlas Agent | `apps/web/src/components/atlas/`, `apps/web/src/lib/project-model/`, atlas tests | Home page route, content bodies, backend |
-| Motion and 3D Agent | `apps/web/src/components/hero/`, `apps/web/src/lib/motion/`, `apps/web/src/lib/webgl/`, 3D assets under `apps/web/public/interactive/` | Case-study content, backend, CI |
-| Contact UX Agent | `apps/web/src/components/contact/`, `apps/web/src/lib/contact-client/`, contact page tests | Rust contact route internals, unrelated pages |
-| Backend Agent | `apps/api/`, backend Dockerfile, backend Shuttle config | Frontend code except documented API contract fixtures |
-| QA Agent | `tests/e2e/`, `tests/fixtures/`, Lighthouse config, accessibility reports | Product implementation except tiny test IDs requested through handoff |
+| Owner                  | Owns                                                                                                                                                                      | Must Not Edit                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Coordinator            | Phase sequencing, issue splitting, final merge review, `docs/`, shared contracts                                                                                          | Product code unless resolving integration conflicts                   |
+| Foundation Agent       | `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `astro.config.*`, `tsconfig*.json`, `playwright.config.*`, `vitest.config.*`, root `justfile`, root `.gitignore` | Feature components, content, Rust handlers                            |
+| CI and Deploy Agent    | `.github/workflows/`, `infra/`, deployment config, `runbooks/`                                                                                                            | Frontend components, content bodies, Rust route logic                 |
+| Visual System Agent    | `apps/web/src/styles/`, `apps/web/src/layouts/`, `apps/web/src/components/chrome/`, fonts and base visual assets under `apps/web/public/`                                 | Page route files, content collections, API code                       |
+| Page Composition Agent | `apps/web/src/pages/`, page-level integration wrappers, sitemap and robots route generation                                                                               | Low-level visual components, atlas internals, Rust API                |
+| Content Agent          | `apps/web/src/content/`, `apps/web/src/data/`, redacted case-study media under `apps/web/public/content/`, resume source assets                                           | Page shell, 3D components, backend                                    |
+| Project Atlas Agent    | `apps/web/src/components/atlas/`, `apps/web/src/lib/project-model/`, atlas tests                                                                                          | Home page route, content bodies, backend                              |
+| Motion and 3D Agent    | `apps/web/src/components/hero/`, `apps/web/src/lib/motion/`, `apps/web/src/lib/webgl/`, 3D assets under `apps/web/public/interactive/`                                    | Case-study content, backend, CI                                       |
+| Contact UX Agent       | `apps/web/src/components/contact/`, `apps/web/src/lib/contact-client/`, contact page tests                                                                                | Rust contact route internals, unrelated pages                         |
+| Backend Agent          | `apps/api/`, backend Dockerfile, backend Shuttle config                                                                                                                   | Frontend code except documented API contract fixtures                 |
+| QA Agent               | `tests/e2e/`, `tests/fixtures/`, Lighthouse config, accessibility reports                                                                                                 | Product implementation except tiny test IDs requested through handoff |
 
 Shared contract files must be edited by one owner only:
 
@@ -136,14 +136,14 @@ Shared contract files must be edited by one owner only:
 
 The Coordinator should use this matrix to increase execution speed while avoiding collisions.
 
-| Wave | Can Run In Parallel | Must Wait For | Integration Gate |
-| --- | --- | --- | --- |
-| 0A | Foundation Agent scaffolds `apps/web`; Backend Agent scaffolds `apps/api`; QA Agent scaffolds Playwright; CI Agent drafts CI | None | Command contract passes locally |
-| 1A | Content Agent defines schemas and safe draft content; Visual System Agent creates tokens/layout primitives; Backend Agent expands health route tests | Phase 0 command contract | `pnpm typecheck`, `pnpm build`, `cargo test` |
-| 2A | Page Composition Agent builds static routes; Content Agent drafts case studies; QA Agent writes no-JS/static-shell tests | Content schemas and layout primitives | Static shell tests pass |
-| 3A | Project Atlas Agent builds HTML atlas; Motion/3D Agent builds isolated hero enhancement; Backend Agent implements projects/contact/events routes | Static routes and API contracts | Atlas fallback, backend tests, and bundle budget pass |
-| 4A | Contact UX Agent integrates API fallback; CI Agent adds deployment runbooks; QA Agent adds Lighthouse/Axe/security checks | Stable static pages and backend route contracts | Full local verification command set |
-| 5A | Deployment Agent handles frontend host; Backend Agent handles API host; Coordinator builds evidence matrix | Final domain, secrets, case-study approvals | Production smoke checks pass |
+| Wave | Can Run In Parallel                                                                                                                                  | Must Wait For                                   | Integration Gate                                      |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------- |
+| 0A   | Foundation Agent scaffolds `apps/web`; Backend Agent scaffolds `apps/api`; QA Agent scaffolds Playwright; CI Agent drafts CI                         | None                                            | Command contract passes locally                       |
+| 1A   | Content Agent defines schemas and safe draft content; Visual System Agent creates tokens/layout primitives; Backend Agent expands health route tests | Phase 0 command contract                        | `pnpm typecheck`, `pnpm build`, `cargo test`          |
+| 2A   | Page Composition Agent builds static routes; Content Agent drafts case studies; QA Agent writes no-JS/static-shell tests                             | Content schemas and layout primitives           | Static shell tests pass                               |
+| 3A   | Project Atlas Agent builds HTML atlas; Motion/3D Agent builds isolated hero enhancement; Backend Agent implements projects/contact/events routes     | Static routes and API contracts                 | Atlas fallback, backend tests, and bundle budget pass |
+| 4A   | Contact UX Agent integrates API fallback; CI Agent adds deployment runbooks; QA Agent adds Lighthouse/Axe/security checks                            | Stable static pages and backend route contracts | Full local verification command set                   |
+| 5A   | Deployment Agent handles frontend host; Backend Agent handles API host; Coordinator builds evidence matrix                                           | Final domain, secrets, case-study approvals     | Production smoke checks pass                          |
 
 If two agents both need a shared contract file, stop one agent and let the Coordinator make a single contract edit before both resume.
 
@@ -168,18 +168,18 @@ Small-model work is safe for scaffolding, content normalization, metadata additi
 
 Use the smallest model that can safely complete the task without cross-lane reasoning.
 
-| Task Type | Recommended Model Size | Safe For Smaller Models | Requires Larger Model |
-| --- | --- | --- | --- |
-| Markdown copyediting, redaction pass, metadata normalization | Small | Yes, with source excerpts and exact path | If sensitive publishing judgment is ambiguous |
-| Static Astro page layout from existing components | Small to medium | Yes, if component APIs are stable | If page also changes design system or routing |
-| CSS tokens, typography, simple responsive tweaks | Small to medium | Yes, with screenshots or exact acceptance criteria | If visual direction is being invented |
-| Content collection schema and data modeling | Medium | Only after schema is specified | If schema affects routing, SEO, and generated pages |
-| Playwright smoke tests and no-JS tests | Medium | Yes, if routes and selectors already exist | If debugging hydration or browser-specific failures |
-| Rust route tests and simple handlers | Medium | Yes, if contracts are fixed | If rate limiting, CORS, tracing, or deployment failures interact |
-| Project atlas keyboard accessibility | Medium to large | Not recommended for smallest models | Required if Canvas/WebGL and HTML fallback diverge |
-| WebGL/R3F hero and performance debugging | Large | No | Always use larger model or human review |
-| Security/privacy review | Large | No | Always use larger model or human review |
-| Deployment debugging across Cloudflare/Shuttle/Fly/Railway | Large | No | Always use larger model or human review |
+| Task Type                                                    | Recommended Model Size | Safe For Smaller Models                            | Requires Larger Model                                            |
+| ------------------------------------------------------------ | ---------------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
+| Markdown copyediting, redaction pass, metadata normalization | Small                  | Yes, with source excerpts and exact path           | If sensitive publishing judgment is ambiguous                    |
+| Static Astro page layout from existing components            | Small to medium        | Yes, if component APIs are stable                  | If page also changes design system or routing                    |
+| CSS tokens, typography, simple responsive tweaks             | Small to medium        | Yes, with screenshots or exact acceptance criteria | If visual direction is being invented                            |
+| Content collection schema and data modeling                  | Medium                 | Only after schema is specified                     | If schema affects routing, SEO, and generated pages              |
+| Playwright smoke tests and no-JS tests                       | Medium                 | Yes, if routes and selectors already exist         | If debugging hydration or browser-specific failures              |
+| Rust route tests and simple handlers                         | Medium                 | Yes, if contracts are fixed                        | If rate limiting, CORS, tracing, or deployment failures interact |
+| Project atlas keyboard accessibility                         | Medium to large        | Not recommended for smallest models                | Required if Canvas/WebGL and HTML fallback diverge               |
+| WebGL/R3F hero and performance debugging                     | Large                  | No                                                 | Always use larger model or human review                          |
+| Security/privacy review                                      | Large                  | No                                                 | Always use larger model or human review                          |
+| Deployment debugging across Cloudflare/Shuttle/Fly/Railway   | Large                  | No                                                 | Always use larger model or human review                          |
 
 Small-model prompt pattern:
 
@@ -591,7 +591,7 @@ pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
-cargo audit --manifest-path apps/api/Cargo.toml
+cargo audit --file apps/api/Cargo.lock
 ```
 
 **Pause Conditions:**
@@ -694,7 +694,7 @@ pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
-cargo audit --manifest-path apps/api/Cargo.toml
+cargo audit --file apps/api/Cargo.lock
 ```
 
 **Final Production Verification Commands:**
@@ -712,22 +712,22 @@ Replace `<production-frontend-domain>` and `<production-api-domain>` only after 
 
 ## Cross-Phase Test Matrix
 
-| Requirement | Test Type | Command | Owner |
-| --- | --- | --- | --- |
-| Core pages build static HTML | Build | `pnpm build` | Page Composition Agent |
-| JavaScript-disabled content remains useful | E2E | `pnpm test:e2e -- --grep "@noscript"` | QA Agent |
-| Reduced motion is respected | E2E | `pnpm test:e2e -- --grep "@reduced-motion"` | QA Agent |
-| Keyboard navigation works | E2E | `pnpm test:e2e -- --grep "@keyboard"` | QA Agent |
-| Accessibility meets baseline | E2E/Axe | `pnpm test:e2e -- --grep "@accessibility"` | QA Agent |
-| Lighthouse thresholds pass | Lighthouse | `pnpm lighthouse:local` | QA Agent |
-| Content schema is valid | Unit | `pnpm test -- --run content` | Content Agent |
-| Project atlas fallback works | E2E | `pnpm test:e2e -- --grep "@atlas"` | Project Atlas Agent |
-| Contact success and fallback work | E2E | `pnpm test:e2e -- --grep "@contact"` | Contact UX Agent |
-| API-down mode preserves site usefulness | E2E | `pnpm test:e2e -- --grep "@api-down"` | Contact UX Agent |
-| Rust API route behavior is tested | Rust tests | `cargo test --manifest-path apps/api/Cargo.toml` | Backend Agent |
-| Rust code is warning-free | Rust lint | `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings` | Backend Agent |
-| Frontend dependencies have no moderate runtime audit failures | Audit | `pnpm audit --audit-level moderate` | QA Agent |
-| Rust dependencies have no known runtime advisory blocker | Audit | `cargo audit --manifest-path apps/api/Cargo.toml` | QA Agent |
+| Requirement                                                   | Test Type  | Command                                                                         | Owner                  |
+| ------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------- | ---------------------- |
+| Core pages build static HTML                                  | Build      | `pnpm build`                                                                    | Page Composition Agent |
+| JavaScript-disabled content remains useful                    | E2E        | `pnpm test:e2e -- --grep "@noscript"`                                           | QA Agent               |
+| Reduced motion is respected                                   | E2E        | `pnpm test:e2e -- --grep "@reduced-motion"`                                     | QA Agent               |
+| Keyboard navigation works                                     | E2E        | `pnpm test:e2e -- --grep "@keyboard"`                                           | QA Agent               |
+| Accessibility meets baseline                                  | E2E/Axe    | `pnpm test:e2e -- --grep "@accessibility"`                                      | QA Agent               |
+| Lighthouse thresholds pass                                    | Lighthouse | `pnpm lighthouse:local`                                                         | QA Agent               |
+| Content schema is valid                                       | Unit       | `pnpm test -- --run content`                                                    | Content Agent          |
+| Project atlas fallback works                                  | E2E        | `pnpm test:e2e -- --grep "@atlas"`                                              | Project Atlas Agent    |
+| Contact success and fallback work                             | E2E        | `pnpm test:e2e -- --grep "@contact"`                                            | Contact UX Agent       |
+| API-down mode preserves site usefulness                       | E2E        | `pnpm test:e2e -- --grep "@api-down"`                                           | Contact UX Agent       |
+| Rust API route behavior is tested                             | Rust tests | `cargo test --manifest-path apps/api/Cargo.toml`                                | Backend Agent          |
+| Rust code is warning-free                                     | Rust lint  | `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings` | Backend Agent          |
+| Frontend dependencies have no moderate runtime audit failures | Audit      | `pnpm audit --audit-level moderate`                                             | QA Agent               |
+| Rust dependencies have no known runtime advisory blocker      | Audit      | `cargo audit --file apps/api/Cargo.lock`                                        | QA Agent               |
 
 ## Risk Controls
 

@@ -122,18 +122,19 @@ Public frontend variables are safe to expose in generated client assets.
 
 Backend variables may contain secrets and must be configured in the backend host.
 
-| Variable                                | Secret | Required    | Purpose                                               |
-| --------------------------------------- | ------ | ----------- | ----------------------------------------------------- |
-| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                   |
-| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                        |
-| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.     |
-| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | `disabled` by default; `store` is integration-only.   |
-| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Enables gated privacy-safe events when set true.      |
-| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed request-limit setting for API hardening.       |
-| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.      |
-| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                        |
-| `RUST_LOG`                              | No     | Recommended | Structured logging verbosity.                         |
-| Future provider/database variables      | Yes    | Future only | Add only when durable contact delivery/storage lands. |
+| Variable                                | Secret | Required    | Purpose                                                |
+| --------------------------------------- | ------ | ----------- | ------------------------------------------------------ |
+| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                    |
+| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                         |
+| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.      |
+| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | `disabled` by default; set `store` only with storage.  |
+| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.           |
+| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Enables gated privacy-safe events when set true.       |
+| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed request-limit setting for API hardening.        |
+| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.       |
+| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                         |
+| `RUST_LOG`                              | No     | Recommended | Structured logging verbosity.                          |
+| Future provider/database variables      | Yes    | Future only | Add only if JSONL storage is replaced or supplemented. |
 
 ### 4.3 Secret Storage Locations
 
@@ -222,9 +223,9 @@ Critical route tests:
 - `GET /api/projects/live` handles fresh cache, stale cache, and upstream
   failure.
 - `POST /api/contact` handles valid input, invalid input, honeypot, oversized
-  payloads, disabled mode, rate limiting, and safe acceptance without echoing
-  private text. Provider/storage failure tests remain blocked until durable
-  delivery/storage exists.
+  payloads, disabled mode, missing storage configuration, rate limiting, and
+  safe acceptance without echoing private text. Store mode appends accepted
+  submissions to the configured JSONL file.
 - `POST /api/events` rejects unknown event types and behaves safely when
   disabled.
 
@@ -805,7 +806,8 @@ Backend:
 - `/api/health` returns version and uptime.
 - `/api/projects/live` has safe stale/failure behavior.
 - `/api/contact` validates input, rejects honeypot and oversized payloads, and
-  stays disabled in production until durable delivery/storage is configured.
+  stays disabled in production until `HK_API_CONTACT_STORE_PATH` points at an
+  approved persistent location or a separate durable provider is configured.
 - `/api/events` disabled or privacy-reviewed.
 - Structured tracing/logging enabled.
 - Integration tests pass.

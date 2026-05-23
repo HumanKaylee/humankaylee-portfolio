@@ -37,4 +37,9 @@ cargo test --manifest-path apps/api/Cargo.toml
 cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
 ```
 
-Current pre-launch status: the static frontend includes home, projects, reviewed case-study routes, resume, notes/RSS, sitemap/robots, metadata, and an accessible project atlas fallback. The Rust API exposes `GET /api/health` and `GET /api/projects/live`; contact/events and deployment remain future phases. Case studies still require completed redaction approval before launch readiness.
+Current pre-launch status: the static frontend includes home, projects, reviewed
+case-study routes, resume, notes/RSS, sitemap/robots, metadata, and an
+accessible project atlas fallback. The Rust API exposes `GET /api/health`,
+`GET /api/projects/live`, `POST /api/contact`, and gated `POST /api/events`.
+Production launch still requires approved case-study redaction, final
+deployment targets, and an approved persistent contact store path or provider.

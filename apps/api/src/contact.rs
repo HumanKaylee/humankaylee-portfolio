@@ -7,6 +7,12 @@ use axum::{
     Json,
 };
 use serde::{Deserialize, Serialize};
+use std::{
+    io,
+    path::Path,
+    time::{SystemTime, UNIX_EPOCH},
+};
+use tokio::{fs, io::AsyncWriteExt};
 
 #[derive(Debug, Deserialize)]
 pub struct ContactRequest {
@@ -25,6 +31,15 @@ struct ContactAcceptedResponse {
     status: &'static str,
     delivery: &'static str,
     message: &'static str,
+}
+
+#[derive(Debug, Serialize)]
+struct ContactStoreRecord<'a> {
+    received_at_unix_seconds: u64,
+    name: &'a str,
+    email: &'a str,
+    subject: &'a str,
+    message: &'a str,
 }
 
 #[derive(Debug, Serialize)]
@@ -119,6 +134,17 @@ pub async fn contact_handler(
         );
     }
 
+    let Some(contact_store_path) = state.config().contact_store_path.as_deref() else {
+        return contact_storage_unavailable_response();
+    };
+
+    if store_contact_submission(contact_store_path, &payload)
+        .await
+        .is_err()
+    {
+        return contact_storage_unavailable_response();
+    }
+
     (
         StatusCode::ACCEPTED,
         Json(ContactAcceptedResponse {
@@ -128,6 +154,46 @@ pub async fn contact_handler(
         }),
     )
         .into_response()
+}
+
+async fn store_contact_submission(path: &Path, payload: &ContactRequest) -> io::Result<()> {
+    if let Some(parent) = path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+    {
+        fs::create_dir_all(parent).await?;
+    }
+
+    let record = ContactStoreRecord {
+        received_at_unix_seconds: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs(),
+        name: payload.name.trim(),
+        email: payload.email.trim(),
+        subject: payload.subject.trim(),
+        message: payload.message.trim(),
+    };
+
+    let mut line = serde_json::to_vec(&record).map_err(io::Error::other)?;
+    line.push(b'\n');
+
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)
+        .await?;
+    file.write_all(&line).await?;
+    file.flush().await
+}
+
+fn contact_storage_unavailable_response() -> axum::response::Response {
+    error_response(
+        StatusCode::SERVICE_UNAVAILABLE,
+        "contact_storage_unavailable",
+        "Contact storage is unavailable. Use the static email fallback.",
+        Vec::new(),
+    )
 }
 
 fn contact_client_identity(headers: &HeaderMap, payload: &ContactRequest) -> String {

@@ -83,6 +83,10 @@ The contact page can evolve from a static placeholder to an API-enhanced form, b
 
 The Rust route can validate, reject honeypots, enforce request-size limits, rate-limit repeat submissions, apply CORS, and return structured errors, but production enablement still needs durable delivery or storage. Until then, the mailto fallback remains the reliable contact path and the enhanced API should stay disabled outside controlled integration checks.
 
+### Store mode needs an explicit persistence contract
+
+Accepting contact messages without a configured store path creates false confidence. `store` mode should fail safely until `HK_API_CONTACT_STORE_PATH` points at an approved persistent location, and launch evidence should separately record retention, backup, rotation, and deletion decisions.
+
 ### Replace blocker tests when the blocker is removed
 
 The route-coverage suite correctly encoded project detail pages as a 404 blocker while they did not exist. Once static project detail pages shipped, the integration work had to replace that stale negative test with positive detail-route coverage and update project-card links to the new static routes.
@@ -94,6 +98,10 @@ Provider docs often use generic variables, but this API currently reads `HK_API_
 ### Privacy docs should describe current defaults, not launch intent
 
 The privacy writeup needs to say exactly what ships now: static pages, a resume PDF asset, a contact route with validation plus mailto fallback, and events disabled by default. If a provider or storage path does not exist yet, the doc should say so plainly instead of implying a retention or analytics story that is not implemented.
+
+### Launch evidence must separate PR checks from production readiness
+
+Passing PR CI is useful evidence, but it is not a production launch signal by itself. The launch runbook should keep PR checks, local final verification, production smoke checks, provider deployment IDs, rollback targets, redaction approvals, and contact-delivery status in separate rows so blocked or not-run production work cannot be mistaken for launch readiness.
 
 ## Risks To Revisit During Implementation
 

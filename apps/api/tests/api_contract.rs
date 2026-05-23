@@ -9,7 +9,11 @@ use humankaylee_api::{
 };
 use serde_json::json;
 use serde_json::Value;
-use std::time::{Duration, Instant};
+use std::{
+    fs,
+    path::PathBuf,
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
+};
 use tower::ServiceExt;
 
 async fn get_json(state: AppState, uri: &str) -> (StatusCode, Value) {
@@ -94,6 +98,17 @@ async fn post_json(state: AppState, uri: &str, payload: Value) -> (StatusCode, V
     (status, json)
 }
 
+fn unique_contact_store_path(label: &str) -> PathBuf {
+    let timestamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system time")
+        .as_nanos();
+    std::env::temp_dir().join(format!(
+        "humankaylee-contact-{label}-{}-{timestamp}.jsonl",
+        std::process::id()
+    ))
+}
+
 #[tokio::test]
 async fn health_route_returns_public_status_version_and_uptime() {
     let config = AppConfig {
@@ -173,6 +188,10 @@ fn config_parses_typed_environment_values_without_secrets() {
             "https://example.com,http://localhost:4321",
         ),
         ("HK_API_CONTACT_DELIVERY_MODE", "store"),
+        (
+            "HK_API_CONTACT_STORE_PATH",
+            "/tmp/humankaylee-contact.jsonl",
+        ),
         ("HK_API_EVENT_LOGGING_ENABLED", "true"),
         ("HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE", "120"),
         ("HK_API_CONTACT_RATE_LIMIT_PER_HOUR", "6"),
@@ -190,6 +209,10 @@ fn config_parses_typed_environment_values_without_secrets() {
         ]
     );
     assert_eq!(config.contact_delivery_mode, ContactDeliveryMode::Store);
+    assert_eq!(
+        config.contact_store_path,
+        Some(PathBuf::from("/tmp/humankaylee-contact.jsonl"))
+    );
     assert!(config.event_logging_enabled);
     assert_eq!(
         config.rate_limits,
@@ -203,8 +226,10 @@ fn config_parses_typed_environment_values_without_secrets() {
 
 #[tokio::test]
 async fn contact_store_mode_accepts_valid_submission_without_echoing_private_message() {
+    let store_path = unique_contact_store_path("valid");
     let state = AppState::with_config(AppConfig {
         contact_delivery_mode: ContactDeliveryMode::Store,
+        contact_store_path: Some(store_path.clone()),
         ..AppConfig::default()
     });
 
@@ -226,6 +251,52 @@ async fn contact_store_mode_accepts_valid_submission_without_echoing_private_mes
     assert_eq!(json["delivery"], "store");
     assert_eq!(json["message"], "Message queued for follow-up.");
     assert!(!json.to_string().contains("private message body"));
+
+    let stored = fs::read_to_string(&store_path).expect("stored contact JSONL");
+    let records = stored.lines().collect::<Vec<_>>();
+    assert_eq!(records.len(), 1);
+
+    let record: Value = serde_json::from_str(records[0]).expect("stored contact record");
+    assert!(record["received_at_unix_seconds"].as_u64().is_some());
+    assert_eq!(record["name"], "Kaylee Example");
+    assert_eq!(record["email"], "kaylee@example.com");
+    assert_eq!(record["subject"], "Portfolio inquiry");
+    assert_eq!(
+        record["message"],
+        "This private message body must not be echoed in the response."
+    );
+    assert!(record.get("company").is_none());
+    assert!(record.get("headers").is_none());
+
+    fs::remove_file(store_path).expect("remove contact store");
+}
+
+#[tokio::test]
+async fn contact_store_mode_requires_configured_storage_before_accepting_submission() {
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        ..AppConfig::default()
+    });
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "Kaylee Example",
+            "email": "kaylee@example.com",
+            "subject": "Portfolio inquiry",
+            "message": "This is a valid length contact message for the portfolio.",
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(json["error"]["code"], "contact_storage_unavailable");
+    assert_eq!(
+        json["error"]["message"],
+        "Contact storage is unavailable. Use the static email fallback."
+    );
 }
 
 #[tokio::test]
@@ -307,8 +378,10 @@ async fn contact_rejects_oversized_payload_before_validation() {
 
 #[tokio::test]
 async fn contact_rate_limits_repeat_submissions_from_the_same_sender() {
+    let store_path = unique_contact_store_path("rate-limit");
     let state = AppState::with_config(AppConfig {
         contact_delivery_mode: ContactDeliveryMode::Store,
+        contact_store_path: Some(store_path.clone()),
         rate_limits: RateLimitConfig {
             requests_per_minute: 60,
             contact_per_hour: 1,
@@ -331,6 +404,8 @@ async fn contact_rate_limits_repeat_submissions_from_the_same_sender() {
     let (status, json) = post_json(state, "/api/contact", payload).await;
     assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
     assert_eq!(json["error"]["code"], "contact_rate_limited");
+
+    fs::remove_file(store_path).expect("remove contact store");
 }
 
 #[tokio::test]

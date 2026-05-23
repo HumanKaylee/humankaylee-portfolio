@@ -92,16 +92,17 @@ pnpm exec wrangler pages secret put PUBLIC_RELEASE_VERSION \
 
 ### 3.2 API: Shuttle
 
-| Name                                    | Secret | Required    | Notes                                                       |
-| --------------------------------------- | ------ | ----------- | ----------------------------------------------------------- |
-| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                         |
-| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                              |
-| `HK_API_ALLOWED_ORIGINS`                | No     | Before CORS | Comma-separated frontend origins for future CORS plumbing.  |
-| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` in production until durable delivery lands. |
-| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Keep false unless privacy-reviewed.                         |
-| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed setting for future stateful middleware.              |
-| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Parsed setting for future stateful middleware.              |
-| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                              |
+| Name                                    | Secret | Required    | Notes                                                |
+| --------------------------------------- | ------ | ----------- | ---------------------------------------------------- |
+| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                  |
+| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                       |
+| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.    |
+| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` unless `store` has approved storage. |
+| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.         |
+| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Keep false unless privacy-reviewed.                  |
+| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Request-limit setting for API hardening.             |
+| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.     |
+| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                       |
 
 Shuttle secrets are stored in a TOML file at deploy time. Keep
 `Secrets*.toml` ignored and outside commits.
@@ -112,16 +113,17 @@ shuttle deploy --name "$SHUTTLE_PROJECT" --secrets Secrets.production.toml
 
 ### 3.3 API Fallback: Fly.io
 
-| Name                                    | Secret | Required    | Notes                                                       |
-| --------------------------------------- | ------ | ----------- | ----------------------------------------------------------- |
-| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                         |
-| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                              |
-| `HK_API_ALLOWED_ORIGINS`                | No     | Before CORS | Comma-separated frontend origins for future CORS plumbing.  |
-| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` in production until durable delivery lands. |
-| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Keep false unless privacy-reviewed.                         |
-| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed setting for future stateful middleware.              |
-| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Parsed setting for future stateful middleware.              |
-| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                              |
+| Name                                    | Secret | Required    | Notes                                                |
+| --------------------------------------- | ------ | ----------- | ---------------------------------------------------- |
+| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                  |
+| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                       |
+| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.    |
+| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | Keep `disabled` unless `store` has approved storage. |
+| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.         |
+| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Keep false unless privacy-reviewed.                  |
+| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Request-limit setting for API hardening.             |
+| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.     |
+| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                       |
 
 Fly secrets are set as runtime environment variables. Prepare an ignored
 environment file or use shell variables outside this repository; do not paste
@@ -143,7 +145,7 @@ railway variable set HK_API_CONTACT_DELIVERY_MODE=disabled \
 ```
 
 Use the same API variable names listed for Shuttle and Fly.io. Add
-provider/database secrets only after the API has durable delivery or storage.
+provider/database secrets only if JSONL storage is replaced or supplemented.
 
 ## 4. Frontend: Cloudflare Pages
 
@@ -298,9 +300,10 @@ xh "$API_ORIGIN/api/projects/live"
 xh -h OPTIONS "$API_ORIGIN/api/health" Origin:"$FRONTEND_ORIGIN"
 ```
 
-Contact smoke check, only when `HK_API_CONTACT_DELIVERY_MODE=store` is
-intentionally enabled for an integration environment. Keep production disabled
-until durable delivery or storage exists:
+Contact smoke check, only when `HK_API_CONTACT_DELIVERY_MODE=store` and
+`HK_API_CONTACT_STORE_PATH` are intentionally enabled for an integration
+environment. Keep production disabled until the store path points at an approved
+persistent location or a separate durable provider exists:
 
 ```bash
 xh POST "$API_ORIGIN/api/contact" \
@@ -311,8 +314,9 @@ xh POST "$API_ORIGIN/api/contact" \
   message="Smoke test from deployment runbook; safe to ignore."
 ```
 
-Do not treat a `202` response as delivered mail. Current `store` mode is a
-validation/integration path, not a production delivery provider.
+Do not treat a `202` response as delivered mail. Current `store` mode appends a
+JSONL record and still needs retention, backup, and deletion decisions before it
+is treated as production contact handling.
 
 ### 5.4 Shuttle Rollback
 
