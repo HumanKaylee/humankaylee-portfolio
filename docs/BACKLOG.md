@@ -1384,6 +1384,9 @@ Acceptance criteria:
 Verification evidence:
 
 - API-down smoke-test output or manual test note.
+- `pnpm test:e2e -- --grep "@api-down"` covers aborted API requests across
+  home, projects, one case-study route, resume, notes, and contact, plus
+  sanitized contact outage fallback behavior.
 
 ## Phase 7: Deployment, Operations, and Launch
 

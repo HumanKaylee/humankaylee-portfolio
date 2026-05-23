@@ -64,6 +64,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added the Phase 8 deployment runbook for Cloudflare Pages, Shuttle, Fly.io, Railway, smoke checks, and rollback evidence.
 - Added the launch evidence status runbook with current PR evidence, local verification gaps, and explicit production blockers.
 - Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.
+- Added B-056 API outage resilience Playwright coverage for representative
+  static routes and sanitized contact outage fallback behavior.
 
 ### Remaining Blockers
 

@@ -199,6 +199,15 @@ middleware lets Playwright catch missing Content Security Policy, frame denial,
 MIME sniffing, referrer, cross-origin, and permissions headers before provider
 deployment exists.
 
+### API outage UX must sanitize backend details
+
+Static-first fallback is not enough if an enhanced form echoes raw backend
+errors when the API fails. API-down tests should assert both route usability and
+absence of operational details such as stack traces, internal errors, and local
+paths while preserving user-actionable fallback copy. If future non-400 errors
+become user-actionable, add explicit safe messages instead of passing raw API
+text through.
+
 ## Risks To Revisit During Implementation
 
 | Risk                                                    | Control                                                                   |

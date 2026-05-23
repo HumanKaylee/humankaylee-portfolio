@@ -62,6 +62,8 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 
 <script>
 	const form = document.querySelector<HTMLFormElement>(".contact-form");
+	const apiUnavailableMessage =
+		"API unavailable. Your message is still in the form; use the mailto fallback below if needed.";
 
 	function contactEndpoint(apiBase: string) {
 		const trimmed = apiBase.trim().replace(/\/$/, "");
@@ -69,6 +71,10 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 	}
 
 	async function responseMessage(response: Response) {
+		if (!response.ok && response.status !== 400) {
+			return apiUnavailableMessage;
+		}
+
 		try {
 			const payload = await response.json();
 			return (
@@ -113,12 +119,13 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 			if (status) {
 				status.textContent = response.ok
 					? message
-					: `${message} The mailto fallback remains available below.`;
+					: message === apiUnavailableMessage
+						? message
+						: `${message} The mailto fallback remains available below.`;
 			}
 		} catch {
 			if (status) {
-				status.textContent =
-					"API unavailable. Your message is still in the form; use the mailto fallback below if needed.";
+				status.textContent = apiUnavailableMessage;
 			}
 		} finally {
 			submit?.removeAttribute("disabled");
