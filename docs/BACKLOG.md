@@ -451,6 +451,9 @@ Verification evidence:
 
 - Case study passes content schema validation.
 - Content links back to public docs and safe implementation artifacts.
+- Local route and quality-gate coverage verifies the public-safe body, static
+  architecture, optional Rust API boundary, agent-assisted workflow, and launch
+  evidence boundary while keeping redaction status `reviewed`.
 
 ### B-017: Draft case study: creative web demo
 

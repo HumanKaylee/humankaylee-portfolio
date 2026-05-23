@@ -120,6 +120,51 @@ test.describe("case-study routes @case-studies", () => {
 		).toBeVisible();
 	});
 
+	test("renders the HumanKaylee portfolio build case study with launch-safe body sections", async ({
+		page,
+	}) => {
+		await page.goto("/case-studies/humankaylee-portfolio-build/");
+
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: "HumanKaylee Portfolio Build",
+			}),
+		).toBeVisible();
+
+		const body = page.getByRole("region", { name: "Case study body" });
+
+		for (const section of [
+			"Product goal",
+			"Design constraints",
+			"Static-first architecture",
+			"Content model",
+			"Visual system",
+			"Rust API boundary",
+			"Agent-assisted implementation",
+			"Verification matrix",
+			"Deployment and operations",
+			"Launch evidence boundary",
+			"Lessons",
+		]) {
+			await expect(
+				body.getByRole("heading", { name: section, exact: true }),
+			).toBeVisible();
+		}
+
+		for (const phrase of [
+			/static-first story/i,
+			/astro/i,
+			/content collections/i,
+			/systems atelier/i,
+			/rust axum api/i,
+			/playwright route checks, quality-gate scans, content rendering checks/i,
+			/lighthouse/i,
+		]) {
+			await expect(body.getByText(phrase)).toBeVisible();
+		}
+	});
+
 	test("does not serve unsafe or deferred case-study routes", async ({
 		request,
 	}) => {

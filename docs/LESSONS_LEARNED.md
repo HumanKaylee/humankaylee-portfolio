@@ -154,6 +154,13 @@ long-form case-study narrative needs Markdown body rendering. Otherwise
 placeholder replacement can look complete in source while the public page still
 lacks the deeper architecture, verification, and operator-checklist story.
 
+### Meta case studies still need evidence boundaries
+
+The portfolio-build story is safer than private operations work, but it can
+still overclaim if local tests are presented as production proof. Keep local,
+PR, and production evidence in separate lanes, and leave redaction at
+`reviewed` until real provider/domain/rollback artifacts exist.
+
 ### QA tags should match launch gates
 
 The plan's cross-phase matrix named keyboard and accessibility checks, but CI

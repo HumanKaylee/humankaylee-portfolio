@@ -23,6 +23,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a generalized public-safe body for the remote workstation recovery case
   study, with route coverage and quality-gate scans while keeping its redaction
   status `reviewed`.
+- Added a public-safe body for the HumanKaylee portfolio build case study,
+  including static-first architecture, optional Rust API boundary, agent
+  assistance, verification matrix, and launch evidence boundary coverage.
 - Added a critical JavaScript bundle budget gate with CI coverage and a
   generated summary artifact.
 - Added a feature-gated Shuttle API binary, Shuttle dirty-deploy guard,

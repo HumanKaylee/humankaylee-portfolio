@@ -19,6 +19,10 @@ const coreRoutes = [
 		marker: /public-safe narrative/i,
 	},
 	{
+		path: "/case-studies/humankaylee-portfolio-build/",
+		marker: /static-first architecture/i,
+	},
+	{
 		path: "/resume/",
 		marker: /Download resume PDF/i,
 	},
