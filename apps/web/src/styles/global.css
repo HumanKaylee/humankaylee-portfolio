@@ -262,12 +262,57 @@ a[data-touch-target="true"] {
 	gap: clamp(1.5rem, 5vw, 4rem);
 	align-items: end;
 	min-height: min(760px, calc(100vh - 7rem));
-	padding: clamp(2rem, 6vw, 5rem) 0;
+	border: 1px solid rgba(243, 234, 216, 0.18);
+	border-radius: 2rem;
+	background: radial-gradient(
+			circle at 18% 18%,
+			rgba(196, 123, 49, 0.24),
+			transparent 10rem
+		),
+		radial-gradient(
+			circle at 82% 20%,
+			rgba(47, 100, 112, 0.22),
+			transparent 10rem
+		),
+		linear-gradient(145deg, rgba(255, 248, 234, 0.06), rgba(23, 19, 16, 0.44));
+	box-shadow: var(--shadow-raised);
+	padding: clamp(1.5rem, 4vw, 2rem);
 }
 
 .hero-copy {
 	display: grid;
 	gap: 1.25rem;
+	min-width: 0;
+}
+
+.hero-copy > *,
+.cta-card,
+.systems-map-links a,
+.atlas-filter-nav a,
+.atlas-node-card,
+.workflow-list li {
+	min-width: 0;
+}
+
+.page-shell,
+.page-header,
+.paper-panel,
+.contact-panel,
+.case-study-detail,
+.case-study-section,
+.evidence-drawer,
+.telemetry-strip {
+	min-width: 0;
+}
+
+.page-shell > *,
+.page-header > *,
+.paper-panel > *,
+.contact-panel > *,
+.case-study-detail > *,
+.case-study-section > *,
+.evidence-drawer > * {
+	min-width: 0;
 }
 
 .section-kicker {
@@ -313,6 +358,7 @@ h3 {
 	color: rgba(243, 234, 216, 0.78);
 	font-size: clamp(1.08rem, 2vw, 1.3rem);
 	line-height: 1.65;
+	overflow-wrap: anywhere;
 }
 
 .cta-cluster,
@@ -321,6 +367,7 @@ h3 {
 .path-grid {
 	display: grid;
 	gap: 1rem;
+	min-width: 0;
 }
 
 .cta-cluster {
@@ -377,6 +424,20 @@ h3 {
 .telemetry-strip,
 .content-section {
 	padding: clamp(2rem, 5vw, 4rem) 0;
+}
+
+.telemetry-strip {
+	display: grid;
+	gap: 1rem;
+	border: 1px solid rgba(243, 234, 216, 0.16);
+	border-radius: 1.75rem;
+	background: linear-gradient(
+			135deg,
+			rgba(47, 100, 112, 0.18),
+			rgba(23, 19, 16, 0.56)
+		), rgba(23, 19, 16, 0.42);
+	box-shadow: var(--shadow-raised);
+	padding: clamp(1.25rem, 3vw, 1.75rem);
 }
 
 .telemetry-status {
@@ -485,6 +546,7 @@ h3 {
 .systems-map-copy {
 	display: grid;
 	gap: 0.85rem;
+	min-width: 0;
 }
 
 .systems-map-copy h2 {
@@ -499,6 +561,7 @@ h3 {
 .systems-map-links {
 	display: grid;
 	gap: 0.6rem;
+	min-width: 0;
 }
 
 .systems-map-links a {
@@ -509,6 +572,7 @@ h3 {
 	background: rgba(243, 234, 216, 0.08);
 	padding: 0.75rem 0.85rem;
 	text-decoration: none;
+	min-width: 0;
 }
 
 .systems-map-links span {
@@ -598,6 +662,15 @@ h3 {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.75rem;
+	border: 1px solid rgba(243, 234, 216, 0.16);
+	border-radius: 1.35rem;
+	background: linear-gradient(
+			145deg,
+			rgba(255, 248, 234, 0.08),
+			rgba(47, 100, 112, 0.12)
+		), rgba(23, 19, 16, 0.22);
+	box-shadow: var(--shadow-raised);
+	padding: 1rem;
 }
 
 .atlas-filter-nav a,
@@ -686,6 +759,18 @@ h3 {
 	gap: 1rem;
 }
 
+.case-study-detail {
+	border: 1px solid rgba(243, 234, 216, 0.16);
+	border-radius: 2rem;
+	background: linear-gradient(
+			145deg,
+			rgba(255, 248, 234, 0.08),
+			rgba(23, 19, 16, 0.48)
+		), rgba(23, 19, 16, 0.28);
+	box-shadow: var(--shadow-raised);
+	padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
 .case-study-section p,
 .case-study-section li,
 .case-study-card p,
@@ -694,6 +779,7 @@ h3 {
 .evidence-drawer li {
 	color: rgba(243, 234, 216, 0.78);
 	line-height: 1.65;
+	overflow-wrap: anywhere;
 }
 
 .case-study-section ul,
@@ -733,6 +819,7 @@ h3 {
 .case-study-body table {
 	width: 100%;
 	border-collapse: collapse;
+	table-layout: fixed;
 	font-size: 0.9rem;
 }
 
@@ -742,6 +829,8 @@ h3 {
 	padding: 0.75rem;
 	text-align: left;
 	vertical-align: top;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .text-diagram {
@@ -776,12 +865,20 @@ h3 {
 .paper-panel .body-copy,
 .paper-panel p {
 	color: var(--color-ink-soft);
+	overflow-wrap: anywhere;
 }
 
 .workflow-list {
 	display: grid;
 	gap: 0.75rem;
-	padding: 0;
+	border: 1px solid rgba(23, 19, 16, 0.12);
+	border-radius: 1.25rem;
+	background: linear-gradient(
+			145deg,
+			rgba(255, 248, 234, 0.96),
+			rgba(243, 234, 216, 0.82)
+		), var(--color-paper);
+	padding: 1rem;
 	list-style: none;
 }
 
@@ -792,6 +889,12 @@ h3 {
 	border-bottom: 1px solid rgba(23, 19, 16, 0.14);
 	padding-bottom: 0.75rem;
 	font-family: var(--font-evidence);
+	min-width: 0;
+}
+
+.workflow-list li:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
 }
 
 .contact-link {
@@ -813,6 +916,15 @@ h3 {
 
 .contact-form {
 	margin-block: 0.5rem;
+	border: 1px solid rgba(23, 19, 16, 0.14);
+	border-radius: 1.5rem;
+	background: linear-gradient(
+			145deg,
+			rgba(255, 248, 234, 0.84),
+			rgba(243, 234, 216, 0.72)
+		), var(--color-paper);
+	box-shadow: var(--shadow-raised);
+	padding: 1rem;
 }
 
 .contact-form label {
@@ -860,8 +972,11 @@ h3 {
 }
 
 .contact-status {
-	border-left: 4px solid var(--color-tungsten);
-	padding-left: 0.85rem;
+	border: 1px solid rgba(196, 123, 49, 0.32);
+	border-left-width: 4px;
+	border-radius: 0.95rem;
+	background: rgba(47, 109, 79, 0.08);
+	padding: 0.9rem 1rem;
 	font-family: var(--font-evidence);
 	font-size: 0.9rem;
 }
@@ -929,10 +1044,23 @@ h3 {
 	.case-study-grid,
 	.evidence-drawer-grid,
 	.atlas-category-grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr);
 	}
 
 	h1 {
 		font-size: clamp(3.25rem, 18vw, 5.8rem);
+	}
+
+	.hero-shell {
+		padding: 1rem;
+	}
+
+	.case-study-body pre,
+	.case-study-body table {
+		max-width: 100%;
+	}
+
+	.case-study-body pre {
+		white-space: pre-wrap;
 	}
 }

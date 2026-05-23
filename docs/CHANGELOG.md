@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added art-directed page-surface treatments and a `@visual-surfaces`
+  Playwright gate for the home, project index, case-study detail, resume, and
+  contact routes.
 - Added a static systems-map hero poster on the home page with project links
   and no JavaScript/WebGL dependency.
 - Added a static-site security header policy, Cloudflare-compatible `_headers`

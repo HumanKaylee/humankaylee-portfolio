@@ -253,6 +253,9 @@ Exit criteria:
 
 Evidence:
 
+- Local visual-surface Playwright coverage verifies the art-directed home,
+  project index, case-study detail, resume, and contact surfaces. This is
+  implementation evidence, not a production-launch claim.
 - Desktop recording of the signature interaction.
 - Reduced-motion recording or screenshots.
 - Bundle analysis showing heavy assets are lazy-loaded.

@@ -789,7 +789,11 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Visual review on home, project index, and case-study pages.
+- Local `@visual-surfaces` Playwright coverage verifies home, project index,
+  case-study detail, resume, and contact surfaces use deliberate Systems
+  Atelier treatments without mobile horizontal overflow.
+- Local regression coverage verifies static shell, atlas, case-study,
+  reduced-motion, and no-JavaScript behavior after the surface pass.
 
 ### B-032: Implement static hero poster and fallback
 

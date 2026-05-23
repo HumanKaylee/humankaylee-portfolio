@@ -140,6 +140,13 @@ static systems-map poster can deliver the signature "atelier" moment, link to
 real project routes, and remain visible in no-JS contexts while the heavier
 constellation stays optional.
 
+### Visual polish needs executable surface contracts
+
+Art direction is easier to preserve when it has measurable, non-pixel-perfect
+checks. The `@visual-surfaces` gate verifies deliberate surface treatments,
+mobile overflow safety, and touch-target floors across representative routes
+without turning design review into brittle screenshot diffs.
+
 ### Case-study bodies must be rendered, not just stored
 
 Frontmatter-driven sections are useful for consistent evidence drawers, but the
