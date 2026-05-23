@@ -11,6 +11,7 @@ import { homeScaffold } from "../lib/home-scaffold";
 const scaffold = homeScaffold();
 type ProjectEntry = CollectionEntry<"projects">;
 const allProjects = (await getCollection("projects")) as ProjectEntry[];
+const [resume] = await getCollection("resume");
 const projects = allProjects
 	.filter(
 		(project: ProjectEntry) => project.data.publicationStatus === "publish",
@@ -52,9 +53,16 @@ const projects = allProjects
 				<p class="eyebrow">Recruiter path</p>
 				<h3>Skills, scope, resume, contact.</h3>
 				<p>
-					A quick scan of practical strengths, current resume workflow, selected
-					projects, and a direct fallback contact route.
+					A quick scan of practical strengths, the published resume PDF,
+					selected projects, and a direct fallback contact route.
 				</p>
+				<a
+					class="contact-link"
+					data-touch-target="true"
+					href={resume.data.pdfDownloadPath}
+				>
+					Download resume PDF
+				</a>
 			</article>
 			<article class="path-card">
 				<p class="eyebrow">Engineer path</p>

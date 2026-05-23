@@ -14,7 +14,7 @@ const coreRoutes = [
 	{
 		path: "/resume/",
 		heading: /resume/i,
-		copy: /PDF source workflow/i,
+		copy: /Published resume/i,
 	},
 	{
 		path: "/contact/",
@@ -212,6 +212,22 @@ test.describe("static shell @static-shell", () => {
 			const response = await request.get(href);
 			expect(response.status(), href).not.toBe(404);
 		}
+	});
+
+	test("serves the approved resume PDF from home and the resume page", async ({
+		page,
+		request,
+	}) => {
+		for (const route of ["/", "/resume/"]) {
+			await page.goto(route);
+			await expect(
+				page.getByRole("link", { name: /Download resume PDF/i }),
+			).toHaveAttribute("href", "/downloads/humankaylee-resume.pdf");
+		}
+
+		const response = await request.get("/downloads/humankaylee-resume.pdf");
+		expect(response.status()).toBe(200);
+		expect(response.headers()["content-type"]).toContain("application/pdf");
 	});
 
 	test("labels project proof links uniquely while case-study routes are pending", async ({
