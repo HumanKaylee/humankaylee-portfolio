@@ -165,6 +165,41 @@ test.describe("case-study routes @case-studies", () => {
 		}
 	});
 
+	test("renders the creative web demo case study body sections", async ({
+		page,
+	}) => {
+		await page.goto("/case-studies/creative-web-systems-atlas-demo/");
+
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: "Creative Web Systems Atlas Demo",
+			}),
+		).toBeVisible();
+
+		const body = page.getByRole("region", { name: "Case study body" });
+
+		for (const section of [
+			"Visual goal",
+			"Static proof first",
+			"Atlas fallback",
+			"Motion boundary",
+			"Performance budget",
+			"Accessibility contract",
+			"Verification",
+			"Launch evidence boundary",
+			"Next enhancement",
+		]) {
+			await expect(
+				body.getByRole("heading", { name: section, exact: true }),
+			).toBeVisible();
+		}
+
+		await expect(
+			body.getByText(/approved B-017 scope is content and fallback evidence/i),
+		).toBeVisible();
+	});
+
 	test("does not serve unsafe or deferred case-study routes", async ({
 		request,
 	}) => {

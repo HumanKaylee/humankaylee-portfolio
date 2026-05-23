@@ -161,6 +161,13 @@ still overclaim if local tests are presented as production proof. Keep local,
 PR, and production evidence in separate lanes, and leave redaction at
 `reviewed` until real provider/domain/rollback artifacts exist.
 
+### Creative demos need scope gates before spectacle
+
+The creative web systems atlas story can raise the visual bar without implying
+that WebGL is already implemented. Treat the semantic atlas fallback and static
+systems-map poster as the current proof, then require a separate scope approval
+before building any heavier interactive layer.
+
 ### QA tags should match launch gates
 
 The plan's cross-phase matrix named keyboard and accessibility checks, but CI

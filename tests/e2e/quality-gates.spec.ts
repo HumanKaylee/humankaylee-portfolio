@@ -23,6 +23,10 @@ const coreRoutes = [
 		marker: /static-first architecture/i,
 	},
 	{
+		path: "/case-studies/creative-web-systems-atlas-demo/",
+		marker: /semantic project atlas fallback/i,
+	},
+	{
 		path: "/resume/",
 		marker: /Download resume PDF/i,
 	},

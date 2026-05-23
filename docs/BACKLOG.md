@@ -476,6 +476,10 @@ Verification evidence:
 
 - Draft content validates.
 - Demo scope is approved before implementation begins.
+- Local route and quality-gate coverage verifies the public-safe body,
+  semantic project atlas fallback marker, no-JS readability, reduced-motion
+  behavior, accessibility scan, private-content scan, and explicit boundary
+  that B-017 approves content plus fallback evidence only.
 
 ### B-018: Evaluate Kalshi or analytics tooling publication safety
 
