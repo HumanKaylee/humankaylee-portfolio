@@ -204,10 +204,6 @@ test.describe("static shell @static-shell", () => {
 			}
 		}
 
-		expect([...hrefs].some((href) => href.startsWith("/case-studies/"))).toBe(
-			false,
-		);
-
 		for (const href of hrefs) {
 			const response = await request.get(href);
 			expect(response.status(), href).not.toBe(404);

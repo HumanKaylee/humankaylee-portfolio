@@ -67,6 +67,14 @@ Phase 3 route work split cleanly when each worker owned a route family and its o
 
 Case-study pages can safely render reviewed public-safe outlines without marking them launch-approved. The content model should keep `publicationStatus` separate from `redactionStatus` so route infrastructure, navigation, metadata, and no-JS behavior can mature while the final evidence checklist remains a hard launch gate.
 
+### Dev-server markup is not a privacy evidence source
+
+Astro's development server injects source-file attributes, local paths, font module URLs, and dev-toolbar scripts into `page.content()`. Privacy tests should scan generated build artifacts or user-visible text plus public link/meta attributes, not raw dev-server HTML.
+
+### The atlas fallback is the durable contract
+
+The project atlas should start as keyboard-reachable HTML with category filters and stable links. WebGL or scroll-linked motion can enhance that model later, but the static atlas is the accessibility, no-JS, and reduced-motion source of truth.
+
 ## Risks To Revisit During Implementation
 
 | Risk | Control |

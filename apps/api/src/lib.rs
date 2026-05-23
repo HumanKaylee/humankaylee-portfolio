@@ -1,4 +1,6 @@
+pub mod config;
 pub mod health;
+pub mod projects;
 pub mod state;
 
 use axum::{routing::get, Router};
@@ -7,6 +9,7 @@ use state::AppState;
 pub fn app(state: AppState) -> Router {
     Router::new()
         .route("/api/health", get(health::health_handler))
+        .route("/api/projects/live", get(projects::projects_live_handler))
         .with_state(state)
 }
 
@@ -39,8 +42,9 @@ mod tests {
         let json: Value = serde_json::from_slice(&body).expect("json");
 
         assert_eq!(json["status"], "ok");
-        assert_eq!(json["service"], "humankaylee-api");
+        assert_eq!(json["service"], "humankaylee-portfolio-api");
         assert_eq!(json["version"], env!("CARGO_PKG_VERSION"));
+        assert_eq!(json["commit"], "local-dev");
         assert!(json["uptime_seconds"].as_u64().is_some());
     }
 }

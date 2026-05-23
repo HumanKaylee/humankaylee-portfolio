@@ -378,6 +378,7 @@ h3 {
 	gap: 1rem;
 }
 
+.project-atlas-shell,
 .case-study-card,
 .case-study-section,
 .text-diagram,
@@ -386,6 +387,100 @@ h3 {
 	border-radius: 1.5rem;
 	background: rgba(23, 19, 16, 0.38);
 	padding: 1.25rem;
+}
+
+.project-atlas-shell {
+	gap: 1.25rem;
+	background: linear-gradient(
+			135deg,
+			rgba(47, 100, 112, 0.34),
+			rgba(23, 19, 16, 0.5) 45%,
+			rgba(196, 123, 49, 0.22)
+		), rgba(23, 19, 16, 0.48);
+}
+
+.atlas-filter-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+.atlas-filter-nav a,
+.atlas-node-card {
+	border: 1px solid rgba(243, 234, 216, 0.18);
+	border-radius: 999px;
+	background: rgba(243, 234, 216, 0.08);
+	text-decoration: none;
+}
+
+.atlas-filter-nav a {
+	gap: 0.55rem;
+	padding: 0.65rem 0.9rem;
+	font-family: var(--font-label);
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.atlas-filter-nav strong {
+	display: grid;
+	min-width: 1.7rem;
+	min-height: 1.7rem;
+	place-items: center;
+	border-radius: 999px;
+	background: var(--color-tungsten);
+	color: var(--color-ink);
+	font-family: var(--font-evidence);
+	font-size: 0.78rem;
+}
+
+.atlas-motion-panel {
+	border: 1px dashed rgba(143, 230, 187, 0.34);
+	border-radius: 1.25rem;
+	background: rgba(47, 109, 79, 0.13);
+	padding: 1rem;
+}
+
+.reduced-motion-poster {
+	display: none;
+}
+
+.atlas-category-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.atlas-category-panel {
+	display: grid;
+	gap: 0.8rem;
+	border: 1px solid rgba(243, 234, 216, 0.14);
+	border-radius: 1.25rem;
+	background: rgba(18, 15, 13, 0.34);
+	padding: 1rem;
+}
+
+.atlas-node-list {
+	display: grid;
+	gap: 0.65rem;
+}
+
+.atlas-node-card {
+	display: grid;
+	gap: 0.3rem;
+	border-radius: 1rem;
+	padding: 0.85rem;
+}
+
+.atlas-node-card span {
+	font-family: var(--font-display);
+	font-size: 1.25rem;
+	line-height: 1;
+}
+
+.atlas-node-card small {
+	color: rgba(243, 234, 216, 0.66);
+	font-family: var(--font-evidence);
+	line-height: 1.45;
 }
 
 .case-study-card,
@@ -489,6 +584,14 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.motion-enhancement-copy {
+		display: none;
+	}
+
+	.reduced-motion-poster {
+		display: block;
+	}
+
 	*,
 	*::before,
 	*::after {
@@ -516,7 +619,8 @@ h3 {
 	.artifact-grid,
 	.path-grid,
 	.case-study-grid,
-	.evidence-drawer-grid {
+	.evidence-drawer-grid,
+	.atlas-category-grid {
 		grid-template-columns: 1fr;
 	}
 

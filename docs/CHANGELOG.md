@@ -14,11 +14,16 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added notes/build-log index and detail routes from the notes content collection.
 - Added `/rss.xml`, `/robots.txt`, and `/sitemap-index.xml` static crawler/feed artifacts.
 - Added canonical URLs, Open Graph/Twitter image metadata, JSON-LD Person/WebSite data, and a default social preview SVG asset.
+- Added an accessible project atlas fallback with category filters, keyboard-reachable nodes, and reduced-motion poster behavior.
+- Added the Rust API typed environment config and static-safe `GET /api/projects/live` metadata endpoint.
+- Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.
 
 ### Remaining Blockers
 
 - Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked launch-approved.
 - Final public domain is still unresolved, so metadata currently uses the reserved configured site URL from `apps/web/src/content/site/site.json`.
+- Project detail pages remain intentionally unimplemented; project cards and atlas nodes route to safe case-study URLs or current static anchors.
+- Backend contact/events and frontend API integration remain future phases.
 
 ### Planned
 

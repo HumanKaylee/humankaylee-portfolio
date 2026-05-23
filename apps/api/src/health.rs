@@ -6,7 +6,8 @@ use serde::Serialize;
 pub struct HealthPayload {
     pub status: &'static str,
     pub service: &'static str,
-    pub version: &'static str,
+    pub version: String,
+    pub commit: &'static str,
     pub uptime_seconds: u64,
 }
 
@@ -19,8 +20,9 @@ pub fn health_response(state: &AppState) -> HealthPayload {
 
     HealthPayload {
         status: "ok",
-        service: "humankaylee-api",
-        version: env!("CARGO_PKG_VERSION"),
+        service: "humankaylee-portfolio-api",
+        version: state.config().version.clone(),
+        commit: option_env!("GIT_SHA").unwrap_or("local-dev"),
         uptime_seconds,
     }
 }
@@ -36,8 +38,9 @@ mod tests {
         let payload = health_response(&state);
 
         assert_eq!(payload.status, "ok");
-        assert_eq!(payload.service, "humankaylee-api");
+        assert_eq!(payload.service, "humankaylee-portfolio-api");
         assert_eq!(payload.version, env!("CARGO_PKG_VERSION"));
+        assert_eq!(payload.commit, "local-dev");
         assert!(payload.uptime_seconds <= 1);
     }
 

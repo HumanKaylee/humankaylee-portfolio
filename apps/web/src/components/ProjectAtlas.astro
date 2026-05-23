@@ -1,0 +1,117 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type ProjectEntry = CollectionEntry<"projects">;
+
+type Props = {
+	projects: readonly ProjectEntry[];
+};
+
+const { projects } = Astro.props;
+const atlasCategories = [
+	"AI",
+	"automation",
+	"infrastructure",
+	"backend",
+	"creative web",
+	"operations",
+] as const;
+
+function categoryId(category: string) {
+	return `atlas-${category.replaceAll(" ", "-")}`;
+}
+
+function projectsForCategory(category: string) {
+	return projects.filter((project) => project.data.category === category);
+}
+---
+
+<section
+	class="project-atlas-shell"
+	aria-labelledby="project-atlas-title"
+	aria-label="Accessible project atlas"
+>
+	<header class="page-header">
+		<p class="section-kicker">Systems map fallback</p>
+		<h2 id="project-atlas-title">Accessible project atlas.</h2>
+		<p class="body-copy">
+			{projects.length} published nodes are grouped by capability first. The
+			progressive visual map can layer on top later without replacing these
+			static links.
+		</p>
+	</header>
+
+	<nav class="atlas-filter-nav" aria-label="Project atlas filters">
+		{
+			atlasCategories.map((category) => {
+				const count = projectsForCategory(category).length;
+
+				return (
+					<a data-touch-target="true" href={`#${categoryId(category)}`}>
+						<span>{category}</span>
+						<strong>{count}</strong>
+					</a>
+				);
+			})
+		}
+	</nav>
+
+	<aside class="atlas-motion-panel" aria-label="Project atlas motion fallback">
+		<p class="eyebrow">Progressive enhancement</p>
+		<p class="motion-enhancement-copy">
+			Motion enhancement waits for user-capable contexts: desktop viewport,
+			no reduced-motion preference, and successful WebGL capability checks.
+		</p>
+		<p class="reduced-motion-poster">
+			Reduced-motion poster fallback: the static atlas stays fully navigable
+			without scroll-linked animation or a canvas scene.
+		</p>
+	</aside>
+
+	<div class="atlas-category-grid">
+		{
+			atlasCategories.map((category) => {
+				const categoryProjects = projectsForCategory(category);
+
+				return (
+					<section
+						class="atlas-category-panel"
+						id={categoryId(category)}
+						aria-labelledby={`${categoryId(category)}-title`}
+					>
+						<p class="project-category">{category}</p>
+						<h3 id={`${categoryId(category)}-title`}>
+							{categoryProjects.length > 0
+								? `${categoryProjects.length} project node${
+										categoryProjects.length === 1 ? "" : "s"
+									}`
+								: "No public node yet"}
+						</h3>
+						{categoryProjects.length > 0 ? (
+							<div class="atlas-node-list">
+								{categoryProjects.map((project) => (
+									<a
+										class="atlas-node-card"
+										data-atlas-node="true"
+										data-touch-target="true"
+										href={project.data.links?.docs ?? `/projects/#${project.data.slug}`}
+										aria-label={`Open case study for ${project.data.name}`}
+									>
+										<span>{project.data.name}</span>
+										<small>{project.data.proof}</small>
+									</a>
+								))}
+							</div>
+						) : (
+							<p>
+								This filter remains visible so the atlas taxonomy matches the
+								planned capability model before every category has a public
+								project.
+							</p>
+						)}
+					</section>
+				);
+			})
+		}
+	</div>
+</section>

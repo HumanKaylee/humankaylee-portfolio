@@ -36,4 +36,4 @@ cargo test --manifest-path apps/api/Cargo.toml
 cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
 ```
 
-Phase 0 status: the frontend and backend are scaffold-stage only. The home page is intentionally honest about incomplete PRD features, and the Rust API currently exposes only `GET /api/health`.
+Current pre-launch status: the static frontend includes home, projects, reviewed case-study routes, resume, notes/RSS, sitemap/robots, metadata, and an accessible project atlas fallback. The Rust API exposes `GET /api/health` and `GET /api/projects/live`; contact/events and deployment remain future phases. Case studies still require completed redaction approval before launch readiness.
