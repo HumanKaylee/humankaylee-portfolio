@@ -88,6 +88,16 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   label taxonomy, Phase 0 granular issues B-001 through B-005, and a contract
   test that preserves the Project-scope blocker until interactive auth refresh
   is completed.
+- Added native CSS route-continuity hints for browsers with View Transitions
+  support, with reduced-motion opt-out and a Playwright `@route-continuity`
+  keyboard smoke gate.
+- Added a launch-evidence freshness contract that records the latest verified
+  PR head and CI run without converting production blockers into pass evidence.
+- Expanded GitHub sync docs and live repo issue state with Phase 1 granular
+  issues B-006 through B-012.
+- Hardened deployment and operations runbooks so frontend/API providers,
+  custom domains, contact storage, secret stores, production smoke checks, and
+  rollback evidence remain explicit prerequisites for launch.
 
 ### Remaining Blockers
 

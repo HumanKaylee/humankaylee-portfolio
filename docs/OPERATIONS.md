@@ -1,7 +1,8 @@
 # HumanKaylee Portfolio Operations Runbook
 
 Date: 2026-05-23
-Status: Target operations runbook for implementation planning
+Status: Target operations runbook for implementation planning; production
+launch remains blocked / not run.
 Sources: `docs/PRD.md`, `docs/RESEARCH.md`, `docs/ARCHITECTURE.md`,
 `runbooks/DEPLOYMENT.md`
 
@@ -36,6 +37,11 @@ Planned components:
 - Shuttle Community as recommended launch backend host.
 - Fly.io or Railway as reliability fallback for the Rust backend.
 - Optional database only if contact audit storage or analytics storage is needed.
+
+Production launch is not ready until the frontend provider, API provider,
+custom domains, contact storage decision, secret storage locations, smoke
+targets, and rollback targets are explicit and recorded in
+`runbooks/LAUNCH_EVIDENCE.md`.
 
 Core production URLs should be documented after domain selection:
 
@@ -95,6 +101,8 @@ Expected behavior:
 - API has health checks, structured logs, and release metadata.
 - Backend failure does not break static content.
 - Production deploys happen only after CI and smoke checks pass.
+- Provider selection, custom-domain mapping, contact-storage approval, and
+  secret storage are all resolved before launch evidence is treated as final.
 
 ## 4. Secrets and Configuration
 
@@ -145,12 +153,17 @@ Use the host-native secret store:
 - Fly.io secrets for Fly.io-hosted Rust API.
 - Railway variables for Railway-hosted Rust API.
 - VPS systemd environment files or secret manager if self-hosting.
+- Never commit secret values, provider tokens, or private provider identifiers
+  into this repo or into public runbook excerpts.
 
 Local files:
 
 - `.env.local` or equivalent for frontend local public values.
 - Backend local `.env` only if ignored by git.
 - Never commit local env files.
+- Keep contact storage disabled until the approved persistent path or alternate
+  durable provider exists and the retention, backup, rotation, and deletion
+  decision is recorded.
 
 ## 5. Local Development Runbook
 
@@ -245,6 +258,8 @@ Do not promote to production if:
 
 Use `runbooks/DEPLOYMENT.md` as the exact Phase 8 deployment command source.
 This section keeps the operator-level summary and incident context.
+Do not treat this section as launch-ready while provider, domain, contact
+storage, or rollback evidence is still blocked or not run.
 
 ### 7.1 Frontend: Cloudflare Pages
 
@@ -255,10 +270,11 @@ Recommended production path:
 3. Configure the output directory for Astro static output.
 4. Set public environment variables.
 5. Enable preview deployments for branches or pull requests.
-6. Configure the custom domain after final domain selection.
+6. Configure the custom domain after final domain selection and record the
+   provider project mapping.
 7. Configure redirects, headers, and caching rules as needed.
 8. Deploy from main after CI passes.
-9. Run production smoke checks.
+9. Run production smoke checks against the final public custom domain.
 
 Expected smoke checks are maintained in `runbooks/DEPLOYMENT.md`. Current
 minimum checks:
@@ -289,7 +305,8 @@ Recommended launch path:
 4. Confirm `GET /api/health`.
 5. Configure frontend `PUBLIC_API_BASE_URL`.
 6. Redeploy frontend if the API base URL changed.
-7. Run contact and metadata smoke checks.
+7. Run contact and metadata smoke checks only if contact delivery has an
+   approved production path.
 
 Expected smoke checks are maintained in `runbooks/DEPLOYMENT.md`. Current
 minimum checks:
@@ -305,6 +322,9 @@ Contact smoke check:
 - In production, send a clearly labeled test message only after rate limits and
   provider configuration are confirmed.
 - Confirm no secret or message body is written to logs.
+- If contact storage is still blocked, leave the production contact row as
+  `blocked / not run` and document the mailto-only exception instead of forcing
+  a provider.
 
 ### 7.3 Backend Fallback: Fly.io
 
@@ -618,6 +638,8 @@ Recovery:
 Use `runbooks/DEPLOYMENT.md` for exact provider rollback commands and current
 provider behavior. This section captures rollback triggers and the generic
 decision flow.
+Rollback evidence is required before an incident or provider switch can be
+called complete.
 
 ### 11.1 Frontend Rollback
 
@@ -632,6 +654,8 @@ Preferred path:
 Cloudflare Pages rollback only targets successful production deployments; use
 deployment-list commands in `runbooks/DEPLOYMENT.md` to record deployment IDs.
 Preview deployments are not rollback targets.
+Record the frontend provider, custom domain, prior deployment ID, restored
+deployment ID, and smoke URL in launch evidence.
 
 Rollback triggers:
 
@@ -652,6 +676,8 @@ Preferred path:
 4. Smoke-test `/api/health`.
 5. Smoke-test contact and project metadata.
 6. Watch logs for errors.
+7. Record the API provider, public API origin, prior deployment ID, rollback
+   target, and smoke output in launch evidence.
 
 Rollback triggers:
 
@@ -691,6 +717,8 @@ Include:
 - Smoke-check command and exit status.
 - Home, projects, resume, contact fallback, API health, and DNS/TLS result.
 - Follow-up action, owner, or remaining blocker.
+- The final status of contact handling, including whether it remains disabled
+  or uses an approved persistent store.
 
 Do not mark production recovery complete from local-only checks. Local checks can
 support the diagnosis, but production recovery requires the affected production
@@ -873,6 +901,8 @@ After major content or architecture changes:
 - Re-run launch checklist sections affected by the change.
 - Update architecture and operations docs.
 - Confirm no private details were introduced.
+- Do not change any blocked or not-run production row to pass without direct
+  production evidence.
 
 ## 18. Open Operational Decisions
 
@@ -880,6 +910,8 @@ After major content or architecture changes:
 - Final hosting provider for Rust API at launch.
 - Contact provider.
 - Whether contact submissions are email-only or stored.
+- If contact submissions are stored, the retention, backup, rotation, and
+  deletion policy.
 - Whether privacy-safe events launch in v1.
 - Final package manager and exact local commands.
 - Final CI provider and workflow names.
@@ -896,6 +928,8 @@ The site is production-ready only when a clean operator can:
 - Roll back frontend and backend independently.
 - Confirm secrets are stored outside the repo.
 - Confirm static content still works when the API is unavailable.
+- Confirm the final frontend and API custom domains are publicly reachable and
+  the smoke evidence is captured from those public URLs.
 - Explain known failure modes and recovery paths from this runbook.
 
 ## 20. Required Evidence Files

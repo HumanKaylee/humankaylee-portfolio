@@ -167,6 +167,20 @@ credentials, Project scopes, production targets, or human redaction approval:
 | #10   | B-004: Define "The Systems Atelier" design brief     | #1     | `priority:p0`, `type:content`, `area:design`, `phase:0-product-safety`, `agent-strong`                     |
 | #11   | B-005: Resolve launch blockers register              | #1     | `priority:p0`, `type:task`, `area:product`, `area:ops`, `phase:0-product-safety`, `agent-standard`         |
 
+Phase 1 backlog issues now live as the next granular sync layer, with #3
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                      | Parent | Labels                                                                                               |
+| ----- | ------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| #12   | B-006: Scaffold Astro TypeScript frontend         | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                |
+| #13   | B-007: Configure content collections             | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:1-foundation`, `agent-standard` |
+| #14   | B-008: Build base layout and semantic shell       | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-standard` |
+| #15   | B-009: Establish CSS token system                | #3     | `priority:p0`, `type:task`, `area:design`, `area:frontend`, `phase:1-foundation`, `agent-strong`    |
+| #16   | B-010: Add baseline CI checks                     | #3     | `priority:p0`, `type:task`, `area:infra`, `phase:1-foundation`, `agent-standard`                    |
+| #17   | B-011: Add frontend test harness                  | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                 |
+| #18   | B-012: Add Playwright smoke-test harness          | #3     | `priority:p1`, `type:qa`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-strong`        |
+
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status
 views.

@@ -2,11 +2,28 @@
 
 Date: 2026-05-23
 Status: Phase 8 operations draft; production domains and provider accounts are
-not yet selected.
+not yet selected. Production launch and rollback remain blocked / not run.
 
 This runbook covers the static Astro frontend and Rust Axum API. It is written
 so another operator can deploy without private context. Replace placeholder
 domains and provider project names only after they are selected.
+
+This is a deployment and rollback contract, not a launch-readiness claim.
+Before any future `/goal` launch step can close, record the selected frontend
+provider, API provider, custom domain, contact handling mode, secret storage
+location, and rollback targets in `runbooks/LAUNCH_EVIDENCE.md`.
+
+## 1.1 Required Launch Decisions
+
+Do not treat production as ready until these choices are explicit:
+
+- Frontend provider, frontend project, and final custom domain.
+- API provider, API project, and final public API origin.
+- Contact handling mode: disabled, approved persistent store, or approved
+  alternate provider.
+- Secret storage location for each provider.
+- Frontend and API rollback targets for the intended deployment IDs.
+- Production smoke-check URLs and the evidence rows that will capture them.
 
 ## 1. Provider Command Evidence
 
@@ -108,7 +125,9 @@ pnpm exec wrangler pages project create "$CLOUDFLARE_PAGES_PROJECT" \
 Shuttle secrets are stored in a TOML file at deploy time. The
 `humankaylee-api-shuttle` binary maps Shuttle `SecretStore` keys into the same
 `HK_API_*` configuration parser used by the standalone binary. Keep
-`Secrets*.toml` ignored and outside commits.
+`Secrets*.toml` ignored and outside commits. If contact storage is enabled,
+the approved persistent path, retention, backup, rotation, and deletion
+decisions must already exist before production deploy.
 
 ```bash
 shuttle deploy \
@@ -133,7 +152,8 @@ shuttle deploy \
 
 Fly secrets are set as runtime environment variables. Prepare an ignored
 environment file or use shell variables outside this repository; do not paste
-values into this file.
+values into this file. Do not treat Fly deployment evidence as complete until
+the public API origin, secret store, and rollback target are all recorded.
 
 ```bash
 fly secrets import --app "$FLY_APP" < "$FLY_SECRETS_FILE"
@@ -152,6 +172,8 @@ railway variable set HK_API_CONTACT_DELIVERY_MODE=disabled \
 
 Use the same API variable names listed for Shuttle and Fly.io. Add
 provider/database secrets only if JSONL storage is replaced or supplemented.
+Do not promote a Railway deployment until the provider, service, public API
+origin, secret store, and rollback target are all recorded in launch evidence.
 
 ## 4. Frontend: Cloudflare Pages
 
@@ -164,7 +186,9 @@ provider/database secrets only if JSONL storage is replaced or supplemented.
 5. Set production and preview variables from the frontend matrix.
 6. Keep preview deployments enabled for pull requests or branch checks.
 7. Do not add frontend secrets unless Pages Functions are introduced.
-8. Deploy only after CI gates pass.
+8. Confirm the final custom domain and provider project mapping before the
+   first production smoke result is accepted.
+9. Deploy only after CI gates pass.
 
 ### 4.2 Direct Upload Fallback
 
@@ -237,8 +261,10 @@ Dashboard path:
 3. Open Deployments.
 4. Choose the last known-good production deployment.
 5. Use the rollback action.
-6. Run frontend smoke checks.
-7. Record the deployment ID and smoke-check output in launch evidence.
+6. Run frontend smoke checks against the final custom domain and the provider
+   URL if both exist.
+7. Record the previous deployment ID, restored deployment ID, smoke URL, and
+   smoke-check output in launch evidence.
 
 CLI-assisted evidence:
 
@@ -324,7 +350,9 @@ xh POST "$API_ORIGIN/api/contact" \
 
 Do not treat a `202` response as delivered mail. Current `store` mode appends a
 JSONL record and still needs retention, backup, and deletion decisions before it
-is treated as production contact handling.
+is treated as production contact handling. If production contact handling is
+still blocked, keep this step marked `not run` in launch evidence and do not
+reuse preview or local acceptance as launch proof.
 
 ### 5.4 Shuttle Rollback
 
@@ -344,6 +372,8 @@ If the known-good deployment cannot be redeployed, check out the known-good Git
 commit, confirm secrets are still configured, run backend tests, deploy again,
 and run API smoke checks. If Shuttle itself is unavailable or unreliable, use
 the Fly.io or Railway fallback.
+Record the deployment ID, rollback target, public API origin, and smoke output
+in launch evidence before calling the rollback complete.
 
 ## 6. API Fallback: Fly.io
 
@@ -455,6 +485,9 @@ Cloudflare Pages custom-domain setup:
 5. Wait for Cloudflare to provision TLS.
 6. If CAA records exist, allow Cloudflare's documented certificate authorities.
 7. Verify the final URL with `xh -h "$FRONTEND_ORIGIN/"`.
+8. Do not mark the frontend live until the custom domain and the provider URL
+   both resolve as expected and the smoke evidence is captured for the final
+   public URL.
 
 ### 8.2 API Domain
 
@@ -463,6 +496,8 @@ Recommended pattern:
 - `www.example.com` or apex domain for the static frontend.
 - `api.example.com` for the Rust API.
 - Keep the frontend usable if `api.example.com` fails.
+- Record the final API origin and domain mapping in launch evidence before any
+  production smoke check is treated as complete.
 
 Provider-specific API domain setup must be recorded in
 `runbooks/LAUNCH_EVIDENCE.md` after the provider is selected.
@@ -512,11 +547,19 @@ Before production promotion:
 - Frontend CI gates pass.
 - Backend CI gates pass.
 - Content redaction approval is complete.
+- Frontend provider and project are selected.
+- API provider and project are selected.
+- Final frontend and API custom domains are selected.
 - Production provider variables are configured by name.
-- Final frontend and API domains are selected.
+- Contact handling mode and storage/retention decision are approved or
+  explicitly marked disabled for launch.
+- Secrets are stored in provider-native secret stores or other approved host
+  secret managers, never in the repo.
 - Frontend works with the API stopped.
 - API health checks pass from outside local infrastructure.
 - Rollback target is known for frontend and API.
+- Production smoke URLs are documented, and the evidence rows are ready to fill
+  with command output, deployment IDs, and timestamps.
 
 Commands:
 
@@ -581,6 +624,8 @@ Do not run mutating rollback commands during the dry run. For an actual
 incident rollback, use the provider-specific rollback command from sections
 5.4, 6.2, or 7.2 only after confirming the selected target is the intended
 known-good deployment.
+Dry-run evidence must name the frontend provider, API provider, custom domain,
+and the exact smoke URL that would be used after rollback.
 
 API disablement readiness if rollback is not available:
 

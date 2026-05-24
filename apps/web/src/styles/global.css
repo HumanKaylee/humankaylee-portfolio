@@ -79,6 +79,65 @@ html {
 	scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		/* biome-ignore lint/correctness/noUnknownProperty: View Transitions use this standards-track descriptor for cross-document navigation. */
+		navigation: auto;
+	}
+}
+
+@supports (view-transition-name: route-main) {
+	.site-header {
+		view-transition-name: route-chrome;
+	}
+
+	.site-main {
+		view-transition-name: route-main;
+	}
+
+	::view-transition-group(route-chrome),
+	::view-transition-group(route-main) {
+		animation-duration: 220ms;
+		animation-timing-function: cubic-bezier(0.2, 0.78, 0.2, 1);
+	}
+
+	::view-transition-old(route-main) {
+		animation-name: route-main-out;
+	}
+
+	::view-transition-new(route-main) {
+		animation-name: route-main-in;
+	}
+}
+
+@keyframes route-main-out {
+	from {
+		filter: blur(0);
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	to {
+		filter: blur(8px);
+		opacity: 0;
+		transform: translateY(-0.75rem);
+	}
+}
+
+@keyframes route-main-in {
+	from {
+		filter: blur(8px);
+		opacity: 0;
+		transform: translateY(0.75rem);
+	}
+
+	to {
+		filter: blur(0);
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 body {
 	min-height: 100vh;
 	margin: 0;
@@ -1003,6 +1062,19 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+	@supports (view-transition-name: route-main) {
+		.site-header,
+		.site-main {
+			view-transition-name: none;
+		}
+
+		::view-transition-group(*),
+		::view-transition-old(*),
+		::view-transition-new(*) {
+			animation-duration: 0.001ms !important;
+		}
+	}
+
 	.motion-enhancement-copy {
 		display: none;
 	}
