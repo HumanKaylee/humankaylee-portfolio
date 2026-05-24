@@ -32,6 +32,11 @@ links:
   artifacts:
     - "category taxonomy"
     - "accessibility fallback notes"
+issueTrace:
+  backlogId: "B-017"
+  githubIssue: 23
+  parentIssue: 3
+  closureRule: "Issue #23 is closed as draft-content and fallback evidence only; keep reviewed status and require separate approval before interactive scope."
 publicationStatus: "publish"
 redactionStatus: "reviewed"
 redactionReview:

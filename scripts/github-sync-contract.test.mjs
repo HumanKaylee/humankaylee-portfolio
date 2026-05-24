@@ -59,6 +59,11 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 
 	for (const required of [
 		"gh auth refresh --hostname github.com -s project,read:project",
+		"Current auth snapshot",
+		"gh auth status -h github.com",
+		"Current token scopes:",
+		"The read-only Project check still fails:",
+		"Do not run `gh auth refresh` from unattended automation.",
 		"missing required scopes [project read:project]",
 		"missing required scopes [read:project]",
 		"GitHub Project board creation is blocked",

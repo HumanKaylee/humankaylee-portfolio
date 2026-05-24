@@ -20,9 +20,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added Phase 7 current API host guidance coverage so GitHub sync and launch
   evidence keep Fly.io/Railway as the active Axum host candidates while Shuttle
   stays legacy compatibility only.
-- Added content issue traceability coverage for #20, #21, #24, and #25 so
-  open content/privacy issues map to case-study metadata, redaction runbooks,
-  and closure rules without approving publication or launch eligibility.
+- Added content issue traceability coverage for #20, #21, #22, #23, #24, and
+  #25 so open content/privacy issues and closed draft-content issues map to
+  case-study metadata, redaction runbooks, and closure rules without approving
+  publication or launch eligibility.
 - Added Phase 7 blocker traceability coverage so #63, #64, #65, and #69 map
   from the launch blockers register to controlling decisions and replacement
   evidence rows without changing their open/blocked status.
@@ -189,6 +190,19 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Refreshed the embedded launch-evidence snapshot and final launch checklist PR
   rows for PR #6 head `339afbd` and CI run `26356797852` while preserving
   blocked production rows.
+- Added Resume inventory alignment evidence for commit
+  `536e0cea08c546c69497786974c55c4ec79f4925`: the downloaded resume PDF and
+  repo PDF both hashed to
+  `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`, the
+  focused command
+  `pnpm exec vitest run apps/web/src/data/content-inventory.test.ts apps/web/src/lib/contracts/content.test.ts`
+  and `pnpm test -- --run content` passed locally, and Phase 0 CI run
+  `26369396532` passed with frontend job `77618740151` and Rust job
+  `77618740123`; this is local approved-source evidence only, not production
+  `/resume/` readiness.
+- Added a current GitHub Project auth snapshot to the sync runbook, recording
+  that repo issue sync is still the active surface and unattended automation
+  must not run `gh auth refresh`.
 - Aligned the operations local-development runbook with the actual Astro dev
   command used by README and CI-adjacent checks.
 - Expanded GitHub sync docs and live repo issue state with Phase 1 granular

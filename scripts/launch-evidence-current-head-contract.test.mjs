@@ -21,13 +21,25 @@ function expectNotContains(content, needle, label = needle) {
 	);
 }
 
+function expectMatches(content, pattern, label) {
+	assert.match(
+		normalize(content),
+		pattern,
+		`expected content to match ${label}`,
+	);
+}
+
 const evidencePath = fileURLToPath(
 	new URL("../runbooks/LAUNCH_EVIDENCE.md", import.meta.url),
+);
+const changelogPath = fileURLToPath(
+	new URL("../docs/CHANGELOG.md", import.meta.url),
 );
 const liveVerifierPath = fileURLToPath(
 	new URL("./launch-evidence-live-pr-ci-verifier.test.mjs", import.meta.url),
 );
 const evidence = readFileSync(evidencePath, "utf8");
+const changelog = readFileSync(changelogPath, "utf8");
 const liveVerifier = readFileSync(liveVerifierPath, "utf8");
 
 function latestVerifiedValue(content, label, pattern) {
@@ -38,6 +50,22 @@ function latestVerifiedValue(content, label, pattern) {
 	assert.ok(match, `expected a ${label} record`);
 	assert.match(match[1], pattern, `expected ${label} to match ${pattern}`);
 	return match[1];
+}
+
+function resumeEvidenceBlock(content) {
+	const tableRow = content
+		.split("\n")
+		.find((line) => line.startsWith("| Resume inventory alignment "));
+
+	if (tableRow) return tableRow;
+
+	const marker = "Resume inventory alignment";
+	const markerIndex = content.indexOf(marker);
+	assert.ok(markerIndex >= 0, `expected content to include ${marker}`);
+
+	const blockStart = Math.max(0, content.lastIndexOf("\n- ", markerIndex) + 1);
+	const nextBlock = content.indexOf("\n- ", markerIndex + marker.length);
+	return content.slice(blockStart, nextBlock === -1 ? undefined : nextBlock);
 }
 
 test("launch evidence distinguishes the embedded PR snapshot from live current checks", () => {
@@ -187,4 +215,32 @@ test("live launch-evidence verifier is scoped to the current checkout and requir
 		"for (const entry of pr.statusCheckRollup)",
 		"live verifier should not require every status context to pass",
 	);
+});
+
+test("resume inventory alignment is recorded as local approved-source evidence only", () => {
+	for (const content of [evidence, changelog]) {
+		const block = resumeEvidenceBlock(content);
+
+		expectContains(block, "Resume inventory alignment");
+		expectMatches(block, /commit `?[0-9a-f]{40}`?/i, "commit SHA evidence");
+		expectMatches(block, /ci run `?\d+`?/i, "CI run evidence");
+		expectMatches(block, /frontend job `?\d+`?/i, "frontend job evidence");
+		expectMatches(block, /rust job `?\d+`?/i, "Rust job evidence");
+		expectMatches(block, /\b[0-9a-f]{64}\b/i, "resume PDF checksum");
+		expectContains(
+			block,
+			"pnpm exec vitest run apps/web/src/data/content-inventory.test.ts apps/web/src/lib/contracts/content.test.ts",
+			"resume inventory focused contract command",
+		);
+		expectContains(
+			block,
+			"pnpm test -- --run content",
+			"content contract command",
+		);
+		expectContains(
+			block,
+			"not production `/resume/` readiness",
+			"resume production readiness boundary",
+		);
+	}
 });

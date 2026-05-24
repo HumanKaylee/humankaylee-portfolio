@@ -34,6 +34,11 @@ links:
   artifacts:
     - "local Playwright and Lighthouse evidence"
     - "public-safe content review notes"
+issueTrace:
+  backlogId: "B-016"
+  githubIssue: 22
+  parentIssue: 3
+  closureRule: "Issue #22 is closed as draft-content only; keep reviewed status until production and redaction approval evidence exist."
 publicationStatus: "publish"
 redactionStatus: "reviewed"
 redactionReview:

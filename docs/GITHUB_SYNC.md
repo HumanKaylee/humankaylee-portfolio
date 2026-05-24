@@ -41,6 +41,36 @@ error: your authentication token is missing required scopes [read:project]
 interactive device-code approval. Until that is completed, repo issues are the
 synchronization surface for status, ownership, labels, and acceptance criteria.
 
+### Current auth snapshot
+
+Captured 2026-05-24 from the local GitHub CLI without running auth refresh:
+
+```bash
+gh auth status -h github.com
+```
+
+Current token scopes:
+
+`admin:org`, `admin:public_key`, `admin:repo_hook`, `delete:packages`,
+`notifications`, `repo`, `workflow`, `write:discussion`, `write:packages`
+
+The read-only Project check still fails:
+
+```bash
+gh project list --owner HumanKaylee --format json
+```
+
+Result:
+
+```text
+error: your authentication token is missing required scopes [read:project]
+To request it, run:  gh auth refresh -s read:project
+```
+
+Do not run `gh auth refresh` from unattended automation. It requires
+interactive account approval and should be performed by HumanKaylee before any
+GitHub Project board creation or sync.
+
 ### Project board recovery steps
 
 After interactive auth refresh succeeds:
@@ -222,8 +252,9 @@ are limited to `reviewed` or `blocked`; these handoff rows are not approval
 evidence, do not close #20 or #21, do not clear openItems, and do not establish
 launch readiness.
 
-Content issue traceability status: approval-blocker mapping only; #20, #21,
-#24, and #25 remain open. `issueTrace` frontmatter now maps the four open
+Content issue traceability status: approval-blocker mapping covers #20, #21,
+#24, and #25; draft-source mapping covers closed #22 and #23. #20, #21, #24,
+and #25 remain open. `issueTrace` frontmatter now maps the six current
 content/privacy issue records to their backlog IDs, parent issue, and closure
 rules without changing publication status, redaction status, or launch
 eligibility.

@@ -7,8 +7,12 @@ const files = {
 	cliFleet:
 		"apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md",
 	contentContract: "apps/web/src/lib/contracts/content.ts",
+	creative:
+		"apps/web/src/content/case-studies/creative-web-systems-atlas-demo.md",
 	decision: "runbooks/PUBLICATION_SAFETY_DECISIONS.md",
 	githubSync: "docs/GITHUB_SYNC.md",
+	portfolioBuild:
+		"apps/web/src/content/case-studies/humankaylee-portfolio-build.md",
 	kalshi:
 		"apps/web/src/content/case-studies/kalshi-migration-or-analytics-tooling.md",
 	packet: "runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md",
@@ -112,10 +116,12 @@ test("content issue traceability ties open content issues to approval blockers w
 	const changelog = readRequiredFile(files.changelog);
 	const cliFleet = readRequiredFile(files.cliFleet);
 	const contentContract = readRequiredFile(files.contentContract);
+	const creative = readRequiredFile(files.creative);
 	const decision = readRequiredFile(files.decision);
 	const githubSync = readRequiredFile(files.githubSync);
 	const kalshi = readRequiredFile(files.kalshi);
 	const packet = readRequiredFile(files.packet);
+	const portfolioBuild = readRequiredFile(files.portfolioBuild);
 	const remoteRecovery = readRequiredFile(files.remoteRecovery);
 	const status = readRequiredFile(files.status);
 	const youtube = readRequiredFile(files.youtube);
@@ -143,6 +149,53 @@ test("content issue traceability ties open content issues to approval blockers w
 			parentIssue: 3,
 		},
 		"Remote Workstation Recovery and Operational Debugging",
+	);
+	expectIssueTrace(
+		portfolioBuild,
+		{
+			backlogId: "B-016",
+			closureRule:
+				"Issue #22 is closed as draft-content only; keep reviewed status until production and redaction approval evidence exist.",
+			githubIssue: 22,
+			parentIssue: 3,
+		},
+		"HumanKaylee Portfolio Build",
+	);
+	expectContains(
+		portfolioBuild,
+		'checklistStatus: "partial"',
+		"HumanKaylee Portfolio Build partial checklist status",
+	);
+	expectContains(
+		portfolioBuild,
+		"Production domain, provider, and deploy evidence are blocked in this repository snapshot.",
+		"HumanKaylee Portfolio Build production evidence open item",
+	);
+	expectContains(
+		portfolioBuild,
+		"Launch approval remains blocked until external evidence is captured and reviewed.",
+		"HumanKaylee Portfolio Build launch approval open item",
+	);
+	expectIssueTrace(
+		creative,
+		{
+			backlogId: "B-017",
+			closureRule:
+				"Issue #23 is closed as draft-content and fallback evidence only; keep reviewed status and require separate approval before interactive scope.",
+			githubIssue: 23,
+			parentIssue: 3,
+		},
+		"Creative Web Systems Atlas Demo",
+	);
+	expectContains(
+		creative,
+		'checklistStatus: "partial"',
+		"Creative Web Systems Atlas Demo partial checklist status",
+	);
+	expectContains(
+		creative,
+		"Attach actual atlas fallback evidence after the visual layer exists.",
+		"Creative Web Systems Atlas Demo open item",
 	);
 	expectIssueTrace(
 		kalshi,
@@ -189,6 +242,21 @@ test("content issue traceability ties open content issues to approval blockers w
 			4: ["Keep #21 open"],
 		},
 	);
+	expectTableRowCells(status, "HumanKaylee Portfolio Build", {
+		1: ["B-016 / #22"],
+		2: ["`publish` / `reviewed`"],
+		3: ["production domain/provider evidence", "redaction approval"],
+		4: ["Issue #22 is closed as draft-content only"],
+	});
+	expectTableRowCells(status, "Creative Web Systems Atlas Demo", {
+		1: ["B-017 / #23"],
+		2: ["`publish` / `reviewed`"],
+		3: [
+			"atlas fallback artifact review",
+			"separate interactive-scope approval",
+		],
+		4: ["Issue #23 is closed as draft-content and fallback evidence only"],
+	});
 	expectTableRowCells(status, "Kalshi Migration or Analytics Tooling", {
 		1: ["B-018 / #24"],
 		2: ["`defer` / `blocked`"],
@@ -212,11 +280,11 @@ test("content issue traceability ties open content issues to approval blockers w
 	);
 	expectContains(
 		githubSync,
-		"Content issue traceability status: approval-blocker mapping only; #20, #21, #24, and #25 remain open.",
+		"Content issue traceability status: approval-blocker mapping covers #20, #21, #24, and #25; draft-source mapping covers closed #22 and #23.",
 	);
 	expectContains(
 		changelog,
-		"Added content issue traceability coverage for #20, #21, #24, and #25",
+		"Added content issue traceability coverage for #20, #21, #22, #23, #24, and #25",
 	);
 
 	for (const content of [decision, githubSync, packet, status]) {
