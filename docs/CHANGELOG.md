@@ -29,6 +29,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Hardened the Phase 8 post-launch feature prep contract so assistant and API
   hosting gates are checked structurally while hosting candidates point back to
   the architecture source of truth.
+- Added B-068 migration comparison inputs to Phase 8 prep so API
+  hosting comparisons stay compare-only and future migration steps remain
+  deferred until a later recommendation.
 - Added a repository agent-instructions contract and refreshed `AGENTS.md` so
   future repo agents use the current Cloudflare Pages plus Fly.io/Railway
   hosting guidance, keep Shuttle legacy-only, and preserve launch blockers.

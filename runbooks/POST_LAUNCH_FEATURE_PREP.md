@@ -33,13 +33,13 @@ Authoritative blockers:
 
 ## Prep Matrix
 
-| Feature lane                     | Backlog / issue | Current gate                                                                                       | Safe prep now                                                                                                                                                                                                                         | Required later evidence                                                      |
-| -------------------------------- | --------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Portfolio assistant scope        | B-064 / #70     | Blocked until B-063 launch evidence exists.                                                        | Draft decision note only: `docs/ASSISTANT_SCOPE_DECISION.md` defines user value, public data sources, privacy model, cost controls, rate limits, and no-secret frontend architecture without approving implementation.                | HumanKaylee-approved build/defer/reject decision after launch.               |
-| Portfolio assistant prototype    | B-065 / #71     | Blocked until B-064 approved build recommendation.                                                 | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                                             | Prompt/content tests and disabled-mode smoke test after approved scope.      |
-| Public status or metadata page   | B-066 / #72     | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details.                                                                                                     | API-up and API-down page checks against production or approved preview URLs. |
-| Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence exists.                                                        | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                                             | Feed and notes index review after launch with approved public-safe content.  |
-| API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: record that Shuttle is not a viable new launch target, then compare Fly.io, Railway, Cloudflare, and Hetzner for uptime, cost, deploy complexity, custom domain support, observability, rollback, and Rust fit. | Stay-or-migrate recommendation after real API host production evidence.      |
+| Feature lane                     | Backlog / issue | Current gate                                                                                       | Safe prep now                                                                                                                                                                                                          | Required later evidence                                                      |
+| -------------------------------- | --------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Portfolio assistant scope        | B-064 / #70     | Blocked until B-063 launch evidence exists.                                                        | Draft decision note only: `docs/ASSISTANT_SCOPE_DECISION.md` defines user value, public data sources, privacy model, cost controls, rate limits, and no-secret frontend architecture without approving implementation. | HumanKaylee-approved build/defer/reject decision after launch.               |
+| Portfolio assistant prototype    | B-065 / #71     | Blocked until B-064 approved build recommendation.                                                 | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                              | Prompt/content tests and disabled-mode smoke test after approved scope.      |
+| Public status or metadata page   | B-066 / #72     | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details.                                                                                      | API-up and API-down page checks against production or approved preview URLs. |
+| Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence exists.                                                        | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                              | Feed and notes index review after launch with approved public-safe content.  |
+| API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: use `docs/ARCHITECTURE.md#9-hosting-architecture` as the canonical candidate source and compare every candidate without selecting a provider.                                                    | Stay-or-migrate recommendation after real API host production evidence.      |
 
 ## Status Page Safe Boundary
 
@@ -141,6 +141,24 @@ compare:
 Decision inputs must cover uptime expectations, cost, deploy complexity, custom
 domain and TLS support, observability/logs, rollback or deployment history, Rust
 Axum fit, cold-start or sleep behavior, and operational risks.
+
+## B-068 Migration Comparison Inputs
+
+Compare-only evidence capture for the future API-hosting recommendation. Do not
+select a provider, recommend migration, or write migration steps or rollback
+plans yet. Do not claim launch readiness from this comparison.
+
+- Current launch host evidence.
+- Uptime/availability expectation.
+- Monthly cost estimate.
+- Deploy complexity.
+- Custom domain/TLS support.
+- Observability/logs.
+- Rollback/deployment history.
+- Rust Axum fit.
+- Cold-start/sleep behavior.
+- Operational risk.
+- Migration steps and rollback plan only after a future recommendation exists.
 
 ## Verification
 

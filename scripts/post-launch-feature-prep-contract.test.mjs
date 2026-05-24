@@ -50,6 +50,26 @@ function expectAll(content, needles) {
 	}
 }
 
+function extractSection(content, heading) {
+	const lines = content.split("\n");
+	const start = lines.findIndex((line) => line.trim() === heading);
+	assert.notEqual(start, -1, `expected section heading ${heading}`);
+
+	const headingLevel = heading.match(/^#+/)?.[0].length;
+	assert.ok(headingLevel, `expected markdown heading for ${heading}`);
+
+	const end = lines.findIndex((line, index) => {
+		if (index <= start) {
+			return false;
+		}
+
+		const match = line.match(/^(#+)\s+/);
+		return Boolean(match && match[1].length <= headingLevel);
+	});
+
+	return lines.slice(start, end === -1 ? undefined : end).join("\n");
+}
+
 function fencedLineIndexes(content) {
 	const indexes = new Set();
 	let insideFence = false;
@@ -155,6 +175,10 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 	const research = readRequiredFile(files.research);
 	const roadmap = readRequiredFile(files.roadmap);
 	const runbook = readRequiredFile(files.runbook);
+	const b068MigrationInputs = extractSection(
+		runbook,
+		"## B-068 Migration Comparison Inputs",
+	);
 
 	expectAll(backlog, [
 		"### B-064: Evaluate portfolio assistant scope",
@@ -180,6 +204,24 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"runbooks/FINAL_LAUNCH_CHECKLIST.md",
 		"runbooks/LAUNCH_EVIDENCE.md",
 		"Canonical hosting source: `docs/ARCHITECTURE.md#9-hosting-architecture`",
+	]);
+	expectAll(b068MigrationInputs, [
+		"## B-068 Migration Comparison Inputs",
+		"Compare-only",
+		"Current launch host evidence",
+		"Uptime/availability expectation",
+		"Monthly cost estimate",
+		"Deploy complexity",
+		"Custom domain/TLS support",
+		"Observability/logs",
+		"Rollback/deployment history",
+		"Rust Axum fit",
+		"Cold-start/sleep behavior",
+		"Operational risk",
+		"Migration steps",
+		"rollback plan only after a future recommendation",
+		"Do not select a provider",
+		"Do not claim launch readiness",
 	]);
 
 	expectTableRowCells(runbook, "Portfolio assistant scope", {
@@ -262,14 +304,17 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		2: ["Blocked until B-058 and B-063"],
 		3: [
 			"Decision matrix only",
-			"Shuttle is not a viable new launch target",
-			"Fly.io",
-			"Railway",
-			"Cloudflare",
-			"Hetzner",
+			"docs/ARCHITECTURE.md#9-hosting-architecture",
+			"canonical candidate source",
+			"compare every candidate",
 		],
 		4: ["Stay-or-migrate recommendation"],
 	});
+	const apiHostingPrepCell = findTableRow(runbook, "API hosting migration")[3];
+	expectNotContains(apiHostingPrepCell, "Fly.io");
+	expectNotContains(apiHostingPrepCell, "Railway");
+	expectNotContains(apiHostingPrepCell, "Cloudflare");
+	expectNotContains(apiHostingPrepCell, "Hetzner");
 
 	expectAll(runbook, [
 		"https://docs.shuttle.dev/docs/shuttle-shutdown",
@@ -336,6 +381,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Post-Launch Feature Prep",
 		"Assistant Scope Decision",
 		"B-067 Draft Outline Contract",
+		"B-068 migration comparison inputs",
 		"B-064",
 		"B-068",
 	]);

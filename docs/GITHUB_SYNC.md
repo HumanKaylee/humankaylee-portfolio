@@ -383,6 +383,13 @@ HumanKaylee approval exist. B-065 remains blocked until #70 has that approval
 and the approved outcome is `build`. #70 through #74 remain open until their
 launch, approval, and production-evidence dependencies are satisfied.
 
+B-068 now also carries compare-only migration comparison inputs in
+`runbooks/POST_LAUNCH_FEATURE_PREP.md` for current launch host evidence,
+uptime/availability expectation, monthly cost estimate, deploy complexity,
+custom domain/TLS support, observability/logs, rollback/deployment history,
+Rust Axum fit, cold-start/sleep behavior, and operational risk. Migration
+steps and rollback planning stay deferred until a future recommendation exists.
+
 B-067 draft outline contract status: pre-launch planning only. The post-launch
 feature prep runbook now requires future #73 writing outlines to include a
 working title, problem, approach, evidence plan, lesson, redaction review, launch
