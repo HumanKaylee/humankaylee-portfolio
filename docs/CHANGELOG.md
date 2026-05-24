@@ -95,6 +95,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   keyboard smoke gate.
 - Added a launch-evidence freshness contract that records the latest verified
   PR head and CI run without converting production blockers into pass evidence.
+- Refreshed the latest verified launch-evidence row for PR #6 head `ad798c4`
+  and CI run `26354144870` while preserving blocked production rows.
 - Expanded GitHub sync docs and live repo issue state with Phase 1 granular
   issues B-006 through B-012.
 - Expanded GitHub sync docs and live repo issue state with Phase 2 granular
