@@ -236,6 +236,9 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs",
 		"Granular live GitHub issue verification",
 		"issues #7 through #74",
+		"Completed granular",
+		"open or closed as execution advances",
+		"must remain open until their external decision or evidence gate is satisfied",
 	]) {
 		expectContains(githubSync, required);
 	}
@@ -246,6 +249,7 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"Do not approve implementation before B-063 is closed and reviewed.",
 		"fetchAllIssues",
 		"--paginate",
+		"mustRemainOpenIssueNumbers",
 	]) {
 		expectContains(githubLiveIssueSync, required);
 	}

@@ -9,6 +9,9 @@ const repo = "HumanKaylee/humankaylee-portfolio";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const githubSyncPath = resolve(repoRoot, "docs/GITHUB_SYNC.md");
 const liveVerificationEnabled = process.env.HK_VERIFY_GITHUB_LIVE === "1";
+const mustRemainOpenIssueNumbers = new Set([
+	11, 20, 21, 22, 23, 24, 25, 63, 64, 65, 68, 69, 70, 71, 72, 73, 74,
+]);
 
 function readGitHubSync() {
 	return readFileSync(githubSyncPath, "utf8");
@@ -140,11 +143,19 @@ test(
 			const labels = issue.labels.map((label) => label.name).sort();
 			assert.equal(issue.number, expected.number);
 			assert.equal(issue.title, expected.title);
-			assert.equal(
-				issue.state,
-				"OPEN",
-				`expected #${expected.number} to stay open`,
-			);
+			if (mustRemainOpenIssueNumbers.has(expected.number)) {
+				assert.equal(
+					issue.state,
+					"OPEN",
+					`expected #${expected.number} to stay open`,
+				);
+			} else {
+				assert.match(
+					issue.state,
+					/^(OPEN|CLOSED)$/,
+					`expected #${expected.number} to be a live GitHub issue`,
+				);
+			}
 			assert.deepEqual(
 				labels,
 				expected.labels,

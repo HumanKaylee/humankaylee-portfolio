@@ -1195,6 +1195,9 @@ Verification evidence:
 
 - Accessibility checklist with page-by-page results.
 - Automated accessibility scan output if tooling is available.
+- `runbooks/ACCESSIBILITY_AUDIT.md` records the current page-by-page checklist.
+- `pnpm test:e2e -- --grep "@accessibility"` and `pnpm test:e2e -- --grep "@keyboard"` preserve the automated accessibility and keyboard evidence.
+- `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs` preserves the dedicated artifact contract.
 
 ### B-049: Add reduced-motion and no-WebGL QA pass
 
@@ -1217,6 +1220,10 @@ Verification evidence:
 
 - Reduced-motion screenshots or recording.
 - No-WebGL fallback screenshot.
+- `runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md` records the current reduced-motion and no-WebGL fallback artifact evidence.
+- `pnpm test:e2e -- --grep "@reduced-motion|@motion|@constellation"` covers reduced-motion, motion choreography, and atlas fallback behavior.
+- `pnpm test:visual` preserves the reduced-motion screenshot baseline under `tests/e2e/visual-regression.spec.ts-snapshots/`.
+- `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs` preserves the dedicated artifact contract.
 
 ### B-050: Add Lighthouse production-like checks
 

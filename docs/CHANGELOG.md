@@ -87,6 +87,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   CSS tokens with a contract test.
 - Added resume print-mode coverage, scoped print CSS, and item-specific
   project/case-study JSON-LD with absolute public URLs.
+- Added dedicated B-048 and B-049 QA artifacts for the page-by-page
+  accessibility audit and reduced-motion/no-WebGL fallback evidence, plus a
+  contract test that keeps those artifacts tied to the backlog, quality runbook,
+  and launch evidence without claiming production launch readiness.
 - Added a rollback and incident runbook contract for B-062, including dry-run
   evidence requirements for frontend rollback, API rollback or disablement,
   contact fallback, DNS/custom-domain issues, and recovery verification records.

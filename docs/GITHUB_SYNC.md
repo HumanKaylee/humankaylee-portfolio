@@ -309,9 +309,12 @@ feature approval, and it is not authorization to build the assistant before
 B-064 is approved.
 
 Granular live GitHub issue verification now covers all documented granular
-issues #7 through #74 with paginated GitHub API results. This keeps the Project
-board scope blocker wording above unchanged while verifying the repo issue
-bridge more broadly.
+issues #7 through #74 with paginated GitHub API results. Completed granular
+issues may be open or closed as execution advances, but unresolved blocker,
+content-redaction, deployment, launch-checklist, and post-launch guard issues
+must remain open until their external decision or evidence gate is satisfied.
+This keeps the Project board scope blocker wording above unchanged while
+verifying the repo issue bridge more broadly.
 
 Run live granular issue verification explicitly with:
 

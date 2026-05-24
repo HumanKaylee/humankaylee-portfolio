@@ -18,6 +18,13 @@ duplicate push and PR Lighthouse jobs for the same head.
   and contact fallback behavior when API requests fail.
 - `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
   and route-quality checks on the core route set.
+- `runbooks/ACCESSIBILITY_AUDIT.md` records the B-048 page-by-page
+  accessibility checklist and the local/CI evidence boundary.
+- `runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md` records the B-049 reduced-motion
+  screenshots, no-WebGL fallback evidence, and production screenshot boundary.
+- `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs`
+  verifies those dedicated QA artifacts stay connected to backlog and launch
+  evidence.
 - `pnpm lighthouse:local` builds the Astro site, serves a production-equivalent
   local preview on `127.0.0.1:4322`, runs a non-scored warm-up audit, and then
   audits home, projects, one case study, resume, and contact.
