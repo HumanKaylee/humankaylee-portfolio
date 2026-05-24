@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added B-067 Draft Outline Records for three future post-launch notes while
+  preserving the rule that no notes content, RSS entries, publication approval,
+  or issue closure happens before B-063 launch evidence and approved content.
 - Clarified resume copy on the home recruiter card and `/resume/` route so the
   PDF is described as a downloadable static asset from an approved local source,
   without implying production route evidence or broader launch readiness.

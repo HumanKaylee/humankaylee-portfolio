@@ -179,6 +179,10 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		runbook,
 		"## B-068 Migration Comparison Inputs",
 	);
+	const b067OutlineRecords = extractSection(
+		runbook,
+		"## B-067 Draft Outline Records",
+	);
 
 	expectAll(backlog, [
 		"### B-064: Evaluate portfolio assistant scope",
@@ -299,6 +303,42 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"RSS/index verification after launch",
 		"No RSS feed update is expected before published content exists",
 	]);
+	expectAll(b067OutlineRecords, [
+		"## B-067 Draft Outline Records",
+		"Status: planning outlines only; not published content",
+		"These records do not create notes collection entries, RSS feed items, launch evidence, or publication approval.",
+	]);
+	const outlineRecordHeadings = b067OutlineRecords
+		.split("\n")
+		.filter((line) => line.startsWith("### Outline: "));
+	assert.equal(
+		outlineRecordHeadings.length,
+		3,
+		"expected exactly three B-067 draft outline records",
+	);
+	const outlineSections = b067OutlineRecords
+		.split("\n### Outline: ")
+		.slice(1)
+		.map((section) => `### Outline: ${section}`);
+	for (const requiredOutline of [
+		"Static-first portfolio launch after-action",
+		"Redaction-safe case-study production workflow",
+		"Rust API launch operations postmortem",
+	]) {
+		expectContains(b067OutlineRecords, `### Outline: ${requiredOutline}`);
+	}
+	for (const outlineSection of outlineSections) {
+		expectAll(outlineSection, [
+			"- Working title:",
+			"- Problem:",
+			"- Approach:",
+			"- Evidence plan:",
+			"- Lesson:",
+			"- Redaction review:",
+			"- Launch dependency:",
+			"- RSS/index verification after launch:",
+		]);
+	}
 	expectTableRowCells(runbook, "API hosting migration", {
 		1: ["B-068", "#74"],
 		2: ["Blocked until B-058 and B-063"],
@@ -372,6 +412,8 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"#70 through #74 remain open",
 		"B-067 draft outline contract status: pre-launch planning only",
 		"#73 remains open until B-063 launch evidence exists and approved public-safe content is published",
+		"B-067 draft outline records status: pre-launch planning only",
+		"three draft-only outline records",
 	]);
 	expectAll(roadmap, [
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
@@ -381,6 +423,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Post-Launch Feature Prep",
 		"Assistant Scope Decision",
 		"B-067 Draft Outline Contract",
+		"B-067 Draft Outline Records",
 		"B-068 migration comparison inputs",
 		"B-064",
 		"B-068",

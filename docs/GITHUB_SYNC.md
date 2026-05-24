@@ -429,6 +429,13 @@ content, does not update RSS, and does not authorize publication. #73 remains
 open until B-063 launch evidence exists and approved public-safe content is
 published.
 
+B-067 draft outline records status: pre-launch planning only. The feature prep
+runbook now carries three draft-only outline records for a static-first launch
+after-action, redaction-safe case-study workflow note, and Rust API launch
+operations postmortem. They are planning records only: no notes collection
+entries, RSS feed items, launch evidence, issue closure, or publication approval
+are created from them.
+
 Granular live GitHub issue verification now covers all documented granular
 issues #7 through #74 with paginated GitHub API results. Completed granular
 issues may be open or closed as execution advances. Parent epics #3 and #5 stay

@@ -120,6 +120,71 @@ Every future B-067 note or postmortem outline must include:
 
 No RSS feed update is expected before published content exists.
 
+## B-067 Draft Outline Records
+
+Status: planning outlines only; not published content.
+
+These records do not create notes collection entries, RSS feed items, launch evidence, or publication approval.
+
+### Outline: Static-first portfolio launch after-action
+
+- Working title: Static-first portfolio launch after-action.
+- Problem: Explain how the launch balanced a visually distinctive portfolio with
+  strict no-JavaScript, no-WebGL, and API-down usefulness.
+- Approach: Summarize the static shell, progressive enhancement boundaries,
+  route coverage, Lighthouse gates, and fallback verification after production
+  launch evidence exists.
+- Evidence plan: Use final production frontend smoke, production Lighthouse,
+  visual regression, accessibility, keyboard, API-down, and rollback evidence
+  from the launch evidence runbook.
+- Lesson: Static-first design made the impressive layer additive instead of a
+  core-content dependency.
+- Redaction review: Review for provider IDs, private paths, operational logs,
+  credentials, unapproved project details, and any production incident data
+  before publication.
+- Launch dependency: B-063 launch evidence and approved public-safe content.
+- RSS/index verification after launch: Confirm the published note appears in
+  `/notes/`, `rss.xml`, sitemap metadata, and notes visual/responsive checks.
+
+### Outline: Redaction-safe case-study production workflow
+
+- Working title: Redaction-safe case-study production workflow.
+- Problem: Document how case-study drafts moved from useful private evidence to
+  public-safe narratives without treating `reviewed` as `approved`.
+- Approach: Cover the content schema, redaction status index, approval packets,
+  issue traceability, open-item tracking, and human signoff requirement.
+- Evidence plan: Use final approved case-study frontmatter, approval packet
+  signoff, content traceability contract output, and launch checklist evidence.
+- Lesson: Public credibility improves when approval state is explicit and
+  separated from implementation progress.
+- Redaction review: Re-check every referenced artifact, source label, proof
+  claim, screenshot, hostname, username, and operational detail against the
+  content redaction guide.
+- Launch dependency: B-063 launch evidence plus case-study records that have a
+  completed human redaction approval state.
+- RSS/index verification after launch: Confirm the published note appears in
+  `/notes/`, `rss.xml`, sitemap metadata, and notes visual/responsive checks.
+
+### Outline: Rust API launch operations postmortem
+
+- Working title: Rust API launch operations postmortem.
+- Problem: Explain what the Rust Axum API proves for the portfolio and what
+  operational constraints shaped production launch decisions.
+- Approach: Cover `/api/health`, `/api/projects/live`, contact delivery,
+  cache/stale behavior, container/standalone checks, selected hosting evidence,
+  rollback proof, and API-down frontend behavior.
+- Evidence plan: Use selected host deployment evidence, production API health
+  smoke, project metadata smoke, contact handling decision evidence, rollback
+  proof, Rust CI, dependency audit, and container smoke output.
+- Lesson: A portfolio backend should prove engineering depth while the static
+  frontend remains useful when the API is unavailable.
+- Redaction review: Remove provider account details, deployment IDs unless
+  approved for public evidence, log snippets, contact payloads, tokens, private
+  environment values, and raw operational traces.
+- Launch dependency: B-058 selected API host evidence and B-063 launch evidence.
+- RSS/index verification after launch: Confirm the published note appears in
+  `/notes/`, `rss.xml`, sitemap metadata, and notes visual/responsive checks.
+
 ## API Hosting Decision Inputs
 
 Official-source snapshot date: 2026-05-24.
