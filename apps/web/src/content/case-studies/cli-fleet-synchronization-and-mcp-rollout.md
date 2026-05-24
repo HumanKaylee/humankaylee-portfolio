@@ -45,6 +45,15 @@ redactionReview:
     - "Inspect the sanitized rollout matrix and operator checklist artifacts; record artifact evidence source and reviewer decision before approval."
     - "Keep redactionStatus reviewed until human signoff and openItems clearance."
   notes: "Generalized public narrative is safe for route scaffolding, but final launch approval still needs a completed checklist. Non-approval evidence inventory: sanitized rollout matrix, operator checklist, and public-safe architecture sketch. Mechanical scan note: counts only; matched-text excerpts omitted."
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "not-applicable"
+    logsSummarizedOrSanitized: "yes"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "yes"
+    securitySensitiveProceduresRemoved: "yes"
 seo:
   title: "CLI Fleet Synchronization and MCP Rollout"
   description: "A sanitized operations case study about inventory, rollout, and verification discipline."

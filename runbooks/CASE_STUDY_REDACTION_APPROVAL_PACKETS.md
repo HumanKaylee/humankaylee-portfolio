@@ -40,10 +40,10 @@ current publish-intended case study. It does not mark any case study approved.
 
 | Candidate                                             | Current state          | Missing approval evidence                                                                                                     |
 | ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| CLI Fleet Synchronization and MCP Rollout             | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing artifact evidence source for the sanitized rollout set. |
-| Creative Web Systems Atlas Demo                       | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing atlas fallback artifact inspection evidence.            |
-| HumanKaylee Portfolio Build                           | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing production domain evidence for launch claims.           |
-| Remote Workstation Recovery and Operational Debugging | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing redacted incident summary inspection evidence.          |
+| CLI Fleet Synchronization and MCP Rollout             | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing artifact evidence source for the sanitized rollout set. |
+| Creative Web Systems Atlas Demo                       | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing atlas fallback artifact inspection evidence.            |
+| HumanKaylee Portfolio Build                           | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing production domain evidence for launch claims.           |
+| Remote Workstation Recovery and Operational Debugging | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing redacted incident summary inspection evidence.          |
 
 ## Non-Approval Evidence Inventory
 
@@ -59,10 +59,12 @@ prefixes. The counts were zero for each category; matched-text excerpts are
 intentionally omitted so this runbook does not publish any private-looking
 material if future scans find it.
 
-| Candidate                                             | Current public-safe evidence                                                                                   | Still missing before approval                                                                                 |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| CLI Fleet Synchronization and MCP Rollout             | In-page sanitized architecture sketch, In-page sanitized verification matrix, In-page sanitized operator checklist. | Pending reviewer inspection of sanitized rollout matrix and Pending reviewer inspection of operator checklist. |
-| Remote Workstation Recovery and Operational Debugging | In-page role-labeled diagnostic flow, In-page sanitized verification matrix, and role-labeled prevention notes. | Pending reviewer inspection of redacted incident summary and Pending reviewer inspection of operator runbook excerpt. |
+| Candidate                                             | Current public-safe evidence                                                                                        | Still missing before approval                                                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| CLI Fleet Synchronization and MCP Rollout             | In-page sanitized architecture sketch, In-page sanitized verification matrix, In-page sanitized operator checklist. | Pending reviewer inspection of sanitized rollout matrix and Pending reviewer inspection of operator checklist.        |
+| Creative Web Systems Atlas Demo                       | Semantic project atlas fallback, static systems-map poster, and accessibility/performance boundary notes.           | Pending reviewer inspection of atlas fallback evidence and final public route evidence.                               |
+| HumanKaylee Portfolio Build                           | Static-first local verification matrix, optional Rust API boundary, and public-safe launch evidence boundary.       | Pending reviewer inspection of local verification and launch evidence claims plus production-domain evidence.         |
+| Remote Workstation Recovery and Operational Debugging | In-page role-labeled diagnostic flow, In-page sanitized verification matrix, and role-labeled prevention notes.     | Pending reviewer inspection of redacted incident summary and Pending reviewer inspection of operator runbook excerpt. |
 
 ## Packet Template
 
@@ -105,7 +107,9 @@ Approval packet status: not approved until human signoff.
 
 Missing approval evidence:
 
-- Completed checklist answers in `redactionReview.checklist`.
+- Checklist answers are recorded in `redactionReview.checklist`, but
+  `redactionReview.checklistStatus` remains `partial` until open items and
+  artifact evidence are cleared.
 - Cleared `redactionReview.openItems`.
 - Artifact evidence source for the sanitized rollout matrix and operator
   checklist.
@@ -120,7 +124,9 @@ Approval packet status: not approved until human signoff.
 
 Missing approval evidence:
 
-- Completed checklist answers in `redactionReview.checklist`.
+- Checklist answers are recorded in `redactionReview.checklist`, but
+  `redactionReview.checklistStatus` remains `partial` until open items and
+  artifact evidence are cleared.
 - Cleared `redactionReview.openItems`.
 - Artifact evidence source for atlas fallback screenshots or `not-applicable`.
 - production or approved-preview evidence for the final public route.
@@ -135,7 +141,9 @@ Approval packet status: not approved until human signoff.
 
 Missing approval evidence:
 
-- Completed checklist answers in `redactionReview.checklist`.
+- Checklist answers are recorded in `redactionReview.checklist`, but
+  `redactionReview.checklistStatus` remains `partial` until open items and
+  artifact evidence are cleared.
 - Cleared `redactionReview.openItems`.
 - Public artifact inspection for local verification and launch evidence claims.
 - production or approved-preview evidence for frontend domain, provider deploy,
@@ -149,7 +157,9 @@ Approval packet status: not approved until human signoff.
 
 Missing approval evidence:
 
-- Completed checklist answers in `redactionReview.checklist`.
+- Checklist answers are recorded in `redactionReview.checklist`, but
+  `redactionReview.checklistStatus` remains `partial` until open items and
+  artifact evidence are cleared.
 - Cleared `redactionReview.openItems`.
 - Linked artifact inspection for the redacted incident summary and operator
   runbook excerpt.

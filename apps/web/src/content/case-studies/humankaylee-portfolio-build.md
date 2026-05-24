@@ -45,6 +45,15 @@ redactionReview:
     - "Production domain, provider, and deploy evidence are blocked in this repository snapshot."
     - "Launch approval remains blocked until external evidence is captured and reviewed."
   notes: "This case study is reviewed and public-safe, but it is not launch-approved."
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "not-applicable"
+    logsSummarizedOrSanitized: "not-applicable"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "yes"
+    securitySensitiveProceduresRemoved: "yes"
 seo:
   title: "HumanKaylee Portfolio Build"
   description: "A case study about building this portfolio as a static-first, Systems Atelier site with an optional Rust-backed enhancement layer."

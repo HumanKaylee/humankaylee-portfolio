@@ -66,6 +66,24 @@ const checklistMappings = [
 	["Redaction status", ["redactionStatus"], ["redactionStatus"]],
 ];
 
+const expectedPublishCandidateTitles = [
+	"CLI Fleet Synchronization and MCP Rollout",
+	"Creative Web Systems Atlas Demo",
+	"HumanKaylee Portfolio Build",
+	"Remote Workstation Recovery and Operational Debugging",
+];
+
+const requiredChecklistAnswers = [
+	["secretsRemoved", ["yes"]],
+	["hostnamesAndAccessPathsGeneralized", ["yes"]],
+	["userAndAccountNamesGeneralized", ["yes"]],
+	["screenshotsInspected", ["yes", "not-applicable"]],
+	["logsSummarizedOrSanitized", ["yes", "not-applicable"]],
+	["publicLinksVerified", ["yes", "not-applicable"]],
+	["claimsHaveSafeEvidence", ["yes"]],
+	["securitySensitiveProceduresRemoved", ["yes"]],
+];
+
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
 
@@ -85,15 +103,54 @@ function expectContains(content, needle, label = needle) {
 	);
 }
 
-function frontmatterValue(content, key, filePath) {
+function frontmatterBlock(content, filePath) {
 	const frontmatter = content.match(/^---\n([\s\S]*?)\n---/);
 	assert.ok(frontmatter, `missing frontmatter: ${filePath}`);
+	return frontmatter[1];
+}
 
-	const value = frontmatter[1].match(
+function frontmatterValue(content, key, filePath) {
+	const frontmatter = frontmatterBlock(content, filePath);
+
+	const value = frontmatter.match(
 		new RegExp(`^${key}:\\s*["']?([^"'\\n]+)["']?\\s*$`, "m"),
 	);
 	assert.ok(value, `missing ${key} in frontmatter: ${filePath}`);
 	return value[1];
+}
+
+function nestedFrontmatterValue(content, key, filePath) {
+	const frontmatter = frontmatterBlock(content, filePath);
+
+	const value = frontmatter.match(
+		new RegExp(`^ {2}${key}:\\s*["']?([^"'\\n]+)["']?\\s*$`, "m"),
+	);
+	assert.ok(value, `missing nested ${key} in frontmatter: ${filePath}`);
+	return value[1];
+}
+
+function checklistAnswers(content, filePath) {
+	const frontmatter = frontmatterBlock(content, filePath);
+	const checklist = frontmatter.match(
+		/^ {2}checklist:\n((?: {4}[a-zA-Z][^\n]*\n?)+)/m,
+	);
+	assert.ok(
+		checklist,
+		`missing redactionReview.checklist in frontmatter: ${filePath}`,
+	);
+
+	return Object.fromEntries(
+		checklist[1]
+			.split("\n")
+			.filter((line) => line.trim().length > 0)
+			.map((line) => {
+				const match = line.match(
+					/^\s{4}([A-Za-z0-9]+):\s*["']?([^"'\n]+)["']?$/,
+				);
+				assert.ok(match, `invalid checklist line in ${filePath}: ${line}`);
+				return [match[1], match[2]];
+			}),
+	);
 }
 
 function readCaseStudies() {
@@ -106,6 +163,12 @@ function readCaseStudies() {
 			const content = readRequiredFile(path);
 
 			return {
+				content,
+				checklistStatus: nestedFrontmatterValue(
+					content,
+					"checklistStatus",
+					path,
+				),
 				path,
 				publicationStatus: frontmatterValue(content, "publicationStatus", path),
 				redactionStatus: frontmatterValue(content, "redactionStatus", path),
@@ -116,6 +179,34 @@ function readCaseStudies() {
 
 function escapedRegex(value) {
 	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function expectCompleteChecklistRecord(candidate) {
+	const checklist = checklistAnswers(candidate.content, candidate.path);
+
+	assert.equal(
+		candidate.redactionStatus,
+		"reviewed",
+		`${candidate.path} must remain reviewed while checklist answers are prepared`,
+	);
+	assert.equal(
+		candidate.checklistStatus,
+		"partial",
+		`${candidate.path} must keep checklistStatus partial until openItems and artifact evidence are cleared`,
+	);
+
+	for (const [field, allowedAnswers] of requiredChecklistAnswers) {
+		assert.ok(
+			Object.hasOwn(checklist, field),
+			`${candidate.path} checklist missing ${field}`,
+		);
+		assert.ok(
+			allowedAnswers.includes(checklist[field]),
+			`${candidate.path} checklist ${field} must be one of ${allowedAnswers.join(
+				", ",
+			)}`,
+		);
+	}
 }
 
 function expectPacketMapping(packet, guideCheck, schemaFields) {
@@ -169,9 +260,10 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		(caseStudy) => caseStudy.publicationStatus === "publish",
 	);
 
-	assert.ok(
-		launchCandidates.length >= 1,
-		"expected at least one publish case-study candidate",
+	assert.deepEqual(
+		launchCandidates.map((candidate) => candidate.title).sort(),
+		expectedPublishCandidateTitles.toSorted(),
+		"publish candidates should stay limited to the four current launch candidates",
 	);
 
 	expectContains(
@@ -185,8 +277,18 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		"backlog approval-packet contract",
 	);
 	expectContains(
+		backlog,
+		"checklist answers recorded",
+		"backlog records checklist answer progress",
+	);
+	assert.doesNotMatch(
+		backlog,
+		/missing checklist answers/i,
+		"backlog should not say checklist answers are still missing",
+	);
+	expectContains(
 		githubSync,
-		"#20 and #21 remain open for final redaction checklist/artifact review",
+		"#20 and #21 remain open for openItems/artifact review and final human signoff",
 		"GitHub sync keeps #20/#21 open",
 	);
 	expectContains(
@@ -249,8 +351,19 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		packet,
 		"Pending reviewer inspection of operator runbook excerpt",
 	);
+	expectContains(packet, "Static-first local verification matrix");
+	expectContains(
+		packet,
+		"Pending reviewer inspection of local verification and launch evidence claims",
+	);
+	expectContains(packet, "Semantic project atlas fallback");
+	expectContains(
+		packet,
+		"Pending reviewer inspection of atlas fallback evidence",
+	);
 
 	for (const candidate of launchCandidates) {
+		expectCompleteChecklistRecord(candidate);
 		expectContains(
 			packet,
 			`## ${candidate.title}`,
@@ -272,17 +385,17 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	}
 
 	expectReadinessRow(packet, "CLI Fleet Synchronization and MCP Rollout", [
-		"missing checklist answers",
+		"checklist answers recorded",
 		"missing openItems clearance",
 		"missing artifact evidence source",
 	]);
 	expectReadinessRow(packet, "Creative Web Systems Atlas Demo", [
-		"missing checklist answers",
+		"checklist answers recorded",
 		"missing openItems clearance",
 		"missing atlas fallback artifact inspection evidence",
 	]);
 	expectReadinessRow(packet, "HumanKaylee Portfolio Build", [
-		"missing checklist answers",
+		"checklist answers recorded",
 		"missing openItems clearance",
 		"missing production domain evidence",
 	]);
@@ -290,7 +403,7 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		packet,
 		"Remote Workstation Recovery and Operational Debugging",
 		[
-			"missing checklist answers",
+			"checklist answers recorded",
 			"missing openItems clearance",
 			"missing redacted incident summary inspection evidence",
 		],
@@ -326,6 +439,21 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	);
 	expectContains(
 		status,
+		"Non-approval evidence inventory for all four current `publish` candidates",
+		"status explains packet inventory covers all publish candidates",
+	);
+	expectContains(
+		status,
+		"counts-only mechanical scan note remains limited to the two operational case-study bodies",
+		"status limits mechanical scan scope honestly",
+	);
+	assert.doesNotMatch(
+		status,
+		/two operational case studies/i,
+		"status should not describe the packet inventory as limited to two operational case studies",
+	);
+	expectContains(
+		status,
 		"counts-only mechanical scan note",
 		"status mentions mechanical scan boundary",
 	);
@@ -358,5 +486,10 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		remoteRecoveryCaseStudy,
 		"Keep redactionStatus reviewed until human signoff and openItems clearance.",
 		"remote recovery private detail open item",
+	);
+	assert.doesNotMatch(
+		packet,
+		/Missing checklist answers/,
+		"packet should no longer name checklist answers as missing once frontmatter records them",
 	);
 });

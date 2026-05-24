@@ -42,6 +42,15 @@ redactionReview:
   openItems:
     - "Attach actual atlas fallback evidence after the visual layer exists."
   notes: "Phase 1 outline is safe as a draft but is not launch-approved."
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "not-applicable"
+    logsSummarizedOrSanitized: "not-applicable"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "yes"
+    securitySensitiveProceduresRemoved: "yes"
 seo:
   title: "Creative Web Systems Atlas Demo"
   description: "A draft case study for a progressive project atlas with accessible fallbacks."

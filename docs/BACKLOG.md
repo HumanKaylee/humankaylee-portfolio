@@ -418,7 +418,7 @@ Verification evidence:
 
 - Case study passes content schema validation.
 - Approval packet records the non-approval evidence inventory, counts-only
-  mechanical scan note, missing checklist answers, and required artifact
+  mechanical scan note, checklist answers recorded, and required artifact
   inspection before `redactionStatus` can change from `reviewed` to `approved`.
 
 ### B-015: Draft case study: remote workstation recovery and operational debugging
@@ -444,7 +444,7 @@ Verification evidence:
 
 - Case study passes content schema validation.
 - Approval packet records the non-approval evidence inventory, counts-only
-  mechanical scan note, missing checklist answers, and required artifact
+  mechanical scan note, checklist answers recorded, and required artifact
   inspection before `redactionStatus` can change from `reviewed` to `approved`.
 
 ### B-016: Draft case study: HumanKaylee portfolio build

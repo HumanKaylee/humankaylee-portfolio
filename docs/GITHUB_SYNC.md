@@ -205,10 +205,10 @@ views:
 
 Phase 2 issue sync status: partial. #22 and #23 are closed as draft-content
 tasks with local route, quality, and visual evidence while keeping their
-case-study redaction status at `reviewed`. #20 and #21 remain open for final
-redaction checklist/artifact review; their non-approval evidence inventory is
-progress evidence only and does not change redaction status or the Content
-Redaction Guide launch gate. #24 and #25 remain open because the
+case-study redaction status at `reviewed`. #20 and #21 remain open for
+openItems/artifact review and final human signoff; their non-approval evidence
+inventory is progress evidence only and does not change redaction status or the
+Content Redaction Guide launch gate. #24 and #25 remain open because the
 publication-safety record recommends excluding/deferring sensitive candidates
 from v1, records HumanKaylee owner decision as pending, and treats any
 synthetic proof pack as review evidence only. This is not publication approval
