@@ -1,0 +1,114 @@
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { test } from "node:test";
+
+const AGENTS_PATH = "AGENTS.md";
+
+function readRequiredFile(path) {
+	assert.ok(existsSync(path), `missing required file: ${path}`);
+
+	const content = readFileSync(path, "utf8");
+	assert.ok(content.trim().length > 0, `empty required file: ${path}`);
+	return content;
+}
+
+function expectContains(content, needle, label = needle) {
+	const normalizedContent = content.replace(/\s+/g, " ");
+	const normalizedNeedle = needle.replace(/\s+/g, " ");
+	assert.ok(
+		normalizedContent.includes(normalizedNeedle),
+		`expected AGENTS.md to include ${label}`,
+	);
+}
+
+function section(content, heading) {
+	const headingLine = `## ${heading}`;
+	const lines = content.split("\n");
+	const startIndex = lines.findIndex((line) => line === headingLine);
+	assert.notEqual(
+		startIndex,
+		-1,
+		`expected AGENTS.md to include ${heading} section`,
+	);
+
+	const endIndex = lines.findIndex(
+		(line, index) => index > startIndex && line.startsWith("## "),
+	);
+	return lines
+		.slice(startIndex + 1, endIndex === -1 ? undefined : endIndex)
+		.join("\n");
+}
+
+function bulletStarting(sectionContent, prefix) {
+	const lines = sectionContent.split("\n");
+	const startIndex = lines.findIndex((line) => line.startsWith(`- ${prefix}`));
+	assert.notEqual(
+		startIndex,
+		-1,
+		`expected section to include ${prefix} bullet`,
+	);
+
+	const bulletLines = [lines[startIndex]];
+	for (const line of lines.slice(startIndex + 1)) {
+		if (line.startsWith("- ")) {
+			break;
+		}
+
+		if (line.startsWith("  ")) {
+			bulletLines.push(line);
+		}
+	}
+
+	return bulletLines.join("\n");
+}
+
+function expectCurrentHostingTarget(agents) {
+	const buildDirection = section(agents, "Build Direction");
+	const hostingTarget = bulletStarting(buildDirection, "Hosting target:");
+
+	assert.ok(
+		!/\bShuttle\b/i.test(hostingTarget),
+		"Hosting target bullet must not list Shuttle as an active API host",
+	);
+
+	expectContains(hostingTarget, "Cloudflare Pages frontend");
+	expectContains(hostingTarget, "Fly.io or Railway");
+	expectContains(hostingTarget, "current normal Axum API candidates");
+}
+
+test("repository agent instructions use current hosting and launch-blocker guidance", () => {
+	const agents = readRequiredFile(AGENTS_PATH);
+
+	expectCurrentHostingTarget(agents);
+	expectContains(agents, "Shuttle is not a viable new launch target");
+	expectContains(agents, "https://docs.shuttle.dev/docs/shuttle-shutdown");
+	expectContains(agents, "Do not use Shuttle for a new production launch");
+	expectContains(agents, "not launch-ready");
+	expectContains(agents, "production frontend/API targets");
+	expectContains(agents, "redaction approvals");
+
+	assert.ok(
+		!agents.includes("Shuttle Rust API initially"),
+		"AGENTS.md must not direct new agents toward Shuttle as the initial API host",
+	);
+	assert.ok(
+		!agents.includes("keep Fly.io/Railway fallback documented"),
+		"AGENTS.md must not describe current API candidates as mere fallback documentation",
+	);
+});
+
+test("repository agent instructions reject Shuttle as the active hosting target even with legacy warning text", () => {
+	const agents = readRequiredFile(AGENTS_PATH);
+	const staleAgents = agents.replace(
+		/- Hosting target:[\s\S]*?(?=\n- Shuttle is not a viable new launch target)/,
+		[
+			"- Hosting target: Cloudflare Pages frontend plus Shuttle as the first",
+			"  Rust API host, with Fly.io or Railway documented as fallback options.",
+		].join("\n"),
+	);
+
+	assert.throws(
+		() => expectCurrentHostingTarget(staleAgents),
+		/Shuttle as an active API host/,
+	);
+});

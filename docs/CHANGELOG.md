@@ -14,6 +14,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Hardened the Phase 8 post-launch feature prep contract so assistant and API
   hosting gates are checked structurally while hosting candidates point back to
   the architecture source of truth.
+- Added a repository agent-instructions contract and refreshed `AGENTS.md` so
+  future repo agents use the current Cloudflare Pages plus Fly.io/Railway
+  hosting guidance, keep Shuttle legacy-only, and preserve launch blockers.
 - Added Phase 7 Deployment Decision Packets coverage for #63, #64, #65, and
   #69 so frontend deployment, API host, production domain, and final launch
   evidence requirements are explicit without claiming production launch
