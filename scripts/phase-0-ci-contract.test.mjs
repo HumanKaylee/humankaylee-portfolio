@@ -178,8 +178,30 @@ function expectNode24ActionRuntime(workflow) {
 	}
 }
 
+function expectWorkflowStepIndentation(workflow) {
+	assert.doesNotMatch(
+		workflow,
+		/^ {6,}steps:\s*$/m,
+		"expected job steps blocks to be indented at the job property level",
+	);
+	for (const job of ["frontend", "backend"]) {
+		assert.match(
+			workflow,
+			new RegExp(
+				`^  ${job}:\\n(?:^ {4}[^\\n]+\\n|^\\s*$\\n)*^ {4}steps:$`,
+				"m",
+			),
+			`expected ${job} job to define steps with four-space indentation`,
+		);
+	}
+}
+
 test("phase-0 CI exposes dedicated launch gate steps in the expected order", () => {
 	expectLaunchGateSteps(readWorkflow());
+});
+
+test("phase-0 CI keeps job step blocks at valid YAML indentation", () => {
+	expectWorkflowStepIndentation(readWorkflow());
 });
 
 test("phase-0 CI avoids duplicate PR branch push runs", () => {
