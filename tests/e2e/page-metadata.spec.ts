@@ -38,4 +38,42 @@ test.describe("page metadata @metadata", () => {
 		expect(response.status()).toBe(200);
 		expect(response.headers()["content-type"]).toContain("image/svg+xml");
 	});
+
+	test("renders item-specific JSON-LD on project and case-study detail pages", async ({
+		page,
+	}) => {
+		await page.goto("/projects/cli-fleet-synchronization-and-mcp-rollout/");
+
+		let structuredData = await page
+			.locator('script[type="application/ld+json"]')
+			.allTextContents();
+		let jsonLdText = structuredData.join("\n");
+
+		expect(jsonLdText).toContain('"@type":"SoftwareSourceCode"');
+		expect(jsonLdText).toContain(
+			'"name":"CLI Fleet Synchronization and MCP Rollout"',
+		);
+		expect(jsonLdText).toContain(
+			'"url":"https://humankaylee.example/projects/cli-fleet-synchronization-and-mcp-rollout/"',
+		);
+		expect(jsonLdText).not.toContain("/home/joe");
+
+		await page.goto("/case-studies/cli-fleet-synchronization-and-mcp-rollout/");
+
+		structuredData = await page
+			.locator('script[type="application/ld+json"]')
+			.allTextContents();
+		jsonLdText = structuredData.join("\n");
+
+		expect(jsonLdText).toContain('"@type":"CreativeWork"');
+		expect(jsonLdText).toContain(
+			'"name":"CLI Fleet Synchronization and MCP Rollout"',
+		);
+		expect(jsonLdText).toContain(
+			'"url":"https://humankaylee.example/case-studies/cli-fleet-synchronization-and-mcp-rollout/"',
+		);
+		expect(jsonLdText).not.toContain("Complete the final approval checklist");
+		expect(jsonLdText).not.toContain("openItems");
+		expect(jsonLdText).not.toContain("/home/joe");
+	});
 });

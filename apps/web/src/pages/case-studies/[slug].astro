@@ -46,12 +46,25 @@ const operationItems: string[] = operations;
 const lessonItems: string[] = lessons;
 const safeArtifacts: string[] = links?.artifacts ?? [];
 const { Content } = await render(caseStudy);
+const [site] = await getCollection("site");
+const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+const canonicalUrl = `${siteUrl}${seo.canonicalPath}`;
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "CreativeWork",
+	name: title,
+	description: summary,
+	url: canonicalUrl,
+	genre: category,
+	keywords: [category, ...caseStudy.data.audienceFit],
+};
 ---
 
 <BaseLayout
 	title={`${seo.title} | HumanKaylee`}
 	description={seo.description}
 	canonicalPath={seo.canonicalPath}
+	structuredData={structuredData}
 >
 	<article class="case-study-detail" aria-labelledby="case-study-title">
 		<header class="page-header">

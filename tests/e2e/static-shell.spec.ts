@@ -251,6 +251,41 @@ test.describe("static shell @static-shell", () => {
 		expect(response.headers()["content-type"]).toContain("application/pdf");
 	});
 
+	test("keeps the resume page print-ready without navigation chrome", async ({
+		page,
+	}) => {
+		await page.goto("/resume/");
+		await page.emulateMedia({ media: "print" });
+
+		const printableResume = page.locator('[data-print-resume="true"]');
+		await expect(printableResume).toBeVisible();
+		await expect(printableResume).toHaveCSS(
+			"background-color",
+			"rgb(255, 255, 255)",
+		);
+		await expect(printableResume).toHaveCSS("box-shadow", "none");
+		await expect(page.locator(".site-header")).toHaveCSS("display", "none");
+		await expect(page.locator(".site-footer")).toHaveCSS("display", "none");
+		await expect(page.locator(".resume-screen-header")).toHaveCSS(
+			"display",
+			"none",
+		);
+		await expect(
+			page.getByRole("link", { name: /Download resume PDF/i }),
+		).toHaveAttribute("href", "/downloads/humankaylee-resume.pdf");
+	});
+
+	test("does not apply resume print chrome hiding to non-resume routes", async ({
+		page,
+	}) => {
+		await page.goto("/projects/");
+		await page.emulateMedia({ media: "print" });
+
+		await expect(page.locator("body")).not.toHaveClass(/resume-print-route/);
+		await expect(page.locator(".site-header")).not.toHaveCSS("display", "none");
+		await expect(page.locator(".site-footer")).not.toHaveCSS("display", "none");
+	});
+
 	test("labels project detail links uniquely and points cards to static routes", async ({
 		page,
 	}) => {

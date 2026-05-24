@@ -38,9 +38,23 @@ const projects = allProjects
 
 	<BuildTelemetryStrip items={scaffold.telemetry} />
 
+	<section class="content-section" aria-labelledby="support-title">
+		<p class="section-kicker">Proof themes</p>
+		<h2 id="support-title">What the first scan should prove.</h2>
+		<ol class="support-statement-list">
+			{
+				scaffold.supportStatements.map((statement) => (
+					<li>
+						<span>{statement}</span>
+					</li>
+				))
+			}
+		</ol>
+	</section>
+
 	<section class="content-section" aria-labelledby="paths-title">
 		<p class="section-kicker">Audience paths</p>
-		<h2 id="paths-title">Two fast reads, one evidence trail.</h2>
+		<h2 id="paths-title">Recruiter first, engineer second, collaborators third.</h2>
 		<div class="path-grid">
 			<article class="path-card">
 				<p class="eyebrow">Recruiter path</p>

@@ -12,9 +12,10 @@ type WorkflowStep = (typeof data.workflowSteps)[number];
 	title="Resume | HumanKaylee"
 	description="HTML resume entry point and PDF source workflow for HumanKaylee."
 	canonicalPath="/resume/"
+	bodyClass="resume-print-route"
 >
 	<section class="page-shell" aria-labelledby="resume-title">
-		<header class="page-header">
+		<header class="page-header resume-screen-header">
 			<p class="section-kicker">Resume</p>
 			<h1 id="resume-title">Resume path with a published PDF.</h1>
 			<p class="page-intro">
@@ -23,7 +24,7 @@ type WorkflowStep = (typeof data.workflowSteps)[number];
 			</p>
 		</header>
 
-		<article class="paper-panel">
+		<article class="paper-panel resume-print-sheet" data-print-resume="true">
 			<p class="eyebrow">Published resume</p>
 			<h2>{data.title}</h2>
 			<p>

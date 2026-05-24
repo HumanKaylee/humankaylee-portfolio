@@ -39,5 +39,14 @@ describe("homeScaffold", () => {
 			value: "Graceful fallback",
 		});
 		expect(scaffold.noJsNote).toContain("without JavaScript or WebGL");
+		expect(scaffold.audienceOrder).toEqual([
+			"recruiter",
+			"senior-engineer",
+			"collaborator",
+		]);
+		expect(scaffold.supportStatements).toHaveLength(4);
+		const supportCopy = scaffold.supportStatements.join(" ").toLowerCase();
+		expect(supportCopy).toContain("automation workflows");
+		expect(supportCopy).toContain("backend services");
 	});
 });

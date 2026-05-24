@@ -34,12 +34,25 @@ const relatedCaseStudy = publishedCaseStudies.find(
 	(caseStudy) => caseStudy.data.slug === relatedCaseStudySlug,
 );
 const relatedCaseStudyTitle = relatedCaseStudy?.data.title ?? data.name;
+const [site] = await getCollection("site");
+const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+const canonicalUrl = `${siteUrl}${data.seo.canonicalPath}`;
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "SoftwareSourceCode",
+	name: data.name,
+	description: data.summary,
+	url: canonicalUrl,
+	applicationCategory: data.category,
+	about: data.bestFor,
+};
 ---
 
 <BaseLayout
 	title={`${data.seo.title} | HumanKaylee`}
 	description={data.seo.description}
 	canonicalPath={data.seo.canonicalPath}
+	structuredData={structuredData}
 >
 	<article class="case-study-detail" aria-labelledby="project-detail-title">
 		<header class="page-header">

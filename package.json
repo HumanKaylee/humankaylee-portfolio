@@ -3,7 +3,10 @@
 	"private": true,
 	"packageManager": "pnpm@10.33.2",
 	"scripts": {
+		"dev": "astro dev --host 127.0.0.1 --port 4321",
 		"lint": "biome check astro.config.mjs package.json pnpm-workspace.yaml tsconfig.json vitest.config.ts playwright.config.ts playwright.visual.config.ts apps/web/src tests/e2e tests/fixtures scripts",
+		"format": "biome format --write astro.config.mjs package.json pnpm-workspace.yaml tsconfig.json vitest.config.ts playwright.config.ts playwright.visual.config.ts apps/web/src tests/e2e tests/fixtures scripts",
+		"check": "pnpm typecheck",
 		"typecheck": "astro check && tsc -p tsconfig.json --noEmit",
 		"test": "vitest run && node --test scripts/*.test.mjs",
 		"test:e2e": "node scripts/playwright-with-pnpm-args.mjs",

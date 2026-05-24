@@ -11,6 +11,8 @@ type Props = {
 	description: string;
 	canonicalPath?: string;
 	ogImage?: string;
+	structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
+	bodyClass?: string;
 };
 
 function absoluteUrl(siteUrl: string, pathOrUrl: string) {
@@ -28,12 +30,14 @@ const {
 	description,
 	canonicalPath = "/",
 	ogImage = site.data.defaultOgImage,
+	structuredData: pageStructuredData = [],
+	bodyClass,
 } = Astro.props;
 const scaffold = homeScaffold();
 const siteUrl = site.data.siteUrl.replace(/\/$/, "");
 const canonicalUrl = absoluteUrl(siteUrl, canonicalPath);
 const socialImageUrl = absoluteUrl(siteUrl, ogImage);
-const structuredData = [
+const baseStructuredData = [
 	{
 		"@context": "https://schema.org",
 		"@type": "Person",
@@ -49,6 +53,10 @@ const structuredData = [
 		description: site.data.siteDescription,
 	},
 ];
+const extraStructuredData = Array.isArray(pageStructuredData)
+	? pageStructuredData
+	: [pageStructuredData];
+const structuredData = [...baseStructuredData, ...extraStructuredData];
 ---
 
 <!doctype html>
@@ -76,6 +84,7 @@ const structuredData = [
 		/>
 	</head>
 	<body
+		class={bodyClass}
 		data-enhancement="static-first"
 		data-route-continuity="native-view-transitions"
 		data-webgl="optional"

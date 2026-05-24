@@ -17,6 +17,8 @@ export type HomeScaffold = Readonly<{
 	heroTitle: string;
 	intro: string;
 	noJsNote: string;
+	audienceOrder: readonly string[];
+	supportStatements: readonly string[];
 	primaryNav: readonly ShellLink[];
 	ctas: readonly ShellLink[];
 	telemetry: readonly TelemetryItem[];
@@ -39,6 +41,13 @@ export function homeScaffold(): HomeScaffold {
 			"A static-first portfolio for automation, infrastructure, backend services, creative web systems, and the evidence that proves they work.",
 		noJsNote:
 			"Core content is available without JavaScript or WebGL. Interactive systems maps will enhance this shell later without replacing it.",
+		audienceOrder: ["recruiter", "senior-engineer", "collaborator"],
+		supportStatements: [
+			"Practical AI-assisted systems that turn ambiguous operational work into repeatable tools.",
+			"Automation workflows with evidence, rollback paths, and public-safe handoff documentation.",
+			"Infrastructure and backend services shaped by Rust, Axum, CI, security headers, and API-failure fallbacks.",
+			"Polished user-facing tools that stay readable as static HTML before motion, WebGL, or live APIs load.",
+		],
 		primaryNav: [
 			{ label: "Home", href: "/" },
 			{ label: "Projects", href: "/projects/" },

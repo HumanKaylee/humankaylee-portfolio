@@ -78,6 +78,15 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   representative static routes and sanitized contact outage fallback behavior.
 - Expanded README local-development and deployment guidance with a contract
   test for B-060 coverage.
+- Added a package-scripts contract for B-006 and explicit `dev`, `check`, and
+  `format` package scripts while keeping runbooks on the direct Astro dev
+  command.
+- Added explicit home proof-theme support statements and audience ordering for
+  the recruiter, senior-engineer, and collaborator paths.
+- Added explicit Systems Atelier spacing, radius, motion, layout, and z-index
+  CSS tokens with a contract test.
+- Added resume print-mode coverage, scoped print CSS, and item-specific
+  project/case-study JSON-LD with absolute public URLs.
 - Added a rollback and incident runbook contract for B-062, including dry-run
   evidence requirements for frontend rollback, API rollback or disablement,
   contact fallback, DNS/custom-domain issues, and recovery verification records.
@@ -120,7 +129,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   rows for PR #6 head `339afbd` and CI run `26356797852` while preserving
   blocked production rows.
 - Aligned the operations local-development runbook with the actual Astro dev
-  command because `package.json` does not define a `pnpm dev` script.
+  command used by README and CI-adjacent checks.
 - Expanded GitHub sync docs and live repo issue state with Phase 1 granular
   issues B-006 through B-012.
 - Expanded GitHub sync docs and live repo issue state with Phase 2 granular
