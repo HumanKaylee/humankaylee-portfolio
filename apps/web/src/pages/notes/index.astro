@@ -47,6 +47,9 @@ const notes = ((await getCollection("notes")) as NoteEntry[])
 						</p>
 						<h2 id={`${note.data.slug}-title`}>{note.data.title}</h2>
 						<p class="body-copy">{note.data.summary}</p>
+						<ul class="note-tags" aria-label={`${note.data.title} tags`}>
+							{note.data.tags.map((tag: string) => <li>{tag}</li>)}
+						</ul>
 						<a
 							data-touch-target="true"
 							href={`/notes/${note.data.slug}/`}

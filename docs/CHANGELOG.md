@@ -64,6 +64,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added API-enhanced build telemetry on the home page while preserving the static telemetry fallback.
 - Strengthened the home telemetry strip into a static-first credibility panel for local build, test, accessibility, and API-fallback posture without claiming production launch readiness.
 - Added schema-backed featured evidence hooks and a stronger public-safe proof ledger to case-study evidence drawers while keeping redaction approval boundaries explicit.
+- Expanded the notes/build-log surface with required public tags, RSS
+  categories, deeper public-safe starter notes, and a new API-offline resilience
+  entry explaining the static-first Rust API boundary.
 - Added practical privacy notes documenting current static-site behavior, resume PDF handling, contact validation versus mailto fallback, disabled-by-default events, and redaction expectations.
 - Added a privacy documentation contract test covering contact data use,
   transient rate-limit processing, disabled analytics/events, retention limits,

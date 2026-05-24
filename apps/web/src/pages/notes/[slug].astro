@@ -46,6 +46,9 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
 				<p class="eyebrow">
 					<time datetime={note.data.publishedAt}>{formattedDate}</time>
 				</p>
+				<ul class="note-tags" aria-label="Note tags">
+					{note.data.tags.map((tag: string) => <li>{tag}</li>)}
+				</ul>
 			</header>
 
 			<div class="note-body">

@@ -180,6 +180,7 @@ export const notesEntrySchema = z.object({
 	title: z.string().min(1),
 	slug: slugSchema,
 	summary: z.string().min(1),
+	tags: z.array(z.string().min(1)).min(1).max(6),
 	publishedAt: dateStringSchema,
 	publicationStatus: publicationStatusSchema,
 	seo: seoSchema,

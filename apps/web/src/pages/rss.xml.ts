@@ -28,6 +28,9 @@ export async function GET() {
 	const items = notes
 		.map((note: NoteEntry) => {
 			const pubDate = new Date(`${note.data.publishedAt}T00:00:00Z`);
+			const categories = note.data.tags
+				.map((tag: string) => `<category>${escapeXml(tag)}</category>`)
+				.join("");
 
 			return `<item>
 <title>${escapeXml(note.data.title)}</title>
@@ -35,6 +38,7 @@ export async function GET() {
 <guid>${escapeXml(noteUrl(note))}</guid>
 <pubDate>${pubDate.toUTCString()}</pubDate>
 <description>${escapeXml(note.data.summary)}</description>
+${categories}
 </item>`;
 		})
 		.join("");

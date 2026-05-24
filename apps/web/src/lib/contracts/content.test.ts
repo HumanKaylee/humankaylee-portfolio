@@ -214,6 +214,7 @@ describe("content contracts", () => {
 				publishedAt: "2026-05-23",
 				publicationStatus: "publish",
 				summary: "A launch note that should require SEO metadata.",
+				tags: ["build-log", "architecture"],
 				seo: {
 					title: "How this site was built",
 					description: "Notes about the build.",
@@ -222,6 +223,17 @@ describe("content contracts", () => {
 				},
 			}).success,
 		).toBe(true);
+
+		expect(
+			notesEntrySchema.safeParse({
+				title: "Missing tags",
+				slug: "missing-tags",
+				publishedAt: "2026-05-23",
+				publicationStatus: "publish",
+				summary: "A note without RSS/category tags should fail.",
+				seo,
+			}).success,
+		).toBe(false);
 	});
 
 	it("requires resume workflow state in the schema-backed resume entry", () => {

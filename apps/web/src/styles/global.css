@@ -719,6 +719,27 @@ h3 {
 	text-transform: uppercase;
 }
 
+.note-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 0;
+	list-style: none;
+}
+
+.note-tags li {
+	border: 1px solid rgba(243, 234, 216, 0.18);
+	border-radius: 999px;
+	background: rgba(243, 234, 216, 0.08);
+	color: var(--color-signal-on-dark);
+	padding: 0.35rem 0.65rem;
+	font-family: var(--font-label);
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
 .case-study-grid,
 .evidence-drawer-grid {
 	display: grid;

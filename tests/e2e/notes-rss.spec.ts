@@ -2,11 +2,26 @@ import { expect, test } from "@playwright/test";
 
 const publishedNotes = [
 	{
+		title: "How the portfolio stays useful when the API is offline",
+		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		summary:
+			"A build-log note describing the static-first contract that keeps the portfolio credible when enhanced services are unavailable.",
+		body: /The static shell carries the recruiting story/i,
+		dateLabel: "May 24, 2026",
+		datetime: "2026-05-24",
+		pubDate: "Sun, 24 May 2026 00:00:00 GMT",
+		tags: ["static-first", "resilience", "Rust API"],
+	},
+	{
 		title: "Redaction rules for portfolio case studies",
 		path: "/notes/redaction-rules-for-portfolio-case-studies/",
 		summary:
 			"A build-log note summarizing the publication safety boundary for case-study evidence.",
 		body: /Public proof should preserve the engineering story/i,
+		dateLabel: "May 23, 2026",
+		datetime: "2026-05-23",
+		pubDate: "Sat, 23 May 2026 00:00:00 GMT",
+		tags: ["redaction", "case studies", "public safety"],
 	},
 	{
 		title: "Why the portfolio content starts as data, not pages",
@@ -14,6 +29,10 @@ const publishedNotes = [
 		summary:
 			"A build-log note explaining why Phase 1 establishes structured inventory before visual page composition.",
 		body: /Phase 1 starts with contracts and safe inventory/i,
+		dateLabel: "May 23, 2026",
+		datetime: "2026-05-23",
+		pubDate: "Sat, 23 May 2026 00:00:00 GMT",
+		tags: ["content model", "contracts", "static-first"],
 	},
 ];
 
@@ -44,10 +63,13 @@ test.describe("notes and RSS @notes-rss", () => {
 				article.getByRole("heading", { name: note.title }),
 			).toBeVisible();
 			await expect(article.getByText(note.summary)).toBeVisible();
+			for (const tag of note.tags) {
+				await expect(article.getByText(tag, { exact: true })).toBeVisible();
+			}
 			await expect(
 				article.getByRole("link", { name: new RegExp(note.title, "i") }),
 			).toHaveAttribute("href", note.path);
-			await expect(article.getByText("May 23, 2026")).toBeVisible();
+			await expect(article.getByText(note.dateLabel)).toBeVisible();
 		}
 
 		await expect(main).not.toContainText(/needs-redaction|defer/i);
@@ -65,10 +87,13 @@ test.describe("notes and RSS @notes-rss", () => {
 			);
 			await expect(page.locator("article time")).toHaveAttribute(
 				"datetime",
-				"2026-05-23",
+				note.datetime,
 			);
 			await expect(page.locator("article")).toContainText(note.summary);
 			await expect(page.locator("article")).toContainText(note.body);
+			for (const tag of note.tags) {
+				await expect(page.locator("article")).toContainText(tag);
+			}
 
 			const articleText = await page.locator("article").textContent();
 			for (const pattern of privateContentPatterns) {
@@ -94,8 +119,11 @@ test.describe("notes and RSS @notes-rss", () => {
 			expect(xml).toContain(
 				`<link>https://humankaylee.example${note.path}</link>`,
 			);
-			expect(xml).toContain("<pubDate>Sat, 23 May 2026 00:00:00 GMT</pubDate>");
+			expect(xml).toContain(`<pubDate>${note.pubDate}</pubDate>`);
 			expect(xml).toContain(`<description>${note.summary}</description>`);
+			for (const tag of note.tags) {
+				expect(xml).toContain(`<category>${tag}</category>`);
+			}
 		}
 
 		expect(xml).not.toMatch(/needs-redaction|defer/i);
