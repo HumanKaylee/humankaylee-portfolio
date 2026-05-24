@@ -54,7 +54,7 @@ jobs:
         run: pnpm audit:frontend
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
 
       - name: Run keyboard navigation gate
         run: pnpm test:e2e -- --grep "@keyboard"
@@ -67,6 +67,9 @@ jobs:
 
       - name: Run API outage resilience gate
         run: pnpm test:e2e -- --grep "@api-down"
+
+      - name: Run responsive browser/device gate
+        run: pnpm test:e2e -- --grep "@responsive" --browser=all
 
       - name: Run frontend end-to-end tests
         run: pnpm test:e2e

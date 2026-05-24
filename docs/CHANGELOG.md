@@ -78,6 +78,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   active, preventing duplicate PR-branch Lighthouse runs for the same commit.
 - Added a non-scored Lighthouse warm-up audit before the scored route audits so
   CI cold-start variance does not weaken the strict launch thresholds.
+- Added a B-055 cross-browser responsive QA runbook, Playwright `@responsive`
+  launch gate, and CI step covering Chromium, Firefox, WebKit, mobile, tablet,
+  desktop, and a LinkedIn in-app mobile first-load approximation.
 
 ### Remaining Blockers
 

@@ -1363,6 +1363,14 @@ Acceptance criteria:
 Verification evidence:
 
 - QA matrix with screenshots or notes.
+- `runbooks/CROSS_BROWSER_RESPONSIVE_QA.md` documents the Chromium, Firefox,
+  WebKit, mobile, tablet, desktop, LinkedIn in-app mobile approximation, and
+  issue-triage contract for B-055.
+- `tests/e2e/responsive-cross-browser.spec.ts` covers first-load readability,
+  primary recruiter paths, and horizontal overflow across the launch route set.
+- `scripts/responsive-qa-contract.test.mjs` verifies the B-055 runbook, E2E
+  spec, CI gate, launch evidence row, and browser installation command stay
+  aligned.
 
 ### B-056: Add API outage resilience test
 
