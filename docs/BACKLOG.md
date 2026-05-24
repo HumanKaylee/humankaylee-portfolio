@@ -1479,6 +1479,10 @@ Acceptance criteria:
 Verification evidence:
 
 - Fresh-agent or clean-checkout dry run follows README through build/test.
+- `scripts/readme-contract.test.mjs` verifies README coverage for frontend and
+  backend local development, environment variable names without secrets, local
+  quality gates, frontend and backend deployment pointers, recovery commands,
+  and launch-blocker language.
 
 ### B-061: Write content update and redaction runbook
 

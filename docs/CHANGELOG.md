@@ -66,6 +66,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.
 - Added B-056 API outage resilience Playwright coverage and CI gate for
   representative static routes and sanitized contact outage fallback behavior.
+- Expanded README local-development and deployment guidance with a contract
+  test for B-060 coverage.
 
 ### Remaining Blockers
 

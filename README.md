@@ -1,31 +1,74 @@
 # HumanKaylee Portfolio
 
-Planning and execution repository for a private, resume-ready personal portfolio site for `HumanKaylee`.
+Status: not launch-ready. Final frontend domain, Final API domain, provider
+projects, and required secrets are still pending. See
+[runbooks/LAUNCH_EVIDENCE.md](runbooks/LAUNCH_EVIDENCE.md) for the current
+blocker record.
 
-## Current Status
+This repository is the implementation and operations workspace for the
+portfolio. For broader operating context, use
+[docs/OPERATIONS.md](docs/OPERATIONS.md) and the deployment runbook at
+[runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md). Privacy behavior and contact
+handling are documented in [docs/PRIVACY.md](docs/PRIVACY.md).
 
-- Research brief: [docs/RESEARCH.md](docs/RESEARCH.md)
-- Product requirements: [docs/PRD.md](docs/PRD.md)
-- Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md)
-- Backlog: [docs/BACKLOG.md](docs/BACKLOG.md)
-- Implementation and test plan: [docs/IMPLEMENTATION_AND_TEST_PLAN.md](docs/IMPLEMENTATION_AND_TEST_PLAN.md)
-- Operations runbook: [docs/OPERATIONS.md](docs/OPERATIONS.md)
-- Deployment runbook: [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md)
-- Content update and redaction runbook: [runbooks/CONTENT_UPDATE_AND_REDACTION.md](runbooks/CONTENT_UPDATE_AND_REDACTION.md)
-- Content strategy: [docs/CONTENT_STRATEGY.md](docs/CONTENT_STRATEGY.md)
-- Privacy notes: [docs/PRIVACY.md](docs/PRIVACY.md)
+## Local Development
 
-## Working Decision
+### Frontend Local Development
 
-Build a static-first, visually distinctive portfolio with progressive 3D and motion. Use Rust where it creates credible backend proof, not as unnecessary complexity in the critical rendering path.
+```bash
+pnpm install --frozen-lockfile
+pnpm exec astro dev --host 127.0.0.1 --port 4321
+```
 
-## Local Command Contract
+If the frontend needs a local API, set `PUBLIC_API_BASE_URL` in an ignored
+environment file before starting the dev server.
+
+### Backend Local Development
+
+```bash
+cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
+```
+
+Set `HK_API_HOST=127.0.0.1`, `HK_API_PORT=8787`, and
+`HK_API_ALLOWED_ORIGINS=http://127.0.0.1:4321` for the local loop. Keep
+`HK_API_CONTACT_DELIVERY_MODE=disabled` unless an approved store path exists,
+and keep local env files ignored.
+
+## Environment Variables
+
+Frontend public variables:
+
+- `PUBLIC_SITE_URL`
+- `PUBLIC_API_BASE_URL`
+- `PUBLIC_ANALYTICS_ENABLED`
+- `PUBLIC_RELEASE_VERSION`
+- `PUBLIC_GIT_COMMIT_SHA`
+
+Backend variables:
+
+- `HK_API_HOST`
+- `HK_API_PORT`
+- `HK_API_ALLOWED_ORIGINS`
+- `HK_API_CONTACT_DELIVERY_MODE`
+- `HK_API_CONTACT_STORE_PATH`
+- `HK_API_EVENT_LOGGING_ENABLED`
+- `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE`
+- `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`
+- `HK_API_VERSION`
+- `RUST_LOG`
+
+Rules:
+
+- Do not commit secret values or provider credentials.
+- Keep local overrides in ignored files or host-native secret stores.
+- Use [docs/OPERATIONS.md](docs/OPERATIONS.md) for the full environment matrix
+  and secret-storage guidance.
+
+## Tests And Quality Checks
 
 Run from the repository root:
 
 ```bash
-pnpm install --frozen-lockfile
 pnpm lint
 pnpm typecheck
 pnpm test
@@ -36,12 +79,73 @@ pnpm lighthouse:local
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
-cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
+pnpm run audit
+sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api
 ```
 
-Current pre-launch status: the static frontend includes home, projects, reviewed
-case-study routes, resume, notes/RSS, sitemap/robots, metadata, and an
-accessible project atlas fallback. The Rust API exposes `GET /api/health`,
-`GET /api/projects/live`, `POST /api/contact`, and gated `POST /api/events`.
-Production launch still requires approved case-study redaction, final
-deployment targets, and an approved persistent contact store path or provider.
+`pnpm test` includes the Node contract tests that validate this README and the
+other repository contracts.
+
+For launch-quality local verification, run `pnpm build && pnpm bundle:budget`
+after route, script, or visual changes. Container smoke evidence should follow
+the deployment runbook: start `humankaylee-api:local-check`, check
+`http://127.0.0.1:8788/api/health`, then stop the container with
+`sudo podman stop --time 1 <container-id>`.
+
+## Frontend Deployment
+
+Preferred frontend host: Cloudflare Pages. The detailed workflow and rollback
+steps live in [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md).
+
+1. Build the static site with `pnpm build`.
+2. Deploy the `dist` output through the selected Cloudflare Pages path.
+3. Record the deployment ID and smoke checks in
+   [runbooks/LAUNCH_EVIDENCE.md](runbooks/LAUNCH_EVIDENCE.md).
+
+Direct-upload example:
+
+```bash
+pnpm exec wrangler pages deploy dist \
+  --project-name "$CLOUDFLARE_PAGES_PROJECT" \
+  --branch main
+```
+
+## Backend Deployment
+
+Preferred launch backend host: Shuttle Community, with Fly.io or Railway as
+fallback. See [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md) for the
+provider-specific steps and rollback notes.
+
+1. Prepare the API environment variables and secret store for the selected
+   host.
+2. Deploy with the chosen provider command. For the Shuttle path:
+
+   ```bash
+   shuttle deploy \
+     --working-directory apps/api \
+     --name "$SHUTTLE_PROJECT" \
+     --secrets Secrets.production.toml
+   ```
+
+3. Capture the deployment ID, logs, and smoke checks in
+   [runbooks/LAUNCH_EVIDENCE.md](runbooks/LAUNCH_EVIDENCE.md).
+
+## Common Failure Modes And Recovery
+
+- Frontend dev server will not start: rerun `pnpm install --frozen-lockfile`
+  and then `pnpm exec astro dev --host 127.0.0.1 --port 4321`.
+- API boot or contact behavior looks wrong: verify `HK_API_ALLOWED_ORIGINS`,
+  `HK_API_CONTACT_DELIVERY_MODE`, and `HK_API_VERSION`, then rerun
+  `cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api`.
+- Frontend deploy fails preflight checks: rerun `pnpm lint`, `pnpm typecheck`,
+  `pnpm test`, and `pnpm build`, then follow
+  [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md).
+- Roll back a bad release: list deployments with
+  `pnpm exec wrangler pages deployment list --project-name "$CLOUDFLARE_PAGES_PROJECT" --environment production`
+  for Cloudflare Pages or `shuttle deployment list --name "$SHUTTLE_PROJECT"`
+  for Shuttle. For Fly.io, use
+  `fly releases --app "$FLY_APP" --image`, then redeploy a known-good image
+  with `fly deploy --app "$FLY_APP" --image "$KNOWN_GOOD_IMAGE"`. Use
+  `railway deployment list` for Railway history, then record the recovery in
+  [runbooks/LAUNCH_EVIDENCE.md](runbooks/LAUNCH_EVIDENCE.md).
