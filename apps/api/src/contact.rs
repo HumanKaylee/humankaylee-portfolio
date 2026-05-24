@@ -1,4 +1,7 @@
-use crate::{config::ContactDeliveryMode, state::AppState};
+use crate::{
+    config::{AppConfig, ContactDeliveryMode},
+    state::AppState,
+};
 use axum::{
     body::Bytes,
     extract::State,
@@ -8,8 +11,11 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::{
+    future::Future,
     io,
-    path::Path,
+    path::{Path, PathBuf},
+    pin::Pin,
+    sync::Arc,
     time::{SystemTime, UNIX_EPOCH},
 };
 use tokio::{fs, io::AsyncWriteExt};
@@ -42,6 +48,86 @@ struct ContactStoreRecord<'a> {
     message: &'a str,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ContactSubmission {
+    pub name: String,
+    pub email: String,
+    pub subject: String,
+    pub message: String,
+}
+
+impl ContactSubmission {
+    fn from_request(payload: &ContactRequest) -> Self {
+        Self {
+            name: payload.name.trim().to_owned(),
+            email: payload.email.trim().to_owned(),
+            subject: payload.subject.trim().to_owned(),
+            message: payload.message.trim().to_owned(),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ContactDeliveryError;
+
+impl ContactDeliveryError {
+    pub fn unavailable() -> Self {
+        Self
+    }
+}
+
+impl From<io::Error> for ContactDeliveryError {
+    fn from(_: io::Error) -> Self {
+        Self::unavailable()
+    }
+}
+
+pub type ContactDeliveryFuture<'a> =
+    Pin<Box<dyn Future<Output = Result<(), ContactDeliveryError>> + Send + 'a>>;
+
+pub trait ContactDelivery: Send + Sync + 'static {
+    fn deliver<'a>(&'a self, submission: ContactSubmission) -> ContactDeliveryFuture<'a>;
+}
+
+#[derive(Clone)]
+pub struct JsonlContactDelivery {
+    path: PathBuf,
+}
+
+impl JsonlContactDelivery {
+    pub fn new(path: PathBuf) -> Self {
+        Self { path }
+    }
+}
+
+impl ContactDelivery for JsonlContactDelivery {
+    fn deliver<'a>(&'a self, submission: ContactSubmission) -> ContactDeliveryFuture<'a> {
+        Box::pin(async move {
+            store_contact_submission(&self.path, &submission)
+                .await
+                .map_err(Into::into)
+        })
+    }
+}
+
+pub struct UnavailableContactDelivery;
+
+impl ContactDelivery for UnavailableContactDelivery {
+    fn deliver<'a>(&'a self, _submission: ContactSubmission) -> ContactDeliveryFuture<'a> {
+        Box::pin(async { Err(ContactDeliveryError::unavailable()) })
+    }
+}
+
+pub fn contact_delivery_from_config(config: &AppConfig) -> Arc<dyn ContactDelivery> {
+    match (
+        &config.contact_delivery_mode,
+        config.contact_store_path.clone(),
+    ) {
+        (ContactDeliveryMode::Store, Some(path)) => Arc::new(JsonlContactDelivery::new(path)),
+        _ => Arc::new(UnavailableContactDelivery),
+    }
+}
+
 #[derive(Debug, Serialize)]
 struct ContactDisabledResponse {
     error: ApiError,
@@ -63,7 +149,7 @@ struct ApiError {
 
 pub async fn contact_handler(
     State(state): State<AppState>,
-    headers: HeaderMap,
+    _headers: HeaderMap,
     body: Bytes,
 ) -> impl IntoResponse {
     if body.len() > CONTACT_REQUEST_BODY_LIMIT_BYTES {
@@ -111,7 +197,7 @@ pub async fn contact_handler(
         );
     }
 
-    let client_identity = contact_client_identity(&headers, &payload);
+    let client_identity = contact_client_identity(&payload);
     if !state.contact_abuse_tracker().allow_submission(
         &client_identity,
         state.config().rate_limits.contact_per_hour,
@@ -134,11 +220,9 @@ pub async fn contact_handler(
         );
     }
 
-    let Some(contact_store_path) = state.config().contact_store_path.as_deref() else {
-        return contact_storage_unavailable_response();
-    };
-
-    if store_contact_submission(contact_store_path, &payload)
+    if state
+        .contact_delivery()
+        .deliver(ContactSubmission::from_request(&payload))
         .await
         .is_err()
     {
@@ -156,7 +240,7 @@ pub async fn contact_handler(
         .into_response()
 }
 
-async fn store_contact_submission(path: &Path, payload: &ContactRequest) -> io::Result<()> {
+async fn store_contact_submission(path: &Path, submission: &ContactSubmission) -> io::Result<()> {
     if let Some(parent) = path
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
@@ -169,10 +253,10 @@ async fn store_contact_submission(path: &Path, payload: &ContactRequest) -> io::
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
             .as_secs(),
-        name: payload.name.trim(),
-        email: payload.email.trim(),
-        subject: payload.subject.trim(),
-        message: payload.message.trim(),
+        name: &submission.name,
+        email: &submission.email,
+        subject: &submission.subject,
+        message: &submission.message,
     };
 
     let mut line = serde_json::to_vec(&record).map_err(io::Error::other)?;
@@ -196,31 +280,8 @@ fn contact_storage_unavailable_response() -> axum::response::Response {
     )
 }
 
-fn contact_client_identity(headers: &HeaderMap, payload: &ContactRequest) -> String {
-    if let Some(identity) = forwarded_client_identity(headers) {
-        return identity;
-    }
-
+fn contact_client_identity(payload: &ContactRequest) -> String {
     normalize_email(&payload.email).unwrap_or_else(|| "anonymous".to_owned())
-}
-
-fn forwarded_client_identity(headers: &HeaderMap) -> Option<String> {
-    let forwarded_for = headers
-        .get("x-forwarded-for")
-        .and_then(|value| value.to_str().ok())
-        .and_then(|value| value.split(',').next())
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .map(ToOwned::to_owned);
-
-    forwarded_for.or_else(|| {
-        headers
-            .get("x-real-ip")
-            .and_then(|value| value.to_str().ok())
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-            .map(ToOwned::to_owned)
-    })
 }
 
 fn normalize_email(value: &str) -> Option<String> {

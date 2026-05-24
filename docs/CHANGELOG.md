@@ -54,6 +54,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added `POST /api/contact` with JSON validation, honeypot rejection, oversized-payload rejection, disabled-mode fallback, and a safe accepted response that does not echo private message text.
 - Added required JSONL contact storage for enabled `store` mode via `HK_API_CONTACT_STORE_PATH`, including safe failure when storage is not configured.
 - Added backend CORS allowlist middleware, request body limits, timeout, tracing, compression, and in-memory contact rate limiting.
+- Hardened contact rate limiting so the default abuse key does not trust spoofable forwarded headers before a trusted proxy boundary exists.
+- Added an injectable contact delivery adapter seam with fake success/failure contract coverage while keeping production contact delivery blocked until storage/provider decisions are approved.
 - Added gated `POST /api/events` with disabled-by-default behavior and an allowlisted privacy-safe event shape.
 - Added the API-enhanced contact page form with visible mailto fallback, no-JS usefulness, API-down copy, and Playwright coverage.
 - Added API-enhanced build telemetry on the home page while preserving the static telemetry fallback.

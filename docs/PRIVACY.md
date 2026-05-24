@@ -44,10 +44,11 @@ appends accepted submissions to a JSONL file at that path. The response still
 does not echo message bodies, headers, IP addresses, or honeypot values.
 
 For rate limiting, the API's in-memory rate limit tracks a temporary
-abuse-control key from forwarded client IP headers when present, or the
-normalized email address when those headers are absent. The key is used to
-evaluate an hourly rate-limit window, is kept only in running API process
-memory, and is not written to the contact JSONL record.
+abuse-control key from the normalized sender email address. The API does not
+trust forwarded client IP headers by default because no trusted proxy boundary
+has been approved. The key is used to evaluate an hourly rate-limit window, is
+kept only in running API process memory, and is not written to the contact JSONL
+record.
 
 If the API is unavailable or disabled, the page keeps the mailto fallback
 visible so visitors can still use the static contact path.

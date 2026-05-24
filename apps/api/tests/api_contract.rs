@@ -5,6 +5,7 @@ use axum::{
 use humankaylee_api::{
     app,
     config::{AppConfig, ContactDeliveryMode, RateLimitConfig},
+    contact::{ContactDelivery, ContactDeliveryError, ContactDeliveryFuture, ContactSubmission},
     projects::{
         ProjectMetadata, ProjectMetadataProvider, ProjectsLiveCache, ProjectsLiveError,
         ProjectsLiveSnapshot,
@@ -16,7 +17,7 @@ use serde_json::Value;
 use std::{
     fs,
     path::PathBuf,
-    sync::Arc,
+    sync::{Arc, Mutex},
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tower::ServiceExt;
@@ -153,6 +154,37 @@ impl ProjectMetadataProvider for SlowProjectsProvider {
     fn refresh(&self) -> Result<ProjectsLiveSnapshot, ProjectsLiveError> {
         std::thread::sleep(Duration::from_millis(250));
         Ok(self.snapshot.clone())
+    }
+}
+
+#[derive(Clone, Default)]
+struct RecordingContactDelivery {
+    submissions: Arc<Mutex<Vec<ContactSubmission>>>,
+}
+
+impl RecordingContactDelivery {
+    fn submissions(&self) -> Vec<ContactSubmission> {
+        self.submissions.lock().expect("submissions mutex").clone()
+    }
+}
+
+impl ContactDelivery for RecordingContactDelivery {
+    fn deliver<'a>(&'a self, submission: ContactSubmission) -> ContactDeliveryFuture<'a> {
+        Box::pin(async move {
+            self.submissions
+                .lock()
+                .expect("submissions mutex")
+                .push(submission);
+            Ok(())
+        })
+    }
+}
+
+struct FailingContactDelivery;
+
+impl ContactDelivery for FailingContactDelivery {
+    fn deliver<'a>(&'a self, _submission: ContactSubmission) -> ContactDeliveryFuture<'a> {
+        Box::pin(async { Err(ContactDeliveryError::unavailable()) })
     }
 }
 
@@ -391,6 +423,78 @@ async fn contact_store_mode_accepts_valid_submission_without_echoing_private_mes
 }
 
 #[tokio::test]
+async fn contact_accepts_submission_through_fake_delivery_adapter_without_echoing_private_text() {
+    let delivery = RecordingContactDelivery::default();
+    let state = AppState::with_config_and_contact_delivery(
+        AppConfig {
+            contact_delivery_mode: ContactDeliveryMode::Store,
+            ..AppConfig::default()
+        },
+        Arc::new(delivery.clone()),
+    );
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "  Kaylee Example  ",
+            "email": "  KAYLEE@EXAMPLE.COM  ",
+            "subject": "  Portfolio inquiry  ",
+            "message": "  This private adapter message body must not be echoed.  ",
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::ACCEPTED);
+    assert_eq!(json["status"], "accepted");
+    assert_eq!(json["delivery"], "store");
+    assert!(!json.to_string().contains("private adapter message body"));
+
+    let submissions = delivery.submissions();
+    assert_eq!(submissions.len(), 1);
+    assert_eq!(submissions[0].name, "Kaylee Example");
+    assert_eq!(submissions[0].email, "KAYLEE@EXAMPLE.COM");
+    assert_eq!(submissions[0].subject, "Portfolio inquiry");
+    assert_eq!(
+        submissions[0].message,
+        "This private adapter message body must not be echoed."
+    );
+}
+
+#[tokio::test]
+async fn contact_returns_safe_fallback_when_delivery_adapter_fails() {
+    let state = AppState::with_config_and_contact_delivery(
+        AppConfig {
+            contact_delivery_mode: ContactDeliveryMode::Store,
+            ..AppConfig::default()
+        },
+        Arc::new(FailingContactDelivery),
+    );
+
+    let (status, json) = post_json(
+        state,
+        "/api/contact",
+        json!({
+            "name": "Kaylee Example",
+            "email": "kaylee@example.com",
+            "subject": "Portfolio inquiry",
+            "message": "This private failing adapter message must not be echoed.",
+            "company": ""
+        }),
+    )
+    .await;
+
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(json["error"]["code"], "contact_storage_unavailable");
+    assert_eq!(
+        json["error"]["message"],
+        "Contact storage is unavailable. Use the static email fallback."
+    );
+    assert!(!json.to_string().contains("private failing adapter message"));
+}
+
+#[tokio::test]
 async fn contact_store_mode_requires_configured_storage_before_accepting_submission() {
     let state = AppState::with_config(AppConfig {
         contact_delivery_mode: ContactDeliveryMode::Store,
@@ -521,6 +625,63 @@ async fn contact_rate_limits_repeat_submissions_from_the_same_sender() {
     assert_eq!(json["status"], "accepted");
 
     let (status, json) = post_json(state, "/api/contact", payload).await;
+    assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
+    assert_eq!(json["error"]["code"], "contact_rate_limited");
+
+    fs::remove_file(store_path).expect("remove contact store");
+}
+
+#[tokio::test]
+async fn contact_rate_limit_does_not_trust_spoofable_forwarded_headers_by_default() {
+    let store_path = unique_contact_store_path("spoofed-forwarded");
+    let state = AppState::with_config(AppConfig {
+        contact_delivery_mode: ContactDeliveryMode::Store,
+        contact_store_path: Some(store_path.clone()),
+        rate_limits: RateLimitConfig {
+            requests_per_minute: 60,
+            contact_per_hour: 1,
+        },
+        ..AppConfig::default()
+    });
+    let payload = json!({
+        "name": "Kaylee Example",
+        "email": "kaylee@example.com",
+        "subject": "Portfolio inquiry",
+        "message": "This is a valid length contact message for the portfolio.",
+        "company": ""
+    });
+
+    let first = request(
+        state.clone(),
+        Request::builder()
+            .method("POST")
+            .uri("/api/contact")
+            .header("content-type", "application/json")
+            .header("x-forwarded-for", "198.51.100.10")
+            .body(Body::from(payload.to_string()))
+            .expect("request"),
+    )
+    .await;
+    assert_eq!(first.status(), StatusCode::ACCEPTED);
+
+    let second = request(
+        state,
+        Request::builder()
+            .method("POST")
+            .uri("/api/contact")
+            .header("content-type", "application/json")
+            .header("x-forwarded-for", "203.0.113.20")
+            .header("x-real-ip", "203.0.113.21")
+            .body(Body::from(payload.to_string()))
+            .expect("request"),
+    )
+    .await;
+    let status = second.status();
+    let body = to_bytes(second.into_body(), usize::MAX)
+        .await
+        .expect("body");
+    let json: Value = serde_json::from_slice(&body).expect("json");
+
     assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
     assert_eq!(json["error"]["code"], "contact_rate_limited");
 

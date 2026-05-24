@@ -528,10 +528,11 @@ Expected `xh :8787/api/health` result shape:
   persistent contact storage, production smoke, rollback, or case-study
   redaction blockers.
 - Current partial follow-ups: `B-042` contact abuse controls are in-memory and
-  must not trust spoofable proxy headers in production without a trusted proxy
-  boundary; `B-043` JSONL storage works locally, but production contact handling
-  remains blocked until retention, backup, rotation, deletion, and store/provider
-  decisions are approved.
+  now default to normalized sender identity rather than spoofable forwarded
+  headers until a trusted proxy boundary exists; `B-043` JSONL storage works
+  through an injectable delivery adapter seam with fake success/failure coverage,
+  but production contact handling remains blocked until retention, backup,
+  rotation, deletion, and store/provider decisions are approved.
 - Active guard commands for phase 5 status checks:
   - `cargo fmt --manifest-path apps/api/Cargo.toml --check`
   - `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`

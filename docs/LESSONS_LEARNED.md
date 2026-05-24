@@ -107,6 +107,20 @@ key to evaluate an hourly window, but it does not run a background expiry job.
 The privacy contract should pin that distinction so future docs do not imply a
 deletion workflow that the API does not implement.
 
+### Spoofable network headers are not abuse-control boundaries
+
+Forwarded IP headers are only useful after the deployment has an explicit
+trusted proxy boundary. Until then, contact rate limiting should use a stable
+sender-derived key and tests should prove spoofed `x-forwarded-for` or
+`x-real-ip` headers do not bypass the hourly window.
+
+### Contact delivery needs an adapter seam before provider selection
+
+JSONL storage is useful local evidence, but production delivery should not be
+hard-wired to one persistence choice before retention, backup, rotation, and
+deletion decisions exist. A fakeable delivery adapter keeps backend behavior
+testable while preserving the production blocker.
+
 ### Launch evidence must separate PR checks from production readiness
 
 Passing PR CI is useful evidence, but it is not a production launch signal by itself. The launch runbook should keep PR checks, local final verification, production smoke checks, provider deployment IDs, rollback targets, redaction approvals, and contact-delivery status in separate rows so blocked or not-run production work cannot be mistaken for launch readiness.

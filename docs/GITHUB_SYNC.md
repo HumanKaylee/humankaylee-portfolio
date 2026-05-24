@@ -171,61 +171,61 @@ Phase 1 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
 views:
 
-| Issue | Backlog item                                      | Parent | Labels                                                                                               |
-| ----- | ------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
-| #12   | B-006: Scaffold Astro TypeScript frontend         | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                |
-| #13   | B-007: Configure content collections             | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:1-foundation`, `agent-standard` |
-| #14   | B-008: Build base layout and semantic shell       | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-standard` |
-| #15   | B-009: Establish CSS token system                | #3     | `priority:p0`, `type:task`, `area:design`, `area:frontend`, `phase:1-foundation`, `agent-strong`    |
-| #16   | B-010: Add baseline CI checks                     | #3     | `priority:p0`, `type:task`, `area:infra`, `phase:1-foundation`, `agent-standard`                    |
-| #17   | B-011: Add frontend test harness                  | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                 |
-| #18   | B-012: Add Playwright smoke-test harness          | #3     | `priority:p1`, `type:qa`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-strong`        |
+| Issue | Backlog item                                | Parent | Labels                                                                                              |
+| ----- | ------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------- |
+| #12   | B-006: Scaffold Astro TypeScript frontend   | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                 |
+| #13   | B-007: Configure content collections        | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:1-foundation`, `agent-standard` |
+| #14   | B-008: Build base layout and semantic shell | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-standard` |
+| #15   | B-009: Establish CSS token system           | #3     | `priority:p0`, `type:task`, `area:design`, `area:frontend`, `phase:1-foundation`, `agent-strong`    |
+| #16   | B-010: Add baseline CI checks               | #3     | `priority:p0`, `type:task`, `area:infra`, `phase:1-foundation`, `agent-standard`                    |
+| #17   | B-011: Add frontend test harness            | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                 |
+| #18   | B-012: Add Playwright smoke-test harness    | #3     | `priority:p1`, `type:qa`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-strong`        |
 
 Phase 2 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
 views:
 
-| Issue | Backlog item                                                                      | Parent | Labels                                                                                                        |
-| ----- | --------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
-| #19   | B-013: Write launch home-page content package                                     | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
-| #20   | B-014: Draft case study: CLI fleet synchronization and MCP rollout                | #3     | `priority:p0`, `type:content`, `area:content`, `area:privacy`, `phase:2-content`, `agent-strong`            |
-| #21   | B-015: Draft case study: remote workstation recovery and operational debugging    | #3     | `priority:p0`, `type:content`, `area:content`, `area:privacy`, `phase:2-content`, `agent-strong`            |
-| #22   | B-016: Draft case study: HumanKaylee portfolio build                              | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
-| #23   | B-017: Draft case study: creative web demo                                        | #3     | `priority:p1`, `type:content`, `area:content`, `area:design`, `phase:2-content`, `agent-strong`              |
-| #24   | B-018: Evaluate Kalshi or analytics tooling publication safety                    | #3     | `priority:p1`, `type:research`, `area:content`, `area:privacy`, `phase:2-content`, `agent-standard`          |
-| #25   | B-019: Evaluate YouTube AI video pipeline publication safety                      | #3     | `priority:p1`, `type:research`, `area:content`, `area:privacy`, `phase:2-content`, `agent-standard`          |
-| #26   | B-020: Build resume content source                                                 | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
-| #27   | B-021: Create notes/build-log starter content                                      | #3     | `priority:p1`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
+| Issue | Backlog item                                                                   | Parent | Labels                                                                                              |
+| ----- | ------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
+| #19   | B-013: Write launch home-page content package                                  | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                  |
+| #20   | B-014: Draft case study: CLI fleet synchronization and MCP rollout             | #3     | `priority:p0`, `type:content`, `area:content`, `area:privacy`, `phase:2-content`, `agent-strong`    |
+| #21   | B-015: Draft case study: remote workstation recovery and operational debugging | #3     | `priority:p0`, `type:content`, `area:content`, `area:privacy`, `phase:2-content`, `agent-strong`    |
+| #22   | B-016: Draft case study: HumanKaylee portfolio build                           | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                  |
+| #23   | B-017: Draft case study: creative web demo                                     | #3     | `priority:p1`, `type:content`, `area:content`, `area:design`, `phase:2-content`, `agent-strong`     |
+| #24   | B-018: Evaluate Kalshi or analytics tooling publication safety                 | #3     | `priority:p1`, `type:research`, `area:content`, `area:privacy`, `phase:2-content`, `agent-standard` |
+| #25   | B-019: Evaluate YouTube AI video pipeline publication safety                   | #3     | `priority:p1`, `type:research`, `area:content`, `area:privacy`, `phase:2-content`, `agent-standard` |
+| #26   | B-020: Build resume content source                                             | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                  |
+| #27   | B-021: Create notes/build-log starter content                                  | #3     | `priority:p1`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                  |
 
 Phase 3 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
 views:
 
-| Issue | Backlog item                                                        | Parent | Labels                                                                                               |
-| ----- | ------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
-| #28   | B-022: Implement static home page                                   | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
-| #29   | B-023: Implement project index and category filters                 | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
-| #30   | B-024: Implement case-study routes                                  | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
-| #31   | B-025: Implement resume HTML page and PDF link                      | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
-| #32   | B-026: Implement contact page or section with fallback              | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:privacy`, `phase:3-static-experience`, `agent-standard` |
-| #33   | B-027: Implement notes/build-log pages and RSS                      | #3     | `priority:p1`, `type:feature`, `area:frontend`, `area:seo`, `phase:3-static-experience`, `agent-standard` |
-| #34   | B-028: Add SEO metadata and structured data                         | #3     | `priority:p0`, `type:feature`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard` |
-| #35   | B-029: Add sitemap and robots.txt                                   | #3     | `priority:p0`, `type:task`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard` |
-| #36   | B-030: Add static project metadata fallback                         | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| Issue | Backlog item                                           | Parent | Labels                                                                                                        |
+| ----- | ------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------- |
+| #28   | B-022: Implement static home page                      | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #29   | B-023: Implement project index and category filters    | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #30   | B-024: Implement case-study routes                     | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #31   | B-025: Implement resume HTML page and PDF link         | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #32   | B-026: Implement contact page or section with fallback | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:privacy`, `phase:3-static-experience`, `agent-standard` |
+| #33   | B-027: Implement notes/build-log pages and RSS         | #3     | `priority:p1`, `type:feature`, `area:frontend`, `area:seo`, `phase:3-static-experience`, `agent-standard`     |
+| #34   | B-028: Add SEO metadata and structured data            | #3     | `priority:p0`, `type:feature`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard`     |
+| #35   | B-029: Add sitemap and robots.txt                      | #3     | `priority:p0`, `type:task`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard`        |
+| #36   | B-030: Add static project metadata fallback            | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard`    |
 
 Phase 4 backlog issues now live as the next granular sync layer, with #2
 remaining the parent epic until the GitHub Project board can take over status
 views:
 
-| Issue | Backlog item                                         | Parent | Labels                                                                                                      |
-| ----- | ---------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------- |
-| #37   | B-031: Implement art-directed page surfaces          | #2     | `priority:p1`, `type:feature`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-strong`    |
-| #38   | B-032: Implement static hero poster and fallback     | #2     | `priority:p0`, `type:feature`, `area:design`, `area:performance`, `phase:4-visual-motion`, `agent-strong` |
-| #39   | B-033: Implement accessible project atlas fallback   | #2     | `priority:p0`, `type:feature`, `area:frontend`, `area:a11y`, `phase:4-visual-motion`, `agent-standard`    |
-| #40   | B-034: Implement desktop project constellation       | #2     | `priority:p1`, `type:feature`, `area:motion`, `area:frontend`, `phase:4-visual-motion`, `agent-strong`    |
-| #41   | B-035: Add purposeful scroll and reveal motion       | #2     | `priority:p1`, `type:feature`, `area:motion`, `area:design`, `phase:4-visual-motion`, `agent-strong`      |
-| #42   | B-036: Add view transitions or route continuity      | #2     | `priority:p2`, `type:feature`, `area:motion`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`  |
-| #43   | B-037: Add visual regression snapshots               | #2     | `priority:p1`, `type:qa`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`       |
+| Issue | Backlog item                                       | Parent | Labels                                                                                                    |
+| ----- | -------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------- |
+| #37   | B-031: Implement art-directed page surfaces        | #2     | `priority:p1`, `type:feature`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-strong`    |
+| #38   | B-032: Implement static hero poster and fallback   | #2     | `priority:p0`, `type:feature`, `area:design`, `area:performance`, `phase:4-visual-motion`, `agent-strong` |
+| #39   | B-033: Implement accessible project atlas fallback | #2     | `priority:p0`, `type:feature`, `area:frontend`, `area:a11y`, `phase:4-visual-motion`, `agent-standard`    |
+| #40   | B-034: Implement desktop project constellation     | #2     | `priority:p1`, `type:feature`, `area:motion`, `area:frontend`, `phase:4-visual-motion`, `agent-strong`    |
+| #41   | B-035: Add purposeful scroll and reveal motion     | #2     | `priority:p1`, `type:feature`, `area:motion`, `area:design`, `phase:4-visual-motion`, `agent-strong`      |
+| #42   | B-036: Add view transitions or route continuity    | #2     | `priority:p2`, `type:feature`, `area:motion`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`  |
+| #43   | B-037: Add visual regression snapshots             | #2     | `priority:p1`, `type:qa`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`       |
 
 Phase 4 issue sync status: complete. B-031 through B-037 are mirrored as #37
 through #43. This is only GitHub issue mirror evidence; it is not a Project
@@ -235,21 +235,41 @@ Phase 5 backlog issues now live as the next granular sync layer, with #4
 remaining the parent epic until the GitHub Project board can take over status
 views:
 
-| Issue | Backlog item                                                   | Parent | Labels                                                                                                            |
-| ----- | -------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
-| #44   | B-038: Scaffold Rust Axum API service                          | #4     | `priority:p0`, `type:task`, `area:backend`, `phase:5-backend`, `agent-standard`                                 |
-| #45   | B-039: Implement `GET /api/health`                             | #4     | `priority:p0`, `type:feature`, `area:backend`, `phase:5-backend`, `agent-standard`                              |
-| #46   | B-040: Implement cached `GET /api/projects/live`               | #4     | `priority:p1`, `type:feature`, `area:backend`, `phase:5-backend`, `agent-standard`                              |
-| #47   | B-041: Implement contact endpoint validation                   | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`             |
-| #48   | B-042: Add contact rate limiting and abuse controls            | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`             |
-| #49   | B-043: Add contact delivery or storage adapter                 | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:privacy`, `phase:5-backend`, `agent-standard`              |
-| #50   | B-044: Implement optional privacy-safe events endpoint         | #4     | `priority:p2`, `type:feature`, `area:backend`, `area:privacy`, `phase:5-backend`, `agent-standard`              |
-| #51   | B-045: Configure backend CORS and security middleware          | #4     | `priority:p0`, `type:task`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`                 |
-| #52   | B-046: Add backend Dockerfile and Shuttle deploy path          | #4     | `priority:p0`, `type:task`, `area:backend`, `area:infra`, `phase:5-backend`, `agent-standard`                    |
-| #53   | B-047: Integrate frontend with API fallbacks                   | #4     | `priority:p0`, `type:feature`, `area:frontend`, `area:backend`, `phase:5-backend`, `agent-standard`             |
+| Issue | Backlog item                                           | Parent | Labels                                                                                              |
+| ----- | ------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
+| #44   | B-038: Scaffold Rust Axum API service                  | #4     | `priority:p0`, `type:task`, `area:backend`, `phase:5-backend`, `agent-standard`                     |
+| #45   | B-039: Implement `GET /api/health`                     | #4     | `priority:p0`, `type:feature`, `area:backend`, `phase:5-backend`, `agent-standard`                  |
+| #46   | B-040: Implement cached `GET /api/projects/live`       | #4     | `priority:p1`, `type:feature`, `area:backend`, `phase:5-backend`, `agent-standard`                  |
+| #47   | B-041: Implement contact endpoint validation           | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard` |
+| #48   | B-042: Add contact rate limiting and abuse controls    | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard` |
+| #49   | B-043: Add contact delivery or storage adapter         | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:privacy`, `phase:5-backend`, `agent-standard`  |
+| #50   | B-044: Implement optional privacy-safe events endpoint | #4     | `priority:p2`, `type:feature`, `area:backend`, `area:privacy`, `phase:5-backend`, `agent-standard`  |
+| #51   | B-045: Configure backend CORS and security middleware  | #4     | `priority:p0`, `type:task`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`    |
+| #52   | B-046: Add backend Dockerfile and Shuttle deploy path  | #4     | `priority:p0`, `type:task`, `area:backend`, `area:infra`, `phase:5-backend`, `agent-standard`       |
+| #53   | B-047: Integrate frontend with API fallbacks           | #4     | `priority:p0`, `type:feature`, `area:frontend`, `area:backend`, `phase:5-backend`, `agent-standard` |
 
 Phase 5 issue sync status: complete. B-038 through B-047 are mirrored as #44
 through #53. This is only GitHub issue mirror evidence; it is not a Project
+board recovery, production launch, or launch-readiness claim.
+
+Phase 6 backlog issues now live as the next granular sync layer, with #4
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                       | Parent | Labels                                                                                                       |
+| ----- | -------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------ |
+| #54   | B-048: Add accessibility audit pass                | #4     | `priority:p0`, `type:qa`, `area:a11y`, `phase:6-hardening`, `agent-standard`                                 |
+| #55   | B-049: Add reduced-motion and no-WebGL QA pass     | #4     | `priority:p0`, `type:qa`, `area:a11y`, `area:motion`, `phase:6-hardening`, `agent-standard`                  |
+| #56   | B-050: Add Lighthouse production-like checks       | #4     | `priority:p0`, `type:qa`, `area:performance`, `area:seo`, `area:a11y`, `phase:6-hardening`, `agent-standard` |
+| #57   | B-051: Add bundle analysis and performance budgets | #4     | `priority:p0`, `type:qa`, `area:performance`, `area:frontend`, `phase:6-hardening`, `agent-standard`         |
+| #58   | B-052: Add Playwright journey smoke tests          | #4     | `priority:p0`, `type:qa`, `area:frontend`, `phase:6-hardening`, `agent-standard`                             |
+| #59   | B-053: Add security headers and dependency audit   | #4     | `priority:p0`, `type:qa`, `area:security`, `area:infra`, `phase:6-hardening`, `agent-standard`               |
+| #60   | B-054: Add privacy documentation                   | #4     | `priority:p0`, `type:docs`, `area:privacy`, `phase:6-hardening`, `agent-standard`                            |
+| #61   | B-055: Add cross-browser and responsive QA pass    | #4     | `priority:p0`, `type:qa`, `area:frontend`, `area:design`, `phase:6-hardening`, `agent-standard`              |
+| #62   | B-056: Add API outage resilience test              | #4     | `priority:p0`, `type:qa`, `area:backend`, `area:frontend`, `phase:6-hardening`, `agent-standard`             |
+
+Phase 6 issue sync status: complete. B-048 through B-056 are mirrored as #54
+through #62. This is only GitHub issue mirror evidence; it is not a Project
 board recovery, production launch, or launch-readiness claim.
 
 Next sync passes should add granular issues one phase at a time, preserving the

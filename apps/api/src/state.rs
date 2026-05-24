@@ -1,4 +1,8 @@
-use crate::{config::AppConfig, projects::ProjectsLiveCache};
+use crate::{
+    config::AppConfig,
+    contact::{contact_delivery_from_config, ContactDelivery},
+    projects::ProjectsLiveCache,
+};
 use std::{
     collections::{HashMap, VecDeque},
     sync::{Arc, Mutex},
@@ -10,6 +14,7 @@ pub struct AppState {
     config: AppConfig,
     started_at: Instant,
     contact_abuse_tracker: Arc<ContactAbuseTracker>,
+    contact_delivery: Arc<dyn ContactDelivery>,
     projects_live_cache: ProjectsLiveCache,
 }
 
@@ -36,11 +41,36 @@ impl AppState {
         config: AppConfig,
         projects_live_cache: ProjectsLiveCache,
     ) -> Self {
+        let contact_delivery = contact_delivery_from_config(&config);
+        Self::with_config_projects_live_cache_and_contact_delivery(
+            config,
+            projects_live_cache,
+            contact_delivery,
+        )
+    }
+
+    pub fn with_config_and_contact_delivery(
+        config: AppConfig,
+        contact_delivery: Arc<dyn ContactDelivery>,
+    ) -> Self {
+        Self::with_config_projects_live_cache_and_contact_delivery(
+            config,
+            ProjectsLiveCache::default(),
+            contact_delivery,
+        )
+    }
+
+    fn with_config_projects_live_cache_and_contact_delivery(
+        config: AppConfig,
+        projects_live_cache: ProjectsLiveCache,
+        contact_delivery: Arc<dyn ContactDelivery>,
+    ) -> Self {
         let contact_abuse_tracker = Arc::new(ContactAbuseTracker::new());
         Self {
             config,
             started_at: Instant::now(),
             contact_abuse_tracker,
+            contact_delivery,
             projects_live_cache,
         }
     }
@@ -51,6 +81,7 @@ impl AppState {
 
     pub fn with_config_and_started_at(config: AppConfig, started_at: Instant) -> Self {
         Self {
+            contact_delivery: contact_delivery_from_config(&config),
             config,
             started_at,
             contact_abuse_tracker: Arc::new(ContactAbuseTracker::new()),
@@ -68,6 +99,10 @@ impl AppState {
 
     pub fn contact_abuse_tracker(&self) -> &ContactAbuseTracker {
         self.contact_abuse_tracker.as_ref()
+    }
+
+    pub fn contact_delivery(&self) -> &dyn ContactDelivery {
+        self.contact_delivery.as_ref()
     }
 
     pub fn projects_live_cache(&self) -> &ProjectsLiveCache {

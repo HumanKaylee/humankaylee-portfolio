@@ -305,9 +305,10 @@ Evidence:
   and middleware, Shuttle/container build paths, and frontend API fallback
   behavior.
 - Current production blockers: B-042 remains local in-memory abuse-control
-  evidence, and B-043 remains blocked for production until persistent contact
-  storage or a delivery provider has approved retention, backup, rotation,
-  deletion, and operational handling decisions.
+  evidence, now avoiding untrusted forwarded headers by default. B-043 remains blocked for production.
+  Persistent contact storage or a delivery provider still needs approved
+  retention, backup, rotation, deletion, and operational handling decisions.
+  B-043 now has a tested delivery adapter seam for local backend coverage only.
 
 ## Phase 6: Quality, Security, Accessibility, and Performance Hardening
 
