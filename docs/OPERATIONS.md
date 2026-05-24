@@ -676,6 +676,26 @@ If a database exists:
 - Treat destructive migrations as launch blockers unless there is a tested
   recovery path.
 
+### 11.4 Recovery Verification Record
+
+After every rollback, disablement action, or incident dry run, add a recovery
+record to `runbooks/LAUNCH_EVIDENCE.md` before calling the issue resolved.
+
+Include:
+
+- Incident or dry-run summary.
+- Provider, environment, and affected route or service.
+- Deployment ID before rollback.
+- Rollback target.
+- API disablement setting if used.
+- Smoke-check command and exit status.
+- Home, projects, resume, contact fallback, API health, and DNS/TLS result.
+- Follow-up action, owner, or remaining blocker.
+
+Do not mark production recovery complete from local-only checks. Local checks can
+support the diagnosis, but production recovery requires the affected production
+URL, deployment target, or provider status to be verified directly.
+
 ## 12. Content Operations
 
 ### 12.1 Adding a Case Study

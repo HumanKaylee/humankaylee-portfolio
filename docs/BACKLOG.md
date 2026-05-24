@@ -1534,6 +1534,11 @@ Acceptance criteria:
 Verification evidence:
 
 - Rollback rehearsal note or dry-run evidence.
+- `scripts/rollback-runbook-contract.test.mjs` verifies rollback and incident
+  runbook coverage for frontend rollback, API rollback or disablement, contact
+  endpoint outage fallback, DNS/custom-domain issues, recovery verification,
+  and honest blocked status for production rollback evidence until real targets
+  exist.
 
 ### B-063: Complete launch checklist
 

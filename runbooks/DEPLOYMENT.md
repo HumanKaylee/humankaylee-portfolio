@@ -430,6 +430,10 @@ Dashboard path:
 CLI evidence after rollback:
 
 ```bash
+railway deployment list \
+  --service "$RAILWAY_SERVICE" \
+  --environment "$RAILWAY_ENVIRONMENT" \
+  --json
 railway status --json
 railway logs \
   --service "$RAILWAY_SERVICE" \
@@ -530,3 +534,96 @@ xh "$FRONTEND_ORIGIN/"
 
 Record command, date, target URL, exit status, and deployment IDs in
 `runbooks/LAUNCH_EVIDENCE.md`.
+
+## 10. Rollback And Incident Dry Run
+
+Run this dry run before production promotion and after any provider change. It
+does not perform a rollback by itself; it proves the operator can identify the
+target, choose the recovery path, and record the evidence without exposing
+secrets.
+
+Set target placeholders:
+
+```bash
+FRONTEND_ROLLBACK_TARGET="<known-good-cloudflare-pages-deployment-id>"
+API_ROLLBACK_TARGET="<known-good-api-deployment-or-image-id>"
+KNOWN_GOOD_SHUTTLE_DEPLOYMENT_ID="$API_ROLLBACK_TARGET"
+KNOWN_GOOD_IMAGE="$API_ROLLBACK_TARGET"
+```
+
+Frontend rollback readiness:
+
+```bash
+pnpm exec wrangler pages deployment list \
+  --project-name "$CLOUDFLARE_PAGES_PROJECT" \
+  --environment production
+xh -h "$FRONTEND_ORIGIN/"
+xh -h "$FRONTEND_ORIGIN/projects/"
+xh -h "$FRONTEND_ORIGIN/resume/"
+xh -h "$FRONTEND_ORIGIN/contact/"
+```
+
+API rollback readiness:
+
+```bash
+shuttle deployment list --name "$SHUTTLE_PROJECT"
+fly releases --app "$FLY_APP"
+railway deployment list \
+  --service "$RAILWAY_SERVICE" \
+  --environment "$RAILWAY_ENVIRONMENT" \
+  --json
+railway status --json
+xh "$API_ORIGIN/api/health"
+xh "$API_ORIGIN/api/projects/live"
+```
+
+Do not run mutating rollback commands during the dry run. For an actual
+incident rollback, use the provider-specific rollback command from sections
+5.4, 6.2, or 7.2 only after confirming the selected target is the intended
+known-good deployment.
+
+API disablement readiness if rollback is not available:
+
+```bash
+export HK_API_CONTACT_DELIVERY_MODE=disabled
+export PUBLIC_API_BASE_URL=""
+pnpm build
+```
+
+Provider console or CLI: set `HK_API_CONTACT_DELIVERY_MODE=disabled` on the API
+service before redeploying or restarting it, then rebuild/redeploy the frontend
+with `PUBLIC_API_BASE_URL=""` if the safest incident posture is mailto-only
+contact and no API enhancement.
+
+When the API is disabled or unavailable, keep the frontend static routes live,
+keep the mailto fallback visible, and verify API-down behavior with
+`pnpm test:e2e -- --grep "@api-down"` before promoting the disabled frontend.
+If using a provider dashboard rather than CLI for rollback, capture the
+deployment ID, previous deployment ID, and dashboard timestamp in the evidence
+record.
+
+DNS and custom-domain readiness:
+
+```bash
+xh -h "$FRONTEND_ORIGIN/"
+xh -h "$API_ORIGIN/api/health"
+```
+
+Confirm the Pages custom-domain association exists, the CNAME points at
+`<project>.pages.dev` for subdomains, CAA records allow Cloudflare certificate
+issuance when CAA is present, TLS is valid in a clean browser, and no
+mixed-content warnings appear.
+
+Recovery verification evidence must include:
+
+- Incident or dry-run date.
+- Provider and environment.
+- Deployment ID before rollback.
+- Rollback target.
+- Smoke-check command and exit status.
+- Home, projects, resume, contact fallback, API health, and DNS/TLS result.
+- Follow-up action or blocker.
+
+Record command, target, date, exit status, deployment ID, rollback target, and
+result in `runbooks/LAUNCH_EVIDENCE.md`. Production rollback targets remain
+blocked until real provider deployments exist.

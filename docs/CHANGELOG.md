@@ -68,6 +68,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   representative static routes and sanitized contact outage fallback behavior.
 - Expanded README local-development and deployment guidance with a contract
   test for B-060 coverage.
+- Added a rollback and incident runbook contract for B-062, including dry-run
+  evidence requirements for frontend rollback, API rollback or disablement,
+  contact fallback, DNS/custom-domain issues, and recovery verification records.
 
 ### Remaining Blockers
 
