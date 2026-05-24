@@ -26,9 +26,18 @@ describe("homeScaffold", () => {
 			"/projects/",
 			"/contact/",
 		]);
-		expect(scaffold.telemetry.some((item) => item.label === "Rendering")).toBe(
-			true,
-		);
+		expect(scaffold.telemetry.map((item) => item.label)).toEqual([
+			"Build",
+			"Verification",
+			"Accessibility",
+			"API fallback",
+		]);
+		expect(scaffold.telemetry[0]).toMatchObject({
+			value: "Static output",
+		});
+		expect(scaffold.telemetry[3]).toMatchObject({
+			value: "Graceful fallback",
+		});
 		expect(scaffold.noJsNote).toContain("without JavaScript or WebGL");
 	});
 });

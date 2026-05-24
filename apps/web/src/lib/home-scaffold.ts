@@ -64,21 +64,28 @@ export function homeScaffold(): HomeScaffold {
 		],
 		telemetry: [
 			{
-				label: "Rendering",
-				value: "Static-first",
+				label: "Build",
+				value: "Static output",
 				detail:
 					"HTML carries the core story before JavaScript, WebGL, or API calls.",
 			},
 			{
-				label: "Evidence",
-				value: "Schema-backed",
+				label: "Verification",
+				value: "Local coverage",
 				detail:
-					"Case studies, projects, resume workflow, and metadata are typed.",
+					"Vitest and Playwright keep the scaffold and fallback paths covered.",
 			},
 			{
-				label: "Backend",
-				value: "Rust-ready",
-				detail: "API telemetry remains optional until integration phases.",
+				label: "Accessibility",
+				value: "No-JS readable",
+				detail:
+					"Landmarks, skip link, and fallback content stay visible without hydration.",
+			},
+			{
+				label: "API fallback",
+				value: "Graceful fallback",
+				detail:
+					"Health and cached-project requests can fail without hiding the home page.",
 			},
 		],
 	};

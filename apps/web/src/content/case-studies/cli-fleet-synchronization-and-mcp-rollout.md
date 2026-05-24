@@ -25,6 +25,10 @@ operations:
 outcome: "The workflow became portable enough to reuse for future CLI maintenance instead of being trapped in one-off terminal history."
 lessons:
   - "Fleet work stays trustworthy only when each target is verified on its own terms."
+featuredEvidence:
+  label: "Verification matrix"
+  summary: "Target-by-target pass, skip, and blocker evidence without copying account-local state."
+  scope: "Local and PR evidence only; not production launch approval."
 links:
   artifacts:
     - "sanitized rollout matrix"

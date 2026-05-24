@@ -26,6 +26,10 @@ operations:
 outcome: "The project now has a content and tooling backbone that can support recruiter, engineer, and collaborator paths without depending on live backend availability."
 lessons:
   - "The cleanest portfolio systems start with a safe content model, not visual polish alone."
+featuredEvidence:
+  label: "Static-first launch evidence"
+  summary: "Route, Lighthouse, Playwright, content, and Rust checks prove the local portfolio contract without claiming production readiness."
+  scope: "Local and PR evidence only; production deploy and approval evidence remain blocked."
 links:
   artifacts:
     - "local Playwright and Lighthouse evidence"

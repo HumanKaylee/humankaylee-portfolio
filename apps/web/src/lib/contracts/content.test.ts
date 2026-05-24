@@ -69,6 +69,12 @@ const publishableCaseStudy = {
 	operations: ["Kept auth state local to each account."],
 	outcome: "The fleet was aligned.",
 	lessons: ["Inventory first, then rollout, then verification."],
+	featuredEvidence: {
+		label: "Verification matrix",
+		summary:
+			"Target-by-target pass, skip, and blocker evidence without copying account-local state.",
+		scope: "Local and PR evidence only",
+	},
 	links: {
 		demo: "/demos/cli-fleet-rollout",
 	},
@@ -138,6 +144,15 @@ describe("content contracts", () => {
 
 	it("accepts a publishable case study entry before launch approval", () => {
 		expect(caseStudySchema.safeParse(publishableCaseStudy).success).toBe(true);
+	});
+
+	it("requires a featured evidence hook for the public evidence drawer", () => {
+		const { featuredEvidence: _featuredEvidence, ...withoutFeaturedEvidence } =
+			publishableCaseStudy;
+
+		expect(caseStudySchema.safeParse(withoutFeaturedEvidence).success).toBe(
+			false,
+		);
 	});
 
 	it("requires a completed redaction checklist before approval", () => {

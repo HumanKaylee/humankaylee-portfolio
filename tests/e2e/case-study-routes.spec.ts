@@ -69,6 +69,18 @@ test.describe("case-study routes @case-studies", () => {
 			page.getByRole("region", { name: /evidence drawer/i }),
 		).toContainText(/sanitized rollout matrix/i);
 		await expect(
+			page.getByRole("region", { name: /evidence drawer/i }),
+		).toContainText(/proof ledger/i);
+		await expect(
+			page.getByRole("region", { name: /evidence drawer/i }),
+		).toContainText(/launch approval pending/i);
+		await expect(
+			page.getByRole("region", { name: /evidence drawer/i }),
+		).toContainText(/Target-by-target pass, skip, and blocker evidence/i);
+		await expect(
+			page.getByRole("list", { name: /public-safe artifact ledger/i }),
+		).toContainText(/Artifact 01/);
+		await expect(
 			page.getByRole("heading", {
 				name: "Sanitized verification matrix",
 				exact: true,

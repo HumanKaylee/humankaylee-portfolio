@@ -13,10 +13,30 @@ const {
 	verification,
 	operations,
 	lessons,
+	featuredEvidence,
 	links,
 	redactionStatus,
+	redactionReview,
 } = caseStudy.data;
 const artifacts: string[] = links?.artifacts ?? [];
+const proofLedger = [
+	{
+		label: "Architecture",
+		value: architecture.diagramAlt,
+	},
+	{
+		label: "Verification",
+		value: verification[0],
+	},
+	{
+		label: "Operations",
+		value: operations[0],
+	},
+	{
+		label: "Lesson",
+		value: lessons[0],
+	},
+];
 ---
 
 <section
@@ -26,6 +46,33 @@ const artifacts: string[] = links?.artifacts ?? [];
 >
 	<p class="section-kicker">Evidence drawer</p>
 	<h2 id="evidence-drawer-title">Evidence drawer</h2>
+	<article class="featured-evidence-card">
+		<p class="eyebrow">{featuredEvidence.label}</p>
+		<strong>{featuredEvidence.summary}</strong>
+		<span>{featuredEvidence.scope}</span>
+	</article>
+	<div class="evidence-approval-card">
+		<p class="eyebrow">Public release gate</p>
+		<strong>Launch approval pending</strong>
+		<p>
+			Current content state is {redactionStatus}; checklist status is{" "}
+			{redactionReview.checklistStatus}. This panel exposes sanitized evidence
+			labels only and does not upgrade local proof into production approval.
+		</p>
+	</div>
+	<section class="proof-ledger" aria-labelledby="proof-ledger-title">
+		<h3 id="proof-ledger-title">Proof ledger</h3>
+		<ol>
+			{
+				proofLedger.map((item) => (
+					<li>
+						<span>{item.label}</span>
+						<p>{item.value}</p>
+					</li>
+				))
+			}
+		</ol>
+	</section>
 	<div class="evidence-drawer-grid">
 		<article class="evidence-panel">
 			<p class="eyebrow">Diagram text alternative</p>
@@ -46,13 +93,16 @@ const artifacts: string[] = links?.artifacts ?? [];
 	</div>
 	{
 		artifacts.length > 0 && (
-			<div class="safe-artifact-list" aria-label="Safe artifact labels">
+			<div class="safe-artifact-list">
 				<p class="eyebrow">Safe artifact labels</p>
-				<ul>
-					{artifacts.map((artifact) => (
-						<li>{artifact}</li>
+				<ol aria-label="Public-safe artifact ledger">
+					{artifacts.map((artifact, index) => (
+						<li>
+							<span>{`Artifact ${String(index + 1).padStart(2, "0")}`}</span>
+							{artifact}
+						</li>
 					))}
-				</ul>
+				</ol>
 			</div>
 		)
 	}

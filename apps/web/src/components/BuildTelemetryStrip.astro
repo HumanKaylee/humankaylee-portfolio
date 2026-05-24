@@ -11,21 +11,29 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 
 <aside
 	class="telemetry-strip"
-	aria-label="Static build telemetry"
+	aria-labelledby="telemetry-title"
 	data-api-base={apiBaseUrl}
 	data-telemetry-strip
 >
 	<p class="section-kicker">Static evidence until API integration</p>
+	<h2 id="telemetry-title">
+		Local build, test, accessibility, and API fallback posture.
+	</h2>
 	<p class="telemetry-status" role="status" aria-live="polite" data-telemetry-status>
-		Static telemetry fallback active until the Rust API responds.
+		Static evidence only. Production launch is not claimed in this panel.
 	</p>
 	<div class="telemetry-grid">
 		{
 			items.map((item) => (
 				<article
 					class="evidence-panel"
-					aria-label={`${item.label}: ${item.value}`}
+					aria-label={
+						item.label === "Build"
+							? `Rendering: ${item.value}`
+							: `${item.label}: ${item.value}`
+					}
 					data-telemetry-label={item.label}
+					style={item.label === "API fallback" ? "grid-column: 1 / -1;" : undefined}
 				>
 					<p>{item.label}</p>
 					<strong>{item.value}</strong>
@@ -70,9 +78,9 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 		return response.json();
 	}
 
-	function updateBackendPanel(summary: string, detail: string) {
+	function updateApiFallbackPanel(summary: string, detail: string) {
 		const panel = telemetryStrip?.querySelector<HTMLElement>(
-			"[data-telemetry-label='Backend']",
+			"[data-telemetry-label='API fallback']",
 		);
 		const value = panel?.querySelector("strong");
 		const body = panel?.querySelector("span");
@@ -83,6 +91,7 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 		if (body) {
 			body.textContent = detail;
 		}
+		panel?.setAttribute("aria-label", `${summary}: ${detail}`);
 	}
 
 	async function enhanceTelemetry() {
@@ -99,8 +108,8 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 			const freshness = projects.stale ? "stale cache" : "fresh cache";
 			const statusText = `Rust API live (${version}); ${projectCount} cached projects from ${freshness}.`;
 
-			updateBackendPanel(
-				"Rust API live",
+			updateApiFallbackPanel(
+				"API live",
 				`${projectCount} cached projects available without replacing the static fallback.`,
 			);
 			if (telemetryStatus) {

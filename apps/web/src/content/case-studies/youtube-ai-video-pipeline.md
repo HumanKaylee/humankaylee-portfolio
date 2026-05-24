@@ -24,6 +24,10 @@ operations:
 outcome: "The work is credible enough to keep in the launch pipeline, but not yet safe enough to publish directly."
 lessons:
   - "AI workflow case studies are only useful if they can be described without leaking the sensitive parts."
+featuredEvidence:
+  label: "Redaction boundary"
+  summary: "Pipeline remains blocked until private channel details, account identifiers, and asset-linked workflow edges are removed."
+  scope: "Blocked redaction evidence only; not rendered as a public case-study route."
 links:
   artifacts:
     - "redaction checklist"

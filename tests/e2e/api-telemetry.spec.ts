@@ -40,8 +40,13 @@ test.describe("home API telemetry @api-telemetry", () => {
 		await page.goto("/");
 
 		await expect(
-			page.getByText("Static evidence until API integration"),
+			page.getByRole("heading", {
+				name: /Local build, test, accessibility, and API fallback posture\./i,
+			}),
 		).toBeVisible();
+		await expect(
+			page.getByRole("article", { name: /API live: 2 cached projects/i }),
+		).toContainText("API live");
 		await expect(page.getByRole("status")).toContainText("Rust API live");
 		await expect(page.getByRole("status")).toContainText("2 cached projects");
 		expect(healthCalled).toBe(true);
@@ -56,14 +61,39 @@ test.describe("home API telemetry @api-telemetry", () => {
 
 		await page.goto("/");
 
-		await expect(page.getByRole("article", { name: /Backend/i })).toContainText(
-			"Rust-ready",
-		);
+		await expect(
+			page.getByRole("article", { name: /API fallback: Graceful fallback/i }),
+		).toContainText("Graceful fallback");
 		await expect(page.getByRole("status")).toContainText(
 			"API telemetry unavailable",
 		);
+		await expect(page.getByRole("status")).toContainText(
+			"static fallback remains active",
+		);
+	});
+});
+
+test.describe("home telemetry static shell @static-shell", () => {
+	test.use({ javaScriptEnabled: false });
+
+	test("keeps the credibility panel readable without hydration", async ({
+		page,
+	}) => {
+		await page.goto("/");
+
 		await expect(
-			page.getByText("Static evidence until API integration"),
+			page.getByRole("heading", {
+				name: /Local build, test, accessibility, and API fallback posture\./i,
+			}),
 		).toBeVisible();
+		await expect(
+			page.getByRole("article", { name: /Rendering: Static output/i }),
+		).toContainText("Build");
+		await expect(
+			page.getByRole("article", { name: /API fallback: Graceful fallback/i }),
+		).toBeVisible();
+		await expect(page.getByRole("status")).toContainText(
+			"Production launch is not claimed",
+		);
 	});
 });

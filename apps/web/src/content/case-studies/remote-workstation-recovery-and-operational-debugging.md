@@ -26,6 +26,10 @@ operations:
 outcome: "The result was a reliable debugging playbook that reduced guesswork when remote access degraded."
 lessons:
   - "Most remote recoveries become simpler once every symptom is not treated as a host outage."
+featuredEvidence:
+  label: "Layered triage matrix"
+  summary: "Role-labeled reachability, session, viewer, and tool checks separated client symptoms from host health."
+  scope: "Sanitized operational evidence only; private commands and access paths stay excluded."
 links:
   artifacts:
     - "redacted incident summary"

@@ -153,6 +153,7 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			"operations",
 			"outcome",
 			"lessons",
+			"featuredEvidence",
 			"seo",
 		],
 		validExample: {
@@ -173,6 +174,12 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			operations: ["Recorded safe operational notes."],
 			outcome: "The public story is safe to draft.",
 			lessons: ["Keep evidence useful without leaking private context."],
+			featuredEvidence: {
+				label: "Public-safe proof",
+				summary:
+					"A curated evidence hook that stays useful without private details.",
+				scope: "Local and PR evidence only.",
+			},
 			publicationStatus: "publish",
 			redactionStatus: "reviewed",
 			redactionReview: {

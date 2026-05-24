@@ -1026,11 +1026,72 @@ h3 {
 }
 
 .case-study-section ul,
-.safe-artifact-list ul {
+.safe-artifact-list ul,
+.safe-artifact-list ol,
+.proof-ledger ol {
 	display: grid;
 	gap: 0.45rem;
 	margin: 0;
 	padding-left: 1.2rem;
+}
+
+.featured-evidence-card,
+.evidence-approval-card,
+.proof-ledger {
+	border: 1px solid rgba(196, 123, 49, 0.24);
+	border-radius: 1.35rem;
+	background: linear-gradient(
+			135deg,
+			rgba(196, 123, 49, 0.16),
+			rgba(47, 109, 79, 0.12)
+		), rgba(23, 19, 16, 0.46);
+	padding: 1rem;
+}
+
+.featured-evidence-card {
+	border-color: rgba(123, 199, 167, 0.32);
+	background: linear-gradient(
+			135deg,
+			rgba(123, 199, 167, 0.18),
+			rgba(47, 100, 112, 0.18)
+		), rgba(23, 19, 16, 0.5);
+}
+
+.featured-evidence-card strong,
+.evidence-approval-card strong,
+.proof-ledger h3 {
+	display: block;
+	margin-block: 0.1rem 0.35rem;
+	color: var(--color-paper);
+	font-family: var(--font-display);
+	font-size: clamp(1.35rem, 3vw, 2.1rem);
+	line-height: 1;
+}
+
+.featured-evidence-card span {
+	color: rgba(243, 234, 216, 0.68);
+	font-family: var(--font-evidence);
+}
+
+.proof-ledger li,
+.safe-artifact-list li {
+	padding-left: 0.2rem;
+}
+
+.proof-ledger li::marker,
+.safe-artifact-list li::marker {
+	color: var(--color-tungsten);
+	font-family: var(--font-evidence);
+}
+
+.proof-ledger span,
+.safe-artifact-list span {
+	display: block;
+	color: var(--color-signal);
+	font-family: var(--font-evidence);
+	font-size: 0.76rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
 }
 
 .case-study-body {

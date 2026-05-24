@@ -70,6 +70,12 @@ export const linkTargetsSchema = z.object({
 	artifacts: z.array(z.string().min(1)).min(1).optional(),
 });
 
+export const featuredEvidenceSchema = z.object({
+	label: z.string().min(1),
+	summary: z.string().min(1),
+	scope: z.string().min(1),
+});
+
 export const redactionChecklistAnswerSchema = z.enum(["yes", "not-applicable"]);
 
 export const redactionChecklistSchema = z.object({
@@ -112,6 +118,7 @@ export const caseStudySchema = z
 		operations: z.array(z.string().min(1)).min(1),
 		outcome: z.string().min(1),
 		lessons: z.array(z.string().min(1)).min(1),
+		featuredEvidence: featuredEvidenceSchema,
 		links: linkTargetsSchema.optional(),
 		publicationStatus: publicationStatusSchema,
 		redactionStatus: caseStudyRedactionStatusSchema,

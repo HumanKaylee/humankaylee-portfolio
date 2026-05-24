@@ -24,6 +24,10 @@ operations:
 outcome: "This establishes a clear boundary between a helpful visual layer and the underlying content model."
 lessons:
   - "An interactive demo earns its place only if the fallback story is stronger than the animation."
+featuredEvidence:
+  label: "Static atlas proof"
+  summary: "Semantic project atlas fallback and systems-map poster carry the story before any interactive layer."
+  scope: "Local fallback evidence only; heavier interactive scope still needs approval."
 links:
   artifacts:
     - "category taxonomy"

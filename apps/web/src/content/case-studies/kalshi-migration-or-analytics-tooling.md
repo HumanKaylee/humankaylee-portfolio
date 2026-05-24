@@ -23,6 +23,10 @@ operations:
 outcome: "Deferred status protects the portfolio from overclaiming while keeping the candidate visible for later review."
 lessons:
   - "If a case study needs too much explanation to become safe, defer rather than dilute it."
+featuredEvidence:
+  label: "Publication safety finding"
+  summary: "Candidate remains deferred until a safe abstraction removes financial, account, repository, and private path detail."
+  scope: "Blocked redaction evidence only; not rendered as a public case-study route."
 links:
   artifacts:
     - "redaction review pending"
