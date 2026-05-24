@@ -56,6 +56,20 @@ Do not show provider account names, deployment IDs, internal hostnames, private
 repository paths, log snippets, tokens, contact records, or incident details
 that have not passed redaction review.
 
+## B-066 Status / Metadata Implementation Checklist
+
+This is planning guidance only. It does not authorize route or UI work, and it
+remains launch-blocked until B-063.
+
+- Permitted data sources: `/api/health`, `/api/projects/live`, static fallback
+  copy.
+- API-up check.
+- API-down fallback check.
+- No private deployment, provider, log, or contact data.
+- No JavaScript requirement for core content.
+- Launch-blocked until B-063.
+- No route or UI implementation yet.
+
 ## Assistant Safe Boundary
 
 A future assistant must answer only from public portfolio content, disclose its

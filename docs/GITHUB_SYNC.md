@@ -332,6 +332,12 @@ before provider accounts, domains, production secrets, or rollback targets
 exist. #63, #64, #65, and #69 remain open until real production evidence and
 four approved case studies exist.
 
+Phase 7 metadata readiness status: local-readiness only; production remains
+blocked. `scripts/phase-7-metadata-readiness-contract.test.mjs` verifies RSS
+uses shared site metadata with the sitemap, robots, canonical URL, and Open
+Graph path, but #65 remains open until the final domain, DNS/TLS, and
+production metadata smoke evidence exist.
+
 Phase 7 blocker traceability status: issue-to-evidence mapping only; production
 remains blocked. `runbooks/LAUNCH_BLOCKERS_REGISTER.md` now maps #63, #64, #65,
 and #69 to their controlling launch-blocker decisions and the replacement

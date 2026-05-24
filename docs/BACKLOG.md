@@ -1524,6 +1524,12 @@ Verification evidence:
 - `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the domain, DNS,
   TLS, canonical URL, sitemap, and Open Graph evidence still required before
   #65 can close.
+- Phase 7 metadata readiness verifies RSS uses shared site metadata with the
+  sitemap, robots, canonical URL, and Open Graph path; this is local readiness
+  only and does not close #65 until final domain, DNS/TLS, and production
+  metadata smoke evidence exist.
+- `scripts/phase-7-metadata-readiness-contract.test.mjs` guards the shared
+  metadata source and preserves the B-059 production blocker boundary.
 
 ### B-060: Write local development and deployment README
 

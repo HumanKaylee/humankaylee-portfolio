@@ -227,6 +227,16 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		3: ["/api/health", "/api/projects/live", "static fallback"],
 		4: ["API-up and API-down"],
 	});
+	expectAll(runbook, [
+		"## B-066 Status / Metadata Implementation Checklist",
+		"Permitted data sources: `/api/health`, `/api/projects/live`, static fallback copy",
+		"API-up check",
+		"API-down fallback check",
+		"No private deployment, provider, log, or contact data",
+		"No JavaScript requirement for core content",
+		"Launch-blocked until B-063",
+		"No route or UI implementation yet",
+	]);
 	expectTableRowCells(runbook, "Additional notes and postmortems", {
 		1: ["B-067", "#73"],
 		2: ["Blocked until B-063"],

@@ -1,4 +1,10 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
+
+const site = JSON.parse(
+	readFileSync("apps/web/src/content/site/site.json", "utf8"),
+) as { siteUrl: string };
+const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
 
 const publishedNotes = [
 	{
@@ -116,9 +122,8 @@ test.describe("notes and RSS @notes-rss", () => {
 
 		for (const note of publishedNotes) {
 			expect(xml).toContain(`<title>${note.title}</title>`);
-			expect(xml).toContain(
-				`<link>https://humankaylee.example${note.path}</link>`,
-			);
+			expect(xml).toContain(`<link>${expectedSiteUrl}${note.path}</link>`);
+			expect(xml).toContain(`<guid>${expectedSiteUrl}${note.path}</guid>`);
 			expect(xml).toContain(`<pubDate>${note.pubDate}</pubDate>`);
 			expect(xml).toContain(`<description>${note.summary}</description>`);
 			for (const tag of note.tags) {

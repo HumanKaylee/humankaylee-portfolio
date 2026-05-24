@@ -3,8 +3,6 @@ import type { CollectionEntry } from "astro:content";
 
 type NoteEntry = CollectionEntry<"notes">;
 
-const siteUrl = "https://humankaylee.example";
-
 function escapeXml(value: string) {
 	return value
 		.replaceAll("&", "&amp;")
@@ -14,11 +12,13 @@ function escapeXml(value: string) {
 		.replaceAll("'", "&apos;");
 }
 
-function noteUrl(note: NoteEntry) {
+function noteUrl(siteUrl: string, note: NoteEntry) {
 	return `${siteUrl}/notes/${note.data.slug}/`;
 }
 
 export async function GET() {
+	const [site] = await getCollection("site");
+	const siteUrl = site.data.siteUrl.replace(/\/$/, "");
 	const notes = ((await getCollection("notes")) as NoteEntry[])
 		.filter((note: NoteEntry) => note.data.publicationStatus === "publish")
 		.sort((left: NoteEntry, right: NoteEntry) =>
@@ -34,8 +34,8 @@ export async function GET() {
 
 			return `<item>
 <title>${escapeXml(note.data.title)}</title>
-<link>${escapeXml(noteUrl(note))}</link>
-<guid>${escapeXml(noteUrl(note))}</guid>
+<link>${escapeXml(noteUrl(siteUrl, note))}</link>
+<guid>${escapeXml(noteUrl(siteUrl, note))}</guid>
 <pubDate>${pubDate.toUTCString()}</pubDate>
 <description>${escapeXml(note.data.summary)}</description>
 ${categories}
