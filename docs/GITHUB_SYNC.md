@@ -272,6 +272,24 @@ Phase 6 issue sync status: complete. B-048 through B-056 are mirrored as #54
 through #62. This is only GitHub issue mirror evidence; it is not a Project
 board recovery, production launch, or launch-readiness claim.
 
+Phase 7 backlog issues now live as the next granular sync layer, with #5
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                          | Parent | Labels                                                                                         |
+| ----- | ----------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
+| #63   | B-057: Configure Cloudflare Pages frontend deployment | #5     | `priority:p0`, `type:task`, `area:infra`, `phase:7-launch`, `agent-standard`                   |
+| #64   | B-058: Deploy Rust API to selected host               | #5     | `priority:p0`, `type:task`, `area:backend`, `area:infra`, `phase:7-launch`, `agent-standard`   |
+| #65   | B-059: Configure production domain and canonical URLs | #5     | `priority:p0`, `type:task`, `area:infra`, `area:seo`, `phase:7-launch`, `agent-standard`       |
+| #66   | B-060: Write local development and deployment README  | #5     | `priority:p0`, `type:docs`, `area:ops`, `phase:7-launch`, `agent-standard`                     |
+| #67   | B-061: Write content update and redaction runbook     | #5     | `priority:p0`, `type:docs`, `area:content`, `area:privacy`, `phase:7-launch`, `agent-standard` |
+| #68   | B-062: Write rollback and incident runbook            | #5     | `priority:p0`, `type:docs`, `area:ops`, `area:infra`, `phase:7-launch`, `agent-standard`       |
+| #69   | B-063: Complete launch checklist                      | #5     | `priority:p0`, `type:qa`, `area:ops`, `phase:7-launch`, `agent-standard`                       |
+
+Phase 7 issue sync status: complete. B-057 through B-063 are mirrored as #63
+through #69. This is only GitHub issue mirror evidence; it is not a Project
+board recovery, production deployment, or launch-readiness claim.
+
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status
 views.

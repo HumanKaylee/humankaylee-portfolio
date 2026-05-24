@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
+
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const files = {
-	backlog: "docs/BACKLOG.md",
-	githubSync: "docs/GITHUB_SYNC.md",
+	backlog: resolve(repoRoot, "docs/BACKLOG.md"),
+	githubSync: resolve(repoRoot, "docs/GITHUB_SYNC.md"),
 };
 
 function readRequiredFile(path) {
@@ -181,6 +185,22 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"#62",
 		"B-056: Add API outage resilience test",
 		"Phase 6 issue sync status: complete",
+		"Phase 7 backlog issues now live as the next granular sync layer",
+		"#63",
+		"B-057: Configure Cloudflare Pages frontend deployment",
+		"#64",
+		"B-058: Deploy Rust API to selected host",
+		"#65",
+		"B-059: Configure production domain and canonical URLs",
+		"#66",
+		"B-060: Write local development and deployment README",
+		"#67",
+		"B-061: Write content update and redaction runbook",
+		"#68",
+		"B-062: Write rollback and incident runbook",
+		"#69",
+		"B-063: Complete launch checklist",
+		"Phase 7 issue sync status: complete",
 		"only GitHub issue mirror evidence",
 		"not a Project",
 		"board recovery, production launch, or launch-readiness claim",

@@ -118,6 +118,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added stale-safe cached project metadata for `GET /api/projects/live` through
   an injectable provider/cache boundary with refresh-success, refresh-failure,
   and slow-refresh timeout route coverage.
+- Added Phase 7 granular GitHub issues B-057 through B-063 while preserving the
+  Project-board scope blocker and launch-readiness boundary.
 - Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
   and use Node 24-native action majors before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,
