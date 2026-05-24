@@ -213,6 +213,24 @@ views:
 | #35   | B-029: Add sitemap and robots.txt                                   | #3     | `priority:p0`, `type:task`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard` |
 | #36   | B-030: Add static project metadata fallback                         | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
 
+Phase 4 backlog issues now live as the next granular sync layer, with #2
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                         | Parent | Labels                                                                                                      |
+| ----- | ---------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| #37   | B-031: Implement art-directed page surfaces          | #2     | `priority:p1`, `type:feature`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-strong`    |
+| #38   | B-032: Implement static hero poster and fallback     | #2     | `priority:p0`, `type:feature`, `area:design`, `area:performance`, `phase:4-visual-motion`, `agent-strong` |
+| #39   | B-033: Implement accessible project atlas fallback   | #2     | `priority:p0`, `type:feature`, `area:frontend`, `area:a11y`, `phase:4-visual-motion`, `agent-standard`    |
+| #40   | B-034: Implement desktop project constellation       | #2     | `priority:p1`, `type:feature`, `area:motion`, `area:frontend`, `phase:4-visual-motion`, `agent-strong`    |
+| #41   | B-035: Add purposeful scroll and reveal motion       | #2     | `priority:p1`, `type:feature`, `area:motion`, `area:design`, `phase:4-visual-motion`, `agent-strong`      |
+| #42   | B-036: Add view transitions or route continuity      | #2     | `priority:p2`, `type:feature`, `area:motion`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`  |
+| #43   | B-037: Add visual regression snapshots               | #2     | `priority:p1`, `type:qa`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`       |
+
+Phase 4 issue sync status: complete. B-031 through B-037 are mirrored as #37
+through #43. This is only GitHub issue mirror evidence; it is not a Project
+board recovery, production launch, or launch-readiness claim.
+
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status
 views.

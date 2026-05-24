@@ -102,6 +102,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a B-037 visual regression gate with desktop/mobile snapshots for home,
   projects, a representative case study, resume, and contact, plus dedicated
   `pnpm test:visual` and `pnpm test:visual:update` commands.
+- Added a lightweight Phase 4 implementation-status contract in implementation
+  plan/roadmap docs and local PR evidence for B-034 as a desktop-gated
+  SVG/HTML project constellation with lazy helper loading and mobile skip
+  coverage.
 - Added a B-035 purposeful motion gate and CSS-only evidence reveal treatment
   for narrative/artifact surfaces, with reduced-motion and no-JS visibility
   coverage.

@@ -16,6 +16,23 @@ const atlasCategories = [
 	"creative web",
 	"operations",
 ] as const;
+const constellationLayout = [
+	{ category: "AI", x: 18, y: 24 },
+	{ category: "automation", x: 45, y: 16 },
+	{ category: "infrastructure", x: 72, y: 28 },
+	{ category: "backend", x: 24, y: 72 },
+	{ category: "creative web", x: 58, y: 68 },
+	{ category: "operations", x: 82, y: 76 },
+] as const;
+const categoryCoordinates = new Map(
+	constellationLayout.map((cluster) => [cluster.category, cluster]),
+);
+const constellationNodeOffsets = [
+	{ x: -11, y: 11 },
+	{ x: 10, y: -8 },
+	{ x: -8, y: -10 },
+	{ x: 12, y: 9 },
+] as const;
 
 function categoryId(category: string) {
 	return `atlas-${category.replaceAll(" ", "-")}`;
@@ -23,6 +40,29 @@ function categoryId(category: string) {
 
 function projectsForCategory(category: string) {
 	return projects.filter((project) => project.data.category === category);
+}
+
+function constellationArtifactId(project: ProjectEntry) {
+	return `constellation-artifact-${project.data.slug}`;
+}
+
+function constellationNodePosition(project: ProjectEntry) {
+	const cluster = categoryCoordinates.get(project.data.category) ?? {
+		x: 50,
+		y: 50,
+	};
+	const categoryProjects = projectsForCategory(project.data.category);
+	const categoryIndex = categoryProjects.findIndex(
+		(entry) => entry.data.slug === project.data.slug,
+	);
+	const offset =
+		categoryProjects.length === 1
+			? { x: 0, y: 12 }
+			: constellationNodeOffsets[
+					Math.max(categoryIndex, 0) % constellationNodeOffsets.length
+				];
+
+	return `--x: ${cluster.x + offset.x}%; --y: ${cluster.y + offset.y}%;`;
 }
 ---
 
@@ -60,13 +100,91 @@ function projectsForCategory(category: string) {
 		<p class="eyebrow">Progressive enhancement</p>
 		<p class="motion-enhancement-copy">
 			Motion enhancement waits for user-capable contexts: desktop viewport,
-			no reduced-motion preference, and successful WebGL capability checks.
+			no reduced-motion preference, and a readable static atlas baseline.
 		</p>
 		<p class="reduced-motion-poster">
 			Reduced-motion poster fallback: the static atlas stays fully navigable
 			without scroll-linked animation or a canvas scene.
 		</p>
 	</aside>
+
+	<section
+		class="project-constellation"
+		aria-label="Desktop project constellation"
+		data-project-constellation
+	>
+		<header>
+			<p class="eyebrow">Signature desktop layer</p>
+			<h3>Desktop project constellation.</h3>
+			<p>
+				Constellation focus helper is lazy-loaded after the static atlas is readable;
+				node selection focuses the matching artifact card without replacing the
+				HTML fallback.
+			</p>
+		</header>
+
+		<div class="constellation-stage" aria-label="Capability clusters">
+			<svg
+				class="constellation-lines"
+				viewBox="0 0 100 100"
+				role="img"
+				aria-label="Constellation paths connecting project capability clusters"
+			>
+				<path d="M18 24 L45 16 L72 28 L82 76 L58 68 L24 72 Z" />
+				<path d="M45 16 L58 68 M72 28 L24 72" />
+			</svg>
+			{
+				constellationLayout.map((cluster) => (
+					<span
+						class="constellation-cluster-label"
+						data-constellation-cluster={cluster.category}
+						style={`--x: ${cluster.x}%; --y: ${cluster.y}%;`}
+					>
+						{cluster.category}
+					</span>
+				))
+			}
+			{
+				projects.map((project) => (
+					<a
+						class="constellation-node"
+						data-constellation-node
+						data-category={project.data.category}
+						style={constellationNodePosition(project)}
+						href={`#${constellationArtifactId(project)}`}
+						aria-label={`Focus constellation artifact for ${project.data.name}`}
+					>
+						<span>{project.data.name}</span>
+					</a>
+				))
+			}
+		</div>
+
+		<div class="constellation-artifact-grid" aria-label="Constellation artifacts">
+			{
+				projects.map((project) => (
+					<article
+						class="constellation-artifact-card"
+						id={constellationArtifactId(project)}
+						tabindex="-1"
+						data-constellation-artifact
+					>
+						<p class="project-category">{project.data.category}</p>
+						<h3>{project.data.name}</h3>
+						<p>{project.data.summary}</p>
+						<p class="proof-line">{project.data.proof}</p>
+						<a
+							data-touch-target="true"
+							aria-label={`Open constellation case study for ${project.data.name}`}
+							href={project.data.links?.docs ?? `/projects/${project.data.slug}/`}
+						>
+							Open case study for {project.data.name}
+						</a>
+					</article>
+				))
+			}
+		</div>
+	</section>
 
 	<div class="atlas-category-grid">
 		{
@@ -115,3 +233,17 @@ function projectsForCategory(category: string) {
 		}
 	</div>
 </section>
+
+<script type="module" data-constellation-loader="idle-module" is:inline>
+	const loadConstellation = () => import("/scripts/project-constellation.mjs");
+
+	if (!matchMedia("(min-width: 821px)").matches) {
+		document.body.dataset.constellationReady = "mobile-skipped";
+	} else if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+		document.body.dataset.constellationReady = "reduced-motion";
+	} else if ("requestIdleCallback" in window) {
+		window.requestIdleCallback(loadConstellation, { timeout: 1500 });
+	} else {
+		window.setTimeout(loadConstellation, 1);
+	}
+</script>

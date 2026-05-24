@@ -60,6 +60,73 @@ test.describe("project atlas @atlas", () => {
 
 		expect(focusedLabel).toMatch(/Open case study/i);
 	});
+
+	test("adds a lazy desktop constellation without replacing the static atlas @constellation", async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1440, height: 1100 });
+		await page.goto("/projects/");
+
+		const constellation = page.getByRole("region", {
+			name: /Desktop project constellation/i,
+		});
+		await expect(constellation).toBeVisible();
+
+		for (const category of atlasCategories) {
+			await expect(
+				constellation.locator(`[data-constellation-cluster="${category}"]`),
+			).toBeVisible();
+		}
+
+		const nodes = constellation.locator("[data-constellation-node]");
+		await expect(nodes).toHaveCount(4);
+		await expect(
+			constellation.getByText(/Constellation focus helper is lazy-loaded/i),
+		).toBeVisible();
+		await expect(
+			page.locator('script[data-constellation-loader="idle-module"]'),
+		).toHaveAttribute("type", "module");
+
+		const firstNode = constellation.getByRole("link", {
+			name: /Focus constellation artifact for CLI Fleet Synchronization/i,
+		});
+		await expect(firstNode).toHaveAttribute(
+			"href",
+			"#constellation-artifact-cli-fleet-synchronization-and-mcp-rollout",
+		);
+
+		await page.waitForFunction(() => document.body.dataset.constellationReady);
+		await firstNode.click();
+
+		const artifact = page.locator(
+			"#constellation-artifact-cli-fleet-synchronization-and-mcp-rollout",
+		);
+		await expect(artifact).toBeFocused();
+		await expect(artifact).toContainText(
+			"CLI Fleet Synchronization and MCP Rollout",
+		);
+		await expect(
+			artifact.getByRole("link", { name: /Open constellation case study/i }),
+		).toHaveAttribute(
+			"href",
+			"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+		);
+	});
+
+	test("keeps mobile users on the static atlas instead of the desktop constellation @constellation", async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 390, height: 900 });
+		await page.goto("/projects/");
+
+		await expect(
+			page.getByRole("region", { name: "Accessible project atlas" }),
+		).toBeVisible();
+		await expect(page.locator("[data-project-constellation]")).toBeHidden();
+		await page.waitForFunction(
+			() => document.body.dataset.constellationReady === "mobile-skipped",
+		);
+	});
 });
 
 test.describe("project atlas @reduced-motion", () => {

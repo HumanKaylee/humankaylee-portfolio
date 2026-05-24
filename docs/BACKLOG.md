@@ -862,16 +862,18 @@ Acceptance criteria:
 
 - Projects cluster by AI, automation, infrastructure, backend, creative web, and
   operations.
-- Selecting a node opens or focuses an artifact card with title, summary, impact,
-  and links.
-- Enhanced scene is lazy-loaded.
+- Selecting a node opens or focuses an artifact card with title, summary,
+  proof/impact evidence, and links.
+- Enhanced helper or heavier future scene is lazy-loaded.
 - Scene failure falls back to the accessible atlas.
 - Interaction does not block first content paint.
 
 Verification evidence:
 
 - Desktop recording of constellation interaction.
-- Bundle analysis showing lazy-loaded enhanced scene.
+- `pnpm test:e2e -- --grep "@constellation"` for desktop interaction and
+  mobile skip coverage.
+- Bundle analysis showing the enhanced helper or heavier future scene stays lazy-loaded.
 
 ### B-035: Add purposeful scroll and reveal motion
 

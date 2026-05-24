@@ -440,6 +440,20 @@ pnpm lighthouse:local
 - Keyboard or screen-reader access diverges from the visual atlas.
 - Smooth scrolling or pinned animation breaks native browser behavior.
 
+### Phase 4 Implementation Contract Snapshot
+
+- Local PR evidence in place today: `B-031` art-directed page surfaces (`@visual-surfaces`), `B-032` static systems-map hero fallback (`static systems map hero`), `B-033` accessible project atlas fallback (`@atlas`), `B-034` desktop-gated SVG/HTML project constellation with lazy focus helper (`@constellation`), `B-035` purposeful motion (`@motion`), `B-036` route continuity (`@route-continuity`), `B-037` visual-regression coverage (`pnpm test:visual`).
+- Keep launch status explicit: Phase 4 has local guard coverage, but it does not remove the separate provider, domain, redaction, production smoke, rollback, or contact-storage launch blockers.
+- Do not claim Three.js, R3F, or WebGL is shipping; the current constellation is a lightweight SVG/HTML progressive enhancement with a lazy focus helper.
+- Active guard commands for phase 4 status checks:
+  - `pnpm test:e2e -- --grep "@visual-surfaces"`
+  - `pnpm test:e2e -- --grep "static systems map hero"`
+  - `pnpm test:e2e -- --grep "@atlas"`
+  - `pnpm test:e2e -- --grep "@constellation"`
+  - `pnpm test:e2e -- --grep "@motion"`
+  - `pnpm test:e2e -- --grep "@route-continuity"`
+  - `pnpm test:visual`
+
 ## Phase 5: Rust Axum Backend
 
 **Primary Owner:** Backend Agent  

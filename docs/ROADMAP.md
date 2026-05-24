@@ -260,6 +260,7 @@ Evidence:
 - Reduced-motion recording or screenshots.
 - Bundle analysis showing heavy assets are lazy-loaded.
 - Lighthouse or equivalent performance pass on representative pages.
+- Current PR status: B-031/032/033/034/035/036/037 have local guard coverage above. `B-034` is represented by a desktop-gated SVG/HTML constellation with a lazy focus helper, not by a WebGL/R3F shipping claim.
 
 ## Phase 5: Rust Backend and API-Backed Features
 
