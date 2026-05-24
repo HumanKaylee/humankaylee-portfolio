@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added public-safe architecture maps to case-study detail pages so the
+  architecture section renders intentional context, constraint, verification,
+  and release-boundary signals instead of visible placeholder copy.
 - Added a static hero evidence legend to the systems-map hero so the first
   viewport communicates static route, optional motion, and Rust proof boundaries
   before any JavaScript, WebGL, or API enhancement.

@@ -60,11 +60,25 @@ test.describe("case-study routes @case-studies", () => {
 			).toBeVisible();
 		}
 
-		await expect(
-			page.getByLabel(
-				"A sanitized rollout loop showing inventory, registration, verification, and status matrix phases.",
-			),
-		).toContainText(/text diagram placeholder/i);
+		const architectureMap = page.getByLabel(
+			"A sanitized rollout loop showing inventory, registration, verification, and status matrix phases.",
+		);
+		await expect(architectureMap).toContainText(
+			/public-safe architecture map/i,
+		);
+		await expect(architectureMap).not.toContainText(
+			/text diagram placeholder/i,
+		);
+		for (const stage of [
+			"Context",
+			"Constraint",
+			"Verification",
+			"Release boundary",
+		]) {
+			await expect(
+				architectureMap.locator("dt").filter({ hasText: stage }),
+			).toBeVisible();
+		}
 		await expect(
 			page.getByRole("region", { name: /evidence drawer/i }),
 		).toContainText(/sanitized rollout matrix/i);
