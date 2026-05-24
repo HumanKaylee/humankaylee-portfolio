@@ -10,6 +10,50 @@ const atlasCategories = [
 ];
 
 test.describe("project atlas @atlas", () => {
+	test("surfaces public best-for audience chips on cards and atlas artifacts", async ({
+		page,
+	}) => {
+		await page.goto("/projects/");
+
+		const projectCard = page.locator(
+			"article.project-card#cli-fleet-synchronization-and-mcp-rollout",
+		);
+		await expect(
+			projectCard.getByRole("group", {
+				name: "Best for CLI Fleet Synchronization and MCP Rollout",
+			}),
+		).toContainText(/senior engineer/i);
+		await expect(
+			projectCard.getByRole("group", {
+				name: "Best for CLI Fleet Synchronization and MCP Rollout",
+			}),
+		).toContainText(/collaborator/i);
+
+		const atlasNode = page
+			.getByRole("link", {
+				name: /Open case study for CLI Fleet Synchronization and MCP Rollout/i,
+			})
+			.filter({ hasText: /Sanitized rollout matrix/i });
+		await expect(
+			atlasNode.getByRole("group", {
+				name: "Best for CLI Fleet Synchronization and MCP Rollout",
+			}),
+		).toContainText(/senior engineer/i);
+
+		await page.setViewportSize({ width: 1440, height: 1100 });
+		await page.goto("/projects/");
+
+		const artifact = page.locator(
+			"#constellation-artifact-humankaylee-portfolio-build",
+		);
+		const artifactAudience = artifact.getByRole("group", {
+			name: "Best for HumanKaylee Portfolio Build",
+		});
+		for (const audience of ["recruiter", "senior engineer", "collaborator"]) {
+			await expect(artifactAudience).toContainText(new RegExp(audience, "i"));
+		}
+	});
+
 	test("renders accessible category filters and static atlas nodes", async ({
 		page,
 	}) => {

@@ -783,6 +783,40 @@ h3 {
 	gap: 0.9rem;
 }
 
+.audience-chips {
+	display: grid;
+	gap: 0.45rem;
+}
+
+.audience-chips-label {
+	color: var(--color-tungsten);
+	font-family: var(--font-label);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.audience-chips ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.audience-chips li {
+	border: 1px solid rgba(123, 199, 167, 0.28);
+	border-radius: 999px;
+	background: rgba(123, 199, 167, 0.1);
+	color: var(--color-signal-on-dark);
+	padding: 0.28rem 0.55rem;
+	font-family: var(--font-evidence);
+	font-size: 0.78rem;
+	letter-spacing: 0.02em;
+}
+
 .project-card a,
 .case-study-card a {
 	width: fit-content;
@@ -1085,16 +1119,24 @@ h3 {
 	padding: 0.85rem;
 }
 
-.atlas-node-card span {
+.atlas-node-card[data-touch-target="true"] {
+	display: grid;
+	align-items: stretch;
+	justify-content: stretch;
+}
+
+.atlas-node-card > span {
 	font-family: var(--font-display);
 	font-size: 1.25rem;
 	line-height: 1;
+	overflow-wrap: anywhere;
 }
 
-.atlas-node-card small {
+.atlas-node-card > small {
 	color: rgba(243, 234, 216, 0.66);
 	font-family: var(--font-evidence);
 	line-height: 1.45;
+	overflow-wrap: anywhere;
 }
 
 .case-study-card,

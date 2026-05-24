@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added public audience chips to project cards, atlas nodes, and constellation
+  artifact cards using existing `bestFor` metadata so recruiter, senior
+  engineer, and collaborator paths are visible on static project surfaces.
 - Added public-safe architecture maps to case-study detail pages so the
   architecture section renders intentional context, constraint, verification,
   and release-boundary signals instead of visible placeholder copy.

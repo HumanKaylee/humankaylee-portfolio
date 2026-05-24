@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
+import AudienceChips from "./AudienceChips.astro";
+
 type Props = {
 	project: CollectionEntry<"projects">;
 };
@@ -13,6 +15,10 @@ const { data } = project;
 	<p class="project-category">{data.category}</p>
 	<h2>{data.name}</h2>
 	<p>{data.summary}</p>
+	<AudienceChips
+		audiences={data.bestFor}
+		label={`Best for ${data.name}`}
+	/>
 	<p class="proof-line">{data.proof}</p>
 	<a
 		data-touch-target="true"

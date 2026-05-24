@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
+import AudienceChips from "./AudienceChips.astro";
+
 type ProjectEntry = CollectionEntry<"projects">;
 
 type Props = {
@@ -172,6 +174,10 @@ function constellationNodePosition(project: ProjectEntry) {
 						<p class="project-category">{project.data.category}</p>
 						<h3>{project.data.name}</h3>
 						<p>{project.data.summary}</p>
+						<AudienceChips
+							audiences={project.data.bestFor}
+							label={`Best for ${project.data.name}`}
+						/>
 						<p class="proof-line">{project.data.proof}</p>
 						<a
 							data-touch-target="true"
@@ -216,6 +222,10 @@ function constellationNodePosition(project: ProjectEntry) {
 										aria-label={`Open case study for ${project.data.name}`}
 									>
 										<span>{project.data.name}</span>
+										<AudienceChips
+											audiences={project.data.bestFor}
+											label={`Best for ${project.data.name}`}
+										/>
 										<small>{project.data.proof}</small>
 									</a>
 								))}
