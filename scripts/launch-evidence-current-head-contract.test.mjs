@@ -50,10 +50,14 @@ test("launch evidence distinguishes the latest PR head from historical rows", ()
 	expectContains(evidence, "Latest Verified PR Evidence");
 	expectContains(evidence, "Latest verified PR head");
 	expectContains(evidence, "historical rows");
-	expectContains(evidence, `current head \`${head}\``, "current PR row head");
 	expectContains(
 		evidence,
-		`PR #6, head \`${head}\``,
+		`latest verified head \`${head}\``,
+		"latest verified PR row head",
+	);
+	expectContains(
+		evidence,
+		`PR #6, latest verified head \`${head}\``,
 		"frontend and Rust row heads",
 	);
 	expectContains(evidence, ciRun, "latest verified CI run");
