@@ -34,6 +34,35 @@ function readWorkflow() {
 	return content;
 }
 
+function expectCiTriggers(workflow) {
+	assert.match(workflow, /^on:\n/m, "expected workflow trigger block");
+	assert.match(
+		workflow,
+		/^ {2}pull_request:\s*$/m,
+		"expected pull_request trigger for PR branches",
+	);
+	assert.match(
+		workflow,
+		/^ {2}workflow_dispatch:\s*$/m,
+		"expected manual workflow_dispatch trigger",
+	);
+	assert.match(
+		workflow,
+		/^ {2}push:\n {4}branches:\n {6}- main$/m,
+		"expected push trigger to be scoped to main only",
+	);
+	assert.doesNotMatch(
+		workflow,
+		/^ {2}push:\n {2}pull_request:/m,
+		"expected push trigger not to run on every branch",
+	);
+	assert.match(
+		workflow,
+		/group: phase-0-ci-\${{ github.workflow }}-\${{ github.event_name }}-\${{ github.event.pull_request.number \|\| github.ref_name }}/,
+		"expected concurrency to separate PR numbers from direct pushes",
+	);
+}
+
 function scalarValue(value) {
 	const trimmed = value.trim();
 	const quote = trimmed[0];
@@ -132,6 +161,10 @@ function expectLaunchGateSteps(workflow) {
 
 test("phase-0 CI exposes dedicated launch gate steps in the expected order", () => {
 	expectLaunchGateSteps(readWorkflow());
+});
+
+test("phase-0 CI avoids duplicate PR branch push runs", () => {
+	expectCiTriggers(readWorkflow());
 });
 
 test("phase-0 CI contract rejects collapsed launch gates", () => {

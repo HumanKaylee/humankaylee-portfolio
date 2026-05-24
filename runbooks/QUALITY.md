@@ -2,6 +2,10 @@
 
 Phase 7 launch gates are enforced locally and in CI.
 
+Pull requests run the full Phase 0 CI suite through the `pull_request` trigger.
+The `push` trigger is scoped to `main` so feature-branch PR commits do not run
+duplicate push and PR Lighthouse jobs for the same head.
+
 ## Local Checks
 
 - `pnpm test:e2e -- --grep "@keyboard"` runs the launch keyboard
