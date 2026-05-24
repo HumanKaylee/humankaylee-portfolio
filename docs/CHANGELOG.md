@@ -116,6 +116,11 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   evidence-only commits.
 - Refreshed the embedded launch-evidence snapshot row for PR #6 head `ad798c4`
   and CI run `26354144870` while preserving blocked production rows.
+- Refreshed the embedded launch-evidence snapshot and final launch checklist PR
+  rows for PR #6 head `339afbd` and CI run `26356797852` while preserving
+  blocked production rows.
+- Aligned the operations local-development runbook with the actual Astro dev
+  command because `package.json` does not define a `pnpm dev` script.
 - Expanded GitHub sync docs and live repo issue state with Phase 1 granular
   issues B-006 through B-012.
 - Expanded GitHub sync docs and live repo issue state with Phase 2 granular

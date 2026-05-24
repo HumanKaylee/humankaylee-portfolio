@@ -3,13 +3,18 @@ import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
 const README_PATH = "README.md";
+const OPERATIONS_PATH = "docs/OPERATIONS.md";
+
+function readRequiredFile(path) {
+	assert.ok(existsSync(path), `missing required file: ${path}`);
+
+	const content = readFileSync(path, "utf8");
+	assert.ok(content.trim().length > 0, `empty required file: ${path}`);
+	return content;
+}
 
 function readReadme() {
-	assert.ok(existsSync(README_PATH), `missing required file: ${README_PATH}`);
-
-	const content = readFileSync(README_PATH, "utf8");
-	assert.ok(content.trim().length > 0, `empty required file: ${README_PATH}`);
-	return content;
+	return readRequiredFile(README_PATH);
 }
 
 function expectContains(content, needle, label = needle) {
@@ -17,7 +22,7 @@ function expectContains(content, needle, label = needle) {
 	const normalizedNeedle = needle.replace(/\s+/g, " ");
 	assert.ok(
 		normalizedContent.includes(normalizedNeedle),
-		`expected README to include ${label}`,
+		`expected content to include ${label}`,
 	);
 }
 
@@ -91,5 +96,27 @@ test("README covers local development, deployment, and recovery contracts", () =
 	assert.ok(
 		!readme.includes("fly secrets list"),
 		"README rollback guidance should use Fly releases, not Fly secrets listing",
+	);
+});
+
+test("operations local development runbook uses runnable frontend commands", () => {
+	const operations = readRequiredFile(OPERATIONS_PATH);
+	const localDevelopmentSection =
+		operations.match(/## 5\. Local Development Runbook[\s\S]*?## 6\./)?.[0] ??
+		"";
+
+	assert.ok(
+		localDevelopmentSection,
+		"expected operations runbook to include local development section",
+	);
+
+	expectContains(
+		localDevelopmentSection,
+		"pnpm exec astro dev --host 127.0.0.1 --port 4321",
+		"direct Astro dev command",
+	);
+	assert.ok(
+		!localDevelopmentSection.includes("pnpm dev"),
+		"operations local development section should not reference a missing package.json dev script",
 	);
 });

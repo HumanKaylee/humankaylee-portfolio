@@ -171,7 +171,7 @@ Expected frontend workflow:
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm dev
+pnpm exec astro dev --host 127.0.0.1 --port 4321
 pnpm build
 pnpm preview
 ```
