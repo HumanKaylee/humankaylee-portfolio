@@ -85,8 +85,8 @@ Set these shell variables locally before running smoke checks. Do not commit
 the values.
 
 ```bash
-FRONTEND_ORIGIN="https://www.example.com"
-API_ORIGIN="https://api.example.com"
+FRONTEND_ORIGIN="<https-frontend-origin>"
+API_ORIGIN="<https-api-origin>"
 CLOUDFLARE_PAGES_PROJECT="humankaylee-portfolio"
 SHUTTLE_PROJECT="humankaylee-api"
 FLY_APP="humankaylee-api"
@@ -510,9 +510,9 @@ Cloudflare Pages custom-domain setup:
 
 Recommended pattern:
 
-- `www.example.com` or apex domain for the static frontend.
-- `api.example.com` for the Rust API.
-- Keep the frontend usable if `api.example.com` fails.
+- selected `www` or apex domain for the static frontend.
+- selected API subdomain for the Rust API.
+- Keep the frontend usable if the API origin fails.
 - Record the final API origin and domain mapping in launch evidence before any
   production smoke check is treated as complete.
 

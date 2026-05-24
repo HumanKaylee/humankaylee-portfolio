@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a static hero evidence legend to the systems-map hero so the first
+  viewport communicates static route, optional motion, and Rust proof boundaries
+  before any JavaScript, WebGL, or API enhancement.
+- Added rollback/operations placeholder hygiene coverage so deployment and
+  incident docs use explicit origin variables instead of runnable `example.com`
+  smoke targets.
 - Hardened the content strategy schema wording to use the live case-study field names, redaction review, issue trace, and launch eligibility gates without changing approval state.
 - Added Phase 7 metadata readiness coverage so RSS uses shared site metadata
   alongside sitemap, robots, canonical URL, and Open Graph generation while

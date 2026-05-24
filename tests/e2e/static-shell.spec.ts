@@ -135,6 +135,11 @@ test.describe("static shell @static-shell", () => {
 			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
 		);
 		await expect(mapHero.getByText(/No JavaScript required/i)).toBeVisible();
+		const legend = mapHero.getByLabel("Hero evidence legend");
+		await expect(legend).toBeVisible();
+		for (const proof of ["Static route", "Optional motion", "Rust proof"]) {
+			await expect(legend.getByText(proof, { exact: true })).toBeVisible();
+		}
 	});
 
 	test("keeps primary links keyboard reachable with mobile-safe touch targets @keyboard", async ({

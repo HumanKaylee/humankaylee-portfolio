@@ -535,9 +535,10 @@ Sev 3:
 Checks:
 
 ```bash
-xh -h https://example.com/
-xh -h https://example.com/resume
-xh -h https://example.com/sitemap.xml
+FRONTEND_ORIGIN="<https-frontend-origin>"
+xh -h "$FRONTEND_ORIGIN/"
+xh -h "$FRONTEND_ORIGIN/resume"
+xh -h "$FRONTEND_ORIGIN/sitemap.xml"
 ```
 
 Likely causes:
@@ -560,8 +561,9 @@ Recovery:
 Checks:
 
 ```bash
-xh https://api.example.com/api/health
-xh https://api.example.com/api/projects/live
+API_ORIGIN="<https-api-origin>"
+xh "$API_ORIGIN/api/health"
+xh "$API_ORIGIN/api/projects/live"
 ```
 
 Likely causes:

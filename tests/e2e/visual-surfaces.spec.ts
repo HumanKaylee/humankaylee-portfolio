@@ -98,6 +98,8 @@ test.describe("visual surfaces @visual-surfaces", () => {
 		await page.goto("/");
 		await expectSurfaceTreatment(page, ".hero-shell");
 		await expectSurfaceTreatment(page, ".systems-map-hero");
+		await expectSurfaceTreatment(page, ".systems-map-legend");
+		await expectSurfaceTreatment(page, ".systems-map-legend li");
 		await expectSurfaceTreatment(page, ".cta-cluster .cta-card");
 		await expectSurfaceTreatment(page, ".telemetry-strip");
 

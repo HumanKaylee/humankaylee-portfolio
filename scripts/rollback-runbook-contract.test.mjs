@@ -41,6 +41,14 @@ function expectAll(content, needles) {
 	}
 }
 
+function expectNoExampleOriginCommands(content, label) {
+	assert.doesNotMatch(
+		content,
+		/https:\/\/(?:www\.)?example\.com|https:\/\/api\.example\.com/,
+		`${label} should use shell variables or angle-bracket placeholders instead of runnable example.com origins`,
+	);
+}
+
 test("deployment and operations runbooks cover B-062 rollback and incident requirements", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const deployment = readRequiredFile(files.deployment);
@@ -119,4 +127,16 @@ test("deployment and operations runbooks cover B-062 rollback and incident requi
 		"node --test scripts/rollback-runbook-contract.test.mjs",
 		"Production rollback targets remain blocked",
 	]);
+});
+
+test("deployment and operations docs do not ship runnable example origins", () => {
+	const deployment = readRequiredFile(files.deployment);
+	const operations = readRequiredFile(files.operations);
+
+	expectNoExampleOriginCommands(deployment, files.deployment);
+	expectNoExampleOriginCommands(operations, files.operations);
+	expectContains(deployment, 'FRONTEND_ORIGIN="<https-frontend-origin>"');
+	expectContains(deployment, 'API_ORIGIN="<https-api-origin>"');
+	expectContains(operations, 'FRONTEND_ORIGIN="<https-frontend-origin>"');
+	expectContains(operations, 'API_ORIGIN="<https-api-origin>"');
 });
