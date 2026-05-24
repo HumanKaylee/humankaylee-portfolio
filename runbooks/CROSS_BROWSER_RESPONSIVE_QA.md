@@ -77,7 +77,7 @@ Use these categories for B-055 findings:
 ## Current Notes
 
 - The automated gate is production-like local evidence; it is not production
-  evidence until run against the final deployed site or an approved preview URL.
+  evidence until run against the final deployed site or an owner-approved production-equivalent provider preview URL.
 - Screenshots are optional when the automated gate passes, but any triaged
   issue should include a screenshot or concise reproduction note.
 - Production launch evidence still belongs in `runbooks/LAUNCH_EVIDENCE.md`.

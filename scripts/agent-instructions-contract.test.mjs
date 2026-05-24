@@ -104,6 +104,32 @@ test("repository agent instructions use current hosting and launch-blocker guida
 	);
 });
 
+test("repository agent instructions surface GitHub Project board guardrails", () => {
+	const agents = readRequiredFile(AGENTS_PATH);
+
+	expectContains(agents, "## GitHub And Project Work");
+	expectContains(
+		agents,
+		"Read `docs/GITHUB_SYNC.md` before changing issues, labels, milestones, or GitHub Project state.",
+	);
+	expectContains(
+		agents,
+		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks.",
+	);
+	expectContains(
+		agents,
+		"Do not run `gh auth refresh` from unattended automation.",
+	);
+	expectContains(
+		agents,
+		"Project board recovery requires every open issue in the live issue bridge to have a Project item or a documented skip reason.",
+	);
+	expectContains(
+		agents,
+		"Issue sync evidence is not launch readiness, production deployment evidence, post-launch feature approval, assistant-build approval, or Project board recovery.",
+	);
+});
+
 test("repository agent instructions reject Shuttle as the active hosting target even with legacy warning text", () => {
 	const agents = readRequiredFile(AGENTS_PATH);
 	const staleAgents = agents.replace(

@@ -6,7 +6,7 @@ Source: `docs/CONTENT_STRATEGY.md`
 
 ## Purpose
 
-This guide prevents portfolio content from publishing secrets, private infrastructure details, private account data, or operational details that increase risk. Every real-work case study must link to this guide and record a redaction status before it can be treated as launch-ready.
+This guide prevents portfolio content from publishing secrets, private infrastructure details, private account data, or operational details that increase risk. Every real-work case study must link to this guide and record a redaction status before it can be treated as launch-approved.
 
 ## Redaction Statuses
 
@@ -16,7 +16,7 @@ Use these statuses in content frontmatter or data as `redactionStatus`:
 | --- | --- | --- |
 | `draft` | Content exists but has not been reviewed for sensitive details. | No |
 | `reviewed` | A reviewer has checked the item and requested no further redaction or listed required edits. | No |
-| `approved` | The item is safe enough to publish with its current artifacts and links. | Yes |
+| `approved` | The item has completed review, open-items clearance, artifact inspection, human signoff, and any required production or owner-approved production-equivalent provider preview evidence. | Yes |
 | `blocked` | The item cannot be published without missing approval, unsafe details, or loss of credibility after redaction. | No |
 
 Use these publication statuses for case-study launch selection as `publicationStatus`:

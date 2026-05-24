@@ -318,8 +318,8 @@ Each launch case study must include:
 4. Replace sensitive details with generalized labels.
 5. Confirm every claim has safe supporting evidence.
 6. Mark `redactionStatus` as `reviewed`.
-7. Perform final review in page context.
-8. Mark `redactionStatus` as `approved`.
+7. Preserve `redactionStatus` as `reviewed` until open items are cleared, linked artifacts are inspected, human signoff is recorded, and any required production or owner-approved production-equivalent provider preview evidence exists.
+8. Mark `redactionStatus` as `approved` only after those gates are complete.
 9. Publish only after the case study remains understandable without private context.
 
 ## Launch Eligibility

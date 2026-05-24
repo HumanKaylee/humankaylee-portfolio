@@ -6,16 +6,19 @@ const files = {
 	changelog: "docs/CHANGELOG.md",
 	cliFleet:
 		"apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md",
+	contentRedactionGuide: "docs/CONTENT_REDACTION_GUIDE.md",
 	contentStrategy: "docs/CONTENT_STRATEGY.md",
 	contentContract: "apps/web/src/lib/contracts/content.ts",
 	creative:
 		"apps/web/src/content/case-studies/creative-web-systems-atlas-demo.md",
 	decision: "runbooks/PUBLICATION_SAFETY_DECISIONS.md",
+	finalChecklist: "runbooks/FINAL_LAUNCH_CHECKLIST.md",
 	githubSync: "docs/GITHUB_SYNC.md",
 	portfolioBuild:
 		"apps/web/src/content/case-studies/humankaylee-portfolio-build.md",
 	kalshi:
 		"apps/web/src/content/case-studies/kalshi-migration-or-analytics-tooling.md",
+	launchEvidence: "runbooks/LAUNCH_EVIDENCE.md",
 	packet: "runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md",
 	remoteRecovery:
 		"apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md",
@@ -57,6 +60,7 @@ function expectNoUnsafeApprovalParaphrases(content, label) {
 		/\blaunch[- ]safe\b/i,
 		/\bsafe enough\b/i,
 		/\bready to publish\b/i,
+		/\bapproved[- ]preview\b/i,
 	];
 
 	for (const pattern of forbiddenPatterns) {
@@ -69,6 +73,15 @@ function expectNoUnsafeApprovalParaphrases(content, label) {
 
 	for (const line of content.split("\n")) {
 		if (!/\bcounts? toward launch\b/i.test(line)) {
+			if (!/\blaunch-ready\b/i.test(line)) {
+				continue;
+			}
+
+			assert.match(
+				line,
+				/\b(not|do not|does not|cannot|no)\b/i,
+				`${label} can only mention launch-ready in negative wording: ${line}`,
+			);
 			continue;
 		}
 
@@ -148,11 +161,14 @@ test("content issue traceability ties open content issues to approval blockers w
 	const changelog = readRequiredFile(files.changelog);
 	const cliFleet = readRequiredFile(files.cliFleet);
 	const contentContract = readRequiredFile(files.contentContract);
+	const contentRedactionGuide = readRequiredFile(files.contentRedactionGuide);
 	const contentStrategy = readRequiredFile(files.contentStrategy);
 	const creative = readRequiredFile(files.creative);
 	const decision = readRequiredFile(files.decision);
+	const finalChecklist = readRequiredFile(files.finalChecklist);
 	const githubSync = readRequiredFile(files.githubSync);
 	const kalshi = readRequiredFile(files.kalshi);
+	const launchEvidence = readRequiredFile(files.launchEvidence);
 	const packet = readRequiredFile(files.packet);
 	const portfolioBuild = readRequiredFile(files.portfolioBuild);
 	const remoteRecovery = readRequiredFile(files.remoteRecovery);
@@ -316,6 +332,10 @@ test("content issue traceability ties open content issues to approval blockers w
 		"Do not use readiness or sufficiency language for blocked candidates; keep approval wording explicit until every launch gate is actually complete.",
 	);
 	expectContains(
+		contentStrategy,
+		"Preserve `redactionStatus` as `reviewed` until open items are cleared, linked artifacts are inspected, human signoff is recorded, and any required production or owner-approved production-equivalent provider preview evidence exists.",
+	);
+	expectContains(
 		githubSync,
 		"Content issue traceability status: approval-blocker mapping covers #20, #21, #24, and #25; draft-source mapping covers closed #22 and #23.",
 	);
@@ -326,13 +346,16 @@ test("content issue traceability ties open content issues to approval blockers w
 
 	for (const content of [
 		contentStrategy,
+		contentRedactionGuide,
 		decision,
+		finalChecklist,
 		githubSync,
+		launchEvidence,
 		packet,
 		status,
+		changelog,
 	]) {
 		expectNotContains(content, "Status: publication approved");
-		expectNotContains(content, "launch-ready");
 		expectNotContains(content, "Traceability approves publication");
 		expectNoUnsafeApprovalParaphrases(
 			content,

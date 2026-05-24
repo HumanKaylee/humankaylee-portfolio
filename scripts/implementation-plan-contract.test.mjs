@@ -148,9 +148,17 @@ test("implementation plan is swarm-ready for content privacy and legacy API host
 	containsAll(
 		plan,
 		[
+			"AGENTS.md",
 			"docs/CONTENT_STRATEGY.md",
 			"docs/CONTENT_REDACTION_GUIDE.md",
 			"docs/PRIVACY.md",
+			"docs/ARCHITECTURE.md",
+			"docs/ROADMAP.md",
+			"docs/BACKLOG.md",
+			"docs/OPERATIONS.md",
+			"docs/GITHUB_SYNC.md",
+			"runbooks/LAUNCH_EVIDENCE.md",
+			"Do not start implementation until the executor has read every file in the Source of Truth list.",
 			"Preflight evidence must include sanitized command output for",
 			"Final resume PDF source is resolved locally",
 			"Shuttle remains legacy compatibility only",
@@ -175,5 +183,34 @@ test("implementation plan is swarm-ready for content privacy and legacy API host
 	assert.ok(
 		!roadmap.includes("final PDF source remains an open decision"),
 		"roadmap must not reopen the resolved local resume source decision",
+	);
+});
+
+test("implementation plan has a current-state overlay for blocked goal continuations", () => {
+	containsAll(
+		plan,
+		[
+			"## Current Repo State / Issue Overlay",
+			"Current goal continuations must treat completed or local-evidence items as guard-check targets, not duplicate implementation tasks.",
+			"Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external evidence gates prove otherwise.",
+			"provider/domain/auth/contact/redaction blockers are unresolved",
+			"continue only non-blocked local-readiness, docs-sync, guardrail, and verification-hardening work",
+		],
+		"current-state overlay",
+	);
+
+	containsAll(
+		plan,
+		[
+			"stop deployment or launch work at the documented pause conditions",
+			"do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence",
+		],
+		"goal prompt blocker handling",
+	);
+
+	assert.equal(
+		plan.match(/^pnpm preview$/gm)?.length ?? 0,
+		1,
+		"bare long-running pnpm preview must appear only in the root command contract, not automated verification lists",
 	);
 });

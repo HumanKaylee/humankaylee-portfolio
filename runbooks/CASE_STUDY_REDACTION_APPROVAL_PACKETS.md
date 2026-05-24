@@ -94,7 +94,7 @@ content record `approved` from the template alone.
 | Review date              | `YYYY-MM-DD`                                                               |
 | Current publication      | Current `publicationStatus`                                                |
 | Current redaction        | Current `redactionStatus`                                                  |
-| Artifact evidence source | Public URL, approved preview URL, local artifact path, or `not-applicable` |
+| Artifact evidence source | Public URL, owner-approved production-equivalent provider preview URL, local artifact path, or `not-applicable` |
 | Linked artifact review   | Notes confirming linked artifacts inspected                                |
 | Public-safe evidence     | Summary of evidence that supports claims without private context           |
 | Approval decision        | `approved`, `blocked`, or `reviewed` with reason                           |
@@ -145,7 +145,7 @@ Missing approval evidence:
   artifact evidence are cleared.
 - Cleared `redactionReview.openItems`.
 - Artifact evidence source for atlas fallback screenshots or `not-applicable`.
-- production or approved-preview evidence for the final public route.
+- production or owner-approved production-equivalent provider preview evidence for the final public route.
 - Reviewer confirmation that no WebGL, R3F, Three.js, or interactive feature is
   claimed as launched unless separately approved.
 
@@ -162,7 +162,7 @@ Missing approval evidence:
   artifact evidence are cleared.
 - Cleared `redactionReview.openItems`.
 - Public artifact inspection for local verification and launch evidence claims.
-- production or approved-preview evidence for frontend domain, provider deploy,
+- production or owner-approved production-equivalent provider preview evidence for frontend domain, provider deploy,
   API health, and rollback records before production claims are approved.
 
 ## Remote Workstation Recovery and Operational Debugging

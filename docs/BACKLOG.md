@@ -1486,7 +1486,7 @@ Scope:
 
 Acceptance criteria:
 
-- Health endpoint is reachable from public internet or approved preview network.
+- Health endpoint is reachable from public internet or owner-approved production-equivalent provider preview network.
 - Required secrets are configured server-side.
 - API origin is added to frontend config.
 - CORS allows production frontend and blocks unapproved origins.

@@ -8,6 +8,17 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened the implementation plan for resumed goal execution with a current
+  repo-state overlay, explicit blocker-aware goal prompt language, full source
+  order coverage, and no bare long-running `pnpm preview` in automated
+  verification lists.
+- Added repo agent guardrails for GitHub Project work so agents must use
+  `docs/GITHUB_SYNC.md`, non-interactive Project discovery, and live issue
+  bridge recovery criteria before changing issue or Project state.
+- Clarified case-study approval workflow and preview-evidence wording so
+  `reviewed` stays in place until open items, artifact inspection, human
+  signoff, and production or owner-approved production-equivalent provider
+  preview evidence are complete.
 - Hardened GitHub Project recovery guidance with non-interactive discovery,
   manual-only auth-scope cases, canonical board verification, and Project item
   recovery criteria while Project scopes remain blocked.

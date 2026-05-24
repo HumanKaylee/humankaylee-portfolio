@@ -14,30 +14,49 @@
 
 Read these before executing any phase:
 
+- `AGENTS.md`: repository-local agent instructions, current source order, hosting boundary, agent workflow, and launch-readiness guardrails.
 - `docs/PRD.md`: product requirements, success metrics, journeys, feature requirements, launch definition, open decisions.
 - `docs/RESEARCH.md`: recommended stack, visual concept, hosting recommendations, content strategy, risk controls.
+- `docs/IMPLEMENTATION_AND_TEST_PLAN.md`: this execution contract, path ownership boundaries, swarm protocol, phase gates, and final verification commands.
+- `docs/ARCHITECTURE.md`: static-first frontend architecture, Rust API boundaries, hosting options, failure isolation, and launch criteria.
+- `docs/ROADMAP.md`: phase sequencing, current implementation status, and blocked production milestones.
+- `docs/BACKLOG.md`: backlog item definitions, issue mapping, acceptance criteria, and agent sizing metadata.
 - `docs/CONTENT_STRATEGY.md`: current content model, route inventory, schema names, and public-safe messaging boundaries.
 - `docs/CONTENT_REDACTION_GUIDE.md`: publication safety checklist for case studies, projects, artifacts, logs, screenshots, and links.
 - `docs/PRIVACY.md`: implemented privacy posture for contact handling, optional events, logging, and visitor data boundaries.
+- `docs/OPERATIONS.md`: local, preview, production, deployment, incident, rollback, and maintenance runbooks.
+- `docs/GITHUB_SYNC.md`: GitHub issue bridge, Project auth blocker, live issue status, and sync commands.
+- `runbooks/LAUNCH_EVIDENCE.md`: current local/PR evidence, production blockers, and evidence boundaries.
 - `README.md`: repository status and working decision.
 
 If this plan conflicts with `docs/PRD.md` or `docs/RESEARCH.md`, pause and ask for a planning update before changing code.
 
+## Current Repo State / Issue Overlay
+
+Current goal continuations must treat completed or local-evidence items as guard-check targets, not duplicate implementation tasks.
+
+- Phase 0 through Phase 6 have substantial local and PR evidence in the current PR branch; use the guard commands and live issue verifier before reopening or reimplementing those slices.
+- Phase 7 and Phase 8 contain planning, runbook, local-readiness, and issue-sync evidence only; production deploy, provider, DNS/TLS, API health, contact handling, rollback, production Lighthouse, and redaction approval gates remain unresolved.
+- Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external evidence gates prove otherwise.
+- When provider/domain/auth/contact/redaction blockers are unresolved, stop deployment or launch work at the documented pause conditions and continue only non-blocked local-readiness, docs-sync, guardrail, and verification-hardening work.
+- Do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence.
+- Treat embedded evidence snapshots as historical unless a live verifier or fresh command output proves they match the current checkout.
+
 ## Ready-To-Use Codex Goal Objective
 
 ```text
-/goal Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Work phase-by-phase in order, respect the path ownership boundaries, keep static content usable without JavaScript/WebGL/API availability, and stop only when every phase acceptance criterion and final launch verification command in the plan passes or a listed pause condition is reached.
+/goal Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Work phase-by-phase in order, respect the path ownership boundaries, keep static content usable without JavaScript/WebGL/API availability, stop deployment or launch work at the documented pause conditions when provider/domain/auth/contact/redaction blockers are unresolved, continue only non-blocked local-readiness/docs-sync/guardrail/verification-hardening work in that state, do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence, and stop only when every phase acceptance criterion and final launch verification command in the plan passes or a listed pause condition is reached.
 ```
 
 ## Optional Claude Code Execution Prompt
 
 ```text
-Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Execute phases in order, use a fresh task context for each ownership lane, verify with the exact commands listed in the plan, and stop only when all final launch checks pass or a pause condition is reached.
+Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Execute phases in order, use a fresh task context for each ownership lane, verify with the exact commands listed in the plan, stop deployment or launch work at the documented pause conditions when provider/domain/auth/contact/redaction blockers are unresolved, continue only non-blocked local-readiness/docs-sync/guardrail/verification-hardening work in that state, do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence, and stop only when all final launch checks pass or a pause condition is reached.
 ```
 
 ## Execution Rules
 
-- Do not start implementation until the executor has read `docs/PRD.md`, `docs/RESEARCH.md`, and this plan.
+- Do not start implementation until the executor has read every file in the Source of Truth list.
 - Start with a read-only preflight that records local tool versions, GitHub auth status, available package managers, Rust version, Node version, and current repository remotes in `runbooks/PREFLIGHT.md`.
 - Preflight evidence must include sanitized command output for `date`, `git status --short --branch`, `git remote -v`, `node --version`, `corepack --version`, `pnpm --version`, `rustc --version`, `cargo --version`, `gh auth status`, `git --version`, and `codex --version`. Omit tokens, private paths, hostnames, and secrets; record missing Project scopes separately from repository readiness.
 - Do not let two agents edit the same file or directory ownership lane at the same time.
@@ -639,7 +658,6 @@ pnpm test
 pnpm test:e2e
 pnpm build
 pnpm bundle:budget
-pnpm preview
 pnpm lighthouse:local
 pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check
@@ -746,7 +764,6 @@ pnpm test
 pnpm test:e2e
 pnpm build
 pnpm bundle:budget
-pnpm preview
 pnpm lighthouse:local
 pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check

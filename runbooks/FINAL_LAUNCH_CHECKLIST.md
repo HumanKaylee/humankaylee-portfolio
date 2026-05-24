@@ -39,7 +39,7 @@ These checks are CI evidence, not production launch evidence.
 | Resume HTML and PDF are live                         | Blocked / not run  | Local resume source is approved and the PDF asset checksum is recorded in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists. | Smoke-test production `/resume/` and PDF link after frontend deploy.                                              |
 | Notes/build-log is live                              | Blocked / not run  | Local notes/RSS route evidence exists; no production frontend target exists.                                                                   | Smoke-test production `/notes/` or RSS route after frontend deploy.                                               |
 | Contact path works                                   | Blocked / not run  | Local contact fallback and API-down evidence exists; production contact handling is not approved.                                              | Choose mailto-only launch exception or configure approved persistent contact store/provider.                      |
-| Rust API health is live                              | Blocked / not run  | Local API health evidence exists; no production API domain, provider project, or secrets exist.                                                | Select API host, configure environment, deploy, and record public or approved-preview `/api/health` response.     |
+| Rust API health is live                              | Blocked / not run  | Local API health evidence exists; no production API domain, provider project, or secrets exist.                                                | Select API host, configure environment, deploy, and record public or owner-approved production-equivalent provider preview `/api/health` response. |
 | CI is green                                          | Pass for PR only   | PR #6 checks above and `gh pr checks 6 --repo HumanKaylee/humankaylee-portfolio`.                                                              | Re-run after each commit; production deployment still needs provider/environment gating after provider selection. |
 | Lighthouse targets pass or exceptions are documented | Pass locally only  | `pnpm lighthouse:local` row in `runbooks/LAUNCH_EVIDENCE.md`.                                                                                  | Re-run Lighthouse against production or approved production-equivalent preview after deploy.                      |
 | Deployment and rollback docs are complete            | Pass for docs only | `README.md`, `docs/OPERATIONS.md`, `runbooks/DEPLOYMENT.md`, and rollback contract evidence in `runbooks/LAUNCH_EVIDENCE.md`.                  | Replace blocked production rows only after real provider deployment IDs and rollback targets exist.               |
@@ -67,7 +67,7 @@ These checks are CI evidence, not production launch evidence.
 - Production frontend smoke, Production API smoke, Production Lighthouse,
   Contact production handling, and Rollback evidence remain Blocked / not run.
 
-## Required Evidence Before Launch-Ready
+## Required Evidence Before Launch Approval
 
 Add or update rows in `runbooks/LAUNCH_EVIDENCE.md` with real command output,
 target URL, date, result, artifact, and blocker/next-action fields for:
@@ -79,7 +79,7 @@ target URL, date, result, artifact, and blocker/next-action fields for:
 - Rollback evidence.
 - Redaction approvals for at least four case studies.
 
-Any future launch-ready claim must be supported by the affected production URL,
+Any future launch approval claim must be supported by the affected production URL,
 deployment ID, check URL, Lighthouse report, API response, redaction approval
 record, or rollback target. Local-only checks and PR checks cannot satisfy a
 production-live requirement.

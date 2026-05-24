@@ -115,7 +115,7 @@ Fallback artifact evidence:
 ## Production Review Notes
 
 - Current screenshots and gates are local/CI evidence only. Capture fresh
-  production or approved-preview screenshots after the frontend domain exists.
+  production or owner-approved production-equivalent provider preview screenshots after the frontend domain exists.
 - If a future WebGL/R3F/Three.js layer is added, it must keep the same static
   atlas baseline and must not become a dependency for recruiter reading paths.
 - Any production-only motion or GPU issue is a launch blocker if it prevents

@@ -142,7 +142,7 @@ function phase7StatusRequirements(backlogId) {
 		requirements.push(
 			"Deploy API to Fly.io, Railway, or another approved host.",
 			"Shuttle is legacy compatibility only, not a new production launch host.",
-			"No production API evidence exists until public or approved-preview `/api/health`, CORS, secret storage, contact handling, and rollback evidence are recorded.",
+			"No production API evidence exists until public or owner-approved production-equivalent provider preview `/api/health`, CORS, secret storage, contact handling, and rollback evidence are recorded.",
 		);
 	}
 

@@ -373,7 +373,10 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectContains(packet, "redactionStatus: approved");
 	expectContains(packet, "public-safe evidence");
 	expectContains(packet, "linked artifacts inspected");
-	expectContains(packet, "production or approved-preview evidence");
+	expectContains(
+		packet,
+		"production or owner-approved production-equivalent provider preview evidence",
+	);
 	expectContains(packet, "approval decision");
 	expectContains(packet, "## Non-Approval Evidence Inventory");
 	expectContains(
@@ -509,7 +512,7 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectStatusRow(status, "Creative Web Systems Atlas Demo", [
 		"review recorded checklist answers",
 		"inspect atlas fallback artifacts",
-		"capture production or approved preview evidence",
+		"capture production or owner-approved production-equivalent provider preview evidence",
 	]);
 	expectStatusRow(status, "HumanKaylee Portfolio Build", [
 		"review recorded checklist answers",
