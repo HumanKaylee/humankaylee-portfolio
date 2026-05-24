@@ -746,3 +746,31 @@ async fn events_enabled_rejects_unallowlisted_event_names() {
     assert_eq!(status, StatusCode::BAD_REQUEST);
     assert_eq!(json["error"]["code"], "validation_failed");
 }
+
+#[tokio::test]
+async fn events_enabled_rate_limits_repeated_allowlisted_submissions_without_echoing_payload() {
+    let state = AppState::with_config(AppConfig {
+        event_logging_enabled: true,
+        rate_limits: RateLimitConfig {
+            requests_per_minute: 1,
+            contact_per_hour: 3,
+        },
+        ..AppConfig::default()
+    });
+    let payload = json!({
+        "event": "contact_form_viewed",
+        "path": "/contact/private-review",
+        "session_id": "session-private-123"
+    });
+
+    let (status, json) = post_json(state.clone(), "/api/events", payload.clone()).await;
+    assert_eq!(status, StatusCode::ACCEPTED);
+    assert_eq!(json["status"], "accepted");
+
+    let (status, json) = post_json(state, "/api/events", payload).await;
+    assert_eq!(status, StatusCode::TOO_MANY_REQUESTS);
+    assert_eq!(json["error"]["code"], "events_rate_limited");
+    assert!(!json.to_string().contains("contact_form_viewed"));
+    assert!(!json.to_string().contains("/contact/private-review"));
+    assert!(!json.to_string().contains("session-private-123"));
+}

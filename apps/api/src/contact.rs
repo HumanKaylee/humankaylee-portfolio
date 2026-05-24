@@ -16,7 +16,7 @@ use std::{
     path::{Path, PathBuf},
     pin::Pin,
     sync::Arc,
-    time::{SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use tokio::{fs, io::AsyncWriteExt};
 
@@ -201,6 +201,7 @@ pub async fn contact_handler(
     if !state.contact_abuse_tracker().allow_submission(
         &client_identity,
         state.config().rate_limits.contact_per_hour,
+        Duration::from_secs(60 * 60),
     ) {
         return error_response(
             StatusCode::TOO_MANY_REQUESTS,

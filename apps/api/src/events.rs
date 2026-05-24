@@ -1,6 +1,7 @@
 use crate::state::AppState;
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 
 #[derive(Debug, Deserialize)]
 pub struct EventRequest {
@@ -30,8 +31,6 @@ pub async fn events_handler(
     State(state): State<AppState>,
     Json(payload): Json<EventRequest>,
 ) -> impl IntoResponse {
-    // TODO(phase5-security): Add explicit event allowlist/rate limits before
-    // enabling events beyond test/local privacy-safe plumbing.
     if !state.config().event_logging_enabled {
         return (
             StatusCode::SERVICE_UNAVAILABLE,
@@ -62,6 +61,28 @@ pub async fn events_handler(
             .into_response();
     }
 
+    let event_rate_limit_key = EventRateLimitKey {
+        event: payload.event.trim(),
+        path: payload.path.trim(),
+        session_id: payload.session_id.as_deref().map(str::trim),
+    };
+    if !state.event_abuse_tracker().allow_submission(
+        &event_rate_limit_key,
+        state.config().rate_limits.requests_per_minute,
+        Duration::from_secs(60),
+    ) {
+        return (
+            StatusCode::TOO_MANY_REQUESTS,
+            Json(ApiErrorResponse {
+                error: ApiError {
+                    code: "events_rate_limited",
+                    message: "Event submission rate limit exceeded.",
+                },
+            }),
+        )
+            .into_response();
+    }
+
     (
         StatusCode::ACCEPTED,
         Json(EventAcceptedResponse { status: "accepted" }),
@@ -74,4 +95,11 @@ fn is_allowlisted_event(event: &str) -> bool {
         event,
         "contact_form_viewed" | "contact_form_submitted" | "project_card_viewed"
     )
+}
+
+#[derive(Hash)]
+struct EventRateLimitKey<'a> {
+    event: &'a str,
+    path: &'a str,
+    session_id: Option<&'a str>,
 }

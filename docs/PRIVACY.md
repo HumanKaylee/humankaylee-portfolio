@@ -1,6 +1,6 @@
 # HumanKaylee Portfolio Privacy Notes
 
-Date: 2026-05-23
+Date: 2026-05-24
 Status: Current implementation summary
 
 This document describes the portfolio as it behaves today. It is a practical
@@ -63,6 +63,12 @@ Current behavior:
 - `PUBLIC_ANALYTICS_ENABLED` is not required for the static site to work.
 - `HK_API_EVENT_LOGGING_ENABLED` defaults to `false`.
 - Only allowlisted event names are accepted when events are enabled.
+- When events are explicitly enabled, accepted event submissions pass through an
+  in-memory per-minute rate limit.
+- The event limiter stores only transient hashed abuse-control buckets derived
+  from the allowlisted event, path, and optional session value. It does not
+  trust forwarded client IP headers for event rate limiting, and it does not
+  write raw event payload values or event records to disk.
 - The current repository does not ship an analytics provider, event sink, or
   retention policy for enabled events.
 
@@ -112,16 +118,19 @@ the contact route together.
 
 ## Implementation Review
 
-Reviewed against current implementation on 2026-05-23:
+Reviewed against current implementation on 2026-05-24:
 
 - `apps/web/src/components/ContactForm.astro` for submitted form fields, visible
   mailto fallback, and typed text preservation when the API path fails.
 - `apps/api/src/contact.rs` for validation, honeypot rejection, request-size
   limits, disabled mode, store mode, JSONL storage behavior, and safe responses.
+- `apps/api/src/state.rs` for transient hashed abuse-control buckets shared by
+  contact and events rate limiting.
 - `apps/api/src/config.rs` for disabled contact storage defaults, the
   `HK_API_CONTACT_STORE_PATH` requirement, and disabled event logging defaults.
 - `apps/api/src/events.rs` for disabled-by-default event handling and the
-  allowlisted event names accepted when event logging is explicitly enabled.
+  allowlisted event names and rate-limit behavior accepted when event logging is
+  explicitly enabled.
 - `apps/api/tests/api_contract.rs` for backend coverage of contact storage,
   disabled contact, validation, rate limiting, and disabled events.
 - `tests/e2e/contact-api.spec.ts` for frontend API enhancement behavior and

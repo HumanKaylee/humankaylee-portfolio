@@ -105,6 +105,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Hardened contact rate limiting so the default abuse key does not trust spoofable forwarded headers before a trusted proxy boundary exists.
 - Added an injectable contact delivery adapter seam with fake success/failure contract coverage while keeping production contact delivery blocked until storage/provider decisions are approved.
 - Added gated `POST /api/events` with disabled-by-default behavior and an allowlisted privacy-safe event shape.
+- Added explicit `/api/events` rate limiting with safe 429 responses and hashed
+  in-memory abuse-control buckets, while keeping events disabled by default and
+  without adding an analytics sink.
 - Added the API-enhanced contact page form with visible mailto fallback, no-JS usefulness, API-down copy, and Playwright coverage.
 - Added API-enhanced build telemetry on the home page while preserving the static telemetry fallback.
 - Strengthened the home telemetry strip into a static-first credibility panel for local build, test, accessibility, and API-fallback posture without claiming production launch readiness.

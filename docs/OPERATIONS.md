@@ -260,7 +260,8 @@ Critical route tests:
   safe acceptance without echoing private text. Store mode appends accepted
   submissions to the configured JSONL file.
 - `POST /api/events` rejects unknown event types and behaves safely when
-  disabled.
+  disabled. When explicitly enabled, accepted events are rate-limited with
+  transient hashed in-memory buckets and safe 429 responses.
 
 ### 6.3 CI Release Gates
 
@@ -814,7 +815,9 @@ If no database is used:
 
 - Source repo and host deployment history are the primary recovery assets.
 - Contact provider retains messages according to provider policy.
-- No event data is retained locally.
+- No event records are retained locally. If events are explicitly enabled,
+  transient hashed event rate-limit buckets may exist in process memory during
+  the configured per-minute window and reset on process restart.
 
 If SQLite or Postgres is used:
 
@@ -828,6 +831,9 @@ Privacy-safe analytics:
 
 - Collect only allowlisted events.
 - Avoid persistent user identifiers unless explicitly justified.
+- Keep event rate limiting disabled by default with the API flag; if enabled,
+  use the hashed in-memory buckets only for abuse control, not analytics
+  storage.
 - Document event names and fields.
 - Provide a simple way to disable event collection.
 

@@ -4,7 +4,8 @@ use crate::{
     projects::ProjectsLiveCache,
 };
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{hash_map::RandomState, HashMap, VecDeque},
+    hash::{BuildHasher, Hash},
     sync::{Arc, Mutex},
     time::{Duration, Instant},
 };
@@ -13,7 +14,8 @@ use std::{
 pub struct AppState {
     config: AppConfig,
     started_at: Instant,
-    contact_abuse_tracker: Arc<ContactAbuseTracker>,
+    contact_abuse_tracker: Arc<SlidingWindowAbuseTracker>,
+    event_abuse_tracker: Arc<SlidingWindowAbuseTracker>,
     contact_delivery: Arc<dyn ContactDelivery>,
     projects_live_cache: ProjectsLiveCache,
 }
@@ -65,11 +67,13 @@ impl AppState {
         projects_live_cache: ProjectsLiveCache,
         contact_delivery: Arc<dyn ContactDelivery>,
     ) -> Self {
-        let contact_abuse_tracker = Arc::new(ContactAbuseTracker::new());
+        let contact_abuse_tracker = Arc::new(SlidingWindowAbuseTracker::new());
+        let event_abuse_tracker = Arc::new(SlidingWindowAbuseTracker::new());
         Self {
             config,
             started_at: Instant::now(),
             contact_abuse_tracker,
+            event_abuse_tracker,
             contact_delivery,
             projects_live_cache,
         }
@@ -84,7 +88,8 @@ impl AppState {
             contact_delivery: contact_delivery_from_config(&config),
             config,
             started_at,
-            contact_abuse_tracker: Arc::new(ContactAbuseTracker::new()),
+            contact_abuse_tracker: Arc::new(SlidingWindowAbuseTracker::new()),
+            event_abuse_tracker: Arc::new(SlidingWindowAbuseTracker::new()),
             projects_live_cache: ProjectsLiveCache::default(),
         }
     }
@@ -97,8 +102,12 @@ impl AppState {
         &self.config
     }
 
-    pub fn contact_abuse_tracker(&self) -> &ContactAbuseTracker {
+    pub fn contact_abuse_tracker(&self) -> &SlidingWindowAbuseTracker {
         self.contact_abuse_tracker.as_ref()
+    }
+
+    pub fn event_abuse_tracker(&self) -> &SlidingWindowAbuseTracker {
+        self.event_abuse_tracker.as_ref()
     }
 
     pub fn contact_delivery(&self) -> &dyn ContactDelivery {
@@ -111,27 +120,34 @@ impl AppState {
 }
 
 #[derive(Default)]
-pub struct ContactAbuseTracker {
-    attempts: Mutex<HashMap<String, VecDeque<Instant>>>,
+pub struct SlidingWindowAbuseTracker {
+    attempts: Mutex<HashMap<u64, VecDeque<Instant>, RandomState>>,
+    hash_builder: RandomState,
 }
 
-impl ContactAbuseTracker {
+impl SlidingWindowAbuseTracker {
     pub fn new() -> Self {
-        Self::default()
+        let hash_builder = RandomState::new();
+        Self {
+            attempts: Mutex::new(HashMap::with_hasher(hash_builder.clone())),
+            hash_builder,
+        }
     }
 
-    pub fn allow_submission(&self, key: &str, limit: u32) -> bool {
+    pub fn allow_submission<K: Hash + ?Sized>(
+        &self,
+        key: &K,
+        limit: u32,
+        window: Duration,
+    ) -> bool {
         if limit == 0 {
             return false;
         }
 
-        let mut attempts = self
-            .attempts
-            .lock()
-            .expect("contact abuse tracker mutex poisoned");
+        let mut attempts = self.attempts.lock().expect("abuse tracker mutex poisoned");
+        let hashed_key = self.hash_key(key);
         let now = Instant::now();
-        let window = Duration::from_secs(60 * 60);
-        let entries = attempts.entry(key.to_owned()).or_default();
+        let entries = attempts.entry(hashed_key).or_default();
 
         while let Some(front) = entries.front() {
             if now.duration_since(*front) > window {
@@ -147,5 +163,36 @@ impl ContactAbuseTracker {
 
         entries.push_back(now);
         true
+    }
+
+    fn hash_key<K: Hash + ?Sized>(&self, key: &K) -> u64 {
+        self.hash_builder.hash_one(key)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::Duration;
+
+    #[test]
+    fn sliding_window_tracker_does_not_retain_raw_private_key_material() {
+        let tracker = SlidingWindowAbuseTracker::new();
+        let raw_key = "contact_form_viewed|/contact/private-review|session-private-123";
+
+        assert!(tracker.allow_submission(raw_key, 1, Duration::from_secs(60)));
+
+        let stored_keys = tracker
+            .attempts
+            .lock()
+            .expect("tracker mutex")
+            .keys()
+            .cloned()
+            .collect::<Vec<_>>();
+        let stored_keys_debug = format!("{stored_keys:?}");
+
+        assert!(!stored_keys_debug.contains("contact_form_viewed"));
+        assert!(!stored_keys_debug.contains("/contact/private-review"));
+        assert!(!stored_keys_debug.contains("session-private-123"));
     }
 }
