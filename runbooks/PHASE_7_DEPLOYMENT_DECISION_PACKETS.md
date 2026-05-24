@@ -29,6 +29,9 @@ Authoritative blockers:
   rollback targets until the real provider records exist.
 - Keep provider account IDs, private repository paths, logs, credentials,
   contact records, and unapproved case-study evidence out of this packet.
+- Do not select providers, replace placeholders, run provider commands, or
+  clear blocked rows.
+- Keep the packet provider-neutral.
 - Update `runbooks/LAUNCH_EVIDENCE.md` with command output before changing any
   Phase 7 row from blocked to passed.
 
@@ -40,6 +43,19 @@ Authoritative blockers:
 | Rust API deployment                  | B-058 / #64     | Blocked until API host decision, provider project, public API origin, secret store, and contact handling decision exist.                        | Keep Shuttle as legacy-only, compare Fly.io/Railway/current approved host options, record `GET /api/health`, `HK_API_ALLOWED_ORIGINS`, `HK_API_CONTACT_DELIVERY_MODE`, CORS checks, and rollback target fields.           | Public or approved-preview `GET /api/health`, CORS smoke-check output, secret storage record, deployment ID, API origin, and rollback target.                     |
 | Production domain and canonical URLs | B-059 / #65     | Blocked until final domain and DNS target are selected.                                                                                         | Record DNS record owner, TLS check command, canonical `PUBLIC_SITE_URL`, sitemap, Open Graph, robots, and RSS inspection fields.                                                                                          | DNS result, active TLS, final canonical URL, sitemap URL, Open Graph URL inspection, and production metadata smoke output.                                        |
 | Final launch checklist               | B-063 / #69     | Blocked until B-057, B-058, B-059, production contact handling, four approved case studies, production Lighthouse, and rollback evidence exist. | Keep the checklist honest: preserve blocked production rows, current PR-only CI rows, and local-only Lighthouse rows until production evidence exists.                                                                    | Production route smoke, API health, production Lighthouse report, contact handling proof, rollback evidence, and at least four approved public-safe case studies. |
+
+## Provider-Neutral Evidence Mapping
+
+Use this mapping when future Phase 7 evidence is ready to record. It does not
+select providers, replace placeholders, run provider commands, or clear blocked
+rows.
+
+| Evidence area     | Fields to capture                                                                                                                                                                                                        | Still blocked by                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Frontend evidence | Exact command, target URL or local target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.              | Provider project, production deploy URL, production smoke, and frontend rollback evidence.     |
+| API evidence      | Exact command, public API origin or local target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.       | API host selection, contact handling decision, API health evidence, and API rollback evidence. |
+| Domain evidence   | Exact command, final domain or local validation target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule. | Final domain selection, DNS, TLS, and canonical URL evidence.                                  |
+| Rollback evidence | Exact command, deployment ID or rollback target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.        | Real deployment IDs, rollback targets, and rollback verification output.                       |
 
 ## Pre-Provider Local Readiness Contract
 

@@ -170,12 +170,29 @@ The current record has these launch blockers:
 For each future launch check, append a row with:
 
 - Exact command.
-- Target, including the real production URL or local preview target when
-  applicable.
+- Target, including the real production URL, origin, or local preview target
+  when applicable.
 - ISO-8601 date/time.
-- Exit status and concise result.
-- Artifact path, PR check URL, deployment ID, report path, or response capture.
+- Result / Status with exit status or HTTP status.
+- Artifact path, PR check URL, deployment ID, report path, rollback target, or
+  response capture.
 - Blocker or next action if the row is not pass evidence.
+- Privacy redaction rule.
+
+## Provider-Neutral Evidence Schema
+
+Use this row shape for future launch evidence, regardless of frontend, API,
+domain, or rollback provider:
+
+| Field                                             | Required content                                                                      |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Command                                           | Exact command used to produce the evidence.                                           |
+| Target                                            | Real production URL, origin, deployment target, or local preview target.              |
+| Timestamp                                         | ISO-8601 date/time.                                                                   |
+| Result / Status                                   | Exit status for local commands or HTTP status for request-based checks.               |
+| Artifact / Link / Deployment ID / Rollback Target | Public-safe pointer to the artifact, link, deployment identifier, or rollback target. |
+| Blocker / Next Action                             | Any unresolved blocker or the next required action.                                   |
+| Privacy Redaction Rule                            | The redaction rule applied before the row was copied here.                            |
 
 Do not use example domains, provider placeholders, blank result cells, or
 generic "passed locally" claims as final launch evidence.

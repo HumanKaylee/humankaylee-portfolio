@@ -48,13 +48,13 @@ targets, and rollback targets are explicit and recorded in
 
 Core production URLs should be documented after domain selection:
 
-| Component        | URL                            | Owner       | Notes                                   |
-| ---------------- | ------------------------------ | ----------- | --------------------------------------- |
-| Public site      | Pending final domain selection | HumanKaylee | Custom domain pending.                  |
-| Frontend preview | Pending host setup             | HumanKaylee | Usually Cloudflare Pages branch deploy. |
+| Component        | URL                            | Owner       | Notes                                          |
+| ---------------- | ------------------------------ | ----------- | ---------------------------------------------- |
+| Public site      | Pending final domain selection | HumanKaylee | Custom domain pending.                         |
+| Frontend preview | Pending host setup             | HumanKaylee | Usually Cloudflare Pages branch deploy.        |
 | API production   | Pending backend host selection | HumanKaylee | Fly.io/Railway or approved alternate endpoint. |
-| API health       | `/api/health`                  | HumanKaylee | Public, safe, non-secret response.      |
-| Source repo      | Pending publication decision   | HumanKaylee | Public or private decision pending.     |
+| API health       | `/api/health`                  | HumanKaylee | Public, safe, non-secret response.             |
+| Source repo      | Pending publication decision   | HumanKaylee | Public or private decision pending.            |
 
 ## 3. Environments
 
@@ -168,6 +168,22 @@ Local files:
 - Keep contact storage disabled until the approved persistent path or alternate
   durable provider exists and the retention, backup, rotation, and deletion
   decision is recorded.
+
+### 4.4 Public-Safe Evidence Handling
+
+Use public-safe evidence summaries in runbooks and changelog entries.
+
+- Preserve the exact command, target, timestamp, result/status, artifact link,
+  deployment ID, rollback target, blocker, and next action.
+- Redact provider account IDs, private paths, logs, secrets, tokens, and other
+  sensitive identifiers before copying evidence into runbooks, public docs, or
+  changelog entries.
+- Prefer concise summaries of observable outcomes over raw log dumps or secret
+  material.
+- Keep blocked production rows blocked; do not rewrite them into pass evidence
+  until the real target and artifact exist.
+- If a row must mention a sensitive source, replace it with a public-safe
+  label that keeps the evidence useful without exposing the private value.
 
 ## 5. Local Development Runbook
 

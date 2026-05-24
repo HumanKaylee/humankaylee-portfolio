@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened the Phase 7 launch evidence schema and packet mapping so future
+  rows record command, target, timestamp, status, artifact, blocker, and
+  privacy-redaction fields without clearing blocked production evidence.
 - Added Phase 7 current API host guidance coverage so GitHub sync and launch
   evidence keep Fly.io/Railway as the active Axum host candidates while Shuttle
   stays legacy compatibility only.
