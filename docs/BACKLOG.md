@@ -1680,6 +1680,9 @@ Acceptance criteria:
 Verification evidence:
 
 - Decision note approved before implementation.
+- `docs/ASSISTANT_SCOPE_DECISION.md` records draft decision support only,
+  recommends deferring assistant implementation until B-063 launch evidence and
+  HumanKaylee approval exist, and does not authorize B-065.
 - `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the pre-launch decision inputs
   and keeps #70 blocked until B-063 launch evidence exists.
 - `scripts/post-launch-feature-prep-contract.test.mjs` verifies the prep record
@@ -1693,7 +1696,8 @@ Depends on: B-064
 
 Scope:
 
-- Build only if B-064 recommends implementation.
+- Build only if B-064 has a HumanKaylee-approved build recommendation after
+  B-063 launch evidence exists.
 
 Acceptance criteria:
 
@@ -1709,7 +1713,7 @@ Verification evidence:
 - Disabled-mode smoke test.
 - `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the do-not-build gate, public
   content boundary, disabled-mode expectation, and abuse/cost control inputs
-  while #71 remains blocked by B-064 approval.
+  while #71 remains blocked by a B-064 approved build recommendation.
 
 ### B-066: Add richer public status or metadata page
 

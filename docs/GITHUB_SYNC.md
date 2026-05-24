@@ -342,14 +342,19 @@ Phase 8 issue sync status: complete. B-064 through B-068 are mirrored as #70
 through #74. This is only GitHub issue-sync evidence; it is not a Project
 board recovery, production launch, launch-readiness claim, or post-launch
 feature approval, and it is not authorization to build the assistant before
-B-064 is approved.
+#70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome
+of `build`.
 
-Phase 8 prep status: pre-launch planning only. `runbooks/POST_LAUNCH_FEATURE_PREP.md`
-and `scripts/post-launch-feature-prep-contract.test.mjs` record safe decision
-inputs for the assistant scope, assistant prototype gate, public status/metadata
-page, additional notes/postmortems, and API hosting migration. #70 through #74
-remain open until their launch, approval, and production-evidence dependencies
-are satisfied.
+Phase 8 prep status: pre-launch planning only. `runbooks/POST_LAUNCH_FEATURE_PREP.md`,
+`docs/ASSISTANT_SCOPE_DECISION.md`, and
+`scripts/post-launch-feature-prep-contract.test.mjs` record safe decision inputs
+for the assistant scope, assistant prototype gate, public status/metadata page,
+additional notes/postmortems, and API hosting migration. The assistant scope
+note recommends deferring implementation until B-063 launch evidence and
+HumanKaylee approval exist. #70 remains open until B-063 launch evidence and
+HumanKaylee approval exist. B-065 remains blocked until #70 has that approval
+and the approved outcome is `build`. #70 through #74 remain open until their
+launch, approval, and production-evidence dependencies are satisfied.
 
 Granular live GitHub issue verification now covers all documented granular
 issues #7 through #74 with paginated GitHub API results. Completed granular

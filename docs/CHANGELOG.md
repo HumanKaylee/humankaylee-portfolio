@@ -183,6 +183,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added Phase 8 granular GitHub issues B-064 through B-068 while preserving the
   post-launch, assistant-approval, Project-board, and launch-readiness
   boundaries, plus an optional live GitHub issue-sync verifier.
+- Added the Assistant Scope Decision draft for B-064/#70, recommending defer
+  while documenting user value, public data sources, privacy, cost/rate limits,
+  no-secret architecture, and disabled-mode boundaries without approving B-065
+  implementation.
 - Broadened the opt-in live GitHub issue-sync verifier to bulk-check the
   documented granular bridge from #7 through #74 while preserving the
   Project-board scope blocker wording in the sync runbook.

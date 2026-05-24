@@ -4,6 +4,7 @@ import { test } from "node:test";
 
 const files = {
 	architecture: "docs/ARCHITECTURE.md",
+	assistantDecision: "docs/ASSISTANT_SCOPE_DECISION.md",
 	backlog: "docs/BACKLOG.md",
 	blockers: "runbooks/LAUNCH_BLOCKERS_REGISTER.md",
 	changelog: "docs/CHANGELOG.md",
@@ -77,6 +78,7 @@ function expectTableRow(content, firstCell, expectedCells) {
 
 test("Phase 8 post-launch feature prep is documented without authorizing blocked work", () => {
 	const architecture = readRequiredFile(files.architecture);
+	const assistantDecision = readRequiredFile(files.assistantDecision);
 	const backlog = readRequiredFile(files.backlog);
 	const blockers = readRequiredFile(files.blockers);
 	const changelog = readRequiredFile(files.changelog);
@@ -118,14 +120,36 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"B-064",
 		"#70",
 		"Blocked until B-063",
-		"Decision note only",
+		"docs/ASSISTANT_SCOPE_DECISION.md",
 		"privacy",
 		"cost",
+	]);
+
+	expectAll(assistantDecision, [
+		"# Portfolio Assistant Scope Decision",
+		"Status: draft decision support only; not approved for implementation",
+		"Backlog / issue: B-064 / #70",
+		"Depends on: B-063 launch evidence",
+		"Current recommendation: defer",
+		"## User Value Beyond Novelty",
+		"## Allowed Public Data Sources",
+		"## Privacy Model",
+		"## Cost And Rate-Limit Controls",
+		"## No-Secret Frontend Architecture",
+		"## Disabled-Mode Behavior",
+		"## Build / Defer / Reject Decision",
+		"public portfolio content only",
+		"no raw contact submissions",
+		"no private repositories",
+		"server-side only",
+		"rate limit",
+		"monthly cost cap",
+		"kill switch",
 	]);
 	expectTableRow(runbook, "Portfolio assistant prototype", [
 		"B-065",
 		"#71",
-		"Blocked until B-064",
+		"Blocked until B-064 approved build recommendation",
 		"Do not build",
 		"disabled-mode",
 	]);
@@ -189,18 +213,39 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 	expectAll(githubSync, [
 		"Phase 8 prep status: pre-launch planning only",
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
+		"docs/ASSISTANT_SCOPE_DECISION.md",
+		"not authorization to build the assistant before #70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome of `build`",
+		"#70 remains open until B-063 launch evidence and HumanKaylee approval exist",
+		"B-065 remains blocked until #70 has that approval",
 		"#70 through #74 remain open",
 	]);
 	expectAll(roadmap, [
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
 		"pre-launch planning only",
 	]);
-	expectAll(changelog, ["Post-Launch Feature Prep", "B-064", "B-068"]);
+	expectAll(changelog, [
+		"Post-Launch Feature Prep",
+		"Assistant Scope Decision",
+		"B-064",
+		"B-068",
+	]);
 
-	for (const content of [backlog, githubSync, roadmap, runbook]) {
+	for (const content of [
+		assistantDecision,
+		backlog,
+		githubSync,
+		roadmap,
+		runbook,
+	]) {
 		expectNotContains(content, "Phase 8 approved for implementation");
 		expectNotContains(content, "Status: launch-ready");
 		expectNotContains(content, "Status: post-launch features approved");
+		expectNotContains(content, "Status: approved for implementation");
 		expectNotContains(content, "redactionStatus: approved");
 	}
+	expectNotContains(
+		githubSync,
+		"before B-064 is approved",
+		"GitHub sync should not use ambiguous assistant approval shorthand",
+	);
 });

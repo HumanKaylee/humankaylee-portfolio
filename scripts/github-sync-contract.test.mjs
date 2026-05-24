@@ -232,7 +232,7 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"post-launch",
 		"feature approval",
 		"authorization to build the assistant before",
-		"B-064 is approved",
+		"#70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome",
 		"HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs",
 		"Granular live GitHub issue verification",
 		"issues #7 through #74",
@@ -245,8 +245,9 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 
 	for (const required of [
 		"Deferred until B-063 launch completion.",
-		"Do not build the assistant before B-064 is approved.",
-		"Do not approve implementation before B-063 is closed and reviewed.",
+		"Do not approve implementation before B-063 is closed and reviewed and HumanKaylee approves the B-064 decision.",
+		"Blocked until B-064 has a HumanKaylee-approved build recommendation.",
+		"Do not build the assistant before #70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome of build.",
 		"fetchAllIssues",
 		"--paginate",
 		"mustRemainOpenIssueNumbers",

@@ -82,14 +82,14 @@ function phase8StatusRequirements(backlogId) {
 
 	if (backlogId === "B-064") {
 		requirements.push(
-			"Do not approve implementation before B-063 is closed and reviewed.",
+			"Do not approve implementation before B-063 is closed and reviewed and HumanKaylee approves the B-064 decision.",
 		);
 	}
 
 	if (backlogId === "B-065") {
 		requirements.push(
-			"Blocked until B-064 recommends implementation.",
-			"Do not build the assistant before B-064 is approved.",
+			"Blocked until B-064 has a HumanKaylee-approved build recommendation.",
+			"Do not build the assistant before #70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome of build.",
 		);
 	}
 

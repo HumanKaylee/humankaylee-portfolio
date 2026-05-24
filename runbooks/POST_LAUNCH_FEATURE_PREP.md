@@ -22,7 +22,8 @@ Authoritative blockers:
 
 - Do not close Phase 8 issues from this runbook alone.
 - Do not claim launch readiness from this runbook.
-- Do not build a portfolio assistant before B-064 has an approved decision note.
+- Do not build a portfolio assistant before B-064 has an approved decision note;
+  `docs/ASSISTANT_SCOPE_DECISION.md` is draft decision support only.
 - Do not expose private deployment details, provider account IDs, logs, private
   paths, credentials, raw contact data, or unapproved case-study evidence.
 - Keep any status or metadata concept safe when the API is unavailable; static
@@ -32,13 +33,13 @@ Authoritative blockers:
 
 ## Prep Matrix
 
-| Feature lane | Backlog / issue | Current gate | Safe prep now | Required later evidence |
-| --- | --- | --- | --- | --- |
-| Portfolio assistant scope | B-064 / #70 | Blocked until B-063 launch evidence exists. | Decision note only: define user value, public data sources, privacy model, cost controls, rate limits, and no-secret frontend architecture. | HumanKaylee-approved build/defer/reject decision after launch. |
-| Portfolio assistant prototype | B-065 / #71 | Blocked until B-064 approval. | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype. | Prompt/content tests and disabled-mode smoke test after approved scope. |
-| Public status or metadata page | B-066 / #72 | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details. | API-up and API-down page checks against production or approved preview URLs. |
-| Additional notes and postmortems | B-067 / #73 | Blocked until B-063 launch evidence exists. | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing. | Feed and notes index review after launch with approved public-safe content. |
-| API hosting migration | B-068 / #74 | Blocked until B-058 and B-063 provide selected-host and production launch evidence. | Decision matrix only: record that Shuttle is not a viable new launch target, then compare Fly.io, Railway, Cloudflare, and Hetzner for uptime, cost, deploy complexity, custom domain support, observability, rollback, and Rust fit. | Stay-or-migrate recommendation after real API host production evidence. |
+| Feature lane                     | Backlog / issue | Current gate                                                                                       | Safe prep now                                                                                                                                                                                                                         | Required later evidence                                                      |
+| -------------------------------- | --------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Portfolio assistant scope        | B-064 / #70     | Blocked until B-063 launch evidence exists.                                                        | Draft decision note only: `docs/ASSISTANT_SCOPE_DECISION.md` defines user value, public data sources, privacy model, cost controls, rate limits, and no-secret frontend architecture without approving implementation.                | HumanKaylee-approved build/defer/reject decision after launch.               |
+| Portfolio assistant prototype    | B-065 / #71     | Blocked until B-064 approved build recommendation.                                                 | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                                             | Prompt/content tests and disabled-mode smoke test after approved scope.      |
+| Public status or metadata page   | B-066 / #72     | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details.                                                                                                     | API-up and API-down page checks against production or approved preview URLs. |
+| Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence exists.                                                        | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                                             | Feed and notes index review after launch with approved public-safe content.  |
+| API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: record that Shuttle is not a viable new launch target, then compare Fly.io, Railway, Cloudflare, and Hetzner for uptime, cost, deploy complexity, custom domain support, observability, rollback, and Rust fit. | Stay-or-migrate recommendation after real API host production evidence.      |
 
 ## Status Page Safe Boundary
 
@@ -66,6 +67,10 @@ portfolio navigation. The scope decision must explicitly answer:
 - What data is logged, retained, or excluded.
 - What cost and rate-limit controls stop runaway usage.
 - How the frontend behaves when the assistant is disabled.
+
+Current draft: `docs/ASSISTANT_SCOPE_DECISION.md` recommends deferring
+implementation until B-063 launch evidence exists and HumanKaylee approves the
+post-launch assistant decision. This is not B-065 implementation approval.
 
 ## Notes And Postmortem Boundary
 
