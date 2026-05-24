@@ -402,13 +402,17 @@ static frontend. Required GitHub-side assumptions:
 
 Required secret names if CI later deploys directly:
 
-| Secret name             | Used by                                   | Notes                                                      |
-| ----------------------- | ----------------------------------------- | ---------------------------------------------------------- |
-| `CLOUDFLARE_API_TOKEN`  | Cloudflare Pages direct upload            | Token value stays in GitHub Actions secrets.               |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Pages direct upload            | Account identifier; avoid publishing in logs.              |
-| `SHUTTLE_API_KEY`       | Shuttle API deploy, if CI deploys backend | Prefer manual deploy until Shuttle CI access is confirmed. |
-| `FLY_API_TOKEN`         | Fly.io API deploy                         | Only if Fly.io is selected.                                |
-| `RAILWAY_TOKEN`         | Railway API deploy                        | Only if Railway is selected.                               |
+Shuttle is not a viable new launch target:
+`https://docs.shuttle.dev/docs/shuttle-shutdown`. Fly.io and Railway are the
+current normal Axum API deploy candidates. Shuttle secrets are legacy
+compatibility only and are not required for new CI deploy setup.
+
+| Secret name             | Used by                        | Notes                                         |
+| ----------------------- | ------------------------------ | --------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | Cloudflare Pages direct upload | Token value stays in GitHub Actions secrets.  |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Pages direct upload | Account identifier; avoid publishing in logs. |
+| `FLY_API_TOKEN`         | Fly.io API deploy              | Only if Fly.io is selected.                   |
+| `RAILWAY_TOKEN`         | Railway API deploy             | Only if Railway is selected.                  |
 
 Exact provider commands and rollback steps are maintained in
 `runbooks/DEPLOYMENT.md`.

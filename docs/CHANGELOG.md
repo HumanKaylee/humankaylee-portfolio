@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added Phase 7 current API host guidance coverage so GitHub sync and launch
+  evidence keep Fly.io/Railway as the active Axum host candidates while Shuttle
+  stays legacy compatibility only.
 - Added content issue traceability coverage for #20, #21, #24, and #25 so
   open content/privacy issues map to case-study metadata, redaction runbooks,
   and closure rules without approving publication or launch eligibility.
