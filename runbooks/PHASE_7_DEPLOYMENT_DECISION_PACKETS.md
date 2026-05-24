@@ -1,0 +1,110 @@
+# Phase 7 Deployment Decision Packets
+
+Date: 2026-05-24
+Branch: `goal/portfolio-implementation`
+Scope: B-057 through B-059 and B-063
+Status: decision packets only; not launch-ready
+
+This runbook records the exact deployment decisions and evidence still needed
+for Phase 7. It is progress evidence only. It does not deploy the frontend,
+deploy the API, configure DNS, approve contact handling, approve case studies,
+or complete launch validation.
+
+Authoritative blockers:
+
+- `runbooks/FINAL_LAUNCH_CHECKLIST.md`
+- `runbooks/LAUNCH_EVIDENCE.md`
+- `runbooks/LAUNCH_BLOCKERS_REGISTER.md`
+- `runbooks/DEPLOYMENT.md`
+- `docs/GITHUB_SYNC.md`
+- `docs/BACKLOG.md`
+
+## Operator Rules
+
+- Do not close #63, #64, #65, or #69 from this packet alone.
+- Do not mark production smoke, DNS, TLS, API health, contact handling,
+  rollback, Lighthouse, or redaction approvals as passed from local or PR-only
+  evidence.
+- Do not replace placeholder domains, provider project names, deployment IDs, or
+  rollback targets until the real provider records exist.
+- Keep provider account IDs, private repository paths, logs, credentials,
+  contact records, and unapproved case-study evidence out of this packet.
+- Update `runbooks/LAUNCH_EVIDENCE.md` with command output before changing any
+  Phase 7 row from blocked to passed.
+
+## Decision Packet Matrix
+
+| Packet | Backlog / issue | Current gate | Safe prep now | Required later evidence |
+| --- | --- | --- | --- | --- |
+| Cloudflare Pages frontend deployment | B-057 / #63 | Blocked until provider project, production branch, auth, and custom-domain target are selected. | Record the expected build command `pnpm build`, output directory `dist`, public variables `PUBLIC_SITE_URL` and `PUBLIC_API_BASE_URL`, preview behavior, private repo compatibility checks, and rollback evidence fields. | Successful preview or production deploy log, deployment URL, project name, production branch, environment variables, and frontend smoke output. |
+| Rust API deployment | B-058 / #64 | Blocked until API host decision, provider project, public API origin, secret store, and contact handling decision exist. | Keep Shuttle as legacy-only, compare Fly.io/Railway/current approved host options, record `GET /api/health`, `HK_API_ALLOWED_ORIGINS`, `HK_API_CONTACT_DELIVERY_MODE`, CORS checks, and rollback target fields. | Public or approved-preview `GET /api/health`, CORS smoke-check output, secret storage record, deployment ID, API origin, and rollback target. |
+| Production domain and canonical URLs | B-059 / #65 | Blocked until final domain and DNS target are selected. | Record DNS record owner, TLS check command, canonical `PUBLIC_SITE_URL`, sitemap, Open Graph, robots, and RSS inspection fields. | DNS result, active TLS, final canonical URL, sitemap URL, Open Graph URL inspection, and production metadata smoke output. |
+| Final launch checklist | B-063 / #69 | Blocked until B-057, B-058, B-059, production contact handling, four approved case studies, production Lighthouse, and rollback evidence exist. | Keep the checklist honest: preserve blocked production rows, current PR-only CI rows, and local-only Lighthouse rows until production evidence exists. | Production route smoke, API health, production Lighthouse report, contact handling proof, rollback evidence, and at least four approved public-safe case studies. |
+
+## Official-Source Notes
+
+Snapshot date: 2026-05-24. These notes are decision support only.
+
+- Cloudflare Pages Astro guidance maps to build command `pnpm build` for this
+  repo and output directory `dist`; a failed build command marks the build
+  failed. Source:
+  `https://developers.cloudflare.com/pages/configuration/build-configuration/`
+- Cloudflare Direct Upload supports `wrangler pages deploy <directory>` with
+  `--project-name` and optional `--branch`, but Direct Upload projects cannot
+  later switch to Git integration. Source:
+  `https://developers.cloudflare.com/pages/get-started/direct-upload/`
+- Cloudflare Pages custom domains must be associated through the Pages custom
+  domain flow; apex domains must be Cloudflare zones on the same account, and
+  subdomains can use CNAME records. Source:
+  `https://developers.cloudflare.com/pages/configuration/custom-domains/`
+- Cloudflare Pages rollback: successful production deployments are rollback
+  targets; preview deployments are not rollback targets. Source:
+  `https://developers.cloudflare.com/pages/configuration/rollbacks/`
+- Fly.io deploys with `fly deploy`; secrets are encrypted runtime environment
+  variables, and rollback is image-only, not database/config/secrets rollback.
+  Sources: `https://fly.io/docs/launch/deploy/`,
+  `https://fly.io/docs/apps/secrets/`, and
+  `https://fly.io/docs/blueprints/rollback-guide/`
+- Railway deploys with `railway up`, and variables are service/environment
+  scoped. Railway caution: Older deployments outside plan retention cannot be
+  rolled back. Sources:
+  `https://docs.railway.com/cli/deploying`,
+  `https://docs.railway.com/cli/variable`, and
+  `https://docs.railway.com/deployments/deployment-actions`
+- Shuttle is ceasing operations and is not a viable new production launch
+  target. Source: `https://docs.shuttle.dev/docs/shuttle-shutdown`
+
+## Evidence Fields To Fill Later
+
+Use this shape when the real provider records exist:
+
+| Field | Required value |
+| --- | --- |
+| Provider/project | Cloudflare Pages project, API provider project, or domain registrar target. |
+| Target URL | Production or approved-preview frontend/API URL. |
+| Deployment ID | Provider deployment identifier or release label. |
+| Command evidence | Exact command and relevant success output. |
+| Smoke result | Route, status, and timestamp. |
+| Rollback target | Previous known-good deployment or provider rollback record. |
+| Owner decision | HumanKaylee or operations-owner approval where required. |
+| Remaining blockers | Any row that still cannot be marked passed. |
+
+## Verification Commands
+
+Run these only after the relevant provider and domain values exist:
+
+```bash
+gh issue view 63 --repo HumanKaylee/humankaylee-portfolio --json number,state,title
+gh issue view 64 --repo HumanKaylee/humankaylee-portfolio --json number,state,title
+gh issue view 65 --repo HumanKaylee/humankaylee-portfolio --json number,state,title
+gh issue view 69 --repo HumanKaylee/humankaylee-portfolio --json number,state,title
+pnpm build
+pnpm bundle:budget
+pnpm lighthouse:local
+xh -h "$FRONTEND_ORIGIN/"
+xh --check-status --body GET "$API_ORIGIN/api/health"
+```
+
+Do not paste private provider output into public docs. Summarize only the
+public-safe status, URL shape, deployment ID, and command result needed for
+launch evidence.

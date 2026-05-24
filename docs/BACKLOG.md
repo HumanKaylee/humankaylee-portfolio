@@ -1444,6 +1444,10 @@ Acceptance criteria:
 Verification evidence:
 
 - Successful preview or production deploy log.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the frontend
+  provider/project/domain inputs that are still missing before #63 can close,
+  while `scripts/phase-7-deployment-decision-packets-contract.test.mjs` keeps
+  that packet blocked and non-launch-ready.
 
 ### B-058: Deploy Rust API to selected host
 
@@ -1466,6 +1470,9 @@ Verification evidence:
 
 - Public or preview `GET /api/health` response.
 - CORS smoke-check output.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the API provider,
+  origin, secret storage, contact handling, CORS, health, and rollback inputs
+  still required before #64 can close.
 
 ### B-059: Configure production domain and canonical URLs
 
@@ -1489,6 +1496,9 @@ Verification evidence:
 
 - DNS/TLS check.
 - Metadata inspection on production domain.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the domain, DNS,
+  TLS, canonical URL, sitemap, and Open Graph evidence still required before
+  #65 can close.
 
 ### B-060: Write local development and deployment README
 
@@ -1614,6 +1624,11 @@ Verification evidence:
 - `scripts/final-launch-checklist-contract.test.mjs` verifies the checklist and
   launch evidence keep not-launch-ready status explicit until real production
   targets and approval evidence exist.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the remaining
+  provider, domain, API, contact, Lighthouse, rollback, and redaction evidence
+  required before #69 can close, while
+  `scripts/phase-7-deployment-decision-packets-contract.test.mjs` prevents this
+  prep packet from being treated as launch approval.
 
 ## Phase 8: Post-Launch Enhancements
 

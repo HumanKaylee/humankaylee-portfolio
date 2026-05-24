@@ -13,7 +13,9 @@ Before any future `/goal` launch step can close, record the selected frontend
 provider, API provider, custom domain, contact handling mode, secret storage
 location, and rollback targets in `runbooks/LAUNCH_EVIDENCE.md`. Use
 `runbooks/LAUNCH_BLOCKERS_REGISTER.md` as the decision register for unresolved
-launch choices.
+launch choices. Use the Phase 7 Deployment Decision Packets in
+`runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` to prepare #63, #64, #65,
+and #69 evidence without claiming production deployment or launch readiness.
 
 ## 1.1 Required Launch Decisions
 

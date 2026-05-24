@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added Phase 7 Deployment Decision Packets coverage for #63, #64, #65, and
+  #69 so frontend deployment, API host, production domain, and final launch
+  evidence requirements are explicit without claiming production launch
+  readiness.
 - Added Post-Launch Feature Prep coverage for B-064 through B-068 so Phase 8
   assistant, status/metadata, notes/postmortem, and API hosting migration ideas
   have safe pre-launch decision inputs without authorizing implementation or

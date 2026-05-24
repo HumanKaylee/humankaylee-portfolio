@@ -10,9 +10,12 @@ execution. It does not resolve the decisions below and must not be used as a
 launch-readiness claim.
 
 Authoritative follow-through remains in `runbooks/FINAL_LAUNCH_CHECKLIST.md`,
-`runbooks/LAUNCH_EVIDENCE.md`, and `docs/GITHUB_SYNC.md`. Replace `Blocked /
-pending` statuses only after the owner records a concrete decision, target,
-approval, or command artifact in the linked evidence docs.
+`runbooks/LAUNCH_EVIDENCE.md`,
+`runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md`, and `docs/GITHUB_SYNC.md`.
+Replace `Blocked / pending` statuses only after the owner records a concrete
+decision, target, approval, or command artifact in the linked evidence docs.
+Phase 7 deployment decision packets are issue-progress evidence only; they do
+not resolve any blocker by themselves.
 
 ## Decision Register
 

@@ -12,7 +12,10 @@ not exist yet. The authoritative evidence index remains
 `runbooks/LAUNCH_EVIDENCE.md`, and the redaction source of truth remains
 `runbooks/CONTENT_REDACTION_STATUS.md`. The Launch Blockers Register at
 `runbooks/LAUNCH_BLOCKERS_REGISTER.md` tracks unresolved launch decisions and
-owners; it does not make this checklist launch-ready.
+owners; it does not make this checklist launch-ready. The Phase 7 Deployment
+Decision Packets at `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` identify
+the missing provider, API, domain, smoke, Lighthouse, rollback, contact, and
+redaction evidence for #63, #64, #65, and #69 without approving launch.
 
 ## Current PR Evidence
 
@@ -43,6 +46,8 @@ These checks are CI evidence, not production launch evidence.
 
 ## Production Blockers
 
+- GitHub issues #63, #64, #65, and #69 remain open until provider, deployment,
+  domain, and launch evidence exist.
 - Review `runbooks/LAUNCH_BLOCKERS_REGISTER.md` before Phase 7 launch work and
   update it when a blocker decision is resolved.
 - Final frontend domain and frontend provider project are not selected.
