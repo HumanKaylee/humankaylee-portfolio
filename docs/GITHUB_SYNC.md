@@ -319,6 +319,13 @@ domain, production smoke, Lighthouse, rollback, contact-handling, and redaction
 evidence still required for #63, #64, #65, and #69. #63, #64, #65, and #69
 remain open until real production evidence exists.
 
+Phase 7 local readiness contract status: local-readiness only; production
+remains blocked. `scripts/phase-7-local-readiness-contract.test.mjs` now guards
+the safe local frontend, API, metadata, and evidence commands that can run
+before provider accounts, domains, production secrets, or rollback targets
+exist. #63, #64, #65, and #69 remain open until real production evidence and
+four approved case studies exist.
+
 Phase 8 backlog issues now live as the next granular sync layer, with #5
 remaining the parent epic until the GitHub Project board can take over status
 views:

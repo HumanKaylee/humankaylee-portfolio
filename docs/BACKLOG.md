@@ -1436,6 +1436,17 @@ Verification evidence:
 
 ## Phase 7: Deployment, Operations, and Launch
 
+Phase 7 local readiness guard:
+
+- Pre-provider local readiness contract:
+  `local-readiness only; production remains blocked`.
+- `scripts/phase-7-local-readiness-contract.test.mjs` verifies the safe local
+  frontend, API, metadata, and evidence commands that can run before provider
+  accounts, domains, production secrets, or rollback targets exist.
+- The contract is progress evidence only; #63, #64, #65, and #69 stay open
+  until real provider, domain, production smoke, rollback, contact, Lighthouse,
+  four approved case studies, and redaction approval evidence exists.
+
 ### B-057: Configure Cloudflare Pages frontend deployment
 
 Labels: `priority:p0`, `type:task`, `area:infra`, `phase:7-launch`
@@ -1641,6 +1652,10 @@ Verification evidence:
   required before #69 can close, while
   `scripts/phase-7-deployment-decision-packets-contract.test.mjs` prevents this
   prep packet from being treated as launch approval.
+- `scripts/phase-7-local-readiness-contract.test.mjs` protects the
+  pre-provider local readiness boundary so local build, Lighthouse, e2e, Rust
+  API, metadata, and contract evidence cannot be mistaken for production launch
+  evidence.
 
 ## Phase 8: Post-Launch Enhancements
 

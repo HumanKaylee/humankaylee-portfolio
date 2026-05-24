@@ -34,12 +34,40 @@ Authoritative blockers:
 
 ## Decision Packet Matrix
 
-| Packet | Backlog / issue | Current gate | Safe prep now | Required later evidence |
-| --- | --- | --- | --- | --- |
-| Cloudflare Pages frontend deployment | B-057 / #63 | Blocked until provider project, production branch, auth, and custom-domain target are selected. | Record the expected build command `pnpm build`, output directory `dist`, public variables `PUBLIC_SITE_URL` and `PUBLIC_API_BASE_URL`, preview behavior, private repo compatibility checks, and rollback evidence fields. | Successful preview or production deploy log, deployment URL, project name, production branch, environment variables, and frontend smoke output. |
-| Rust API deployment | B-058 / #64 | Blocked until API host decision, provider project, public API origin, secret store, and contact handling decision exist. | Keep Shuttle as legacy-only, compare Fly.io/Railway/current approved host options, record `GET /api/health`, `HK_API_ALLOWED_ORIGINS`, `HK_API_CONTACT_DELIVERY_MODE`, CORS checks, and rollback target fields. | Public or approved-preview `GET /api/health`, CORS smoke-check output, secret storage record, deployment ID, API origin, and rollback target. |
-| Production domain and canonical URLs | B-059 / #65 | Blocked until final domain and DNS target are selected. | Record DNS record owner, TLS check command, canonical `PUBLIC_SITE_URL`, sitemap, Open Graph, robots, and RSS inspection fields. | DNS result, active TLS, final canonical URL, sitemap URL, Open Graph URL inspection, and production metadata smoke output. |
-| Final launch checklist | B-063 / #69 | Blocked until B-057, B-058, B-059, production contact handling, four approved case studies, production Lighthouse, and rollback evidence exist. | Keep the checklist honest: preserve blocked production rows, current PR-only CI rows, and local-only Lighthouse rows until production evidence exists. | Production route smoke, API health, production Lighthouse report, contact handling proof, rollback evidence, and at least four approved public-safe case studies. |
+| Packet                               | Backlog / issue | Current gate                                                                                                                                    | Safe prep now                                                                                                                                                                                                             | Required later evidence                                                                                                                                           |
+| ------------------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cloudflare Pages frontend deployment | B-057 / #63     | Blocked until provider project, production branch, auth, and custom-domain target are selected.                                                 | Record the expected build command `pnpm build`, output directory `dist`, public variables `PUBLIC_SITE_URL` and `PUBLIC_API_BASE_URL`, preview behavior, private repo compatibility checks, and rollback evidence fields. | Successful preview or production deploy log, deployment URL, project name, production branch, environment variables, and frontend smoke output.                   |
+| Rust API deployment                  | B-058 / #64     | Blocked until API host decision, provider project, public API origin, secret store, and contact handling decision exist.                        | Keep Shuttle as legacy-only, compare Fly.io/Railway/current approved host options, record `GET /api/health`, `HK_API_ALLOWED_ORIGINS`, `HK_API_CONTACT_DELIVERY_MODE`, CORS checks, and rollback target fields.           | Public or approved-preview `GET /api/health`, CORS smoke-check output, secret storage record, deployment ID, API origin, and rollback target.                     |
+| Production domain and canonical URLs | B-059 / #65     | Blocked until final domain and DNS target are selected.                                                                                         | Record DNS record owner, TLS check command, canonical `PUBLIC_SITE_URL`, sitemap, Open Graph, robots, and RSS inspection fields.                                                                                          | DNS result, active TLS, final canonical URL, sitemap URL, Open Graph URL inspection, and production metadata smoke output.                                        |
+| Final launch checklist               | B-063 / #69     | Blocked until B-057, B-058, B-059, production contact handling, four approved case studies, production Lighthouse, and rollback evidence exist. | Keep the checklist honest: preserve blocked production rows, current PR-only CI rows, and local-only Lighthouse rows until production evidence exists.                                                                    | Production route smoke, API health, production Lighthouse report, contact handling proof, rollback evidence, and at least four approved public-safe case studies. |
+
+## Pre-Provider Local Readiness Contract
+
+Status: local-readiness only; production remains blocked.
+
+This contract defines the safe local work that can happen before provider
+accounts, domains, production secrets, or deployment targets exist. Safe to run
+now with no provider credentials, deploy tokens, DNS changes, or production
+restarts. Provider-mutating commands stay disabled until real provider records,
+domains, secrets, and rollback targets exist. Do not run `wrangler pages deploy`,
+`fly deploy`, `railway up`, or production `xh` smoke commands from this local
+readiness contract. Record successful local evidence in
+`runbooks/LAUNCH_EVIDENCE.md` without closing #63, #64, #65, or #69.
+
+Runnable local command reference:
+
+```bash
+pnpm test:e2e -- --grep "@security|@keyboard|@accessibility|@api-down"
+```
+
+| Local readiness lane                      | Safe local evidence                                                                                                                                                                                                                                                               | Records to update                                                                                                | Still blocked by                                                                                                                                     |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend static build readiness           | `pnpm build && pnpm bundle:budget`; `pnpm lighthouse:local` against local production-equivalent preview.                                                                                                                                                                          | `runbooks/LAUNCH_EVIDENCE.md` final local verification rows.                                                     | frontend provider project, production deployment URL, production branch/auth, and rollback target.                                                   |
+| Frontend interaction and safety readiness | Focused Playwright safety grep for route, accessibility, keyboard, security, and API-outage behavior.                                                                                                                                                                             | `runbooks/LAUNCH_EVIDENCE.md` frontend local QA rows.                                                            | production frontend smoke, production Lighthouse, DNS/TLS, and final canonical URL evidence.                                                         |
+| Rust API package readiness                | `cargo fmt --manifest-path apps/api/Cargo.toml --check`; `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`; `cargo test --manifest-path apps/api/Cargo.toml`; `cargo audit --file apps/api/Cargo.lock`.                                             | `runbooks/LAUNCH_EVIDENCE.md` Rust verification rows.                                                            | API host, secret store, public API origin, contact delivery mode, and rollback target.                                                               |
+| Local API smoke readiness                 | `HK_API_CONTACT_DELIVERY_MODE=store HK_API_CONTACT_STORE_PATH=/tmp/humankaylee-contact-local-readiness.jsonl cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api` plus local `GET /api/health`, projects, CORS, and contact checks using a temporary JSONL store. | `runbooks/LAUNCH_EVIDENCE.md` local API smoke row.                                                               | persistent contact store, production CORS origin, production `GET /api/health`, and provider deployment ID.                                          |
+| Domain and metadata readiness             | Local `PUBLIC_SITE_URL` build checks, `sitemap-index.xml`, Open Graph, robots, RSS, and canonical metadata inspection.                                                                                                                                                            | `runbooks/LAUNCH_EVIDENCE.md` final local verification or metadata rows.                                         | final domain, DNS, TLS, provider custom-domain binding, and production metadata smoke.                                                               |
+| Launch evidence readiness                 | `node --test scripts/final-launch-checklist-contract.test.mjs scripts/launch-blockers-register-contract.test.mjs scripts/phase-7-deployment-decision-packets-contract.test.mjs scripts/phase-7-local-readiness-contract.test.mjs`.                                                | `runbooks/FINAL_LAUNCH_CHECKLIST.md`, `runbooks/LAUNCH_BLOCKERS_REGISTER.md`, and `runbooks/LAUNCH_EVIDENCE.md`. | blocked production rows, rollback evidence, contact production handling, production Lighthouse, four approved case studies, and redaction approvals. |
 
 ## Official-Source Notes
 
@@ -78,16 +106,16 @@ Snapshot date: 2026-05-24. These notes are decision support only.
 
 Use this shape when the real provider records exist:
 
-| Field | Required value |
-| --- | --- |
-| Provider/project | Cloudflare Pages project, API provider project, or domain registrar target. |
-| Target URL | Production or approved-preview frontend/API URL. |
-| Deployment ID | Provider deployment identifier or release label. |
-| Command evidence | Exact command and relevant success output. |
-| Smoke result | Route, status, and timestamp. |
-| Rollback target | Previous known-good deployment or provider rollback record. |
-| Owner decision | HumanKaylee or operations-owner approval where required. |
-| Remaining blockers | Any row that still cannot be marked passed. |
+| Field              | Required value                                                              |
+| ------------------ | --------------------------------------------------------------------------- |
+| Provider/project   | Cloudflare Pages project, API provider project, or domain registrar target. |
+| Target URL         | Production or approved-preview frontend/API URL.                            |
+| Deployment ID      | Provider deployment identifier or release label.                            |
+| Command evidence   | Exact command and relevant success output.                                  |
+| Smoke result       | Route, status, and timestamp.                                               |
+| Rollback target    | Previous known-good deployment or provider rollback record.                 |
+| Owner decision     | HumanKaylee or operations-owner approval where required.                    |
+| Remaining blockers | Any row that still cannot be marked passed.                                 |
 
 ## Verification Commands
 
