@@ -188,7 +188,11 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Register reviewed before Phase 7 launch work begins.
+- `runbooks/LAUNCH_BLOCKERS_REGISTER.md` records the unresolved launch
+  decisions, impact, latest acceptable resolution phase, owner, status, and next
+  evidence for each blocker without claiming launch readiness.
+- `node --test scripts/launch-blockers-register-contract.test.mjs`
+  verifies the register and its launch evidence cross-links.
 
 ## Phase 1: Repository and Frontend Foundation
 
@@ -1732,6 +1736,8 @@ Parallel-safe groups after dependencies are met:
 
 Known launch blockers:
 
+- `runbooks/LAUNCH_BLOCKERS_REGISTER.md` is the source register for unresolved
+  launch decisions and their owners/statuses.
 - Final domain name is required for production canonical URLs and DNS.
 - Final resume PDF source is required for launch.
 - At least four case studies must be approved as public-safe.

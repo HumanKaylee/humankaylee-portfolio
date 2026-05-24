@@ -11,7 +11,9 @@ domains and provider project names only after they are selected.
 This is a deployment and rollback contract, not a launch-readiness claim.
 Before any future `/goal` launch step can close, record the selected frontend
 provider, API provider, custom domain, contact handling mode, secret storage
-location, and rollback targets in `runbooks/LAUNCH_EVIDENCE.md`.
+location, and rollback targets in `runbooks/LAUNCH_EVIDENCE.md`. Use
+`runbooks/LAUNCH_BLOCKERS_REGISTER.md` as the decision register for unresolved
+launch choices.
 
 ## 1.1 Required Launch Decisions
 
@@ -19,6 +21,7 @@ Do not treat production as ready until these choices are explicit:
 
 - Frontend provider, frontend project, and final custom domain.
 - API provider, API project, and final public API origin.
+- Shuttle vs Fly.io/Railway API host decision.
 - Contact handling mode: disabled, approved persistent store, or approved
   alternate provider.
 - Secret storage location for each provider.

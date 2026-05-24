@@ -10,7 +10,9 @@ Do not mark launch-ready from this checklist. It is a current-state validation
 matrix that separates local and PR evidence from production evidence that does
 not exist yet. The authoritative evidence index remains
 `runbooks/LAUNCH_EVIDENCE.md`, and the redaction source of truth remains
-`runbooks/CONTENT_REDACTION_STATUS.md`.
+`runbooks/CONTENT_REDACTION_STATUS.md`. The Launch Blockers Register at
+`runbooks/LAUNCH_BLOCKERS_REGISTER.md` tracks unresolved launch decisions and
+owners; it does not make this checklist launch-ready.
 
 ## Current PR Evidence
 
@@ -41,6 +43,8 @@ These checks are CI evidence, not production launch evidence.
 
 ## Production Blockers
 
+- Review `runbooks/LAUNCH_BLOCKERS_REGISTER.md` before Phase 7 launch work and
+  update it when a blocker decision is resolved.
 - Final frontend domain and frontend provider project are not selected.
 - Final API domain and API provider project are not selected.
 - Final frontend and API provider projects are not selected or configured.

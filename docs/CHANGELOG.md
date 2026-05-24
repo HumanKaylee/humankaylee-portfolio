@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a B-005 launch blockers register with owner, impact, phase, status, and
+  next-evidence fields for unresolved launch decisions without claiming launch
+  readiness.
 - Added art-directed page-surface treatments and a `@visual-surfaces`
   Playwright gate for the home, project index, case-study detail, resume, and
   contact routes.
