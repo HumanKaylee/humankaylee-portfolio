@@ -167,6 +167,12 @@ credentials, Project scopes, production targets, or human redaction approval:
 | #10   | B-004: Define "The Systems Atelier" design brief     | #1     | `priority:p0`, `type:content`, `area:design`, `phase:0-product-safety`, `agent-strong`                     |
 | #11   | B-005: Resolve launch blockers register              | #1     | `priority:p0`, `type:task`, `area:product`, `area:ops`, `phase:0-product-safety`, `agent-standard`         |
 
+Phase 0 issue sync status: complete and closed. #7 through #11 are closed, and
+the parent #1 is closed after B-001 through B-005 completed. Latest closure
+evidence for B-005 is PR #6 commit `1e6cee5`, Phase 0 CI run `26358424380`,
+Frontend verification job `77589342600`, and Rust verification job
+`77589342623`.
+
 Phase 1 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
 views:
@@ -287,8 +293,11 @@ views:
 | #69   | B-063: Complete launch checklist                      | #5     | `priority:p0`, `type:qa`, `area:ops`, `phase:7-launch`, `agent-standard`                       |
 
 Phase 7 issue sync status: complete. B-057 through B-063 are mirrored as #63
-through #69. This is only GitHub issue mirror evidence; it is not a Project
-board recovery, production deployment, or launch-readiness claim.
+through #69. #66, #67, and #68 are closed as docs/runbook tasks; #63, #64,
+#65, and #69 remain open because provider targets, production deployment,
+production domain, and launch validation evidence are not complete. This is
+only GitHub issue mirror evidence; it is not a Project board recovery,
+production deployment, or launch-readiness claim.
 
 Phase 8 backlog issues now live as the next granular sync layer, with #5
 remaining the parent epic until the GitHub Project board can take over status
