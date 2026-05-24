@@ -84,6 +84,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added case-study redaction approval packets and a contract test that maps
   guide checklist items to schema fields while preserving the zero-approved
   launch state.
+- Updated GitHub sync docs and live repo issue state with the current backlog
+  label taxonomy, Phase 0 granular issues B-001 through B-005, and a contract
+  test that preserves the Project-scope blocker until interactive auth refresh
+  is completed.
 
 ### Remaining Blockers
 
