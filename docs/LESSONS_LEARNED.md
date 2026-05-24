@@ -39,7 +39,7 @@ The initial content candidates include local runbooks, operational debugging, ag
 
 ### Hosting should optimize reliability and cost
 
-Cloudflare Pages is the recommended frontend baseline because it supports fast static delivery and private repository deploys. Shuttle Community is a good initial Rust API host, with Fly.io, Railway, or a VPS as fallback options if reliability, uptime, or control become more important.
+Cloudflare Pages is the recommended frontend baseline because it supports fast static delivery and private repository deploys. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io and Railway are the current normal Axum PaaS candidates, with Cloudflare Workers/Pages Functions requiring a runtime rewrite and a VPS remaining the higher-ops fallback.
 
 ### The launch bar includes operations and documentation
 
@@ -239,4 +239,4 @@ text through.
 - Which project should be the primary recruiter-facing proof point?
 - Which project should be the deepest senior-engineer proof point?
 - Should an AI assistant remain v2 until the core case studies are strong?
-- Is Shuttle Community acceptable for launch, or should the API start on a more reliable paid host?
+- Which current API host should launch the Rust API now that Shuttle is not a viable new launch target?

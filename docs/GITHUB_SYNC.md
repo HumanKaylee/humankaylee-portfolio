@@ -325,6 +325,13 @@ board recovery, production launch, launch-readiness claim, or post-launch
 feature approval, and it is not authorization to build the assistant before
 B-064 is approved.
 
+Phase 8 prep status: pre-launch planning only. `runbooks/POST_LAUNCH_FEATURE_PREP.md`
+and `scripts/post-launch-feature-prep-contract.test.mjs` record safe decision
+inputs for the assistant scope, assistant prototype gate, public status/metadata
+page, additional notes/postmortems, and API hosting migration. #70 through #74
+remain open until their launch, approval, and production-evidence dependencies
+are satisfied.
+
 Granular live GitHub issue verification now covers all documented granular
 issues #7 through #74 with paginated GitHub API results. Completed granular
 issues may be open or closed as execution advances, but unresolved blocker,
@@ -363,8 +370,8 @@ Required secret names if CI later deploys directly:
 | `CLOUDFLARE_API_TOKEN`  | Cloudflare Pages direct upload            | Token value stays in GitHub Actions secrets.               |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Pages direct upload            | Account identifier; avoid publishing in logs.              |
 | `SHUTTLE_API_KEY`       | Shuttle API deploy, if CI deploys backend | Prefer manual deploy until Shuttle CI access is confirmed. |
-| `FLY_API_TOKEN`         | Fly.io fallback deploy                    | Fallback only.                                             |
-| `RAILWAY_TOKEN`         | Railway fallback deploy                   | Fallback only.                                             |
+| `FLY_API_TOKEN`         | Fly.io API deploy                         | Only if Fly.io is selected.                                |
+| `RAILWAY_TOKEN`         | Railway API deploy                        | Only if Railway is selected.                               |
 
 Exact provider commands and rollback steps are maintained in
 `runbooks/DEPLOYMENT.md`.

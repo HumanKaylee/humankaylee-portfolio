@@ -15,7 +15,12 @@ Recommended stack:
 - Frontend: Astro, TypeScript, React islands, content collections, custom CSS, GSAP ScrollTrigger where cinematic sequencing is needed.
 - Visual layer: Three.js with React Three Fiber for one signature 3D experience; Rive or Lottie for small vector motion; CSS View Transitions for page continuity.
 - Backend: Rust Axum plus Tokio, tower-http, tracing, SQLx with SQLite/Postgres depending on host.
-- Hosting phase 1: Cloudflare Pages for frontend and Shuttle Community for Rust API, with Fly.io or Railway as reliability fallback.
+- Hosting phase 1: Cloudflare Pages for frontend and a selected Rust API host.
+  Shuttle is not a viable new launch target as of the 2026-05-24
+  official-source snapshot at https://docs.shuttle.dev/docs/shuttle-shutdown.
+  Fly.io and Railway are the current normal Axum PaaS candidates; Cloudflare
+  Workers/Pages Functions require an edge/runtime rewrite, and Hetzner is a
+  higher-ops VPS fallback.
 - Content strategy: 4 to 6 deep case studies, each with problem, constraints, architecture, implementation proof, testing, operations, outcome, and lessons learned.
 
 ## What Visually Impressive Sites Are Doing Now
@@ -123,17 +128,20 @@ Best Rust backend use cases for this project:
 
 ### Cheapest Practical Path
 
-Use Cloudflare Pages for the static frontend and Shuttle Community for Rust API.
+Use Cloudflare Pages for the static frontend and select a current Rust API host.
+Do not select Shuttle as a new launch target.
 
 Why:
 
 - Cloudflare Pages free tier supports 500 builds per month, 100 custom domains per project, and 20,000 files on the Free plan: https://developers.cloudflare.com/pages/platform/limits/
 - Cloudflare Workers free tier includes 100,000 requests per day with CPU limits, useful for edge glue or non-Rust functions: https://developers.cloudflare.com/workers/platform/pricing/
-- Shuttle Community is Rust-native and free for hobby projects, with custom domain support and starter resources: https://www.shuttle.dev/pricing2
+- Shuttle is not a viable new launch target because the official shutdown notice
+  says Shuttle is ceasing operations: https://docs.shuttle.dev/docs/shuttle-shutdown
 
 Tradeoff:
 
-- Shuttle Community is best for demos and learning; use Fly.io, Railway, or a VPS if uptime and control become more important.
+- Keep the old Shuttle notes as historical context only; use Fly.io, Railway,
+  or a VPS if uptime and control requirements drive the API-host choice.
 
 ### Hosting Options
 
@@ -141,7 +149,7 @@ Tradeoff:
 | --- | ---: | --- | --- | --- |
 | Cloudflare Pages only | $0 | Static portfolio | Fast CDN, private GitHub repo support, generous free limits | No Rust backend by itself |
 | Cloudflare Pages + Workers | $0 to $5+ | Edge APIs, analytics, redirects | Very cheap, high scale, D1/KV/R2 ecosystem | Rust backend becomes Wasm/edge-specific rather than normal Axum |
-| Cloudflare Pages + Shuttle Rust | $0 initially | Rust proof with low ops | Rust-native, fast to deploy, free Community tier | Free tier reliability/resource limits |
+| Cloudflare Pages + Shuttle Rust | Do not choose for new launch | Legacy compatibility only | Existing feature-gated binary can compile | Shuttle is ceasing operations |
 | Cloudflare Pages + Fly.io Rust | About $2 to $8/month for tiny always-on shape, usage based | Reliable Rust API near users | Containers, global regions, good Rust/Docker story | No permanent free tier; metered costs |
 | Railway Rust | $5/month baseline, usage based | Simple app deploys | Easy DX, included usage credit | Can cost more than expected under always-on workloads |
 | Render static + web service | $0 static, paid service for reliable backend | Simple deploys | Easy Git deploys and TLS | Free service behavior and paid tiers may not be ideal for polished backend |
@@ -223,7 +231,6 @@ Signature interaction:
 
 ## Final Recommendation
 
-Proceed with Astro + React islands + Three.js/R3F + GSAP for the frontend, and Rust Axum for a small API. Host frontend on Cloudflare Pages and start the Rust backend on Shuttle Community. Keep Fly.io and Railway as fallback deploy targets, and document a Hetzner/Caddy/Docker self-host path as an advanced option.
+Proceed with Astro + React islands + Three.js/R3F + GSAP for the frontend, and Rust Axum for a small API. Host frontend on Cloudflare Pages and choose the Rust backend host from current evidence instead of Shuttle. Fly.io and Railway are the current normal Axum PaaS candidates; Cloudflare Workers/Pages Functions require an edge/runtime rewrite, and Hetzner/Caddy/Docker remains an advanced self-host path.
 
 The portfolio should prioritize substance over novelty: the visual wow earns attention, but case studies, evidence, tests, and operational maturity convert that attention into credibility.
-

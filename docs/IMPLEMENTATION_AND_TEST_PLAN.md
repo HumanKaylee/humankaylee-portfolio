@@ -6,7 +6,7 @@
 
 **Architecture:** Use Astro as the static-first shell with TypeScript, content collections, MDX case studies, and selective React islands for interactive sections. Use a Rust Axum API only for visible backend proof: health, cached project metadata, contact, and optional privacy-safe events. The static portfolio must remain useful when JavaScript, WebGL, motion, or the Rust API are unavailable.
 
-**Tech Stack:** Astro, TypeScript, React islands, Three.js or React Three Fiber for one progressive 3D experience, GSAP ScrollTrigger only where scroll choreography needs it, Rust Axum, Tokio, tower-http, tracing, SQLx only if persistence is needed, Playwright, Lighthouse, Axe, Cloudflare Pages, Shuttle Community with Fly.io or Railway fallback.
+**Tech Stack:** Astro, TypeScript, React islands, Three.js or React Three Fiber for one progressive 3D experience, GSAP ScrollTrigger only where scroll choreography needs it, Rust Axum, Tokio, tower-http, tracing, SQLx only if persistence is needed, Playwright, Lighthouse, Axe, Cloudflare Pages, Fly.io and Railway as current Axum API host candidates, with Cloudflare Workers/Pages Functions or Hetzner as alternatives if the API shape changes or higher ops are acceptable. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 
 ---
 
@@ -665,8 +665,10 @@ cargo audit --file apps/api/Cargo.lock
 **Tasks:**
 
 - [ ] Create Cloudflare Pages deployment instructions for frontend.
-- [ ] Create Shuttle Community deployment instructions for Rust API.
-- [ ] Document Fly.io or Railway fallback for the API if Shuttle reliability is insufficient.
+- [ ] Record that Shuttle is not a viable new launch target and keep any Shuttle
+  binary checks as legacy compatibility only.
+- [ ] Create Fly.io and Railway deployment instructions for the Rust API, plus
+  Cloudflare/Hetzner alternatives if the API shape or ops model changes.
 - [ ] Add production environment variable matrix with secret names, not secret values.
 - [ ] Add custom domain, DNS, TLS, cache, and rollback runbook.
 - [ ] Add health check and smoke check commands for deployed frontend and API.
@@ -695,12 +697,12 @@ xh https://<production-api-domain>/api/health
 xh https://<production-frontend-domain>/
 ```
 
-Provider CLI commands must be confirmed during this phase because provider CLIs change over time. The runbook must record the exact working commands and CLI versions used for Cloudflare Pages and Shuttle.
+Provider CLI commands must be confirmed during this phase because provider CLIs change over time. The runbook must record the exact working commands and CLI versions used for Cloudflare Pages plus the selected API host. Shuttle is not a viable new launch target; see https://docs.shuttle.dev/docs/shuttle-shutdown.
 
 **Pause Conditions:**
 
 - Final domain name is not selected.
-- Cloudflare or Shuttle account access is unavailable.
+- Cloudflare or selected API host account access is unavailable.
 - Provider CLI syntax or pricing changed materially from the research assumptions.
 - Production health checks cannot be reached from outside the local network.
 

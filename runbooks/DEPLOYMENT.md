@@ -21,12 +21,18 @@ Do not treat production as ready until these choices are explicit:
 
 - Frontend provider, frontend project, and final custom domain.
 - API provider, API project, and final public API origin.
-- Shuttle vs Fly.io/Railway API host decision.
+- API host decision.
 - Contact handling mode: disabled, approved persistent store, or approved
   alternate provider.
 - Secret storage location for each provider.
 - Frontend and API rollback targets for the intended deployment IDs.
 - Production smoke-check URLs and the evidence rows that will capture them.
+
+Current API hosting note: Shuttle is not a viable new launch target as of the
+2026-05-24 official-source snapshot:
+https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io and Railway are the
+current normal Axum PaaS candidates; Cloudflare Workers/Pages Functions require
+an edge/runtime rewrite, and Hetzner is a higher-ops VPS fallback.
 
 ## 1. Provider Command Evidence
 
@@ -53,13 +59,13 @@ Official command sources checked on 2026-05-23:
   `https://developers.cloudflare.com/pages/configuration/custom-domains/`
 - Cloudflare Pages serving and cache behavior:
   `https://developers.cloudflare.com/pages/configuration/serving-pages/`
-- Shuttle CLI:
+- Shuttle CLI, legacy compatibility only:
   `https://docs.shuttle.dev/guides/cli`
-- Shuttle projects:
+- Shuttle projects, legacy compatibility only:
   `https://docs.shuttle.dev/docs/projects`
-- Shuttle secrets:
+- Shuttle secrets, legacy compatibility only:
   `https://docs.shuttle.dev/resources/shuttle-secrets`
-- Shuttle logs:
+- Shuttle logs, legacy compatibility only:
   `https://docs.shuttle.dev/docs/logs`
 - Fly.io CLI and secrets:
   `https://fly.io/docs/flyctl/`,
@@ -111,7 +117,7 @@ pnpm exec wrangler pages project create "$CLOUDFLARE_PAGES_PROJECT" \
   --production-branch main
 ```
 
-### 3.2 API: Shuttle
+### 3.2 API: Legacy Shuttle Compatibility
 
 | Name                                    | Secret | Required    | Notes                                                                |
 | --------------------------------------- | ------ | ----------- | -------------------------------------------------------------------- |
@@ -125,7 +131,9 @@ pnpm exec wrangler pages project create "$CLOUDFLARE_PAGES_PROJECT" \
 | `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.                     |
 | `HK_API_VERSION`                        | No     | Recommended | Health response version label.                                       |
 
-Shuttle secrets are stored in a TOML file at deploy time. The
+Shuttle is not a viable new launch target. This section exists only to preserve
+the current feature-gated binary compatibility contract until it is removed or
+replaced. Shuttle secrets are stored in a TOML file at deploy time. The
 `humankaylee-api-shuttle` binary maps Shuttle `SecretStore` keys into the same
 `HK_API_*` configuration parser used by the standalone binary. Keep
 `Secrets*.toml` ignored and outside commits. If contact storage is enabled,
@@ -280,7 +288,12 @@ pnpm exec wrangler pages deployment list \
 If rollback is not available or not enough, redeploy the last known-good Git
 commit through the same CI/deploy path and run smoke checks.
 
-## 5. API: Shuttle Community
+## 5. API: Legacy Shuttle Compatibility
+
+Do not use Shuttle for a new production launch. Shuttle is not a viable new
+launch target; see https://docs.shuttle.dev/docs/shuttle-shutdown. Keep this
+section only as a compatibility reference for the existing feature-gated binary
+and for reading historical launch evidence.
 
 ### 5.1 Prerequisites
 
@@ -357,10 +370,10 @@ is treated as production contact handling. If production contact handling is
 still blocked, keep this step marked `not run` in launch evidence and do not
 reuse preview or local acceptance as launch proof.
 
-### 5.4 Shuttle Rollback
+### 5.4 Legacy Shuttle Rollback
 
-Shuttle's current CLI exposes deployment listing and redeploy commands. Use a
-known-good deployment ID when available.
+Shuttle's historical CLI exposed deployment listing and redeploy commands. Use
+these commands only for legacy evidence recovery, not for a new launch.
 
 ```bash
 shuttle deployment list --name "$SHUTTLE_PROJECT"
@@ -372,16 +385,15 @@ xh "$API_ORIGIN/api/health"
 ```
 
 If the known-good deployment cannot be redeployed, check out the known-good Git
-commit, confirm secrets are still configured, run backend tests, deploy again,
-and run API smoke checks. If Shuttle itself is unavailable or unreliable, use
-the Fly.io or Railway fallback.
+commit, confirm secrets are still configured, run backend tests, and use the
+selected current API host instead.
 Record the deployment ID, rollback target, public API origin, and smoke output
 in launch evidence before calling the rollback complete.
 
 ## 6. API Fallback: Fly.io
 
-Use Fly.io if Shuttle access, reliability, resource limits, custom-domain needs,
-or rollback behavior are not sufficient for launch. This path requires a
+Use Fly.io as a current Axum PaaS candidate when its cost, custom-domain,
+observability, and rollback behavior fit launch. This path requires a
 Dockerfile or Fly-compatible build setup for the API. The committed
 `apps/api/Dockerfile` defaults `HK_API_HOST=0.0.0.0` so container traffic is not
 bound to loopback.

@@ -113,20 +113,19 @@ pnpm exec wrangler pages deploy dist \
 
 ## Backend Deployment
 
-Preferred launch backend host: Shuttle Community, with Fly.io or Railway as
-fallback. See [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md) for the
-provider-specific steps and rollback notes.
+Current API hosting note: Shuttle is not a viable new launch target as of the
+2026-05-24 official-source snapshot
+https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io and Railway are the
+current normal Axum PaaS candidates; Cloudflare Workers/Pages Functions require
+an edge/runtime rewrite, and Hetzner is a higher-ops VPS fallback. See
+[runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md) for provider-specific steps and
+rollback notes.
 
 1. Prepare the API environment variables and secret store for the selected
    host.
-2. Deploy with the chosen provider command. For the Shuttle path:
-
-   ```bash
-   shuttle deploy \
-     --working-directory apps/api \
-     --name "$SHUTTLE_PROJECT" \
-     --secrets Secrets.production.toml
-   ```
+2. Deploy with the chosen provider command. Do not use Shuttle for a new
+   production launch; keep the Shuttle binary check as legacy compatibility
+   only until it is removed or replaced.
 
 3. Capture the deployment ID, logs, and smoke checks in
    [runbooks/LAUNCH_EVIDENCE.md](runbooks/LAUNCH_EVIDENCE.md).
@@ -143,8 +142,7 @@ provider-specific steps and rollback notes.
   [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md).
 - Roll back a bad release: list deployments with
   `pnpm exec wrangler pages deployment list --project-name "$CLOUDFLARE_PAGES_PROJECT" --environment production`
-  for Cloudflare Pages or `shuttle deployment list --name "$SHUTTLE_PROJECT"`
-  for Shuttle. For Fly.io, use
+  for Cloudflare Pages. For Fly.io, use
   `fly releases --app "$FLY_APP" --image`, then redeploy a known-good image
   with `fly deploy --app "$FLY_APP" --image "$KNOWN_GOOD_IMAGE"`. Use
   `railway deployment list` for Railway history, then record the recovery in

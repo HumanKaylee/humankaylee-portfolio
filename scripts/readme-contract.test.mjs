@@ -83,15 +83,19 @@ test("README covers local development, deployment, and recovery contracts", () =
 		"Final API domain",
 		"provider projects",
 		"required secrets",
-		"shuttle deploy",
-		"--working-directory apps/api",
-		"--secrets Secrets.production.toml",
+		"Shuttle is not a viable new launch target",
+		"Fly.io and Railway",
+		"Do not use Shuttle for a new production launch",
 		"pnpm exec wrangler pages deployment list",
-		"shuttle deployment list",
 		'fly releases --app "$FLY_APP" --image',
 		'fly deploy --app "$FLY_APP" --image "$KNOWN_GOOD_IMAGE"',
 		"railway deployment list",
 	]);
+
+	assert.ok(
+		!readme.includes("shuttle deploy"),
+		"README should not present Shuttle deploy as a new launch path",
+	);
 
 	assert.ok(
 		!readme.includes("fly secrets list"),

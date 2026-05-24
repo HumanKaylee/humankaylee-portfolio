@@ -34,8 +34,11 @@ Planned components:
 - Optional Three.js/React Three Fiber atlas and GSAP scroll scenes.
 - Rust Axum API for health, live project metadata, contact, and optional events.
 - Cloudflare Pages as recommended frontend host.
-- Shuttle Community as recommended launch backend host.
-- Fly.io or Railway as reliability fallback for the Rust backend.
+- Fly.io and Railway as current Axum API host candidates.
+- Cloudflare Workers/Pages Functions as an edge rewrite option, and Hetzner as a
+  higher-ops VPS fallback.
+- Shuttle is not a viable new launch target as of the 2026-05-24 official-source
+  snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 - Optional database only if contact audit storage or analytics storage is needed.
 
 Production launch is not ready until the frontend provider, API provider,
@@ -49,7 +52,7 @@ Core production URLs should be documented after domain selection:
 | ---------------- | ------------------------------ | ----------- | --------------------------------------- |
 | Public site      | Pending final domain selection | HumanKaylee | Custom domain pending.                  |
 | Frontend preview | Pending host setup             | HumanKaylee | Usually Cloudflare Pages branch deploy. |
-| API production   | Pending backend host selection | HumanKaylee | Shuttle/Fly/Railway endpoint.           |
+| API production   | Pending backend host selection | HumanKaylee | Fly.io/Railway or approved alternate endpoint. |
 | API health       | `/api/health`                  | HumanKaylee | Public, safe, non-secret response.      |
 | Source repo      | Pending publication decision   | HumanKaylee | Public or private decision pending.     |
 
@@ -149,7 +152,8 @@ Backend variables may contain secrets and must be configured in the backend host
 Use the host-native secret store:
 
 - Cloudflare Pages environment variables for public frontend configuration.
-- Shuttle secrets for Shuttle-hosted Rust API.
+- Shuttle secrets only for legacy compatibility checks; do not use Shuttle for a
+  new production launch.
 - Fly.io secrets for Fly.io-hosted Rust API.
 - Railway variables for Railway-hosted Rust API.
 - VPS systemd environment files or secret manager if self-hosting.
@@ -295,11 +299,16 @@ Browser checks:
 - Open Graph preview assets resolve.
 - Reduced-motion mode remains usable.
 
-### 7.2 Backend: Shuttle Community
+### 7.2 Backend: API Host Selection
 
-Recommended launch path:
+Current status: blocked until provider account, project name, custom domain,
+secrets, and contact storage are selected. Fly.io and Railway are the current
+normal Axum PaaS candidates. Shuttle is not a viable new launch target; see
+https://docs.shuttle.dev/docs/shuttle-shutdown.
 
-1. Create the Shuttle project for the Rust API.
+Required launch path:
+
+1. Select the production API host for the Rust API.
 2. Configure required secrets.
 3. Deploy the API.
 4. Confirm `GET /api/health`.
@@ -326,11 +335,11 @@ Contact smoke check:
   `blocked / not run` and document the mailto-only exception instead of forcing
   a provider.
 
-### 7.3 Backend Fallback: Fly.io
+### 7.3 Backend Candidate: Fly.io
 
 Use Fly.io when:
 
-- Shuttle reliability or resource limits are insufficient.
+- Fly.io is the selected current API host.
 - Always-on behavior is required.
 - Container deployment is preferred.
 
@@ -351,7 +360,7 @@ Promotion steps:
 5. Keep previous backend available until frontend CDN caches have aged out or
    the new API is confirmed stable.
 
-### 7.4 Backend Fallback: Railway
+### 7.4 Backend Candidate: Railway
 
 Use Railway when:
 
@@ -555,8 +564,8 @@ Recovery:
   config.
 - If provider integration is failing, disable the dependent feature or route it
   to fallback behavior.
-- If Shuttle is unstable, move API to Fly.io or Railway and update frontend API
-  base URL.
+- If the selected API host is unstable, move API to Fly.io, Railway, or another
+  approved host and update frontend API base URL.
 
 ### 10.5 Contact Form Failing
 

@@ -116,11 +116,13 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 		"Content owner",
 		"Blocked / pending approval",
 	]);
-	expectTableRow(register, "Shuttle vs Fly.io/Railway API host decision", [
+	expectTableRow(register, "API host decision after Shuttle shutdown", [
 		"production API",
 		"Phase 7",
 		"Operations owner",
 		"Blocked / pending decision",
+		"Shuttle is not a viable new launch target",
+		"Fly.io and Railway",
 	]);
 	expectTableRow(register, "AI assistant v1 vs v2 decision", [
 		"post-launch",
@@ -140,7 +142,8 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 	]);
 	expectAll(deployment, [
 		"runbooks/LAUNCH_BLOCKERS_REGISTER.md",
-		"Shuttle vs Fly.io/Railway API host decision",
+		"API host decision",
+		"Shuttle is not a viable new launch target",
 	]);
 	expectAll(githubSync, ["#11", "B-005: Resolve launch blockers register"]);
 

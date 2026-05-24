@@ -8,6 +8,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added Post-Launch Feature Prep coverage for B-064 through B-068 so Phase 8
+  assistant, status/metadata, notes/postmortem, and API hosting migration ideas
+  have safe pre-launch decision inputs without authorizing implementation or
+  launch readiness.
+- Refreshed API hosting guidance after verifying Shuttle's official shutdown
+  notice; Fly.io and Railway are now the normal Axum host candidates while
+  Shuttle remains legacy compatibility only.
 - Added Publication Safety Decisions coverage for B-018 and B-019 so the
   Kalshi/analytics and YouTube AI pipeline candidates have explicit
   recommendation, risk, owner, and pending-decision records without approving
@@ -194,7 +201,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Implement the frontend with Astro, TypeScript, content collections, React islands, and selective Three.js/React Three Fiber enhancements.
 - Implement a small Rust Axum API for health, live project metadata, contact, and optional privacy-safe events.
 - Deploy the frontend to Cloudflare Pages or a comparable static host.
-- Deploy the Rust API to Shuttle Community or a fallback host such as Fly.io or Railway.
+- Deploy the Rust API to Fly.io, Railway, or another selected current host.
 - Add CI for lint, typecheck, tests, backend tests, production build, and Playwright smoke tests.
 - Meet or document exceptions for Lighthouse targets: Performance >= 90, Accessibility >= 95, Best Practices >= 95, SEO >= 95.
 
@@ -203,7 +210,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Final domain name.
 - Which existing projects are safe to publish in detail.
 - Whether the AI assistant ships in v1 or remains a v2 demo.
-- Whether Shuttle Community is sufficient for launch API hosting.
+- Which current API host should replace the stale Shuttle launch assumption.
 
 ## [0.1.0] - 2026-05-23
 

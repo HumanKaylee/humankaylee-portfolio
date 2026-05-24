@@ -56,9 +56,12 @@ External systems:
 
 - GitHub for source repositories, project metadata, and CI triggers.
 - Cloudflare Pages for the recommended static frontend host.
-- Shuttle Community for the recommended launch Rust API host.
-- Fly.io, Railway, Render, Hetzner, or Cloudflare Workers as fallback or
-  evolution paths.
+- Fly.io and Railway as the current normal Axum PaaS candidates for the launch
+  Rust API, pending provider/project/domain evidence.
+- Cloudflare Workers/Pages Functions as an edge rewrite option, and Hetzner as a
+  higher-ops VPS fallback.
+- Shuttle is not a viable new launch target as of the 2026-05-24 official-source
+  snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 - Email or message delivery provider for contact submissions.
 - Optional privacy-safe analytics sink.
 - Browser clients across desktop, mobile, low-power devices, reduced-motion
@@ -476,14 +479,18 @@ Rules:
 
 Frontend: Cloudflare Pages.
 
-Backend: Shuttle Community.
+Backend: Fly.io or Railway candidate, with final host still blocked.
 
 Reasons:
 
 - Cloudflare Pages is a strong fit for static Astro output, private GitHub repo
   deploys, custom domains, TLS, and CDN delivery.
-- Shuttle is Rust-native, low-friction, and appropriate for a small launch API.
-- The frontend remains useful even if Shuttle is unavailable or later replaced.
+- Fly.io and Railway keep the current Axum API shape deployable without a runtime
+  rewrite.
+- Shuttle is not a viable new launch target; keep the feature-gated Shuttle
+  binary only as legacy compatibility until removed or replaced.
+- The frontend remains useful even if the selected API host is unavailable or
+  later replaced.
 
 ### 9.2 Fallback and Evolution Options
 
@@ -503,7 +510,8 @@ Cloudflare Pages plus Railway:
 
 - Good developer experience for simple app deploys.
 - Can be more expensive under always-on workloads.
-- Useful as a fallback when Shuttle limitations become painful.
+- Useful when Railway's cost and operational model fit better than Fly.io or a
+  self-managed VPS.
 
 Render:
 
@@ -788,7 +796,7 @@ Operational principle:
 - Final resume PDF source content.
 - Which existing projects are safe to publish in detail.
 - Whether the AI assistant remains a v2 demo.
-- Whether launch uses Shuttle Community or starts on Fly.io/Railway.
+- Whether launch uses Fly.io, Railway, or another current API host.
 - Whether contact submissions should be email-only or stored in a database.
 - Whether analytics are disabled at launch or implemented with the Rust API.
 

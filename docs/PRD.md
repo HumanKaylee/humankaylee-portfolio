@@ -136,7 +136,8 @@ Backend requirements:
 - Structured tracing.
 - Typed config from environment variables.
 - Integration tests for routes.
-- Dockerfile and Shuttle deploy path.
+- Dockerfile, selected API-host deploy path, and legacy Shuttle compatibility
+  check until the Shuttle binary is removed or replaced.
 - Backend failure must not break static portfolio content.
 
 ### Resume and Identity
@@ -234,7 +235,7 @@ Launch is complete when:
 
 - Home, projects, at least 4 case studies, resume, notes/build-log, and contact are live.
 - Frontend is deployed to Cloudflare Pages or chosen host with custom domain instructions.
-- Rust API is deployed to Shuttle or fallback host.
+- Rust API is deployed to Fly.io, Railway, or another selected current host.
 - CI runs lint, typecheck, unit tests, backend tests, build, and Playwright smoke tests.
 - Lighthouse checks meet targets or documented exceptions exist.
 - README and runbook explain local dev, deployment, rollback, and content updates.
@@ -245,4 +246,5 @@ Launch is complete when:
 - Final resume PDF source content.
 - Which existing projects are safe to publish in detail.
 - Whether to launch AI assistant in v1 or keep it as a v2 demo.
-- Whether to use Shuttle Community for launch or go straight to Fly.io/Railway for reliability.
+- Which current API host to use after Shuttle shutdown. Shuttle is not a viable
+  new launch target: https://docs.shuttle.dev/docs/shuttle-shutdown

@@ -32,8 +32,9 @@ built, tested, deployed, and documented with mature engineering practices.
   typed environment config, route tests, and deployment documentation.
 - Host the frontend on Cloudflare Pages for launch unless a later decision
   explicitly chooses another static host.
-- Start the Rust API on Shuttle Community unless reliability requirements push
-  launch to Fly.io, Railway, or another host.
+- Start the Rust API on a current Axum-capable host. Shuttle is not a viable new
+  launch target as of https://docs.shuttle.dev/docs/shuttle-shutdown; Fly.io and
+  Railway are the current normal PaaS candidates.
 - Keep static portfolio content fully useful if JavaScript, WebGL, or the API is
   unavailable.
 - Publish 4 to 6 flagship case studies before launch.
@@ -352,7 +353,7 @@ procedures.
 Key deliverables:
 
 - Cloudflare Pages deployment for the frontend.
-- Rust API deployment to Shuttle or chosen fallback host.
+- Rust API deployment to Fly.io, Railway, or another approved host.
 - Custom domain instructions and final production environment settings.
 - README and runbook covering local dev, build, deployment, rollback, content
   updates, and redaction policy.
@@ -393,8 +394,12 @@ Candidates:
 - Additional creative web demo as a standalone case study.
 - Public status page or richer live project metadata.
 - More notes/build-log entries.
-- Advanced self-hosting or Fly.io migration if API uptime needs exceed Shuttle
-  Community's fit.
+- Advanced self-hosting or API host migration if uptime, cost, or operations
+  needs exceed the chosen launch host's fit.
+
+Pre-launch prep for these candidates lives in
+`runbooks/POST_LAUNCH_FEATURE_PREP.md` and is pre-launch planning only. It does
+not authorize implementation, post-launch feature approval, or launch readiness.
 
 Entry criteria:
 
@@ -410,7 +415,8 @@ Entry criteria:
 4. Contact fallback before Rust contact endpoint.
 5. Backend tests and abuse controls before public contact endpoint launch.
 6. Accessibility and performance hardening before production launch.
-7. Domain, resume source, case-study approvals, and API host before final launch.
+7. Domain, resume source, case-study approvals, and a current API host before
+   final launch.
 
 ## Definition of Ready for Implementation Issues
 

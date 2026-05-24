@@ -58,7 +58,7 @@ test("deployment and operations runbooks cover B-062 rollback and incident requi
 		"pnpm exec wrangler pages deployment list",
 		"--environment production",
 		"preview deployments are not rollback targets",
-		"### 5.4 Shuttle Rollback",
+		"### 5.4 Legacy Shuttle Rollback",
 		'shuttle deployment redeploy "$KNOWN_GOOD_SHUTTLE_DEPLOYMENT_ID"',
 		"### 6.2 Rollback",
 		'fly releases --app "$FLY_APP"',

@@ -182,7 +182,7 @@ Acceptance criteria:
 - Register includes final domain name.
 - Register includes final resume PDF source.
 - Register includes public-safe case-study approvals.
-- Register includes Shuttle versus Fly.io/Railway API host decision.
+- Register includes current API host decision after Shuttle shutdown.
 - Register includes AI assistant v1 versus v2 decision.
 - Each decision has impact, latest acceptable resolution phase, and owner.
 
@@ -1449,7 +1449,7 @@ Depends on: B-046, B-005
 
 Scope:
 
-- Deploy API to Shuttle Community or chosen fallback host.
+- Deploy API to Fly.io, Railway, or another approved host.
 
 Acceptance criteria:
 
@@ -1634,6 +1634,10 @@ Acceptance criteria:
 Verification evidence:
 
 - Decision note approved before implementation.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the pre-launch decision inputs
+  and keeps #70 blocked until B-063 launch evidence exists.
+- `scripts/post-launch-feature-prep-contract.test.mjs` verifies the prep record
+  does not authorize assistant work before approval.
 
 ### B-065: Add portfolio assistant prototype
 
@@ -1657,6 +1661,9 @@ Verification evidence:
 
 - Prompt/content tests.
 - Disabled-mode smoke test.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the do-not-build gate, public
+  content boundary, disabled-mode expectation, and abuse/cost control inputs
+  while #71 remains blocked by B-064 approval.
 
 ### B-066: Add richer public status or metadata page
 
@@ -1677,6 +1684,11 @@ Acceptance criteria:
 Verification evidence:
 
 - API-up and API-down status page checks.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the safe pre-launch contract for
+  `/api/health`, `/api/projects/live`, static fallback copy, and no private
+  deployment details before any status page is built.
+- `scripts/post-launch-feature-prep-contract.test.mjs` verifies the contract
+  remains planning-only and blocked by B-063.
 
 ### B-067: Add additional notes and postmortems
 
@@ -1697,6 +1709,9 @@ Acceptance criteria:
 Verification evidence:
 
 - Feed and notes index review.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records that pre-launch work is limited
+  to draft outlines and that publishing still requires redaction review,
+  RSS/index verification, and launch completion.
 
 ### B-068: Evaluate API hosting migration
 
@@ -1706,8 +1721,8 @@ Depends on: B-058, B-063
 
 Scope:
 
-- Decide whether to stay on Shuttle Community or migrate to Fly.io, Railway,
-  Hetzner, or another host.
+- Decide whether the selected launch host should stay in place or migrate to
+  Fly.io, Railway, Hetzner, Cloudflare, or another host.
 
 Acceptance criteria:
 
@@ -1719,6 +1734,11 @@ Acceptance criteria:
 Verification evidence:
 
 - Hosting decision note.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the pre-launch hosting decision
+  inputs for Shuttle, Fly.io, Railway, Cloudflare, and Hetzner while #74 remains
+  blocked by B-058 and B-063 production evidence.
+- `scripts/post-launch-feature-prep-contract.test.mjs` verifies the matrix is
+  decision support only, not a migration authorization.
 
 ## Launch-Critical Issue Set
 
