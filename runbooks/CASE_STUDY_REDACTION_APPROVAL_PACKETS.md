@@ -1,6 +1,6 @@
 # Case Study Redaction Approval Packets
 
-Date: 2026-05-23
+Date: 2026-05-24
 Status: approval packets only; no case study is launch-approved
 Scope: launch-candidate case-study approval evidence
 
@@ -44,6 +44,25 @@ current publish-intended case study. It does not mark any case study approved.
 | Creative Web Systems Atlas Demo                       | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing atlas fallback artifact inspection evidence.            |
 | HumanKaylee Portfolio Build                           | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing production domain evidence for launch claims.           |
 | Remote Workstation Recovery and Operational Debugging | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing redacted incident summary inspection evidence.          |
+
+## Non-Approval Evidence Inventory
+
+These inventory notes are mechanical preparation only; they are not approval
+decisions. They identify which public-safe evidence exists in the current
+content and which artifact inspections still need a human reviewer before any
+candidate can move from `reviewed` to `approved`.
+
+Counts-only mechanical scan note: the operational case-study bodies were
+checked for email-like strings, IP addresses, private home path markers,
+Windows absolute paths, credential assignment markers, and raw-log timestamp
+prefixes. The counts were zero for each category; matched-text excerpts are
+intentionally omitted so this runbook does not publish any private-looking
+material if future scans find it.
+
+| Candidate                                             | Current public-safe evidence                                                                                   | Still missing before approval                                                                                 |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| CLI Fleet Synchronization and MCP Rollout             | In-page sanitized architecture sketch, In-page sanitized verification matrix, In-page sanitized operator checklist. | Pending reviewer inspection of sanitized rollout matrix and Pending reviewer inspection of operator checklist. |
+| Remote Workstation Recovery and Operational Debugging | In-page role-labeled diagnostic flow, In-page sanitized verification matrix, and role-labeled prevention notes. | Pending reviewer inspection of redacted incident summary and Pending reviewer inspection of operator runbook excerpt. |
 
 ## Packet Template
 

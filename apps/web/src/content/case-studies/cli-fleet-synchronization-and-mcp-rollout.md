@@ -41,8 +41,10 @@ redactionReview:
   reviewedOn: "2026-05-23"
   checklistStatus: "partial"
   openItems:
-    - "Complete the final approval checklist before changing status to approved."
-  notes: "Generalized public narrative is safe for route scaffolding, but final launch approval still needs a completed checklist."
+    - "Confirm the public narrative uses role labels only and that linked artifacts exclude hostnames, account names, access paths, raw logs, and credentials."
+    - "Inspect the sanitized rollout matrix and operator checklist artifacts; record artifact evidence source and reviewer decision before approval."
+    - "Keep redactionStatus reviewed until human signoff and openItems clearance."
+  notes: "Generalized public narrative is safe for route scaffolding, but final launch approval still needs a completed checklist. Non-approval evidence inventory: sanitized rollout matrix, operator checklist, and public-safe architecture sketch. Mechanical scan note: counts only; matched-text excerpts omitted."
 seo:
   title: "CLI Fleet Synchronization and MCP Rollout"
   description: "A sanitized operations case study about inventory, rollout, and verification discipline."

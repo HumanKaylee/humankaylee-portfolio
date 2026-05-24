@@ -42,8 +42,10 @@ redactionReview:
   reviewedOn: "2026-05-23"
   checklistStatus: "partial"
   openItems:
-    - "Complete final checklist review and artifact inspection before launch approval."
-  notes: "Generalized body is public-safe for route scaffolding, but final artifact review is still required before launch approval."
+    - "Confirm the recovery story and linked artifacts are fully sanitized, with exact commands, session identifiers, and environment-specific details removed or generalized."
+    - "Inspect the redacted incident summary and operator runbook excerpt; record artifact evidence source and reviewer decision before approval."
+    - "Keep redactionStatus reviewed until human signoff and openItems clearance."
+  notes: "Generalized body is public-safe for route scaffolding, but final artifact review is still required before launch approval. Non-approval evidence inventory: redacted incident summary, operator runbook excerpt, and verification matrix. Mechanical scan note: counts only; matched-text excerpts omitted."
 seo:
   title: "Remote Workstation Recovery and Operational Debugging"
   description: "A sanitized systems recovery case study about evidence-first operational debugging."

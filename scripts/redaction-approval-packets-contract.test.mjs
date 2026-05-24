@@ -5,10 +5,15 @@ import { test } from "node:test";
 const files = {
 	backlog: "docs/BACKLOG.md",
 	caseStudiesDir: "apps/web/src/content/case-studies",
+	cliFleetCaseStudy:
+		"apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md",
 	contentContract: "apps/web/src/lib/contracts/content.ts",
 	finalChecklist: "runbooks/FINAL_LAUNCH_CHECKLIST.md",
 	guide: "docs/CONTENT_REDACTION_GUIDE.md",
+	githubSync: "docs/GITHUB_SYNC.md",
 	packet: "runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md",
+	remoteRecoveryCaseStudy:
+		"apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md",
 	status: "runbooks/CONTENT_REDACTION_STATUS.md",
 };
 
@@ -149,10 +154,15 @@ function expectReadinessRow(packet, candidateTitle, expectedFragments) {
 
 test("case-study redaction approval packets preserve not-approved launch state", () => {
 	const backlog = readRequiredFile(files.backlog);
+	const cliFleetCaseStudy = readRequiredFile(files.cliFleetCaseStudy);
 	const contentContract = readRequiredFile(files.contentContract);
 	const finalChecklist = readRequiredFile(files.finalChecklist);
 	const guide = readRequiredFile(files.guide);
+	const githubSync = readRequiredFile(files.githubSync);
 	const packet = readRequiredFile(files.packet);
+	const remoteRecoveryCaseStudy = readRequiredFile(
+		files.remoteRecoveryCaseStudy,
+	);
 	const status = readRequiredFile(files.status);
 	const caseStudies = readCaseStudies();
 	const launchCandidates = caseStudies.filter(
@@ -173,6 +183,16 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		backlog,
 		"scripts/redaction-approval-packets-contract.test.mjs",
 		"backlog approval-packet contract",
+	);
+	expectContains(
+		githubSync,
+		"#20 and #21 remain open for final redaction checklist/artifact review",
+		"GitHub sync keeps #20/#21 open",
+	);
+	expectContains(
+		githubSync,
+		"non-approval evidence inventory",
+		"GitHub sync records non-approval inventory progress",
 	);
 
 	expectContains(packet, "# Case Study Redaction Approval Packets");
@@ -200,6 +220,35 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectContains(packet, "linked artifacts inspected");
 	expectContains(packet, "production or approved-preview evidence");
 	expectContains(packet, "approval decision");
+	expectContains(packet, "## Non-Approval Evidence Inventory");
+	expectContains(
+		packet,
+		"These inventory notes are mechanical preparation only; they are not approval decisions.",
+		"non-approval evidence inventory boundary",
+	);
+	expectContains(packet, "Counts-only mechanical scan note");
+	expectContains(
+		packet,
+		"matched-text excerpts are intentionally omitted",
+		"mechanical scan privacy boundary",
+	);
+	expectContains(packet, "In-page sanitized architecture sketch");
+	expectContains(packet, "In-page sanitized verification matrix");
+	expectContains(packet, "In-page sanitized operator checklist");
+	expectContains(
+		packet,
+		"Pending reviewer inspection of sanitized rollout matrix",
+	);
+	expectContains(packet, "Pending reviewer inspection of operator checklist");
+	expectContains(packet, "In-page role-labeled diagnostic flow");
+	expectContains(
+		packet,
+		"Pending reviewer inspection of redacted incident summary",
+	);
+	expectContains(
+		packet,
+		"Pending reviewer inspection of operator runbook excerpt",
+	);
 
 	for (const candidate of launchCandidates) {
 		expectContains(
@@ -269,5 +318,45 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		finalChecklist,
 		"Current approved launch case studies: 0",
 		"final checklist zero approved count",
+	);
+	expectContains(
+		status,
+		"Non-approval evidence inventory",
+		"status links non-approval inventory",
+	);
+	expectContains(
+		status,
+		"counts-only mechanical scan note",
+		"status mentions mechanical scan boundary",
+	);
+	expectContains(
+		cliFleetCaseStudy,
+		"Confirm the public narrative uses role labels only and that linked artifacts exclude hostnames, account names, access paths, raw logs, and credentials.",
+		"CLI fleet public narrative open item",
+	);
+	expectContains(
+		cliFleetCaseStudy,
+		"Inspect the sanitized rollout matrix and operator checklist artifacts; record artifact evidence source and reviewer decision before approval.",
+		"CLI fleet artifact inspection open item",
+	);
+	expectContains(
+		cliFleetCaseStudy,
+		"Keep redactionStatus reviewed until human signoff and openItems clearance.",
+		"CLI fleet human signoff open item",
+	);
+	expectContains(
+		remoteRecoveryCaseStudy,
+		"Confirm the recovery story and linked artifacts are fully sanitized, with exact commands, session identifiers, and environment-specific details removed or generalized.",
+		"remote recovery public narrative open item",
+	);
+	expectContains(
+		remoteRecoveryCaseStudy,
+		"Inspect the redacted incident summary and operator runbook excerpt; record artifact evidence source and reviewer decision before approval.",
+		"remote recovery artifact inspection open item",
+	);
+	expectContains(
+		remoteRecoveryCaseStudy,
+		"Keep redactionStatus reviewed until human signoff and openItems clearance.",
+		"remote recovery private detail open item",
 	);
 });

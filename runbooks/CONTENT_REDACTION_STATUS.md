@@ -1,6 +1,6 @@
 # Content Redaction Status
 
-Date: 2026-05-23
+Date: 2026-05-24
 Branch: `goal/portfolio-implementation`
 Status: launch-blocking evidence index only; this file does not approve content.
 
@@ -18,7 +18,9 @@ No candidate currently meets that launch gate.
 Approval packet templates for the four current `publish` candidates live in
 `runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md`. Those packets now include a
 readiness matrix that identifies exactly which approval evidence remains
-missing for each candidate; they do not approve any case study.
+missing for each candidate, plus a Non-approval evidence inventory and
+counts-only mechanical scan note for the two operational case studies; they do
+not approve any case study.
 
 Publication-safety decisions for the Kalshi/analytics and YouTube AI pipeline
 blocked candidates live in `runbooks/PUBLICATION_SAFETY_DECISIONS.md`. That
