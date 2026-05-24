@@ -383,6 +383,14 @@ HumanKaylee approval exist. B-065 remains blocked until #70 has that approval
 and the approved outcome is `build`. #70 through #74 remain open until their
 launch, approval, and production-evidence dependencies are satisfied.
 
+B-067 draft outline contract status: pre-launch planning only. The post-launch
+feature prep runbook now requires future #73 writing outlines to include a
+working title, problem, approach, evidence plan, lesson, redaction review, launch
+dependency, and RSS/index verification after launch. It does not create notes
+content, does not update RSS, and does not authorize publication. #73 remains
+open until B-063 launch evidence exists and approved public-safe content is
+published.
+
 Granular live GitHub issue verification now covers all documented granular
 issues #7 through #74 with paginated GitHub API results. Completed granular
 issues may be open or closed as execution advances, but unresolved blocker,

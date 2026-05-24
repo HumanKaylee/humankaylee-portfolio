@@ -98,6 +98,28 @@ the normal content workflow:
 - Redaction review.
 - RSS/index verification.
 
+## B-067 Draft Outline Contract
+
+Outline status: draft only; not published content.
+
+Do not create `apps/web/src/content/notes/*.md` entries before B-063 launch
+evidence exists. Draft outline records can live in planning docs or issue
+comments only, and must not update the live notes collection, notes index, or RSS
+feed before approved content exists.
+
+Every future B-067 note or postmortem outline must include:
+
+- Working title.
+- Problem.
+- Approach.
+- Evidence plan.
+- Lesson.
+- Redaction review.
+- Launch dependency.
+- RSS/index verification after launch.
+
+No RSS feed update is expected before published content exists.
+
 ## API Hosting Decision Inputs
 
 Official-source snapshot date: 2026-05-24.

@@ -243,6 +243,20 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		3: ["draft outlines only", "redaction review"],
 		4: ["Feed and notes index review"],
 	});
+	expectAll(runbook, [
+		"## B-067 Draft Outline Contract",
+		"Outline status: draft only; not published content",
+		"Do not create `apps/web/src/content/notes/*.md` entries before B-063 launch evidence exists",
+		"Working title",
+		"Problem",
+		"Approach",
+		"Evidence plan",
+		"Lesson",
+		"Redaction review",
+		"Launch dependency",
+		"RSS/index verification after launch",
+		"No RSS feed update is expected before published content exists",
+	]);
 	expectTableRowCells(runbook, "API hosting migration", {
 		1: ["B-068", "#74"],
 		2: ["Blocked until B-058 and B-063"],
@@ -311,6 +325,8 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"#70 remains open until B-063 launch evidence and HumanKaylee approval exist",
 		"B-065 remains blocked until #70 has that approval",
 		"#70 through #74 remain open",
+		"B-067 draft outline contract status: pre-launch planning only",
+		"#73 remains open until B-063 launch evidence exists and approved public-safe content is published",
 	]);
 	expectAll(roadmap, [
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
@@ -319,6 +335,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 	expectAll(changelog, [
 		"Post-Launch Feature Prep",
 		"Assistant Scope Decision",
+		"B-067 Draft Outline Contract",
 		"B-064",
 		"B-068",
 	]);
