@@ -95,6 +95,11 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   PR head and CI run without converting production blockers into pass evidence.
 - Expanded GitHub sync docs and live repo issue state with Phase 1 granular
   issues B-006 through B-012.
+- Expanded GitHub sync docs and live repo issue state with Phase 2 granular
+  issues B-013 through B-021.
+- Added a B-037 visual regression gate with desktop/mobile snapshots for home,
+  projects, a representative case study, resume, and contact, plus dedicated
+  `pnpm test:visual` and `pnpm test:visual:update` commands.
 - Hardened deployment and operations runbooks so frontend/API providers,
   custom domains, contact storage, secret stores, production smoke checks, and
   rollback evidence remain explicit prerequisites for launch.

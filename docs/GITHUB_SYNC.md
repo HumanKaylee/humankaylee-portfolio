@@ -181,6 +181,22 @@ views:
 | #17   | B-011: Add frontend test harness                  | #3     | `priority:p0`, `type:task`, `area:frontend`, `phase:1-foundation`, `agent-standard`                 |
 | #18   | B-012: Add Playwright smoke-test harness          | #3     | `priority:p1`, `type:qa`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-strong`        |
 
+Phase 2 backlog issues now live as the next granular sync layer, with #3
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                                                      | Parent | Labels                                                                                                        |
+| ----- | --------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| #19   | B-013: Write launch home-page content package                                     | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
+| #20   | B-014: Draft case study: CLI fleet synchronization and MCP rollout                | #3     | `priority:p0`, `type:content`, `area:content`, `area:privacy`, `phase:2-content`, `agent-strong`            |
+| #21   | B-015: Draft case study: remote workstation recovery and operational debugging    | #3     | `priority:p0`, `type:content`, `area:content`, `area:privacy`, `phase:2-content`, `agent-strong`            |
+| #22   | B-016: Draft case study: HumanKaylee portfolio build                              | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
+| #23   | B-017: Draft case study: creative web demo                                        | #3     | `priority:p1`, `type:content`, `area:content`, `area:design`, `phase:2-content`, `agent-strong`              |
+| #24   | B-018: Evaluate Kalshi or analytics tooling publication safety                    | #3     | `priority:p1`, `type:research`, `area:content`, `area:privacy`, `phase:2-content`, `agent-standard`          |
+| #25   | B-019: Evaluate YouTube AI video pipeline publication safety                      | #3     | `priority:p1`, `type:research`, `area:content`, `area:privacy`, `phase:2-content`, `agent-standard`          |
+| #26   | B-020: Build resume content source                                                 | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
+| #27   | B-021: Create notes/build-log starter content                                      | #3     | `priority:p1`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
+
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status
 views.
