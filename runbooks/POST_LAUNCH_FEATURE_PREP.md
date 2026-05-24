@@ -39,7 +39,7 @@ Authoritative blockers:
 | Portfolio assistant prototype    | B-065 / #71     | Blocked until B-064 approved build recommendation.                                                 | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                              | Prompt/content tests and disabled-mode smoke test after approved scope.      |
 | Public status or metadata page   | B-066 / #72     | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details.                                                                                      | API-up and API-down page checks against production or approved preview URLs. |
 | Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence exists.                                                        | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                              | Feed and notes index review after launch with approved public-safe content.  |
-| API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: use `docs/ARCHITECTURE.md#9-hosting-architecture` as the canonical candidate source and compare every candidate without selecting a provider.                                                    | Stay-or-migrate recommendation after real API host production evidence.      |
+| API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: use `docs/ARCHITECTURE.md#9-hosting-architecture` as the canonical candidate source and compare every candidate without selecting a provider.                                                    | Future host-retention recommendation after real API host production evidence. |
 
 ## Status Page Safe Boundary
 
@@ -209,9 +209,10 @@ Axum fit, cold-start or sleep behavior, and operational risks.
 
 ## B-068 Migration Comparison Inputs
 
-Compare-only evidence capture for the future API-hosting recommendation. Do not
-select a provider, recommend migration, or write migration steps or rollback
-plans yet. Do not claim launch readiness from this comparison.
+Compare-only evidence capture for the future API-hosting recommendation. This
+is no ranking, no provider choice, and not launch evidence. Step-by-step
+provider-move procedures and rollback procedures are deferred until a later
+approved decision exists.
 
 - Current launch host evidence.
 - Uptime/availability expectation.
@@ -223,7 +224,18 @@ plans yet. Do not claim launch readiness from this comparison.
 - Rust Axum fit.
 - Cold-start/sleep behavior.
 - Operational risk.
-- Migration steps and rollback plan only after a future recommendation exists.
+- Provider-move procedure and rollback procedure only after a future
+  recommendation exists.
+
+### B-068 Comparison Matrix
+
+| Candidate | Official doc source | Snapshot date | Source-derived comparison inputs | Still blocked by |
+| --- | --- | --- | --- | --- |
+| Shuttle legacy compatibility | https://docs.shuttle.dev/docs/shuttle-shutdown | 2026-05-24 | Source states Shuttle is ceasing operations. Keep only for legacy binary compatibility evidence, not as a new launch target. | Removal or replacement decision for the legacy binary; not a launch-host candidate. |
+| Fly.io normal Axum PaaS candidate | https://fly.io/docs/about/pricing/ | 2026-05-24 | Usage-based Machines pricing, public networking/TLS, logs/metrics, Docker fit, regional runtime, and machine stopped/suspended cost behavior require future selected-host verification. | B-058 selected-host evidence and B-063 production launch evidence. |
+| Railway normal Axum PaaS candidate | https://docs.railway.com/pricing | 2026-05-24 | Plan plus resource-usage pricing, app deploy flow, logs/metrics, custom domain/TLS, and always-on or sleep behavior require future selected-host verification. | B-058 selected-host evidence and B-063 production launch evidence. |
+| Cloudflare Workers/Pages Functions edge rewrite option | https://developers.cloudflare.com/workers/platform/pricing/ | 2026-05-24 | Request and CPU pricing can be cheap for edge glue, but this option changes the backend runtime model away from normal Axum. | Edge/runtime rewrite decision, API shape decision, and B-063 production launch evidence. |
+| Hetzner VPS higher-ops fallback | https://docs.hetzner.com/cloud/servers/overview | 2026-05-24 | VM control, shared or dedicated resources, Primary IP networking, self-managed TLS/logs, patching, backups, and incident ownership require explicit ops evidence. | Ops ownership decision, B-058 selected-host evidence, and B-063 production launch evidence. |
 
 ## Verification
 

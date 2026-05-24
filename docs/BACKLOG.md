@@ -1782,15 +1782,17 @@ Depends on: B-058, B-063
 
 Scope:
 
-- Decide whether the selected launch host should stay in place or migrate to
-  Fly.io, Railway, Hetzner, Cloudflare, or another host.
+- After B-058 and B-063 evidence exists, compare the actual launch API host
+  against Fly.io, Railway, Hetzner, Cloudflare, or another host.
 
 Acceptance criteria:
 
 - Compares uptime, cost, deploy complexity, custom domain support, observability,
   and rollback.
-- Recommends stay or migrate.
-- If migration is recommended, defines migration steps and rollback.
+- Produces a keep-or-move recommendation only after selected-host and launch
+  evidence exists.
+- If a future host change is recommended, defines provider-move and rollback
+  procedures.
 
 Verification evidence:
 
@@ -1798,6 +1800,9 @@ Verification evidence:
 - `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the pre-launch hosting decision
   inputs for Shuttle, Fly.io, Railway, Cloudflare, and Hetzner while #74 remains
   blocked by B-058 and B-063 production evidence.
+- The pre-launch comparison matrix records official provider source URLs and a
+  source snapshot date for each candidate without ranking candidates or
+  authorizing host changes.
 - `scripts/post-launch-feature-prep-contract.test.mjs` verifies the matrix is
   decision support only, not a migration authorization.
 

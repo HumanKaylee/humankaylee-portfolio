@@ -190,6 +190,8 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"### B-066: Add richer public status or metadata page",
 		"### B-067: Add additional notes and postmortems",
 		"### B-068: Evaluate API hosting migration",
+		"After B-058 and B-063 evidence exists",
+		"Produces a keep-or-move recommendation only after selected-host and launch evidence exists",
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
 		"scripts/post-launch-feature-prep-contract.test.mjs",
 	]);
@@ -222,10 +224,10 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Rust Axum fit",
 		"Cold-start/sleep behavior",
 		"Operational risk",
-		"Migration steps",
-		"rollback plan only after a future recommendation",
-		"Do not select a provider",
-		"Do not claim launch readiness",
+		"Provider-move procedure",
+		"rollback procedure only after a future recommendation",
+		"no provider choice",
+		"not launch evidence",
 	]);
 
 	expectTableRowCells(runbook, "Portfolio assistant scope", {
@@ -348,13 +350,76 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 			"canonical candidate source",
 			"compare every candidate",
 		],
-		4: ["Stay-or-migrate recommendation"],
+		4: ["Future host-retention recommendation"],
 	});
 	const apiHostingPrepCell = findTableRow(runbook, "API hosting migration")[3];
 	expectNotContains(apiHostingPrepCell, "Fly.io");
 	expectNotContains(apiHostingPrepCell, "Railway");
 	expectNotContains(apiHostingPrepCell, "Cloudflare");
 	expectNotContains(apiHostingPrepCell, "Hetzner");
+	expectAll(b068MigrationInputs, [
+		"### B-068 Comparison Matrix",
+		"Official doc source",
+		"Snapshot date",
+		"Source-derived comparison inputs",
+		"Still blocked by",
+		"Shuttle legacy compatibility",
+		"Fly.io normal Axum PaaS candidate",
+		"Railway normal Axum PaaS candidate",
+		"Cloudflare Workers/Pages Functions edge rewrite option",
+		"Hetzner VPS higher-ops fallback",
+		"no ranking",
+		"no provider choice",
+		"not launch evidence",
+	]);
+	for (const forbiddenB068Phrase of [
+		"select a provider",
+		"recommend migration",
+		"best provider",
+		"switch to",
+		"migrate to",
+		"migration steps",
+		"rollback plan",
+		"launch-ready",
+		"production-ready",
+		"approved for implementation",
+		"stay-or-migrate",
+	]) {
+		expectNotContains(b068MigrationInputs, forbiddenB068Phrase);
+	}
+	for (const [candidate, sourceUrl] of [
+		[
+			"Shuttle legacy compatibility",
+			"https://docs.shuttle.dev/docs/shuttle-shutdown",
+		],
+		["Fly.io normal Axum PaaS candidate", "https://fly.io/docs/about/pricing/"],
+		["Railway normal Axum PaaS candidate", "https://docs.railway.com/pricing"],
+		[
+			"Cloudflare Workers/Pages Functions edge rewrite option",
+			"https://developers.cloudflare.com/workers/platform/pricing/",
+		],
+		[
+			"Hetzner VPS higher-ops fallback",
+			"https://docs.hetzner.com/cloud/servers/overview",
+		],
+	]) {
+		const row = findTableRow(b068MigrationInputs, candidate);
+		assert.equal(
+			row[1],
+			sourceUrl,
+			`expected ${candidate} row to carry its own official source URL`,
+		);
+		assert.equal(
+			row[2],
+			"2026-05-24",
+			`expected ${candidate} row to carry its own snapshot date`,
+		);
+		assert.ok(
+			row[3],
+			`expected ${candidate} row to include source-derived comparison inputs`,
+		);
+		assert.ok(row[4], `expected ${candidate} row to include remaining blocker`);
+	}
 
 	expectAll(runbook, [
 		"https://docs.shuttle.dev/docs/shuttle-shutdown",
@@ -397,6 +462,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Cloudflare Pages plus Workers",
 		"Hetzner VPS",
 		"Home self-hosting plus Cloudflare Tunnel",
+		"B-068 comparisons must record the official source URL and snapshot date",
 	]);
 
 	expectAll(githubSync, [
@@ -414,6 +480,8 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"#73 remains open until B-063 launch evidence exists and approved public-safe content is published",
 		"B-067 draft outline records status: pre-launch planning only",
 		"three draft-only outline records",
+		"B-068 source-cited comparison matrix status: pre-launch planning only",
+		"official provider source and snapshot date",
 	]);
 	expectAll(roadmap, [
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
@@ -425,6 +493,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"B-067 Draft Outline Contract",
 		"B-067 Draft Outline Records",
 		"B-068 migration comparison inputs",
+		"B-068 Source-Cited Comparison Matrix",
 		"B-064",
 		"B-068",
 	]);

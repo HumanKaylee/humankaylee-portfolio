@@ -524,6 +524,8 @@ Hetzner VPS:
 - Strong low-cost control path for static files plus Rust behind Caddy.
 - Requires patching, monitoring, firewalling, backups, and incident ownership.
 - Better as an advanced ops proof or fallback, not the lowest-friction launch.
+- B-068 comparisons must record the official source URL and snapshot date for
+  each candidate before any future host-retention recommendation is drafted.
 
 Home self-hosting plus Cloudflare Tunnel:
 
