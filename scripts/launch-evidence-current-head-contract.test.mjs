@@ -78,7 +78,7 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	const frontendJob = latestVerifiedValue(evidence, "Frontend job", /^\d+$/);
 	const rustJob = latestVerifiedValue(evidence, "Rust job", /^\d+$/);
 
-	expectContains(evidence, "current launch evidence index");
+	expectContains(evidence, "snapshot-aware launch evidence index");
 	expectContains(evidence, "Embedded Verified PR Evidence Snapshot");
 	expectContains(evidence, "Embedded verified PR head");
 	expectContains(evidence, "historical rows");
@@ -116,6 +116,11 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 		evidence,
 		"Latest Verified PR Evidence",
 		"stale-prone static evidence heading",
+	);
+	expectNotContains(
+		evidence,
+		"current launch evidence index",
+		"stale-prone current evidence-index wording",
 	);
 	expectNotContains(
 		evidence,

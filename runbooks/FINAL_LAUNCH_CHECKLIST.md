@@ -6,9 +6,9 @@ Head: embedded verified PR head `dadb641f19d7a37b5f79c3f34904818b80c7f707`
 Status: not launch-ready
 Scope: B-063 final launch validation
 
-Do not mark launch-ready from this checklist. It is a current-state validation
-matrix that separates local and PR evidence from production evidence that does
-not exist yet. The authoritative evidence index remains
+Do not mark launch-ready from this checklist. It is an embedded-snapshot
+validation matrix that separates local and PR evidence from production evidence
+that does not exist yet. The authoritative evidence index remains
 `runbooks/LAUNCH_EVIDENCE.md`, and the redaction source of truth remains
 `runbooks/CONTENT_REDACTION_STATUS.md`. The Launch Blockers Register at
 `runbooks/LAUNCH_BLOCKERS_REGISTER.md` tracks unresolved launch decisions and
@@ -17,9 +17,9 @@ Decision Packets at `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` identify
 the missing provider, API, domain, smoke, Lighthouse, rollback, contact, and
 redaction evidence for #63, #64, #65, and #69 without approving launch.
 
-## Current PR Evidence
+## Embedded PR Evidence Snapshot
 
-PR #6 is open for `goal/portfolio-implementation`. Current checks at the time
+PR #6 is open for `goal/portfolio-implementation`. Snapshot checks at the time
 of this checklist update:
 
 | Check                 | Status | Duration | Evidence URL                                                                                    |
@@ -31,18 +31,18 @@ These checks are CI evidence, not production launch evidence.
 
 ## B-063 Acceptance Matrix
 
-| Requirement                                          | Current status     | Evidence source                                                                                                                                | Next action                                                                                                       |
-| ---------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Home is live                                         | Blocked / not run  | Local route and build evidence in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists.                                         | Select frontend provider/project/domain, deploy intended commit, and record production route smoke output.        |
-| Projects are live                                    | Blocked / not run  | Local project route evidence in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists.                                           | Smoke-test production `/projects/` after frontend deploy.                                                         |
-| At least four case studies are live and redacted     | Blocked / not run  | Current approved launch case studies: 0 in `runbooks/CONTENT_REDACTION_STATUS.md`.                                                             | Complete redaction approval packets and inspect linked artifacts before changing any case study to `approved`.    |
-| Resume HTML and PDF are live                         | Blocked / not run  | Local resume source is approved and the PDF asset checksum is recorded in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists. | Smoke-test production `/resume/` and PDF link after frontend deploy.                                              |
-| Notes/build-log is live                              | Blocked / not run  | Local notes/RSS route evidence exists; no production frontend target exists.                                                                   | Smoke-test production `/notes/` or RSS route after frontend deploy.                                               |
-| Contact path works                                   | Blocked / not run  | Local contact fallback and API-down evidence exists; production contact handling is not approved.                                              | Choose mailto-only launch exception or configure approved persistent contact store/provider.                      |
+| Requirement                                          | Current status     | Evidence source                                                                                                                                | Next action                                                                                                                                        |
+| ---------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home is live                                         | Blocked / not run  | Local route and build evidence in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists.                                         | Select frontend provider/project/domain, deploy intended commit, and record production route smoke output.                                         |
+| Projects are live                                    | Blocked / not run  | Local project route evidence in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists.                                           | Smoke-test production `/projects/` after frontend deploy.                                                                                          |
+| At least four case studies are live and redacted     | Blocked / not run  | Current approved launch case studies: 0 in `runbooks/CONTENT_REDACTION_STATUS.md`.                                                             | Complete redaction approval packets and inspect linked artifacts before changing any case study to `approved`.                                     |
+| Resume HTML and PDF are live                         | Blocked / not run  | Local resume source is approved and the PDF asset checksum is recorded in `runbooks/LAUNCH_EVIDENCE.md`; no production frontend target exists. | Smoke-test production `/resume/` and PDF link after frontend deploy.                                                                               |
+| Notes/build-log is live                              | Blocked / not run  | Local notes/RSS route evidence exists; no production frontend target exists.                                                                   | Smoke-test production `/notes/` or RSS route after frontend deploy.                                                                                |
+| Contact path works                                   | Blocked / not run  | Local contact fallback and API-down evidence exists; production contact handling is not approved.                                              | Choose mailto-only launch exception or configure approved persistent contact store/provider.                                                       |
 | Rust API health is live                              | Blocked / not run  | Local API health evidence exists; no production API domain, provider project, or secrets exist.                                                | Select API host, configure environment, deploy, and record public or owner-approved production-equivalent provider preview `/api/health` response. |
-| CI is green                                          | Pass for PR only   | PR #6 checks above and `gh pr checks 6 --repo HumanKaylee/humankaylee-portfolio`.                                                              | Re-run after each commit; production deployment still needs provider/environment gating after provider selection. |
-| Lighthouse targets pass or exceptions are documented | Pass locally only  | `pnpm lighthouse:local` row in `runbooks/LAUNCH_EVIDENCE.md`.                                                                                  | Re-run Lighthouse against production or approved production-equivalent preview after deploy.                      |
-| Deployment and rollback docs are complete            | Pass for docs only | `README.md`, `docs/OPERATIONS.md`, `runbooks/DEPLOYMENT.md`, and rollback contract evidence in `runbooks/LAUNCH_EVIDENCE.md`.                  | Replace blocked production rows only after real provider deployment IDs and rollback targets exist.               |
+| CI is green                                          | Pass for PR only   | PR #6 checks above and `gh pr checks 6 --repo HumanKaylee/humankaylee-portfolio`.                                                              | Re-run after each commit; production deployment still needs provider/environment gating after provider selection.                                  |
+| Lighthouse targets pass or exceptions are documented | Pass locally only  | `pnpm lighthouse:local` row in `runbooks/LAUNCH_EVIDENCE.md`.                                                                                  | Re-run Lighthouse against production or approved production-equivalent preview after deploy.                                                       |
+| Deployment and rollback docs are complete            | Pass for docs only | `README.md`, `docs/OPERATIONS.md`, `runbooks/DEPLOYMENT.md`, and rollback contract evidence in `runbooks/LAUNCH_EVIDENCE.md`.                  | Replace blocked production rows only after real provider deployment IDs and rollback targets exist.                                                |
 
 ## Production Blockers
 

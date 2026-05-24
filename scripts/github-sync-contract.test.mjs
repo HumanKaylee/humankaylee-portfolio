@@ -63,7 +63,7 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"Listing only: `gh auth refresh --hostname github.com -s read:project`",
 		"Create or update: `gh auth refresh --hostname github.com -s project,read:project`",
 		"Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.",
-		"Current auth snapshot",
+		"Auth snapshot as of 2026-05-24",
 		"gh auth status -h github.com",
 		"Current token scopes:",
 		"The read-only Project check still fails:",
@@ -80,7 +80,7 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"gh label create",
 		"gh issue edit",
 		"gh issue create",
-		"Current live issue bridge",
+		"Live issue bridge snapshot as of 2026-05-24",
 		"Legacy `phase-0` through `phase-5` labels remain on the coarse issues",
 		"Granular Issue Sync",
 		"#7",
@@ -257,6 +257,17 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"must remain open until their external decision or evidence gate is satisfied",
 	]) {
 		expectContains(githubSync, required);
+	}
+
+	for (const staleCurrentLabel of [
+		"### Current auth snapshot",
+		"## Current live issue bridge",
+		"current launch host evidence",
+	]) {
+		assert.ok(
+			!githubSync.includes(staleCurrentLabel),
+			`GitHub sync should avoid stale current-state label: ${staleCurrentLabel}`,
+		);
 	}
 
 	for (const required of [

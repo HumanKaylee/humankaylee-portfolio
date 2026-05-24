@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Updated implementation-plan swarm ownership lanes to match the current
+  top-level Astro component layout, with a contract guard that rejects stale
+  component subdirectory ownership paths.
+- Clarified embedded PR, launch evidence, GitHub auth, and issue bridge rows as
+  snapshot evidence so future agents do not treat older recorded evidence as
+  live-current launch state.
 - Hardened the implementation plan for resumed goal execution with a current
   repo-state overlay, explicit blocker-aware goal prompt language, full source
   order coverage, and no bare long-running `pnpm preview` in automated
@@ -189,7 +195,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   transient rate-limit processing, disabled analytics/events, retention limits,
   privacy contact path, and unsupported-promise guards.
 - Added the Phase 8 deployment runbook for Cloudflare Pages, Shuttle, Fly.io, Railway, smoke checks, and rollback evidence.
-- Added the launch evidence status runbook with current PR evidence, local verification gaps, and explicit production blockers.
+- Added the launch evidence status runbook with embedded PR snapshot evidence,
+  local verification gaps, and explicit production blockers.
 - Added route coverage, no-JS, reduced-motion, and rendered-content privacy checks for core routes.
 - Added B-056 API outage resilience Playwright coverage and CI gate for
   representative static routes and sanitized contact outage fallback behavior.

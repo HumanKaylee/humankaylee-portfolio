@@ -125,24 +125,28 @@ Pause if a selected tool cannot support this command contract on Linux Mint 22.3
 
 Only the listed owner may modify a path during a swarm task. If a task needs another path, it must request a handoff.
 
-| Owner                  | Owns                                                                                                                                                                      | Must Not Edit                                                         |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Coordinator            | Phase sequencing, issue splitting, final merge review, `docs/`, shared contracts                                                                                          | Product code unless resolving integration conflicts                   |
-| Foundation Agent       | `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `astro.config.*`, `tsconfig*.json`, `playwright.config.*`, `vitest.config.*`, root `justfile`, root `.gitignore` | Feature components, content, Rust handlers                            |
-| CI and Deploy Agent    | `.github/workflows/`, `infra/`, deployment config, `runbooks/`                                                                                                            | Frontend components, content bodies, Rust route logic                 |
-| Visual System Agent    | `apps/web/src/styles/`, `apps/web/src/layouts/`, `apps/web/src/components/chrome/`, fonts and base visual assets under `apps/web/public/`                                 | Page route files, content collections, API code                       |
-| Page Composition Agent | `apps/web/src/pages/`, page-level integration wrappers, sitemap and robots route generation                                                                               | Low-level visual components, atlas internals, Rust API                |
-| Content Agent          | `apps/web/src/content/`, `apps/web/src/data/`, redacted case-study media under `apps/web/public/content/`, resume source assets                                           | Page shell, 3D components, backend                                    |
-| Project Atlas Agent    | `apps/web/src/components/atlas/`, `apps/web/src/lib/project-model/`, atlas tests                                                                                          | Home page route, content bodies, backend                              |
-| Motion and 3D Agent    | `apps/web/src/components/hero/`, `apps/web/src/lib/motion/`, `apps/web/src/lib/webgl/`, 3D assets under `apps/web/public/interactive/`                                    | Case-study content, backend, CI                                       |
-| Contact UX Agent       | `apps/web/src/components/contact/`, `apps/web/src/lib/contact-client/`, contact page tests                                                                                | Rust contact route internals, unrelated pages                         |
-| Backend Agent          | `apps/api/`, backend Dockerfile, backend Shuttle config                                                                                                                   | Frontend code except documented API contract fixtures                 |
-| QA Agent               | `tests/e2e/`, `tests/fixtures/`, Lighthouse config, accessibility reports                                                                                                 | Product implementation except tiny test IDs requested through handoff |
+| Owner                  | Owns                                                                                                                                                                                                                                                                | Must Not Edit                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Coordinator            | Phase sequencing, issue splitting, final merge review, `docs/`, shared contracts                                                                                                                                                                                    | Product code unless resolving integration conflicts                   |
+| Foundation Agent       | `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `astro.config.*`, `tsconfig*.json`, `playwright.config.*`, `vitest.config.*`, root `.gitignore`                                                                                                            | Feature components, content, Rust handlers                            |
+| CI and Deploy Agent    | `.github/workflows/`, deployment config, `runbooks/`, `runbooks/DEPLOYMENT.md`, `runbooks/LAUNCH_EVIDENCE.md`                                                                                                                                                       | Frontend components, content bodies, Rust route logic                 |
+| Visual System Agent    | `apps/web/src/styles/`, `apps/web/src/layouts/BaseLayout.astro`, `apps/web/src/components/SiteHeader.astro`, `apps/web/src/components/SiteFooter.astro`, `apps/web/src/components/BuildTelemetryStrip.astro`, fonts and base visual assets under `apps/web/public/` | Page route files, content collections, API code                       |
+| Page Composition Agent | `apps/web/src/pages/`, page-level integration wrappers, sitemap, robots, RSS, and metadata route generation                                                                                                                                                         | Low-level visual components, atlas internals, Rust API                |
+| Content Agent          | `apps/web/src/content/`, `apps/web/src/data/`, resume source assets under `apps/web/public/downloads/`, public social images under `apps/web/public/social/`                                                                                                        | Page shell, 3D components, backend                                    |
+| Project Atlas Agent    | `apps/web/src/components/ProjectAtlas.astro`, `apps/web/src/components/ProjectCard.astro`, `apps/web/src/components/AudienceChips.astro`, project atlas tests                                                                                                       | Home page route, content bodies, backend                              |
+| Motion and 3D Agent    | `apps/web/src/components/SystemsMapHero.astro`, `apps/web/src/components/EvidenceDrawer.astro`, `apps/web/public/scripts/project-constellation.mjs`                                                                                                                 | Case-study content, backend, CI                                       |
+| Contact UX Agent       | `apps/web/src/components/ContactForm.astro`, contact page tests                                                                                                                                                                                                     | Rust contact route internals, unrelated pages                         |
+| Backend Agent          | `apps/api/`, backend Dockerfile, backend Shuttle config                                                                                                                                                                                                             | Frontend code except documented API contract fixtures                 |
+| QA Agent               | `tests/e2e/`, `tests/fixtures/`, Lighthouse config, accessibility reports                                                                                                                                                                                           | Product implementation except tiny test IDs requested through handoff |
 
 Shared contract files must be edited by one owner only:
 
-- `apps/web/src/lib/contracts/api.ts`: Foundation Agent creates and owns shared API response types.
-- `apps/web/src/lib/contracts/content.ts`: Foundation Agent creates and owns content-facing shared types.
+- `apps/web/src/lib/contracts/`: Foundation Agent creates and owns shared API and content-facing response types.
+
+Top-level shared Astro components are file-owned as listed above. If an agent
+needs a component owned by another lane, pause that slice and hand it back to the
+coordinator instead of broad-editing `apps/web/src/components/`.
+
 - `docs/CONTENT_REDACTION_GUIDE.md`: Coordinator creates if needed; Content Agent may propose changes through review.
 - `runbooks/DEPLOYMENT.md`: CI and Deploy Agent owns after Phase 8 starts.
 
@@ -689,9 +693,9 @@ cargo audit --file apps/api/Cargo.lock
 
 - [ ] Create Cloudflare Pages deployment instructions for frontend.
 - [ ] Record that Shuttle is not a viable new launch target and keep any Shuttle
-  binary checks as legacy compatibility only.
+      binary checks as legacy compatibility only.
 - [ ] Create Fly.io and Railway deployment instructions for the Rust API, plus
-  Cloudflare/Hetzner alternatives if the API shape or ops model changes.
+      Cloudflare/Hetzner alternatives if the API shape or ops model changes.
 - [ ] Add production environment variable matrix with secret names, not secret values.
 - [ ] Add custom domain, DNS, TLS, cache, and rollback runbook.
 - [ ] Add health check and smoke check commands for deployed frontend and API.

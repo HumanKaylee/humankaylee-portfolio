@@ -48,7 +48,7 @@ synchronization surface for status, ownership, labels, and acceptance criteria.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Current auth snapshot
+### Auth snapshot as of 2026-05-24
 
 Captured 2026-05-24 from the local GitHub CLI without running auth refresh:
 
@@ -182,7 +182,7 @@ Issue bodies should include:
 - whether the issue is suitable for `agent-small`, `agent-standard`, or
   `agent-strong`
 
-## Current live issue bridge
+## Live issue bridge snapshot as of 2026-05-24
 
 The first sync layer is intentionally coarse because GitHub Project scopes are
 not available yet. Keep these issues current until the project board exists:
@@ -430,7 +430,7 @@ and the approved outcome is `build`. #70 through #74 remain open until their
 launch, approval, and production-evidence dependencies are satisfied.
 
 B-068 now also carries compare-only migration comparison inputs in
-`runbooks/POST_LAUNCH_FEATURE_PREP.md` for current launch host evidence,
+`runbooks/POST_LAUNCH_FEATURE_PREP.md` for eventual launch-host evidence inputs,
 uptime/availability expectation, monthly cost estimate, deploy complexity,
 custom domain/TLS support, observability/logs, rollback/deployment history,
 Rust Axum fit, cold-start/sleep behavior, and operational risk. Provider-move

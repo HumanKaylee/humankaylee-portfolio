@@ -214,3 +214,46 @@ test("implementation plan has a current-state overlay for blocked goal continuat
 		"bare long-running pnpm preview must appear only in the root command contract, not automated verification lists",
 	);
 });
+
+test("implementation plan ownership lanes match current repo paths", () => {
+	containsAll(
+		plan,
+		[
+			"apps/web/src/components/SiteHeader.astro",
+			"apps/web/src/components/SiteFooter.astro",
+			"apps/web/src/components/BuildTelemetryStrip.astro",
+			"apps/web/src/components/ProjectAtlas.astro",
+			"apps/web/src/components/ProjectCard.astro",
+			"apps/web/src/components/AudienceChips.astro",
+			"apps/web/src/components/SystemsMapHero.astro",
+			"apps/web/src/components/EvidenceDrawer.astro",
+			"apps/web/public/scripts/project-constellation.mjs",
+			"apps/web/src/components/ContactForm.astro",
+			"apps/web/public/downloads/",
+			"apps/web/public/social/",
+			"apps/web/src/lib/contracts/",
+		],
+		"current ownership paths",
+	);
+
+	for (const stalePath of [
+		"apps/web/src/components/chrome/",
+		"apps/web/src/components/atlas/",
+		"apps/web/src/components/hero/",
+		"apps/web/src/components/contact/",
+		"apps/web/src/lib/project-model/",
+		"apps/web/src/lib/motion/",
+		"apps/web/src/lib/webgl/",
+		"apps/web/src/lib/contact-client/",
+		"apps/web/public/content/",
+		"apps/web/public/interactive/",
+		"apps/web/src/lib/contracts/api.ts",
+		"root `justfile`",
+		"`infra/`",
+	]) {
+		assert.ok(
+			!plan.includes(stalePath),
+			`ownership lane must not reference stale path: ${stalePath}`,
+		);
+	}
+});

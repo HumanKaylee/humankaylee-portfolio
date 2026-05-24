@@ -90,6 +90,8 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		`Head: embedded verified PR head \`${embeddedHead}\``,
 		"B-063",
 		"Do not mark launch-ready",
+		"## Embedded PR Evidence Snapshot",
+		"Snapshot checks at the time of this checklist update:",
 		"Home is live",
 		"Projects are live",
 		"At least four case studies are live and redacted",
@@ -161,6 +163,16 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 
 	expectNotContains(checklist, "Status: launch-ready", "launch-ready status");
 	expectNotContains(checklist, "Head: 77b228b", "stale head SHA");
+	expectNotContains(
+		checklist,
+		"## Current PR Evidence",
+		"stale-prone current PR evidence heading",
+	);
+	expectNotContains(
+		checklist,
+		"Current checks at the time",
+		"stale-prone current PR checks wording",
+	);
 	expectNotContains(
 		checklist,
 		"https://<production",
