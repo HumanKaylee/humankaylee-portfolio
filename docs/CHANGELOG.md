@@ -109,6 +109,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a B-035 purposeful motion gate and CSS-only evidence reveal treatment
   for narrative/artifact surfaces, with reduced-motion and no-JS visibility
   coverage.
+- Added Phase 5 granular GitHub issues B-038 through B-047 while preserving the
+  Project-board scope blocker and coarse parent epic.
+- Added structured JSON startup telemetry for the Rust API standalone and
+  Shuttle entrypoints.
+- Added stale-safe cached project metadata for `GET /api/projects/live` through
+  an injectable provider/cache boundary with refresh-success, refresh-failure,
+  and slow-refresh timeout route coverage.
 - Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
   and use Node 24-native action majors before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,

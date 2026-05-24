@@ -5,6 +5,10 @@ use axum::{
 use humankaylee_api::{
     app,
     config::{AppConfig, ContactDeliveryMode, RateLimitConfig},
+    projects::{
+        ProjectMetadata, ProjectMetadataProvider, ProjectsLiveCache, ProjectsLiveError,
+        ProjectsLiveSnapshot,
+    },
     state::AppState,
 };
 use serde_json::json;
@@ -12,6 +16,7 @@ use serde_json::Value;
 use std::{
     fs,
     path::PathBuf,
+    sync::Arc,
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tower::ServiceExt;
@@ -109,6 +114,48 @@ fn unique_contact_store_path(label: &str) -> PathBuf {
     ))
 }
 
+fn projects_snapshot(cached_at: &str, title: &str) -> ProjectsLiveSnapshot {
+    ProjectsLiveSnapshot::new(
+        cached_at,
+        vec![ProjectMetadata::new(
+            "cache-test",
+            title,
+            "active",
+            vec!["verification"],
+            "Cached safe project metadata for API contract checks.",
+        )],
+    )
+}
+
+struct FailingProjectsProvider;
+
+impl ProjectMetadataProvider for FailingProjectsProvider {
+    fn refresh(&self) -> Result<ProjectsLiveSnapshot, ProjectsLiveError> {
+        Err(ProjectsLiveError::unavailable())
+    }
+}
+
+struct StaticProjectsProvider {
+    snapshot: ProjectsLiveSnapshot,
+}
+
+impl ProjectMetadataProvider for StaticProjectsProvider {
+    fn refresh(&self) -> Result<ProjectsLiveSnapshot, ProjectsLiveError> {
+        Ok(self.snapshot.clone())
+    }
+}
+
+struct SlowProjectsProvider {
+    snapshot: ProjectsLiveSnapshot,
+}
+
+impl ProjectMetadataProvider for SlowProjectsProvider {
+    fn refresh(&self) -> Result<ProjectsLiveSnapshot, ProjectsLiveError> {
+        std::thread::sleep(Duration::from_millis(250));
+        Ok(self.snapshot.clone())
+    }
+}
+
 #[tokio::test]
 async fn health_route_returns_public_status_version_and_uptime() {
     let config = AppConfig {
@@ -167,6 +214,7 @@ async fn projects_live_route_returns_safe_cached_metadata() {
     assert_eq!(status, StatusCode::OK);
     assert!(json["cached_at"].as_str().is_some());
     assert!(json["stale"].as_bool().is_some());
+    assert_eq!(json["source"], "refresh");
     assert!(json["projects"].as_array().expect("projects").len() >= 2);
 
     for project in json["projects"].as_array().expect("projects") {
@@ -176,6 +224,68 @@ async fn projects_live_route_returns_safe_cached_metadata() {
         assert!(project["categories"].as_array().is_some());
         assert!(project.get("url").is_none());
     }
+}
+
+#[tokio::test]
+async fn projects_live_route_returns_stale_safe_cache_when_refresh_fails() {
+    let cache = ProjectsLiveCache::with_snapshot_and_provider(
+        projects_snapshot("2026-05-24T00:00:00Z", "Cached Portfolio Evidence"),
+        Arc::new(FailingProjectsProvider),
+    );
+    let state = AppState::with_projects_live_cache(cache);
+
+    let (status, json) = get_json(state, "/api/projects/live").await;
+
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(json["cached_at"], "2026-05-24T00:00:00Z");
+    assert_eq!(json["stale"], true);
+    assert_eq!(json["source"], "stale-cache");
+    assert_eq!(json["projects"][0]["title"], "Cached Portfolio Evidence");
+    assert!(json.get("error").is_none());
+    assert!(!json.to_string().contains("unavailable"));
+}
+
+#[tokio::test]
+async fn projects_live_route_refreshes_cache_when_provider_succeeds() {
+    let cache = ProjectsLiveCache::with_snapshot_and_provider(
+        projects_snapshot("2026-05-24T00:00:00Z", "Old Portfolio Evidence"),
+        Arc::new(StaticProjectsProvider {
+            snapshot: projects_snapshot("2026-05-24T01:00:00Z", "Fresh Portfolio Evidence"),
+        }),
+    );
+    let state = AppState::with_projects_live_cache(cache);
+
+    let (status, json) = get_json(state, "/api/projects/live").await;
+
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(json["cached_at"], "2026-05-24T01:00:00Z");
+    assert_eq!(json["stale"], false);
+    assert_eq!(json["source"], "refresh");
+    assert_eq!(json["projects"][0]["title"], "Fresh Portfolio Evidence");
+}
+
+#[tokio::test]
+async fn projects_live_route_returns_stale_cache_when_refresh_is_slow() {
+    let cache = ProjectsLiveCache::with_snapshot_and_provider(
+        projects_snapshot("2026-05-24T00:00:00Z", "Bounded Cached Evidence"),
+        Arc::new(SlowProjectsProvider {
+            snapshot: projects_snapshot("2026-05-24T01:00:00Z", "Slow Fresh Evidence"),
+        }),
+    );
+    let state = AppState::with_projects_live_cache(cache);
+
+    let started_at = Instant::now();
+    let (status, json) = get_json(state, "/api/projects/live").await;
+
+    assert_eq!(status, StatusCode::OK);
+    assert!(
+        started_at.elapsed() < Duration::from_millis(200),
+        "stale cache should return before slow provider refresh completes"
+    );
+    assert_eq!(json["cached_at"], "2026-05-24T00:00:00Z");
+    assert_eq!(json["stale"], true);
+    assert_eq!(json["source"], "stale-cache");
+    assert_eq!(json["projects"][0]["title"], "Bounded Cached Evidence");
 }
 
 #[test]
@@ -222,6 +332,15 @@ fn config_parses_typed_environment_values_without_secrets() {
         }
     );
     assert_eq!(config.version, "2026.05.23-test");
+}
+
+#[test]
+fn telemetry_defaults_to_structured_json_with_api_and_http_filters() {
+    assert_eq!(humankaylee_api::telemetry::log_encoding(), "json");
+    let default_filter = humankaylee_api::telemetry::default_filter_directive();
+
+    assert!(default_filter.contains("humankaylee_api=info"));
+    assert!(default_filter.contains("tower_http=info"));
 }
 
 #[tokio::test]

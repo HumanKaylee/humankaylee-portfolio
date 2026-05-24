@@ -1,4 +1,4 @@
-use crate::config::AppConfig;
+use crate::{config::AppConfig, projects::ProjectsLiveCache};
 use std::{
     collections::{HashMap, VecDeque},
     sync::{Arc, Mutex},
@@ -10,6 +10,7 @@ pub struct AppState {
     config: AppConfig,
     started_at: Instant,
     contact_abuse_tracker: Arc<ContactAbuseTracker>,
+    projects_live_cache: ProjectsLiveCache,
 }
 
 impl Default for AppState {
@@ -24,11 +25,23 @@ impl AppState {
     }
 
     pub fn with_config(config: AppConfig) -> Self {
+        Self::with_config_and_projects_live_cache(config, ProjectsLiveCache::default())
+    }
+
+    pub fn with_projects_live_cache(projects_live_cache: ProjectsLiveCache) -> Self {
+        Self::with_config_and_projects_live_cache(AppConfig::default(), projects_live_cache)
+    }
+
+    pub fn with_config_and_projects_live_cache(
+        config: AppConfig,
+        projects_live_cache: ProjectsLiveCache,
+    ) -> Self {
         let contact_abuse_tracker = Arc::new(ContactAbuseTracker::new());
         Self {
             config,
             started_at: Instant::now(),
             contact_abuse_tracker,
+            projects_live_cache,
         }
     }
 
@@ -41,6 +54,7 @@ impl AppState {
             config,
             started_at,
             contact_abuse_tracker: Arc::new(ContactAbuseTracker::new()),
+            projects_live_cache: ProjectsLiveCache::default(),
         }
     }
 
@@ -54,6 +68,10 @@ impl AppState {
 
     pub fn contact_abuse_tracker(&self) -> &ContactAbuseTracker {
         self.contact_abuse_tracker.as_ref()
+    }
+
+    pub fn projects_live_cache(&self) -> &ProjectsLiveCache {
+        &self.projects_live_cache
     }
 }
 

@@ -299,6 +299,15 @@ Evidence:
 - Local API smoke-test output.
 - Deployed health endpoint response.
 - API-down frontend fallback screenshot.
+- Current PR status: B-038/039/040/041/044/045/046/047 have local guard
+  coverage, including structured JSON startup telemetry, health response shape,
+  stale-safe cached project metadata, disabled-by-default events, configured CORS
+  and middleware, Shuttle/container build paths, and frontend API fallback
+  behavior.
+- Current production blockers: B-042 remains local in-memory abuse-control
+  evidence, and B-043 remains blocked for production until persistent contact
+  storage or a delivery provider has approved retention, backup, rotation,
+  deletion, and operational handling decisions.
 
 ## Phase 6: Quality, Security, Accessibility, and Performance Hardening
 

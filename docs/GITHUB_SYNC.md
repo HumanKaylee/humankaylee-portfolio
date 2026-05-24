@@ -231,6 +231,27 @@ Phase 4 issue sync status: complete. B-031 through B-037 are mirrored as #37
 through #43. This is only GitHub issue mirror evidence; it is not a Project
 board recovery, production launch, or launch-readiness claim.
 
+Phase 5 backlog issues now live as the next granular sync layer, with #4
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                                   | Parent | Labels                                                                                                            |
+| ----- | -------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------- |
+| #44   | B-038: Scaffold Rust Axum API service                          | #4     | `priority:p0`, `type:task`, `area:backend`, `phase:5-backend`, `agent-standard`                                 |
+| #45   | B-039: Implement `GET /api/health`                             | #4     | `priority:p0`, `type:feature`, `area:backend`, `phase:5-backend`, `agent-standard`                              |
+| #46   | B-040: Implement cached `GET /api/projects/live`               | #4     | `priority:p1`, `type:feature`, `area:backend`, `phase:5-backend`, `agent-standard`                              |
+| #47   | B-041: Implement contact endpoint validation                   | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`             |
+| #48   | B-042: Add contact rate limiting and abuse controls            | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`             |
+| #49   | B-043: Add contact delivery or storage adapter                 | #4     | `priority:p0`, `type:feature`, `area:backend`, `area:privacy`, `phase:5-backend`, `agent-standard`              |
+| #50   | B-044: Implement optional privacy-safe events endpoint         | #4     | `priority:p2`, `type:feature`, `area:backend`, `area:privacy`, `phase:5-backend`, `agent-standard`              |
+| #51   | B-045: Configure backend CORS and security middleware          | #4     | `priority:p0`, `type:task`, `area:backend`, `area:security`, `phase:5-backend`, `agent-standard`                 |
+| #52   | B-046: Add backend Dockerfile and Shuttle deploy path          | #4     | `priority:p0`, `type:task`, `area:backend`, `area:infra`, `phase:5-backend`, `agent-standard`                    |
+| #53   | B-047: Integrate frontend with API fallbacks                   | #4     | `priority:p0`, `type:feature`, `area:frontend`, `area:backend`, `phase:5-backend`, `agent-standard`             |
+
+Phase 5 issue sync status: complete. B-038 through B-047 are mirrored as #44
+through #53. This is only GitHub issue mirror evidence; it is not a Project
+board recovery, production launch, or launch-readiness claim.
+
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status
 views.

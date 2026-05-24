@@ -515,6 +515,34 @@ Expected `xh :8787/api/health` result shape:
 - Rate limiting cannot be implemented without adding unapproved infrastructure.
 - Shuttle deployment constraints conflict with the API design.
 
+### Phase 5 Implementation Contract Snapshot
+
+- Local PR evidence in place today: `B-038` has structured JSON tracing startup
+  initialization for standalone and Shuttle entrypoints; `B-039` health remains
+  tested; `B-040` now uses an injectable cached project metadata provider with
+  error and slow-refresh stale-cache fallback tests; `B-041`, `B-044`, `B-045`,
+  `B-046`, and `B-047` have local route, middleware, deploy-path, and frontend
+  fallback coverage.
+- Keep launch status explicit: Phase 5 has local API and container evidence,
+  but it does not remove the separate provider, domain, production secret,
+  persistent contact storage, production smoke, rollback, or case-study
+  redaction blockers.
+- Current partial follow-ups: `B-042` contact abuse controls are in-memory and
+  must not trust spoofable proxy headers in production without a trusted proxy
+  boundary; `B-043` JSONL storage works locally, but production contact handling
+  remains blocked until retention, backup, rotation, deletion, and store/provider
+  decisions are approved.
+- Active guard commands for phase 5 status checks:
+  - `cargo fmt --manifest-path apps/api/Cargo.toml --check`
+  - `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`
+  - `cargo test --manifest-path apps/api/Cargo.toml`
+  - `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle`
+  - `cargo audit --file apps/api/Cargo.lock`
+  - `sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api`
+  - `cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api`
+  - `xh --check-status --body GET http://127.0.0.1:8787/api/health`
+  - `xh --check-status --body GET http://127.0.0.1:8787/api/projects/live`
+
 ## Phase 6: Frontend and Backend Integration
 
 **Primary Owner:** Contact UX Agent  

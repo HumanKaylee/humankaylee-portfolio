@@ -1,8 +1,15 @@
-use humankaylee_api::{app, config::AppConfig, state::AppState};
+use humankaylee_api::{app, config::AppConfig, state::AppState, telemetry};
 
 #[tokio::main]
 async fn main() {
+    telemetry::init();
     let config = AppConfig::from_env().expect("valid API configuration");
+    tracing::info!(
+        host = %config.host,
+        port = config.port,
+        version = %config.version,
+        "api_starting"
+    );
     let listener = tokio::net::TcpListener::bind((config.host.as_str(), config.port))
         .await
         .expect("bind listener");

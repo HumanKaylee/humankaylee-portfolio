@@ -1,4 +1,4 @@
-use humankaylee_api::{app, config::AppConfig, state::AppState};
+use humankaylee_api::{app, config::AppConfig, state::AppState, telemetry};
 use shuttle_runtime::SecretStore;
 
 const HK_API_CONFIG_KEYS: &[&str] = &[
@@ -15,8 +15,10 @@ const HK_API_CONFIG_KEYS: &[&str] = &[
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secrets: SecretStore) -> shuttle_axum::ShuttleAxum {
+    telemetry::init();
     let config = AppConfig::from_env_pairs(config_pairs(secrets))
         .map_err(shuttle_runtime::CustomError::new)?;
+    tracing::info!(version = %config.version, "api_starting_shuttle");
     Ok(app(AppState::with_config(config)).into())
 }
 

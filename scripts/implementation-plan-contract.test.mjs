@@ -37,6 +37,17 @@ const implemented = [
 	"B-037",
 ];
 
+const phase5Implemented = [
+	"B-038",
+	"B-039",
+	"B-040",
+	"B-041",
+	"B-044",
+	"B-045",
+	"B-046",
+	"B-047",
+];
+
 test("Phase 4 docs split implemented and remaining work without overstating launch state", () => {
 	containsAll(plan, implemented, "implemented Phase 4 slices");
 	contains(
@@ -90,5 +101,45 @@ test("Phase 4 docs split implemented and remaining work without overstating laun
 	assert.ok(
 		!roadmap.toLowerCase().includes("webgl ships"),
 		"roadmap must not claim WebGL ships",
+	);
+});
+
+test("Phase 5 docs record local backend evidence without overstating production readiness", () => {
+	containsAll(plan, phase5Implemented, "implemented Phase 5 slices");
+	contains(plan, "structured JSON tracing");
+	contains(plan, "injectable cached project metadata provider");
+	contains(plan, "slow-refresh stale-cache fallback tests");
+	contains(
+		plan,
+		"does not remove the separate provider, domain, production secret",
+	);
+	contains(plan, "persistent contact storage");
+	contains(plan, "B-042");
+	contains(plan, "B-043");
+	contains(plan, "Active guard commands for phase 5 status checks");
+	contains(plan, "cargo audit --file apps/api/Cargo.lock");
+	contains(
+		plan,
+		"sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api",
+	);
+	contains(
+		plan,
+		"xh --check-status --body GET http://127.0.0.1:8787/api/projects/live",
+	);
+
+	contains(roadmap, "B-038/039/040/041/044/045/046/047");
+	contains(roadmap, "Current PR status:");
+	contains(roadmap, "structured JSON startup telemetry");
+	contains(roadmap, "stale-safe cached project metadata");
+	contains(roadmap, "Current production blockers:");
+	contains(roadmap, "B-043 remains blocked for production");
+
+	assert.ok(
+		!plan.toLowerCase().includes("production contact handling is approved"),
+		"plan must not approve production contact handling",
+	);
+	assert.ok(
+		!roadmap.toLowerCase().includes("production contact handling is approved"),
+		"roadmap must not approve production contact handling",
 	);
 });

@@ -35,6 +35,37 @@ pending; it must not be used as production launch evidence.
 - Rust job: `77566982090`
 - Captured from GitHub: `2026-05-24T03:03:08Z`
 
+## Latest Local Phase 5 Backend Evidence
+
+Captured locally on `goal/portfolio-implementation` at
+`2026-05-24T01:15:04-04:00`. This is local PR-branch evidence only; it is not
+production launch evidence and does not clear provider, domain, persistent
+contact storage, production smoke, rollback, or redaction blockers.
+
+- Resume download check: `sha256sum` and `cmp -s` confirmed
+  `/home/joe/Downloads/Joe Poznanski Resume February 2026.pdf` is byte-identical
+  to `apps/web/public/downloads/humankaylee-resume.pdf` with SHA-256
+  `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`; no
+  resume asset update was needed.
+- Rust API gates passed after structured telemetry and bounded stale-safe
+  `/api/projects/live` cache/provider changes:
+  `cargo fmt --manifest-path apps/api/Cargo.toml --check`,
+  `cargo test --manifest-path apps/api/Cargo.toml`,
+  `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`,
+  `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle`,
+  and `cargo audit --file apps/api/Cargo.lock`.
+- Local API smoke passed with
+  `HK_API_HOST=127.0.0.1 HK_API_PORT=8787 HK_API_ALLOWED_ORIGINS=http://127.0.0.1:4321 HK_API_VERSION=phase5-cache-timeout-smoke cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api`;
+  `xh --check-status --body GET http://127.0.0.1:8787/api/health` returned
+  `version:"phase5-cache-timeout-smoke"`, `/api/projects/live` returned `stale:false`
+  and `source:"refresh"`, and the configured CORS origin was allowed.
+- Fresh container evidence passed:
+  `sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api`
+  produced image `2237f008eeedbec8f0b12cf3977f17fd02b6f1e0cc6d67d8ba7b6a839738449c`;
+  container health, projects-live, and configured CORS smoke checks passed on
+  `127.0.0.1:8788`; `sudo podman stop --time 1 humankaylee-api-local-check`
+  removed the container and `lsof -ti tcp:8788` returned no listener.
+
 ## Current Evidence Matrix
 
 | Area                              | Command                                                                                                                                                              | Target                                                        | Date                      | Result / Status                                                                                                                                                                                                                                                                                                                                                                           | Artifact / Link                                                                                             | Blocker / Next Action                                                                                                                                                 |

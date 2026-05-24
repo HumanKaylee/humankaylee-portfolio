@@ -5,6 +5,7 @@ pub mod health;
 pub mod projects;
 pub mod security;
 pub mod state;
+pub mod telemetry;
 
 use axum::{
     http::StatusCode,
