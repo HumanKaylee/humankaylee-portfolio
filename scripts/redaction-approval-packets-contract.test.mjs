@@ -11,6 +11,7 @@ const files = {
 	finalChecklist: "runbooks/FINAL_LAUNCH_CHECKLIST.md",
 	guide: "docs/CONTENT_REDACTION_GUIDE.md",
 	githubSync: "docs/GITHUB_SYNC.md",
+	launchEvidence: "runbooks/LAUNCH_EVIDENCE.md",
 	packet: "runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md",
 	remoteRecoveryCaseStudy:
 		"apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md",
@@ -243,6 +244,24 @@ function expectReadinessRow(packet, candidateTitle, expectedFragments) {
 	}
 }
 
+function expectStatusRow(status, candidateTitle, expectedFragments) {
+	const rowPattern = new RegExp(
+		`\\|\\s*${escapedRegex(candidateTitle)}\\s*\\|([^\\n]+)`,
+	);
+	const row = status.match(rowPattern);
+	assert.ok(row, `expected redaction status row for ${candidateTitle}`);
+
+	const normalizedRow = row[1].replace(/`/g, "").toLowerCase();
+
+	for (const fragment of expectedFragments) {
+		const normalizedFragment = fragment.replace(/`/g, "").toLowerCase();
+		assert.ok(
+			normalizedRow.includes(normalizedFragment),
+			`expected ${candidateTitle} status row to include ${fragment}`,
+		);
+	}
+}
+
 test("case-study redaction approval packets preserve not-approved launch state", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const cliFleetCaseStudy = readRequiredFile(files.cliFleetCaseStudy);
@@ -250,6 +269,7 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	const finalChecklist = readRequiredFile(files.finalChecklist);
 	const guide = readRequiredFile(files.guide);
 	const githubSync = readRequiredFile(files.githubSync);
+	const launchEvidence = readRequiredFile(files.launchEvidence);
 	const packet = readRequiredFile(files.packet);
 	const remoteRecoveryCaseStudy = readRequiredFile(
 		files.remoteRecoveryCaseStudy,
@@ -295,6 +315,21 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		githubSync,
 		"non-approval evidence inventory",
 		"GitHub sync records non-approval inventory progress",
+	);
+	expectContains(
+		launchEvidence,
+		"recorded checklist answers",
+		"launch evidence records current redaction checklist state",
+	);
+	expectContains(
+		launchEvidence,
+		"review recorded checklist answers",
+		"launch evidence points reviewer to current redaction action",
+	);
+	assert.doesNotMatch(
+		launchEvidence,
+		/(Complete guide checklists|Complete checklist review|completed redaction checklists|checklists? (?:are )?complete|review complete|artifact inspection (?:done|complete)|human review complete)/i,
+		"launch evidence should not use stale checklist-missing or checklist-complete wording",
 	);
 
 	expectContains(packet, "# Case Study Redaction Approval Packets");
@@ -407,6 +442,35 @@ test("case-study redaction approval packets preserve not-approved launch state",
 			"missing openItems clearance",
 			"missing redacted incident summary inspection evidence",
 		],
+	);
+	expectStatusRow(status, "CLI Fleet Synchronization and MCP Rollout", [
+		"review recorded checklist answers",
+		"clear open items",
+		"inspect linked artifacts",
+	]);
+	expectStatusRow(status, "Creative Web Systems Atlas Demo", [
+		"review recorded checklist answers",
+		"inspect atlas fallback artifacts",
+		"capture production or approved preview evidence",
+	]);
+	expectStatusRow(status, "HumanKaylee Portfolio Build", [
+		"review recorded checklist answers",
+		"inspect public artifacts",
+		"add real production domain",
+	]);
+	expectStatusRow(
+		status,
+		"Remote Workstation Recovery and Operational Debugging",
+		[
+			"review recorded checklist answers",
+			"inspect linked artifacts",
+			"keep hostnames",
+		],
+	);
+	assert.doesNotMatch(
+		status,
+		/(Complete (every guide checklist item|final checklist review)|checklists? (?:are )?complete|review complete|artifact inspection (?:done|complete)|human review complete)/i,
+		"redaction status next actions should reflect recorded checklist answers",
 	);
 
 	for (const [guideCheck, schemaFields, contractFields] of checklistMappings) {
