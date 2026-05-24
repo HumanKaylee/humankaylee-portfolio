@@ -125,7 +125,7 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 		"Operations owner",
 		"Blocked / pending decision",
 		"Shuttle is not a viable new launch target",
-		"Fly.io and Railway",
+		"Fly.io, Railway, or another approved host",
 	]);
 	expectTableRow(register, "AI assistant v1 vs v2 decision", [
 		"post-launch",

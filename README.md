@@ -115,9 +115,10 @@ pnpm exec wrangler pages deploy dist \
 
 Current API hosting note: Shuttle is not a viable new launch target as of the
 2026-05-24 official-source snapshot
-https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io and Railway are the
-current normal Axum PaaS candidates; Cloudflare Workers/Pages Functions require
-an edge/runtime rewrite, and Hetzner is a higher-ops VPS fallback. See
+https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io, Railway, or another
+approved host are the approved current-host comparison set for #64; Cloudflare
+Workers/Pages Functions require an edge/runtime rewrite, and Hetzner is a
+higher-ops VPS fallback. See
 [runbooks/DEPLOYMENT.md](runbooks/DEPLOYMENT.md) for provider-specific steps and
 rollback notes.
 

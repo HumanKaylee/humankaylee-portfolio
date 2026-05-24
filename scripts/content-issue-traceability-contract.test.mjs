@@ -292,4 +292,6 @@ test("content issue traceability ties open content issues to approval blockers w
 		expectNotContains(content, "launch-ready");
 		expectNotContains(content, "Traceability approves publication");
 	}
+	expectNotContains(decision, "enough repo evidence");
+	expectNotContains(decision, "enough evidence");
 });

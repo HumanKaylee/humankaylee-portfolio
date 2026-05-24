@@ -62,10 +62,10 @@ Any future proof pack must include:
 
 ## Current Issue Interpretation
 
-- B-018 has enough repo evidence to recommend excluding the Kalshi or analytics
-  candidate from v1 unless a synthetic abstraction is approved.
-- B-019 has enough repo evidence to recommend deferring the YouTube AI Video
-  Pipeline until a synthetic proof pack and artifact boundary exist.
+- B-018's current risk review supports recommending exclusion of the Kalshi or
+  analytics candidate from v1 unless a synthetic abstraction is approved.
+- B-019's current risk review supports recommending deferral of the YouTube AI
+  Video Pipeline until a synthetic proof pack and artifact boundary exist.
 - Both items still require a HumanKaylee owner decision before publication.
 - #24 and #25 remain open until HumanKaylee records a publication decision and
   any synthetic proof pack passes review.

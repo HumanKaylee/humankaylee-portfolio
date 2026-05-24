@@ -84,7 +84,7 @@ test("README covers local development, deployment, and recovery contracts", () =
 		"provider projects",
 		"required secrets",
 		"Shuttle is not a viable new launch target",
-		"Fly.io and Railway",
+		"Fly.io, Railway, or another approved host",
 		"Do not use Shuttle for a new production launch",
 		"pnpm exec wrangler pages deployment list",
 		'fly releases --app "$FLY_APP" --image',

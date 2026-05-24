@@ -195,7 +195,8 @@ compare:
 
 - Shuttle shutdown status: Shuttle is not a viable new launch target.
   Source: https://docs.shuttle.dev/docs/shuttle-shutdown
-- Fly.io and Railway as current Axum PaaS candidates.
+- Fly.io, Railway, or another approved host as the approved current-host
+  comparison set for #64.
   Sources: https://fly.io/docs/about/pricing/ and
   https://docs.railway.com/pricing
 - Cloudflare Workers or Pages Functions as a cheap edge/runtime rewrite option.

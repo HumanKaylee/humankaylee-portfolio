@@ -243,4 +243,9 @@ test("resume inventory alignment is recorded as local approved-source evidence o
 			"resume production readiness boundary",
 		);
 	}
+	expectNotContains(
+		changelog,
+		"Published the approved downloadable resume PDF",
+	);
+	expectNotContains(changelog, "approved downloadable resume PDF");
 });

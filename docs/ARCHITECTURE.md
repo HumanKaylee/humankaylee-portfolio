@@ -56,8 +56,8 @@ External systems:
 
 - GitHub for source repositories, project metadata, and CI triggers.
 - Cloudflare Pages for the recommended static frontend host.
-- Fly.io and Railway as the current normal Axum PaaS candidates for the launch
-  Rust API, pending provider/project/domain evidence.
+- Fly.io, Railway, or another approved host as the approved current-host
+  comparison set for #64, pending provider/project/domain evidence.
 - Cloudflare Workers/Pages Functions as an edge rewrite option, and Hetzner as a
   higher-ops VPS fallback.
 - Shuttle is not a viable new launch target as of the 2026-05-24 official-source
@@ -485,8 +485,8 @@ Reasons:
 
 - Cloudflare Pages is a strong fit for static Astro output, private GitHub repo
   deploys, custom domains, TLS, and CDN delivery.
-- Fly.io and Railway keep the current Axum API shape deployable without a runtime
-  rewrite.
+- Fly.io, Railway, or another approved host keeps the current Axum API shape
+  deployable without a runtime rewrite.
 - Shuttle is not a viable new launch target; keep the feature-gated Shuttle
   binary only as legacy compatibility until removed or replaced.
 - The frontend remains useful even if the selected API host is unavailable or

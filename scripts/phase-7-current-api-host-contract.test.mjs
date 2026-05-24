@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
 const files = {
+	architecture: "docs/ARCHITECTURE.md",
+	blockers: "runbooks/LAUNCH_BLOCKERS_REGISTER.md",
 	changelog: "docs/CHANGELOG.md",
 	githubSync: "docs/GITHUB_SYNC.md",
 	launchEvidence: "runbooks/LAUNCH_EVIDENCE.md",
@@ -98,6 +100,8 @@ function expectNoTableRow(content, firstCell) {
 }
 
 test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guidance current", () => {
+	const architecture = readRequiredFile(files.architecture);
+	const blockers = readRequiredFile(files.blockers);
 	const changelog = readRequiredFile(files.changelog);
 	const githubSync = readRequiredFile(files.githubSync);
 	const launchEvidence = readRequiredFile(files.launchEvidence);
@@ -110,7 +114,7 @@ test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guid
 	expectContains(githubSync, "https://docs.shuttle.dev/docs/shuttle-shutdown");
 	expectContains(
 		githubSync,
-		"Fly.io and Railway are the current normal Axum API deploy candidates",
+		"Fly.io, Railway, or another approved host are the approved current-host comparison set for #64",
 	);
 	expectContains(
 		githubSync,
@@ -135,11 +139,19 @@ test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guid
 	});
 	expectContains(
 		launchEvidence,
-		"Final API domain and Fly.io, Railway, or alternate current API provider project are not selected.",
+		"Final API domain and Fly.io, Railway, or another approved host provider project are not selected.",
 	);
 	expectContains(
 		launchEvidence,
 		"Shuttle is not a viable new launch target and remains legacy compatibility only.",
+	);
+	expectContains(
+		architecture,
+		"Fly.io, Railway, or another approved host as the approved current-host comparison set for #64",
+	);
+	expectContains(
+		blockers,
+		"Fly.io, Railway, or another approved host are the approved current-host comparison set for #64",
 	);
 	expectNotContains(
 		launchEvidence,
@@ -154,9 +166,12 @@ test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guid
 
 	expectContains(changelog, "Added Phase 7 current API host guidance coverage");
 
-	for (const content of [githubSync, launchEvidence]) {
+	for (const content of [architecture, blockers, githubSync, launchEvidence]) {
 		expectNotContains(content, "Shuttle Rust API initially");
 		expectNotContains(content, "Shuttle as the first Rust API host");
 		expectNotContains(content, "Shuttle API deploy, if CI deploys backend");
+		expectNotContains(content, "current normal Axum API deploy candidates");
+		expectNotContains(content, "current normal Axum PaaS candidates");
+		expectNotContains(content, "alternate current API provider");
 	}
 });

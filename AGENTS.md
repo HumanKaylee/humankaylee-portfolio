@@ -25,9 +25,10 @@ of truth for implementation state, launch blockers, and production evidence.
 
 - Static-first frontend with Astro, TypeScript, custom CSS, React islands, progressive Three.js/R3F, and selective GSAP.
 - Rust backend with Axum/Tokio for API features that prove backend skill without making static content depend on API uptime.
-- Hosting target: Cloudflare Pages frontend plus Fly.io or Railway as the
-  current normal Axum API candidates. Cloudflare Workers/Pages Functions are an
-  edge/runtime rewrite option, and Hetzner is the higher-ops VPS fallback.
+- Hosting target: Cloudflare Pages frontend plus Fly.io, Railway, or another
+  approved host as the approved current-host comparison set for #64. Cloudflare
+  Workers/Pages Functions are an edge/runtime rewrite option, and Hetzner is the
+  higher-ops VPS fallback.
 - Shuttle is not a viable new launch target as of the 2026-05-24
   official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown. Do
   not use Shuttle for a new production launch; keep the feature-gated Shuttle

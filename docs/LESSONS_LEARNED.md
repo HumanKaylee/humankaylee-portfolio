@@ -39,7 +39,7 @@ The initial content candidates include local runbooks, operational debugging, ag
 
 ### Hosting should optimize reliability and cost
 
-Cloudflare Pages is the recommended frontend baseline because it supports fast static delivery and private repository deploys. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io and Railway are the current normal Axum PaaS candidates, with Cloudflare Workers/Pages Functions requiring a runtime rewrite and a VPS remaining the higher-ops fallback.
+Cloudflare Pages is the recommended frontend baseline because it supports fast static delivery and private repository deploys. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io, Railway, or another approved host are the approved current-host comparison set for #64, with Cloudflare Workers/Pages Functions requiring a runtime rewrite and a VPS remaining the higher-ops fallback.
 
 ### The launch bar includes operations and documentation
 

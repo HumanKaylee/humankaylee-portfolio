@@ -6,7 +6,7 @@
 
 **Architecture:** Use Astro as the static-first shell with TypeScript, content collections, MDX case studies, and selective React islands for interactive sections. Use a Rust Axum API only for visible backend proof: health, cached project metadata, contact, and optional privacy-safe events. The static portfolio must remain useful when JavaScript, WebGL, motion, or the Rust API are unavailable.
 
-**Tech Stack:** Astro, TypeScript, React islands, Three.js or React Three Fiber for one progressive 3D experience, GSAP ScrollTrigger only where scroll choreography needs it, Rust Axum, Tokio, tower-http, tracing, SQLx only if persistence is needed, Playwright, Lighthouse, Axe, Cloudflare Pages, Fly.io and Railway as current Axum API host candidates, with Cloudflare Workers/Pages Functions or Hetzner as alternatives if the API shape changes or higher ops are acceptable. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
+**Tech Stack:** Astro, TypeScript, React islands, Three.js or React Three Fiber for one progressive 3D experience, GSAP ScrollTrigger only where scroll choreography needs it, Rust Axum, Tokio, tower-http, tracing, SQLx only if persistence is needed, Playwright, Lighthouse, Axe, Cloudflare Pages, Fly.io, Railway, or another approved host as the approved current-host comparison set for #64, with Cloudflare Workers/Pages Functions or Hetzner as alternatives if the API shape changes or higher ops are acceptable. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 
 ---
 

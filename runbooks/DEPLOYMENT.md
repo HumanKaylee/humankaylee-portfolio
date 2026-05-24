@@ -32,9 +32,10 @@ Do not treat production as ready until these choices are explicit:
 
 Current API hosting note: Shuttle is not a viable new launch target as of the
 2026-05-24 official-source snapshot:
-https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io and Railway are the
-current normal Axum PaaS candidates; Cloudflare Workers/Pages Functions require
-an edge/runtime rewrite, and Hetzner is a higher-ops VPS fallback.
+https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io, Railway, or another
+approved host are the approved current-host comparison set for #64; Cloudflare
+Workers/Pages Functions require an edge/runtime rewrite, and Hetzner is a
+higher-ops VPS fallback.
 
 ## 1. Provider Command Evidence
 
@@ -135,7 +136,10 @@ pnpm exec wrangler pages project create "$CLOUDFLARE_PAGES_PROJECT" \
 
 Shuttle is not a viable new launch target. This section exists only to preserve
 the current feature-gated binary compatibility contract until it is removed or
-replaced. Shuttle secrets are stored in a TOML file at deploy time. The
+replaced. Do not install, authenticate, create, link, deploy, or rollback
+Shuttle for a new launch. Run the Shuttle command snippets only when explicitly
+preserving or investigating legacy compatibility evidence. Shuttle secrets are
+stored in a TOML file at deploy time. The
 `humankaylee-api-shuttle` binary maps Shuttle `SecretStore` keys into the same
 `HK_API_*` configuration parser used by the standalone binary. Keep
 `Secrets*.toml` ignored and outside commits. If contact storage is enabled,
@@ -295,7 +299,8 @@ commit through the same CI/deploy path and run smoke checks.
 Do not use Shuttle for a new production launch. Shuttle is not a viable new
 launch target; see https://docs.shuttle.dev/docs/shuttle-shutdown. Keep this
 section only as a compatibility reference for the existing feature-gated binary
-and for reading historical launch evidence.
+and for reading historical launch evidence. Legacy Shuttle commands must never
+replace Fly.io, Railway, or approved current-host evidence for #64.
 
 ### 5.1 Prerequisites
 

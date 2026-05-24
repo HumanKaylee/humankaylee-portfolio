@@ -18,9 +18,9 @@ Recommended stack:
 - Hosting phase 1: Cloudflare Pages for frontend and a selected Rust API host.
   Shuttle is not a viable new launch target as of the 2026-05-24
   official-source snapshot at https://docs.shuttle.dev/docs/shuttle-shutdown.
-  Fly.io and Railway are the current normal Axum PaaS candidates; Cloudflare
-  Workers/Pages Functions require an edge/runtime rewrite, and Hetzner is a
-  higher-ops VPS fallback.
+  Fly.io, Railway, or another approved host are the approved current-host
+  comparison set for #64; Cloudflare Workers/Pages Functions require an
+  edge/runtime rewrite, and Hetzner is a higher-ops VPS fallback.
 - Content strategy: 4 to 6 deep case studies, each with problem, constraints, architecture, implementation proof, testing, operations, outcome, and lessons learned.
 
 ## What Visually Impressive Sites Are Doing Now
@@ -231,6 +231,6 @@ Signature interaction:
 
 ## Final Recommendation
 
-Proceed with Astro + React islands + Three.js/R3F + GSAP for the frontend, and Rust Axum for a small API. Host frontend on Cloudflare Pages and choose the Rust backend host from current evidence instead of Shuttle. Fly.io and Railway are the current normal Axum PaaS candidates; Cloudflare Workers/Pages Functions require an edge/runtime rewrite, and Hetzner/Caddy/Docker remains an advanced self-host path.
+Proceed with Astro + React islands + Three.js/R3F + GSAP for the frontend, and Rust Axum for a small API. Host frontend on Cloudflare Pages and choose the Rust backend host from current evidence instead of Shuttle. Fly.io, Railway, or another approved host are the approved current-host comparison set for #64; Cloudflare Workers/Pages Functions require an edge/runtime rewrite, and Hetzner/Caddy/Docker remains an advanced self-host path.
 
 The portfolio should prioritize substance over novelty: the visual wow earns attention, but case studies, evidence, tests, and operational maturity convert that attention into credibility.

@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened Phase 7 API-host, deployment, and resume wording guards so docs and
+  agent instructions align with #64's approved-host comparison boundary, keep
+  Shuttle snippets legacy-only, and reject production resume overclaims.
+- Tightened B-018/B-019 publication-safety wording so decision support cannot
+  imply publication-ready proof, close #24/#25, or count either candidate toward
+  launch.
 - Hardened live GitHub issue sync coverage for Phase 7 issues so #63, #64,
   #65, and #69 preserve production-blocker body text and reject stale
   Shuttle-primary API host wording.
@@ -46,8 +52,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   rows record command, target, timestamp, status, artifact, blocker, and
   privacy-redaction fields without clearing blocked production evidence.
 - Added Phase 7 current API host guidance coverage so GitHub sync and launch
-  evidence keep Fly.io/Railway as the active Axum host candidates while Shuttle
-  stays legacy compatibility only.
+  evidence keep Fly.io, Railway, or another approved host as the approved
+  current-host comparison set for #64 while Shuttle stays legacy compatibility
+  only.
 - Added content issue traceability coverage for #20, #21, #22, #23, #24, and
   #25 so open content/privacy issues and closed draft-content issues map to
   case-study metadata, redaction runbooks, and closure rules without approving
@@ -131,7 +138,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a content update and redaction runbook with an executable contract test
   covering project, case-study, notes/build-log, schema field, redaction
   checklist, publication review, and verification-command expectations.
-- Published the approved downloadable resume PDF and linked it from the home recruiter path and resume page.
+- Added the local static resume PDF asset and linked it from the home recruiter path and resume page without claiming production `/resume/` readiness.
 - Added case-study index and detail routes for current `publicationStatus: publish` entries while preserving redaction statuses.
 - Added a safe evidence drawer section for case-study pages using existing sanitized frontmatter.
 - Added notes/build-log index and detail routes from the notes content collection.

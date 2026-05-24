@@ -72,8 +72,12 @@ function expectCurrentHostingTarget(agents) {
 	);
 
 	expectContains(hostingTarget, "Cloudflare Pages frontend");
-	expectContains(hostingTarget, "Fly.io or Railway");
-	expectContains(hostingTarget, "current normal Axum API candidates");
+	expectContains(hostingTarget, "Fly.io, Railway, or another approved host");
+	expectContains(hostingTarget, "approved current-host comparison set for #64");
+	assert.ok(
+		!hostingTarget.includes("current normal Axum API candidates"),
+		"Hosting target bullet must not use stale current-normal provider wording",
+	);
 }
 
 test("repository agent instructions use current hosting and launch-blocker guidance", () => {

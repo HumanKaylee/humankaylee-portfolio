@@ -34,7 +34,8 @@ Planned components:
 - Optional Three.js/React Three Fiber atlas and GSAP scroll scenes.
 - Rust Axum API for health, live project metadata, contact, and optional events.
 - Cloudflare Pages as recommended frontend host.
-- Fly.io and Railway as current Axum API host candidates.
+- Fly.io, Railway, or another approved host as the approved current-host
+  comparison set for #64.
 - Cloudflare Workers/Pages Functions as an edge rewrite option, and Hetzner as a
   higher-ops VPS fallback.
 - Shuttle is not a viable new launch target as of the 2026-05-24 official-source
@@ -319,8 +320,9 @@ Browser checks:
 ### 7.2 Backend: API Host Selection
 
 Current status: blocked until provider account, project name, custom domain,
-secrets, and contact storage are selected. Fly.io and Railway are the current
-normal Axum PaaS candidates. Shuttle is not a viable new launch target; see
+secrets, and contact storage are selected. Fly.io, Railway, or another approved
+host are the approved current-host comparison set for #64. Shuttle is not a
+viable new launch target; see
 https://docs.shuttle.dev/docs/shuttle-shutdown.
 
 Required launch path:

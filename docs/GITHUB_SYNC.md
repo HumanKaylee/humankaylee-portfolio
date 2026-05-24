@@ -477,9 +477,10 @@ static frontend. Required GitHub-side assumptions:
 Required secret names if CI later deploys directly:
 
 Shuttle is not a viable new launch target:
-`https://docs.shuttle.dev/docs/shuttle-shutdown`. Fly.io and Railway are the
-current normal Axum API deploy candidates. Shuttle secrets are legacy
-compatibility only and are not required for new CI deploy setup.
+`https://docs.shuttle.dev/docs/shuttle-shutdown`. Fly.io, Railway, or another
+approved host are the approved current-host comparison set for #64. Shuttle
+secrets are legacy compatibility only and are not required for new CI deploy
+setup.
 
 | Secret name             | Used by                        | Notes                                         |
 | ----------------------- | ------------------------------ | --------------------------------------------- |
