@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened assistant and privacy planning boundaries so the future assistant
+  cannot treat the resume PDF as a production source before `/resume/` and PDF
+  smoke checks pass, and contact production storage must define backup handling
+  before launch.
 - Hardened Phase 7 API-host, deployment, and resume wording guards so docs and
   agent instructions align with #64's approved-host comparison boundary, keep
   Shuttle snippets legacy-only, and reject production resume overclaims.

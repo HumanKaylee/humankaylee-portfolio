@@ -107,6 +107,8 @@ Before production launch, choose whether this JSONL store is acceptable for the
 selected host. If a future provider or database is added, document the retention
 and deletion story before turning it on.
 
+Production contact storage must also define backup handling before launch.
+
 ## Privacy Contact
 
 Use the public contact route at `/contact/` for privacy questions or update

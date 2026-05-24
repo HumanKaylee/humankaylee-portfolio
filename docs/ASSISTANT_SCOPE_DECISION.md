@@ -36,7 +36,8 @@ source classes after launch:
 
 - Published public pages generated from `apps/web/src/content/`.
 - Public project metadata already visible on `/projects/`.
-- Public resume page content and the approved public PDF link.
+- Public resume page content, plus the downloadable resume PDF link only after
+  production `/resume/` and PDF smoke checks pass.
 - Published notes/build-log entries.
 - Public-safe runbook summaries that are already linked from the portfolio.
 

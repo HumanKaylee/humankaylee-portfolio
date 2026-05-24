@@ -261,8 +261,14 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"rate limit",
 		"monthly cost cap",
 		"kill switch",
+		"downloadable resume PDF link only after production `/resume/` and PDF smoke checks pass",
 		"does not authorize B-065",
 	]);
+	expectNotContains(
+		assistantDecision,
+		"approved public PDF link",
+		"assistant source docs should not imply the resume PDF has production-public route evidence",
+	);
 	expectTableRowCells(runbook, "Portfolio assistant prototype", {
 		1: ["B-065", "#71"],
 		2: ["Blocked until B-064", "build recommendation"],

@@ -65,6 +65,7 @@ test("privacy notes cover B-054 contact, analytics, retention, and review contra
 		"## Retention And Storage",
 		"Contact storage is off by default.",
 		"configured JSONL file until that backend host or operator deletes, rotates, or exports the file",
+		"Production contact storage must also define backup handling before launch",
 		"No public deletion workflow is promised until production contact handling is finalized.",
 		"## Privacy Contact",
 		"Use the public contact route at `/contact/` for privacy questions or update requests.",
