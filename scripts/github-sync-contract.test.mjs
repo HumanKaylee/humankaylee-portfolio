@@ -237,6 +237,8 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"Granular live GitHub issue verification",
 		"issues #7 through #74",
 		"Completed granular",
+		"Parent epics #3 and #5 stay",
+		"open while any child blocker remains open",
 		"open or closed as execution advances",
 		"must remain open until their external decision or evidence gate is satisfied",
 	]) {
@@ -251,6 +253,11 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"fetchAllIssues",
 		"--paginate",
 		"mustRemainOpenIssueNumbers",
+		"parentEpicIssueNumbers",
+		"...parentEpicIssueNumbers",
+		"for (const parentEpicNumber of parentEpicIssueNumbers)",
+		"missing live parent epic",
+		"to stay open while child blockers remain open",
 	]) {
 		expectContains(githubLiveIssueSync, required);
 	}

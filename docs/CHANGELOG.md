@@ -226,6 +226,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Broadened the opt-in live GitHub issue-sync verifier to bulk-check the
   documented granular bridge from #7 through #74 while preserving the
   Project-board scope blocker wording in the sync runbook.
+- Hardened the live GitHub issue-sync verifier so parent epics #3 and #5 must
+  stay open while their child blockers remain open.
 - Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
   and use Node 24-native action majors before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,

@@ -400,7 +400,8 @@ published.
 
 Granular live GitHub issue verification now covers all documented granular
 issues #7 through #74 with paginated GitHub API results. Completed granular
-issues may be open or closed as execution advances, but unresolved blocker,
+issues may be open or closed as execution advances. Parent epics #3 and #5 stay
+open while any child blocker remains open, and unresolved blocker,
 content-redaction, deployment, launch-checklist, and post-launch guard issues
 must remain open until their external decision or evidence gate is satisfied.
 This keeps the Project board scope blocker wording above unchanged while

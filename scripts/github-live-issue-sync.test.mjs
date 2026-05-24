@@ -9,8 +9,22 @@ const repo = "HumanKaylee/humankaylee-portfolio";
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const githubSyncPath = resolve(repoRoot, "docs/GITHUB_SYNC.md");
 const liveVerificationEnabled = process.env.HK_VERIFY_GITHUB_LIVE === "1";
+const parentEpicIssueNumbers = [3, 5];
 const mustRemainOpenIssueNumbers = new Set([
-	20, 21, 24, 25, 63, 64, 65, 69, 70, 71, 72, 73, 74,
+	...parentEpicIssueNumbers,
+	20,
+	21,
+	24,
+	25,
+	63,
+	64,
+	65,
+	69,
+	70,
+	71,
+	72,
+	73,
+	74,
 ]);
 
 function readGitHubSync() {
@@ -132,6 +146,16 @@ test(
 			68,
 			"expected granular bridge to cover #7 through #74",
 		);
+
+		for (const parentEpicNumber of parentEpicIssueNumbers) {
+			const issue = issuesByNumber.get(parentEpicNumber);
+			assert.ok(issue, `missing live parent epic #${parentEpicNumber}`);
+			assert.equal(
+				issue.state,
+				"OPEN",
+				`expected parent epic #${parentEpicNumber} to stay open while child blockers remain open`,
+			);
+		}
 
 		for (const expected of expectedIssues) {
 			const issue = issuesByNumber.get(expected.number);
