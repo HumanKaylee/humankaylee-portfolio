@@ -63,6 +63,21 @@ test("launch evidence distinguishes the latest PR head from historical rows", ()
 	expectContains(evidence, ciRun, "latest verified CI run");
 	expectContains(evidence, frontendJob, "latest verified frontend job");
 	expectContains(evidence, rustJob, "latest verified Rust job");
+	expectContains(
+		evidence,
+		"Phase 8 backlog issues #70 through #74 are open and mirror B-064 through B-068",
+		"latest GitHub issue-sync row",
+	);
+	expectContains(
+		evidence,
+		"HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs",
+		"live GitHub issue-sync verifier",
+	);
+	expectContains(
+		evidence,
+		"not launch readiness, post-launch feature approval, or assistant-build approval",
+		"Phase 8 issue-sync guardrail",
+	);
 	expectNotContains(
 		evidence.match(
 			/## Current Evidence Matrix[\s\S]*?\| GitHub issue sync/,

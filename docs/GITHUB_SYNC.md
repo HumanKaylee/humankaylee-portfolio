@@ -152,7 +152,7 @@ taxonomy; use the `phase:*` labels below for new filtering and new issues.
 | #2 Phase 4: Systems Map Hero, Project Atlas, motion, and 3D fallbacks | Visual/motion progressive enhancement                                | B-031 through B-037                                | `priority:p1`, `type:feature`, `area:design`, `area:frontend`, `area:motion`, `area:performance`, `phase:4-visual-motion`, `agent-strong`                                                       | `phase-4`              |
 | #3 Phase 1-3: Static-first content, shell, case studies, resume, SEO  | Static frontend and public-safe content foundation                   | B-006 through B-030 plus B-061/B-063 runbook gates | `priority:p0`, `type:feature`, `type:content`, `area:frontend`, `area:content`, `area:seo`, `area:a11y`, `phase:1-foundation`, `phase:2-content`, `phase:3-static-experience`, `agent-standard` | `phase-1`, `phase-2`   |
 | #4 Phase 5-6: Rust Axum API and frontend API integration              | API, contact, privacy-safe integration, and backend hardening        | B-038 through B-056                                | `priority:p0`, `type:feature`, `area:backend`, `area:security`, `area:privacy`, `phase:5-backend`, `phase:6-hardening`, `agent-standard`                                                        | `phase-3`              |
-| #5 Phase 7-9: Hardening, deployment, operations, and launch evidence  | Launch, production blockers, evidence, rollback, and post-launch ops | B-057 through B-064                                | `priority:p0`, `type:qa`, `type:docs`, `area:infra`, `area:ops`, `area:performance`, `area:security`, `phase:6-hardening`, `phase:7-launch`, `phase:8-post-launch`, `agent-strong`              | `phase-5`              |
+| #5 Phase 7-9: Hardening, deployment, operations, and launch evidence  | Launch, production blockers, evidence, rollback, and post-launch ops | B-057 through B-068                                | `priority:p0`, `type:qa`, `type:docs`, `area:infra`, `area:ops`, `area:performance`, `area:security`, `phase:6-hardening`, `phase:7-launch`, `phase:8-post-launch`, `agent-strong`              | `phase-5`              |
 
 ## Granular Issue Sync
 
@@ -289,6 +289,30 @@ views:
 Phase 7 issue sync status: complete. B-057 through B-063 are mirrored as #63
 through #69. This is only GitHub issue mirror evidence; it is not a Project
 board recovery, production deployment, or launch-readiness claim.
+
+Phase 8 backlog issues now live as the next granular sync layer, with #5
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                     | Parent | Labels                                                                                                                  |
+| ----- | ------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------- |
+| #70   | B-064: Evaluate portfolio assistant scope        | #5     | `priority:p2`, `type:research`, `area:backend`, `area:privacy`, `phase:8-post-launch`, `agent-standard`                 |
+| #71   | B-065: Add portfolio assistant prototype         | #5     | `priority:p2`, `type:feature`, `area:backend`, `area:frontend`, `area:privacy`, `phase:8-post-launch`, `agent-standard` |
+| #72   | B-066: Add richer public status or metadata page | #5     | `priority:p2`, `type:feature`, `area:backend`, `area:frontend`, `phase:8-post-launch`, `agent-standard`                 |
+| #73   | B-067: Add additional notes and postmortems      | #5     | `priority:p2`, `type:content`, `area:content`, `phase:8-post-launch`, `agent-standard`                                  |
+| #74   | B-068: Evaluate API hosting migration            | #5     | `priority:p2`, `type:research`, `area:infra`, `area:backend`, `phase:8-post-launch`, `agent-standard`                   |
+
+Phase 8 issue sync status: complete. B-064 through B-068 are mirrored as #70
+through #74. This is only GitHub issue-sync evidence; it is not a Project
+board recovery, production launch, launch-readiness claim, or post-launch
+feature approval, and it is not authorization to build the assistant before
+B-064 is approved.
+
+Run live Phase 8 issue verification explicitly with:
+
+```bash
+HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+```
 
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status

@@ -120,6 +120,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   and slow-refresh timeout route coverage.
 - Added Phase 7 granular GitHub issues B-057 through B-063 while preserving the
   Project-board scope blocker and launch-readiness boundary.
+- Added Phase 8 granular GitHub issues B-064 through B-068 while preserving the
+  post-launch, assistant-approval, Project-board, and launch-readiness
+  boundaries, plus an optional live GitHub issue-sync verifier.
 - Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
   and use Node 24-native action majors before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,
