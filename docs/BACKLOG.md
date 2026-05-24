@@ -186,11 +186,21 @@ Acceptance criteria:
 - Register includes AI assistant v1 versus v2 decision.
 - Each decision has impact, latest acceptable resolution phase, and owner.
 
+Current evidence:
+
+- Final resume PDF source is resolved locally: `sha256sum` and `cmp -s`
+  confirmed the downloaded source PDF and committed public asset are
+  byte-identical with SHA-256
+  `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`.
+- This does not clear the Phase 7 production `/resume/` route or PDF-link smoke
+  evidence, which remains blocked until a frontend deployment target exists.
+
 Verification evidence:
 
-- `runbooks/LAUNCH_BLOCKERS_REGISTER.md` records the unresolved launch
-  decisions, impact, latest acceptable resolution phase, owner, status, and next
-  evidence for each blocker without claiming launch readiness.
+- `runbooks/LAUNCH_BLOCKERS_REGISTER.md` records remaining unresolved launch
+  decisions plus the resolved local resume-source decision, with impact, latest
+  acceptable resolution phase, owner, status, and next evidence for each blocker
+  without claiming launch readiness.
 - `node --test scripts/launch-blockers-register-contract.test.mjs`
   verifies the register and its launch evidence cross-links.
 
@@ -1788,7 +1798,8 @@ Known launch blockers:
 - `runbooks/LAUNCH_BLOCKERS_REGISTER.md` is the source register for unresolved
   launch decisions and their owners/statuses.
 - Final domain name is required for production canonical URLs and DNS.
-- Final resume PDF source is required for launch.
+- Final resume PDF source is resolved locally, but production `/resume/` and
+  PDF-link smoke evidence is still required for launch.
 - At least four case studies must be approved as public-safe.
 - API host must be selected before production API deployment.
 - Contact delivery provider or storage approach must be chosen before public

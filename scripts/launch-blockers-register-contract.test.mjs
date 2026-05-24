@@ -81,6 +81,7 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 		"### B-005: Resolve launch blockers register",
 		"runbooks/LAUNCH_BLOCKERS_REGISTER.md",
 		"scripts/launch-blockers-register-contract.test.mjs",
+		"- Register includes AI assistant v1 versus v2 decision. - Each decision has impact, latest acceptable resolution phase, and owner. Current evidence:",
 	]);
 
 	expectAll(register, [
@@ -108,7 +109,9 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 		"resume asset",
 		"Phase 7",
 		"HumanKaylee",
-		"Blocked / pending decision",
+		"Resolved / approved local source",
+		"3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477",
+		"production `/resume/` and PDF smoke evidence",
 	]);
 	expectTableRow(register, "Public-safe case-study approvals", [
 		"case studies",
@@ -139,6 +142,13 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 		"Launch blockers register",
 		"runbooks/LAUNCH_BLOCKERS_REGISTER.md",
 		"node --test scripts/launch-blockers-register-contract.test.mjs",
+		"Resume download check",
+		"3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477",
+	]);
+	expectTableRow(evidence, "Launch blockers register", [
+		"remaining unresolved launch decisions",
+		"resume-source row is resolved local evidence only",
+		"production blockers",
 	]);
 	expectAll(deployment, [
 		"runbooks/LAUNCH_BLOCKERS_REGISTER.md",
