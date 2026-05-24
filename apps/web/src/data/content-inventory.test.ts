@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -104,5 +106,25 @@ describe("phase 1 content inventory", () => {
 		expect(
 			CONTENT_VALIDATION_EXAMPLES.caseStudies.requiredFields,
 		).not.toContain("redaction_status");
+	});
+
+	it("keeps the resume validation example aligned with the approved PDF source", () => {
+		const approvedResumeRecord = JSON.parse(
+			readFileSync(
+				new URL("../content/resume/resume.json", import.meta.url),
+				"utf8",
+			),
+		);
+		expect(CONTENT_VALIDATION_EXAMPLES.resume.validExample).toEqual(
+			approvedResumeRecord,
+		);
+		const parsedResumeExample = resumeDataSchema.parse(
+			CONTENT_VALIDATION_EXAMPLES.resume.validExample,
+		);
+		expect(
+			parsedResumeExample.workflowSteps.every(
+				(workflowStep) => workflowStep.status === "complete",
+			),
+		).toBe(true);
 	});
 });

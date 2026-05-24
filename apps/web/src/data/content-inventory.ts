@@ -319,20 +319,38 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 		validExample: {
 			title: "HumanKaylee Resume",
 			slug: "resume",
-			pdfSourcePath: "pending-approved-resume-source",
+			pdfSourcePath: "approved-local-resume-pdf-imported-2026-05-23",
 			pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
-			sourceStatus: "placeholder",
-			workflowState: "awaiting-redaction-review",
-			pdfStatus: "not-generated",
-			sourceAsset: "pending-approved-resume-source",
-			approvalState: "pending",
+			sourceStatus: "approved-source",
+			workflowState: "complete",
+			pdfStatus: "published",
+			sourceAsset: "apps/web/public/downloads/humankaylee-resume.pdf",
+			approvalState: "approved",
 			workflowSteps: [
 				{
 					step: "collect approved source bullets",
-					status: "pending",
+					status: "complete",
+				},
+				{
+					step: "redact private employers, paths, and sensitive details",
+					status: "complete",
+				},
+				{
+					step: "format the final resume source document",
+					status: "complete",
+				},
+				{
+					step: "export the PDF and verify the public link",
+					status: "complete",
 				},
 			],
-			seo: seoExample,
+			seo: {
+				title: "HumanKaylee Resume",
+				description:
+					"HTML resume entry point with a downloadable PDF for recruiter review.",
+				canonicalPath: "/resume/",
+				ogImage: "/social/resume.png",
+			},
 		},
 		invalidExamples: [
 			{
