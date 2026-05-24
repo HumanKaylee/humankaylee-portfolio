@@ -24,7 +24,11 @@ function expectNotContains(content, needle, label = needle) {
 const evidencePath = fileURLToPath(
 	new URL("../runbooks/LAUNCH_EVIDENCE.md", import.meta.url),
 );
+const liveVerifierPath = fileURLToPath(
+	new URL("./launch-evidence-live-pr-ci-verifier.test.mjs", import.meta.url),
+);
 const evidence = readFileSync(evidencePath, "utf8");
+const liveVerifier = readFileSync(liveVerifierPath, "utf8");
 
 function latestVerifiedValue(content, label, pattern) {
 	const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -36,10 +40,10 @@ function latestVerifiedValue(content, label, pattern) {
 	return match[1];
 }
 
-test("launch evidence distinguishes the latest PR head from historical rows", () => {
+test("launch evidence distinguishes the embedded PR snapshot from live current checks", () => {
 	const head = latestVerifiedValue(
 		evidence,
-		"Latest verified PR head",
+		"Embedded verified PR head",
 		/^[0-9a-f]{40}$/,
 	);
 	const ciRun = latestVerifiedValue(evidence, "CI run", /^\d+$/);
@@ -47,18 +51,48 @@ test("launch evidence distinguishes the latest PR head from historical rows", ()
 	const rustJob = latestVerifiedValue(evidence, "Rust job", /^\d+$/);
 
 	expectContains(evidence, "current launch evidence index");
-	expectContains(evidence, "Latest Verified PR Evidence");
-	expectContains(evidence, "Latest verified PR head");
+	expectContains(evidence, "Embedded Verified PR Evidence Snapshot");
+	expectContains(evidence, "Embedded verified PR head");
 	expectContains(evidence, "historical rows");
 	expectContains(
 		evidence,
-		`latest verified head \`${head}\``,
-		"latest verified PR row head",
+		"point-in-time evidence for the embedded PR snapshot",
+		"point-in-time launch-evidence caveat",
 	);
 	expectContains(
 		evidence,
-		`PR #6, latest verified head \`${head}\``,
+		"HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs",
+		"opt-in live PR/CI verifier command",
+	);
+	expectContains(
+		evidence,
+		"compares the GitHub PR head with the local checkout",
+		"live verifier local checkout comparison",
+	);
+	expectContains(
+		evidence,
+		"requires only the Phase 0 CI Frontend verification and Rust verification gates",
+		"live verifier required gate scope",
+	);
+	expectContains(
+		evidence,
+		`embedded snapshot head \`${head}\``,
+		"embedded PR row head",
+	);
+	expectContains(
+		evidence,
+		`PR #6, embedded snapshot head \`${head}\``,
 		"frontend and Rust row heads",
+	);
+	expectNotContains(
+		evidence,
+		"Latest Verified PR Evidence",
+		"stale-prone static evidence heading",
+	);
+	expectNotContains(
+		evidence,
+		"Latest verified PR head",
+		"stale-prone static evidence label",
 	);
 	expectContains(evidence, ciRun, "latest verified CI run");
 	expectContains(evidence, frontendJob, "latest verified frontend job");
@@ -123,4 +157,29 @@ test("launch evidence distinguishes the latest PR head from historical rows", ()
 			"latest verified Rust job does not match expected live Rust job",
 		);
 	}
+});
+
+test("live launch-evidence verifier is scoped to the current checkout and required CI gates", () => {
+	expectContains(
+		liveVerifier,
+		'execFileSync("git", ["rev-parse", "HEAD"]',
+		"local checkout head read",
+	);
+	expectContains(
+		liveVerifier,
+		"assert.equal(pr.headRefOid, localHead())",
+		"PR head must match local checkout",
+	);
+	expectContains(
+		liveVerifier,
+		'"Frontend verification"',
+		"required frontend check",
+	);
+	expectContains(liveVerifier, '"Rust verification"', "required Rust check");
+	expectContains(liveVerifier, '"Phase 0 CI"', "required workflow name");
+	expectNotContains(
+		liveVerifier,
+		"for (const entry of pr.statusCheckRollup)",
+		"live verifier should not require every status context to pass",
+	);
 });

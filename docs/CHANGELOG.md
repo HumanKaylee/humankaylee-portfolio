@@ -93,9 +93,14 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added native CSS route-continuity hints for browsers with View Transitions
   support, with reduced-motion opt-out and a Playwright `@route-continuity`
   keyboard smoke gate.
-- Added a launch-evidence freshness contract that records the latest verified
-  PR head and CI run without converting production blockers into pass evidence.
-- Refreshed the latest verified launch-evidence row for PR #6 head `ad798c4`
+- Added a launch-evidence freshness contract that records an embedded PR
+  snapshot without converting production blockers into pass evidence.
+- Added an opt-in live PR/CI verifier for PR #6 that compares the GitHub PR
+  head to the local checkout, requires only the Phase 0 CI frontend/Rust gates,
+  and clarified that the embedded launch-evidence row is a point-in-time
+  snapshot that can lag the checked-out commit without forcing self-rewriting
+  evidence-only commits.
+- Refreshed the embedded launch-evidence snapshot row for PR #6 head `ad798c4`
   and CI run `26354144870` while preserving blocked production rows.
 - Expanded GitHub sync docs and live repo issue state with Phase 1 granular
   issues B-006 through B-012.
