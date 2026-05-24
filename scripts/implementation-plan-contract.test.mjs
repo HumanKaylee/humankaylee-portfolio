@@ -161,6 +161,8 @@ test("implementation plan is swarm-ready for content privacy and legacy API host
 			"Do not start implementation until the executor has read every file in the Source of Truth list.",
 			"Preflight evidence must include sanitized command output for",
 			"Final resume PDF source is resolved locally",
+			"Define resume data fields and PDF source workflow. Final resume PDF source is resolved locally; production `/resume/` and PDF-link smoke evidence remains blocked until a frontend deployment target exists.",
+			"Downloaded resume recheck evidence is recorded in `runbooks/LAUNCH_EVIDENCE.md`",
 			"Shuttle remains legacy compatibility only",
 			"Do not use Shuttle as a new production API host",
 		],

@@ -8,6 +8,19 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added Downloaded resume recheck evidence after the latest `~/Downloads`
+  resume note: `sha256sum` confirmed
+  `~/Downloads/'Joe Poznanski Resume February 2026.pdf'` and
+  `apps/web/public/downloads/humankaylee-resume.pdf` both hash to
+  `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`,
+  `cmp -s` returned `cmp_exit=0`, and no resume asset update was needed; this
+  remains local approved-source evidence only, not production `/resume/`
+  readiness.
+- Hardened the implementation plan so resumed goal runs treat the downloaded
+  resume recheck as recorded evidence instead of duplicate import work, while
+  preserving the production `/resume/` and PDF-link smoke blocker.
+- Clarified that `runbooks/QUALITY.md` covers automated local/CI quality gates,
+  while manual privacy review remains a separate non-CI launch blocker.
 - Updated implementation-plan swarm ownership lanes to match the current
   top-level Astro component layout, with a contract guard that rejects stale
   component subdirectory ownership paths.

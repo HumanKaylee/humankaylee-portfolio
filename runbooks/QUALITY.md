@@ -1,6 +1,8 @@
 # Quality Gates
 
-Launch quality gates are enforced locally and in CI.
+Automated launch quality gates are enforced locally and in CI.
+Manual privacy review is a separate launch blocker check and cannot be fully
+enforced by CI.
 
 Pull requests run the full Phase 0 CI suite through the `pull_request` trigger.
 The `push` trigger is scoped to `main` so feature-branch PR commits do not run
@@ -63,4 +65,7 @@ the launch route set.
 
 ## Manual Privacy Review
 
-Before launch, inspect rendered pages and build artifacts for private hostnames, home-directory paths, tokens, credentials, private IPs, raw operational logs, and unpublished client details. Any finding is a launch blocker unless the coordinator records an approved exception.
+Before launch, inspect rendered pages and build artifacts for private hostnames,
+home-directory paths, tokens, credentials, private IPs, raw operational logs, and
+unpublished client details. Any finding is a launch blocker unless the
+coordinator records an approved exception.

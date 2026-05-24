@@ -68,6 +68,22 @@ function resumeEvidenceBlock(content) {
 	return content.slice(blockStart, nextBlock === -1 ? undefined : nextBlock);
 }
 
+function downloadedResumeRecheckBlock(content) {
+	const tableRow = content
+		.split("\n")
+		.find((line) => line.startsWith("| Downloaded resume recheck "));
+
+	if (tableRow) return tableRow;
+
+	const marker = "Downloaded resume recheck";
+	const markerIndex = content.indexOf(marker);
+	assert.ok(markerIndex >= 0, `expected content to include ${marker}`);
+
+	const blockStart = Math.max(0, content.lastIndexOf("\n- ", markerIndex) + 1);
+	const nextBlock = content.indexOf("\n- ", markerIndex + marker.length);
+	return content.slice(blockStart, nextBlock === -1 ? undefined : nextBlock);
+}
+
 test("launch evidence distinguishes the embedded PR snapshot from live current checks", () => {
 	const head = latestVerifiedValue(
 		evidence,
@@ -253,4 +269,40 @@ test("resume inventory alignment is recorded as local approved-source evidence o
 		"Published the approved downloadable resume PDF",
 	);
 	expectNotContains(changelog, "approved downloadable resume PDF");
+});
+
+test("downloaded resume recheck records exact local comparison without production readiness", () => {
+	for (const content of [evidence, changelog]) {
+		const block = downloadedResumeRecheckBlock(content);
+
+		expectContains(block, "Downloaded resume recheck");
+		expectContains(
+			block,
+			"~/Downloads/'Joe Poznanski Resume February 2026.pdf'",
+			"downloaded resume source path",
+		);
+		expectContains(
+			block,
+			"apps/web/public/downloads/humankaylee-resume.pdf",
+			"repo resume asset path",
+		);
+		expectContains(block, "sha256sum", "checksum command");
+		expectContains(block, "cmp -s", "byte comparison command");
+		expectContains(block, "cmp_exit=0", "byte comparison exit code");
+		expectContains(
+			block,
+			"3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477",
+			"resume SHA-256",
+		);
+		expectContains(
+			block,
+			"no resume asset update",
+			"no-import-needed boundary",
+		);
+		expectContains(
+			block,
+			"not production `/resume/` readiness",
+			"production readiness boundary",
+		);
+	}
 });

@@ -14,7 +14,7 @@ function readRequiredFile(path) {
 
 function expectContains(content, needle, label = needle) {
 	assert.ok(
-		content.includes(needle),
+		content.replace(/\s+/g, " ").includes(needle.replace(/\s+/g, " ")),
 		`expected quality runbook to include ${label}`,
 	);
 }
@@ -24,7 +24,12 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 
 	expectContains(
 		quality,
-		"Launch quality gates are enforced locally and in CI.",
+		"Automated launch quality gates are enforced locally and in CI.",
+	);
+	expectContains(
+		quality,
+		"Manual privacy review is a separate launch blocker check and cannot be fully enforced by CI.",
+		"manual privacy review CI boundary",
 	);
 	expectContains(quality, "test-results/lighthouse-summary.json");
 	expectContains(quality, "test-results/bundle-budget-summary.json");
@@ -32,5 +37,11 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 	assert.ok(
 		!quality.includes("Phase 7 launch gates"),
 		"quality runbook should not pin current quality gates to stale phase wording",
+	);
+	assert.ok(
+		!quality.includes(
+			"All launch quality gates are enforced locally and in CI.",
+		),
+		"quality runbook should not imply manual privacy review is fully CI-enforced",
 	);
 });

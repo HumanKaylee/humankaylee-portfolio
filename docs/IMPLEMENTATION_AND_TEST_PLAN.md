@@ -39,6 +39,7 @@ Current goal continuations must treat completed or local-evidence items as guard
 - Phase 7 and Phase 8 contain planning, runbook, local-readiness, and issue-sync evidence only; production deploy, provider, DNS/TLS, API health, contact handling, rollback, production Lighthouse, and redaction approval gates remain unresolved.
 - Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external evidence gates prove otherwise.
 - When provider/domain/auth/contact/redaction blockers are unresolved, stop deployment or launch work at the documented pause conditions and continue only non-blocked local-readiness, docs-sync, guardrail, and verification-hardening work.
+- Downloaded resume recheck evidence is recorded in `runbooks/LAUNCH_EVIDENCE.md`; do not duplicate resume import work unless a later approved source replacement is recorded.
 - Do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence.
 - Treat embedded evidence snapshots as historical unless a live verifier or fresh command output proves they match the current checkout.
 
