@@ -15,6 +15,10 @@ private context.
 
 No candidate currently meets that launch gate.
 
+Approval packet templates for the four current `publish` candidates live in
+`runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md`. Those packets identify
+missing evidence only; they do not approve any case study.
+
 ## Redaction Matrix
 
 | Candidate                                             | Publication status | Redaction status | Current evidence                                                                                                                                                                                           | Launch-safe next action                                                                                                                                                                                      |

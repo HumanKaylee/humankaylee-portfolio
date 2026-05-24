@@ -1520,6 +1520,12 @@ Verification evidence:
 - `scripts/content-runbook-contract.test.mjs` verifies the runbook covers the
   required workflows, schema field names, redaction guide/status links, privacy
   rule, review example, and verification commands.
+- `runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md` gives each current launch
+  candidate an approval packet template and missing-evidence list without
+  marking any candidate launch-approved.
+- `scripts/redaction-approval-packets-contract.test.mjs` verifies approval
+  packet coverage, required guide checklist mapping, and the current
+  zero-approved launch state.
 
 ### B-062: Write rollback and incident runbook
 
