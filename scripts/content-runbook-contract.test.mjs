@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
 const runbookPath = "runbooks/CONTENT_UPDATE_AND_REDACTION.md";
+const contentStrategyPath = "docs/CONTENT_STRATEGY.md";
 
 function readRunbook() {
 	assert.ok(existsSync(runbookPath), `missing runbook: ${runbookPath}`);
@@ -12,8 +13,65 @@ function readRunbook() {
 	return content;
 }
 
+function readContentStrategy() {
+	assert.ok(
+		existsSync(contentStrategyPath),
+		`missing content strategy doc: ${contentStrategyPath}`,
+	);
+
+	const content = readFileSync(contentStrategyPath, "utf8");
+	assert.ok(
+		content.trim().length > 0,
+		`empty content strategy doc: ${contentStrategyPath}`,
+	);
+	return content;
+}
+
 function expectContains(content, needle, label = needle) {
 	assert.ok(content.includes(needle), `expected runbook to include ${label}`);
+}
+
+function expectStrategyContains(content, needle, label = needle) {
+	assert.ok(
+		content.includes(needle),
+		`expected content strategy to include ${label}`,
+	);
+}
+
+function expectStrategyNotContains(content, needle, label = needle) {
+	assert.ok(
+		!content.includes(needle),
+		`expected content strategy to exclude ${label}`,
+	);
+}
+
+function expectStrategyContainsAll(content, entries) {
+	for (const [needle, label] of entries) {
+		expectStrategyContains(content, needle, label);
+	}
+}
+
+function extractMarkdownFenceAfterHeading(content, heading) {
+	const headingIndex = content.indexOf(`${heading}\n`);
+	assert.notEqual(
+		headingIndex,
+		-1,
+		`missing content strategy heading: ${heading}`,
+	);
+
+	const afterHeading = content.slice(headingIndex + heading.length);
+	const match = afterHeading.match(/```md\n([\s\S]*?)\n```/);
+	assert.ok(
+		match,
+		`missing markdown fence after content strategy heading: ${heading}`,
+	);
+	return match[1];
+}
+
+function extractFrontmatter(template) {
+	const match = template.match(/^---\n([\s\S]*?)\n---/);
+	assert.ok(match, "case study template must start with frontmatter");
+	return match[1];
 }
 
 test("content update and redaction runbook covers the required workflow", () => {
@@ -117,4 +175,142 @@ test("content update and redaction runbook covers the required workflow", () => 
 	expectContains(content, "pnpm build && pnpm bundle:budget", "bundle gate");
 	expectContains(content, "pnpm lighthouse:local", "Lighthouse escalation");
 	expectContains(content, "Manual privacy review", "manual privacy review");
+});
+
+test("content strategy doc uses the live schema and launch eligibility wording", () => {
+	const content = readContentStrategy();
+	const caseStudyTemplate = extractMarkdownFenceAfterHeading(
+		content,
+		"## Case Study Template",
+	);
+	const caseStudyFrontmatter = extractFrontmatter(caseStudyTemplate);
+	const shortProjectCardTemplate = extractMarkdownFenceAfterHeading(
+		content,
+		"## Short Project Card Template",
+	);
+
+	expectStrategyNotContains(
+		content,
+		"redaction_status",
+		"stale redaction_status field",
+	);
+	expectStrategyNotContains(
+		content,
+		"publication_status",
+		"stale publication_status field",
+	);
+	expectStrategyNotContains(
+		content,
+		"audience_fit",
+		"stale audience_fit field",
+	);
+	expectStrategyNotContains(
+		content,
+		"hero_artifact",
+		"stale hero_artifact field",
+	);
+	expectStrategyNotContains(content, "repo_url", "stale repo_url field");
+	expectStrategyNotContains(content, "demo_url", "stale demo_url field");
+	expectStrategyNotContains(
+		content,
+		'status: "draft"',
+		"stale status template field",
+	);
+	expectStrategyNotContains(
+		content,
+		"Published, draft, private, or redacted",
+		"stale short-card status list",
+	);
+	expectStrategyNotContains(
+		caseStudyFrontmatter,
+		'featuredEvidence: ""',
+		"scalar featuredEvidence template",
+	);
+	expectStrategyNotContains(
+		caseStudyFrontmatter,
+		"links: []",
+		"array links template",
+	);
+	expectStrategyNotContains(
+		caseStudyFrontmatter,
+		'checklistStatus: "incomplete"',
+		"invalid checklistStatus template value",
+	);
+
+	expectStrategyContains(
+		caseStudyFrontmatter,
+		'publicationStatus: "defer"',
+		"case-study template publicationStatus",
+	);
+	expectStrategyContains(
+		caseStudyFrontmatter,
+		'redactionStatus: "draft"',
+		"case-study template redactionStatus",
+	);
+	expectStrategyContains(
+		caseStudyFrontmatter,
+		"audienceFit:",
+		"case-study template audienceFit",
+	);
+	expectStrategyContains(
+		caseStudyFrontmatter,
+		"featuredEvidence:",
+		"case-study template featuredEvidence",
+	);
+	expectStrategyContainsAll(caseStudyFrontmatter, [
+		["links:", "case-study template links"],
+		['  repo: ""', "links repo field"],
+		['  demo: ""', "links demo field"],
+		['  docs: ""', "links docs field"],
+		["  screenshots:", "links screenshots field"],
+		["  artifacts:", "links artifacts field"],
+		["seo:", "case-study template SEO"],
+		['  title: ""', "SEO title field"],
+		['  description: ""', "SEO description field"],
+		["canonicalPath:", "SEO canonical path"],
+		["ogImage:", "SEO Open Graph image"],
+		["redactionReview:", "case-study template redactionReview"],
+		[
+			'guidePath: "docs/CONTENT_REDACTION_GUIDE.md"',
+			"redaction review guide path",
+		],
+		['  reviewer: ""', "redaction review reviewer field"],
+		['  reviewedOn: ""', "redaction review reviewedOn field"],
+		['checklistStatus: "not-started"', "valid default checklistStatus"],
+		["  openItems: []", "redaction review openItems field"],
+		['  notes: ""', "redaction review notes field"],
+		["issueTrace:", "case-study template issueTrace"],
+		["  backlogId:", "issueTrace backlogId key"],
+		["  githubIssue:", "issueTrace githubIssue key"],
+		["  parentIssue:", "issueTrace parentIssue key"],
+		["  closureRule:", "issueTrace closureRule key"],
+		['  label: ""', "featuredEvidence label field"],
+		['  summary: ""', "featuredEvidence summary field"],
+		['  scope: ""', "featuredEvidence scope field"],
+	]);
+	expectStrategyContains(
+		shortProjectCardTemplate,
+		"Publication status: `publish`, `needs-redaction`, or `defer`.",
+		"short-card publication status values",
+	);
+	expectStrategyContains(
+		content,
+		'publicationStatus: "publish"',
+		"launch publicationStatus requirement",
+	);
+	expectStrategyContains(
+		content,
+		'redactionStatus: "approved"',
+		"launch redactionStatus requirement",
+	);
+	expectStrategyContains(
+		content,
+		"understandable public story",
+		"public-story readability requirement",
+	);
+	expectStrategyContains(
+		content,
+		"artifact checklist pass",
+		"artifact checklist pass requirement",
+	);
 });

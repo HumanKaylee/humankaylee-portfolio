@@ -8,6 +8,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened the content strategy schema wording to use the live case-study field names, redaction review, issue trace, and launch eligibility gates without changing approval state.
 - Added Phase 7 metadata readiness coverage so RSS uses shared site metadata
   alongside sitemap, robots, canonical URL, and Open Graph generation while
   final domain, DNS/TLS, and production metadata smoke remain blocked.
