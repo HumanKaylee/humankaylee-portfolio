@@ -28,6 +28,17 @@ export const LIGHTHOUSE_THRESHOLDS = {
 	seo: 0.95,
 };
 
+export const LIGHTHOUSE_WARMUP_ROUTE = {
+	label: "warmup",
+	path: "/",
+	scored: false,
+};
+
+export const LIGHTHOUSE_AUDIT_PLAN = [
+	LIGHTHOUSE_WARMUP_ROUTE,
+	...LIGHTHOUSE_ROUTES.map((route) => ({ ...route, scored: true })),
+];
+
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = 4322;
 const RESULTS_DIR = "test-results";
@@ -152,6 +163,17 @@ function thresholdFailures(results) {
 	);
 }
 
+export async function runAuditPlan(baseUrl, runRoute = runLighthouseForRoute) {
+	const results = [];
+	for (const route of LIGHTHOUSE_AUDIT_PLAN) {
+		const result = await runRoute(baseUrl, route);
+		if (route.scored) {
+			results.push(result);
+		}
+	}
+	return results;
+}
+
 async function writeSummary(results) {
 	const summaryPath = join(RESULTS_DIR, "lighthouse-summary.json");
 	await writeFile(
@@ -201,11 +223,7 @@ export async function runLighthouseGate({
 	}
 
 	try {
-		const results = [];
-		for (const route of LIGHTHOUSE_ROUTES) {
-			results.push(await runLighthouseForRoute(resolvedBaseUrl, route));
-		}
-
+		const results = await runAuditPlan(resolvedBaseUrl);
 		const summaryPath = await writeSummary(results);
 		const failures = thresholdFailures(results);
 

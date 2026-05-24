@@ -76,6 +76,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   handling, rollback targets, and case-study redaction approvals remain blocked.
 - Scoped Phase 0 CI branch pushes to `main` while keeping pull-request checks
   active, preventing duplicate PR-branch Lighthouse runs for the same commit.
+- Added a non-scored Lighthouse warm-up audit before the scored route audits so
+  CI cold-start variance does not weaken the strict launch thresholds.
 
 ### Remaining Blockers
 
