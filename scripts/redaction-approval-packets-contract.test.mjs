@@ -262,6 +262,24 @@ function expectStatusRow(status, candidateTitle, expectedFragments) {
 	}
 }
 
+function expectHandoffQueueRow(packet, artifactLabel, expectedFragments) {
+	const rowPattern = new RegExp(
+		`\\|\\s*${escapedRegex(artifactLabel)}\\s*\\|([^\\n]+)`,
+	);
+	const row = packet.match(rowPattern);
+	assert.ok(row, `expected handoff queue row for ${artifactLabel}`);
+
+	const normalizedRow = row[1].replace(/`/g, "").toLowerCase();
+
+	for (const fragment of expectedFragments) {
+		const normalizedFragment = fragment.replace(/`/g, "").toLowerCase();
+		assert.ok(
+			normalizedRow.includes(normalizedFragment),
+			`expected ${artifactLabel} handoff queue row to include ${fragment}`,
+		);
+	}
+}
+
 test("case-study redaction approval packets preserve not-approved launch state", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const cliFleetCaseStudy = readRequiredFile(files.cliFleetCaseStudy);
@@ -395,6 +413,46 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectContains(
 		packet,
 		"Pending reviewer inspection of atlas fallback evidence",
+	);
+	expectContains(packet, "## B-014/B-015 Artifact Inspection Handoff Queue");
+	expectHandoffQueueRow(packet, "sanitized rollout matrix", [
+		"#20",
+		"CLI Fleet Synchronization and MCP Rollout",
+		"pending reviewer inspection",
+		"reviewed or blocked only",
+		"forbidden material",
+		"not approval evidence",
+	]);
+	expectHandoffQueueRow(packet, "operator checklist", [
+		"#20",
+		"CLI Fleet Synchronization and MCP Rollout",
+		"pending reviewer inspection",
+		"reviewed or blocked only",
+		"forbidden material",
+		"not approval evidence",
+	]);
+	expectHandoffQueueRow(packet, "redacted incident summary", [
+		"#21",
+		"Remote Workstation Recovery and Operational Debugging",
+		"pending reviewer inspection",
+		"reviewed or blocked only",
+		"forbidden material",
+		"not approval evidence",
+	]);
+	expectHandoffQueueRow(packet, "operator runbook excerpt", [
+		"#21",
+		"Remote Workstation Recovery and Operational Debugging",
+		"pending reviewer inspection",
+		"reviewed or blocked only",
+		"forbidden material",
+		"not approval evidence",
+	]);
+	assert.equal(
+		packet.match(
+			/\|\s*(?:sanitized rollout matrix|operator checklist|redacted incident summary|operator runbook excerpt)\s*\|/g,
+		)?.length,
+		4,
+		"handoff queue must include exactly the four required B-014/B-015 artifact labels",
 	);
 
 	for (const candidate of launchCandidates) {

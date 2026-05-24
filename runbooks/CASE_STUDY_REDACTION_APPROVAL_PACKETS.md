@@ -68,6 +68,20 @@ material if future scans find it.
 | HumanKaylee Portfolio Build                           | Static-first local verification matrix, optional Rust API boundary, and public-safe launch evidence boundary.       | Pending reviewer inspection of local verification and launch evidence claims plus production-domain evidence.         |
 | Remote Workstation Recovery and Operational Debugging | In-page role-labeled diagnostic flow, In-page sanitized verification matrix, and role-labeled prevention notes.     | Pending reviewer inspection of redacted incident summary and Pending reviewer inspection of operator runbook excerpt. |
 
+## B-014/B-015 Artifact Inspection Handoff Queue
+
+This queue gives reviewers the exact artifact labels to inspect for #20 and #21.
+Each handoff can produce only `reviewed` or `blocked` reviewer notes until
+openItems are cleared and a separate approval decision is recorded. These rows
+are not approval evidence.
+
+| Artifact label            | Issue | Candidate title                                       | Current status              | Allowed reviewer result  | Forbidden material note                                                                 | Approval boundary                                      |
+| ------------------------- | ----- | ----------------------------------------------------- | --------------------------- | ------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| sanitized rollout matrix  | #20   | CLI Fleet Synchronization and MCP Rollout             | pending reviewer inspection | reviewed or blocked only | Forbidden material: credentials, private paths, hostnames, account names, and raw logs. | not approval evidence; do not change redaction status. |
+| operator checklist        | #20   | CLI Fleet Synchronization and MCP Rollout             | pending reviewer inspection | reviewed or blocked only | Forbidden material: credentials, access paths, account identifiers, and exact commands. | not approval evidence; do not clear openItems.         |
+| redacted incident summary | #21   | Remote Workstation Recovery and Operational Debugging | pending reviewer inspection | reviewed or blocked only | Forbidden material: hostnames, session identifiers, raw logs, and exact recovery steps. | not approval evidence; do not close #21.               |
+| operator runbook excerpt  | #21   | Remote Workstation Recovery and Operational Debugging | pending reviewer inspection | reviewed or blocked only | Forbidden material: private access paths, account details, credentials, and raw logs.   | not approval evidence; do not mark content approved.   |
+
 ## Packet Template
 
 Use this template when preparing a future approval request. Do not mark the

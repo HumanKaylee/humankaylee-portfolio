@@ -87,6 +87,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a case-study redaction approval packet readiness matrix that lists the
   exact missing approval evidence for each publish-intended candidate while
   preserving the zero-approved launch state.
+- Added a B-014/B-015 artifact inspection handoff queue for #20/#21 reviewer
+  routing while preserving `reviewed` status, open issues, and non-approval
+  launch boundaries.
 - Added a content update and redaction runbook with an executable contract test
   covering project, case-study, notes/build-log, schema field, redaction
   checklist, publication review, and verification-command expectations.

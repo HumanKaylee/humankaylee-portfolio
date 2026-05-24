@@ -214,6 +214,14 @@ from v1, records HumanKaylee owner decision as pending, and treats any
 synthetic proof pack as review evidence only. This is not publication approval
 and does not replace the Content Redaction Guide launch gate.
 
+B-014/B-015 artifact inspection handoff status: issue-readiness progress only.
+`runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md` now queues the #20
+sanitized rollout matrix and operator checklist, plus the #21 redacted incident
+summary and operator runbook excerpt, for reviewer inspection. Reviewer results
+are limited to `reviewed` or `blocked`; these handoff rows are not approval
+evidence, do not close #20 or #21, do not clear openItems, and do not establish
+launch readiness.
+
 Content issue traceability status: approval-blocker mapping only; #20, #21,
 #24, and #25 remain open. `issueTrace` frontmatter now maps the four open
 content/privacy issue records to their backlog IDs, parent issue, and closure
