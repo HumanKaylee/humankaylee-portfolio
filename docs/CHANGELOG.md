@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Clarified resume copy on the home recruiter card and `/resume/` route so the
+  PDF is described as a downloadable static asset from an approved local source,
+  without implying production route evidence or broader launch readiness.
 - Added public audience chips to project cards, atlas nodes, and constellation
   artifact cards using existing `bestFor` metadata so recruiter, senior
   engineer, and collaborator paths are visible on static project surfaces.

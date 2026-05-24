@@ -14,7 +14,7 @@ const coreRoutes = [
 	{
 		path: "/resume/",
 		heading: /resume/i,
-		copy: /Published resume/i,
+		copy: /approved local source/i,
 	},
 	{
 		path: "/contact/",
@@ -22,6 +22,9 @@ const coreRoutes = [
 		copy: /mailto fallback/i,
 	},
 ];
+
+const resumeLaunchBoundaryText =
+	/published resume|published PDF|public resume|public PDF|live resume|production resume/i;
 
 function luminance([red, green, blue]: readonly number[]) {
 	const channels = [red, green, blue].map((value) => {
@@ -240,12 +243,18 @@ test.describe("static shell @static-shell", () => {
 		}
 	});
 
-	test("serves the approved resume PDF from home and the resume page", async ({
+	test("serves the approved-source static resume asset from home and the resume page", async ({
 		page,
 		request,
 	}) => {
 		for (const route of ["/", "/resume/"]) {
 			await page.goto(route);
+			await expect(page.locator("main")).toContainText(
+				/approved local source/i,
+			);
+			await expect(page.locator("main")).not.toContainText(
+				resumeLaunchBoundaryText,
+			);
 			await expect(
 				page.getByRole("link", { name: /Download resume PDF/i }),
 			).toHaveAttribute("href", "/downloads/humankaylee-resume.pdf");

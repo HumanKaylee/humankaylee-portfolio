@@ -10,26 +10,28 @@ type WorkflowStep = (typeof data.workflowSteps)[number];
 
 <BaseLayout
 	title="Resume | HumanKaylee"
-	description="HTML resume entry point and PDF source workflow for HumanKaylee."
+	description="HTML resume entry point and approved local-source PDF workflow for HumanKaylee."
 	canonicalPath="/resume/"
 	bodyClass="resume-print-route"
 >
 	<section class="page-shell" aria-labelledby="resume-title">
 		<header class="page-header resume-screen-header">
 			<p class="section-kicker">Resume</p>
-			<h1 id="resume-title">Resume path with a published PDF.</h1>
+			<h1 id="resume-title">Resume path with a static PDF asset.</h1>
 			<p class="page-intro">
-				The downloadable resume PDF is available as a static asset, keeping the
-				recruiter path fast and independent of JavaScript, WebGL, or API uptime.
+				The downloadable resume PDF is served as a static asset from the
+				approved local source, keeping the recruiter path fast and independent
+				of JavaScript, WebGL, or API uptime.
 			</p>
 		</header>
 
 		<article class="paper-panel resume-print-sheet" data-print-resume="true">
-			<p class="eyebrow">Published resume</p>
+			<p class="eyebrow">Static resume asset</p>
 			<h2>{data.title}</h2>
 			<p>
-				Source status: {data.sourceStatus}. Approval state: {data.approvalState}.
-				The public PDF is served from {data.pdfDownloadPath}.
+				Source status: {data.sourceStatus}. Local source approval state:{" "}
+				{data.approvalState}. The downloadable PDF is served from{" "}
+				{data.pdfDownloadPath}.
 			</p>
 			<a
 				class="contact-link"

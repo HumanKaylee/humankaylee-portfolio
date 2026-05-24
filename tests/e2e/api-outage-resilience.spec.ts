@@ -24,7 +24,7 @@ const outageRoutes = [
 	{
 		path: "/resume/",
 		heading: /resume/i,
-		marker: /Published resume/i,
+		marker: /approved local source/i,
 		link: {
 			name: /Download resume PDF/i,
 			href: "/downloads/humankaylee-resume.pdf",
@@ -52,6 +52,8 @@ const outageRoutes = [
 
 const rawErrorText =
 	/Failed to fetch|net::ERR|ECONNREFUSED|ENOTFOUND|sqlx::|stack trace|TypeError:|SyntaxError:|\/home\/[a-z0-9_-]+/i;
+const resumeLaunchBoundaryText =
+	/published resume|published PDF|public resume|public PDF|live resume|production resume/i;
 
 async function fillContactForm(page: import("@playwright/test").Page) {
 	await page.getByLabel("Your name").fill("Public Reviewer");
@@ -76,6 +78,11 @@ test.describe("API outage resilience @api-down @B-056", () => {
 					route.heading,
 				);
 				await expect(page.locator("main")).toContainText(route.marker);
+				if (route.path === "/resume/") {
+					await expect(page.locator("main")).not.toContainText(
+						resumeLaunchBoundaryText,
+					);
+				}
 				await expect(page.locator("body")).toHaveAttribute(
 					"data-enhancement",
 					"static-first",
