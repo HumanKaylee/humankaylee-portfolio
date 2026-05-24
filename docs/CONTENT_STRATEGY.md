@@ -5,7 +5,7 @@ Sources: `docs/RESEARCH.md`, `docs/PRD.md`
 
 ## Strategy Summary
 
-The portfolio should make the strongest work understandable quickly, then reward deeper inspection with architecture, evidence, testing, operations notes, and lessons learned. The content should feel like a working systems lab: polished enough for recruiters, specific enough for senior engineers, and safe enough to publish.
+The portfolio should make the strongest work understandable quickly, then reward deeper inspection with architecture, evidence, testing, operations notes, and lessons learned. The content should feel like a working systems lab: polished enough for recruiters, specific enough for senior engineers, and explicit about redaction boundaries.
 
 Launch content should prioritize 4 to 6 flagship case studies over a large gallery of shallow project cards. Each case study should explain what changed because of the work, how it was built, how it was verified, and what was learned.
 

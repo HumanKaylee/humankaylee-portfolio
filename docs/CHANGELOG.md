@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened GitHub Project recovery guidance with non-interactive discovery,
+  manual-only auth-scope cases, canonical board verification, and Project item
+  recovery criteria while Project scopes remain blocked.
+- Hardened content/redaction approval wording guards so blocked candidates cannot
+  be described with readiness or sufficiency paraphrases before launch gates are
+  complete.
 - Hardened assistant and privacy planning boundaries so the future assistant
   cannot treat the resume PDF as a production source before `/resume/` and PDF
   smoke checks pass, and contact production storage must define backup handling

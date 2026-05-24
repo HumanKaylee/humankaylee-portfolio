@@ -6,6 +6,7 @@ const files = {
 	changelog: "docs/CHANGELOG.md",
 	cliFleet:
 		"apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md",
+	contentStrategy: "docs/CONTENT_STRATEGY.md",
 	contentContract: "apps/web/src/lib/contracts/content.ts",
 	creative:
 		"apps/web/src/content/case-studies/creative-web-systems-atlas-demo.md",
@@ -46,6 +47,37 @@ function expectNotContains(content, needle, label = needle) {
 		!normalize(content).includes(normalize(needle)),
 		`expected content not to include ${label}`,
 	);
+}
+
+function expectNoUnsafeApprovalParaphrases(content, label) {
+	const forbiddenPatterns = [
+		/\bready to close\b/i,
+		/\bsufficient evidence\b/i,
+		/\bready for approval\b/i,
+		/\blaunch[- ]safe\b/i,
+		/\bsafe enough\b/i,
+		/\bready to publish\b/i,
+	];
+
+	for (const pattern of forbiddenPatterns) {
+		assert.doesNotMatch(
+			content,
+			pattern,
+			`${label} should not use approval paraphrase ${pattern}`,
+		);
+	}
+
+	for (const line of content.split("\n")) {
+		if (!/\bcounts? toward launch\b/i.test(line)) {
+			continue;
+		}
+
+		assert.match(
+			line,
+			/\b(only|only after|does not|do not|cannot|not)\b/i,
+			`${label} can only mention count toward launch in blocked/conditional wording: ${line}`,
+		);
+	}
 }
 
 function markdownRows(content) {
@@ -116,6 +148,7 @@ test("content issue traceability ties open content issues to approval blockers w
 	const changelog = readRequiredFile(files.changelog);
 	const cliFleet = readRequiredFile(files.cliFleet);
 	const contentContract = readRequiredFile(files.contentContract);
+	const contentStrategy = readRequiredFile(files.contentStrategy);
 	const creative = readRequiredFile(files.creative);
 	const decision = readRequiredFile(files.decision);
 	const githubSync = readRequiredFile(files.githubSync);
@@ -279,6 +312,10 @@ test("content issue traceability ties open content issues to approval blockers w
 		"#24 and #25 remain open until HumanKaylee records a publication decision and any synthetic proof pack passes review.",
 	);
 	expectContains(
+		status,
+		"Do not use readiness or sufficiency language for blocked candidates; keep approval wording explicit until every launch gate is actually complete.",
+	);
+	expectContains(
 		githubSync,
 		"Content issue traceability status: approval-blocker mapping covers #20, #21, #24, and #25; draft-source mapping covers closed #22 and #23.",
 	);
@@ -287,10 +324,20 @@ test("content issue traceability ties open content issues to approval blockers w
 		"Added content issue traceability coverage for #20, #21, #22, #23, #24, and #25",
 	);
 
-	for (const content of [decision, githubSync, packet, status]) {
+	for (const content of [
+		contentStrategy,
+		decision,
+		githubSync,
+		packet,
+		status,
+	]) {
 		expectNotContains(content, "Status: publication approved");
 		expectNotContains(content, "launch-ready");
 		expectNotContains(content, "Traceability approves publication");
+		expectNoUnsafeApprovalParaphrases(
+			content,
+			"content issue traceability docs",
+		);
 	}
 	expectNotContains(decision, "enough repo evidence");
 	expectNotContains(decision, "enough evidence");

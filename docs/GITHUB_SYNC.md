@@ -28,7 +28,7 @@ error: your authentication token is missing required scopes [project read:projec
 Read-only project listing is also blocked:
 
 ```bash
-gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
 ```
 
 Result:
@@ -40,6 +40,13 @@ error: your authentication token is missing required scopes [read:project]
 `gh auth refresh --hostname github.com -s project,read:project` requires
 interactive device-code approval. Until that is completed, repo issues are the
 synchronization surface for status, ownership, labels, and acceptance criteria.
+
+### Manual Project auth recovery cases
+
+- Listing only: `gh auth refresh --hostname github.com -s read:project`.
+- Create or update: `gh auth refresh --hostname github.com -s project,read:project`.
+
+Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
 ### Current auth snapshot
 
@@ -57,7 +64,7 @@ Current token scopes:
 The read-only Project check still fails:
 
 ```bash
-gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
 ```
 
 Result:
@@ -71,18 +78,26 @@ Do not run `gh auth refresh` from unattended automation. It requires
 interactive account approval and should be performed by HumanKaylee before any
 GitHub Project board creation or sync.
 
+Use `GH_PROMPT_DISABLED=1` for Project discovery checks so automation fails fast
+instead of opening an interactive prompt.
+
 ### Project board recovery steps
 
 After interactive auth refresh succeeds:
 
-1. Run `gh project list --owner HumanKaylee --format json` and confirm whether
-   `HumanKaylee Portfolio` already exists.
+1. Run `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+   and confirm whether `HumanKaylee Portfolio` already exists.
+   Canonical verification command:
+   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json | jq -r '.projects[] | select(.title == "HumanKaylee Portfolio") | [.number, .title, .url] | @tsv'`.
 2. If absent, run
    `gh project create --owner HumanKaylee --title "HumanKaylee Portfolio" --format json`.
 3. Add the existing repo issues from the current live issue bridge to the board.
+   Use:
+   `gh project item-add <project-number> --owner HumanKaylee --url https://github.com/HumanKaylee/humankaylee-portfolio/issues/<issue-number>`.
 4. Add fields for phase, priority, type, area, agent size, status, and blocker.
 5. Keep issue bodies as the source of truth; use the project board for triage
    and status views only.
+6. Do not mark the Project board recovered until every open issue in the live issue bridge has a Project item or a documented skip reason.
 
 ## Issue Sync Plan
 
