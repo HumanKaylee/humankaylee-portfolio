@@ -10,7 +10,7 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const githubSyncPath = resolve(repoRoot, "docs/GITHUB_SYNC.md");
 const liveVerificationEnabled = process.env.HK_VERIFY_GITHUB_LIVE === "1";
 const mustRemainOpenIssueNumbers = new Set([
-	20, 21, 22, 23, 24, 25, 63, 64, 65, 69, 70, 71, 72, 73, 74,
+	20, 21, 24, 25, 63, 64, 65, 69, 70, 71, 72, 73, 74,
 ]);
 
 function readGitHubSync() {

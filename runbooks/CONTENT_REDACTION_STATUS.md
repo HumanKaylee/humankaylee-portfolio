@@ -20,6 +20,10 @@ Approval packet templates for the four current `publish` candidates live in
 readiness matrix that identifies exactly which approval evidence remains
 missing for each candidate; they do not approve any case study.
 
+Publication-safety decisions for the Kalshi/analytics and YouTube AI pipeline
+blocked candidates live in `runbooks/PUBLICATION_SAFETY_DECISIONS.md`. That
+record is decision support only; it does not approve publication.
+
 ## Redaction Matrix
 
 | Candidate                                             | Publication status | Redaction status | Current evidence                                                                                                                                                                                           | Launch-safe next action                                                                                                                                                                                      |

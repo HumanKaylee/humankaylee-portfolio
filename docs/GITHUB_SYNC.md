@@ -203,6 +203,14 @@ views:
 | #26   | B-020: Build resume content source                                             | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                  |
 | #27   | B-021: Create notes/build-log starter content                                  | #3     | `priority:p1`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                  |
 
+Phase 2 issue sync status: partial. #22 and #23 are closed as draft-content
+tasks with local route, quality, and visual evidence while keeping their
+case-study redaction status at `reviewed`. #20 and #21 remain open for final
+redaction checklist/artifact review. #24 and #25 remain open because the
+publication-safety record recommends excluding/deferring sensitive candidates
+from v1 and records HumanKaylee owner decision as pending. This is not launch
+approval and does not satisfy the four approved case-study launch gate.
+
 Phase 3 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
 views:

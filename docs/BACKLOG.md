@@ -505,7 +505,11 @@ Acceptance criteria:
 
 Verification evidence:
 
-- User decision recorded before any public page is created from this material.
+- `runbooks/PUBLICATION_SAFETY_DECISIONS.md` records public-safe,
+  redacted-only, excluded, risk, recommendation, owner, and user-decision status
+  for this candidate without approving publication.
+- `node --test scripts/publication-safety-decisions-contract.test.mjs`
+  verifies the decision-support record and blocked publication status.
 
 ### B-019: Evaluate YouTube AI video pipeline publication safety
 
@@ -527,7 +531,11 @@ Acceptance criteria:
 
 Verification evidence:
 
-- User decision recorded before publication.
+- `runbooks/PUBLICATION_SAFETY_DECISIONS.md` records public-safe,
+  redacted-only, excluded, risk, recommendation, owner, and user-decision status
+  for this candidate without approving publication.
+- `node --test scripts/publication-safety-decisions-contract.test.mjs`
+  verifies the decision-support record and blocked publication status.
 
 ### B-020: Build resume content source
 

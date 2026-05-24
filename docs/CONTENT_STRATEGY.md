@@ -162,6 +162,11 @@ Select from real work in `/home/joe`, prior runbooks, and GitHub repositories. P
 | HumanKaylee portfolio build | Static frontend, Rust API, visual system, CI, deployment | Strong meta case study after launch |
 | Creative web demo | 3D, motion, performance, accessibility | Useful visual proof if backed by technical explanation |
 
+`runbooks/PUBLICATION_SAFETY_DECISIONS.md` is the current decision-support
+record only for the Kalshi/analytics and YouTube AI pipeline candidates. It
+records safe/redacted/excluded material, recommendations, owner, and pending
+user-decision state without approving publication.
+
 ## Redaction Rules
 
 Apply these rules before any project content, screenshot, diagram, log, or artifact becomes public.

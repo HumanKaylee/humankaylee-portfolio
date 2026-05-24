@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added Publication Safety Decisions coverage for B-018 and B-019 so the
+  Kalshi/analytics and YouTube AI pipeline candidates have explicit
+  recommendation, risk, owner, and pending-decision records without approving
+  publication.
 - Added a B-005 launch blockers register with owner, impact, phase, status, and
   next-evidence fields for unresolved launch decisions without claiming launch
   readiness.
