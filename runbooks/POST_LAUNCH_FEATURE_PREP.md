@@ -87,6 +87,7 @@ the normal content workflow:
 ## API Hosting Decision Inputs
 
 Official-source snapshot date: 2026-05-24.
+Canonical hosting source: `docs/ARCHITECTURE.md#9-hosting-architecture`.
 
 Record hosting facts from official provider documentation only. At minimum,
 compare:

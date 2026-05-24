@@ -50,29 +50,94 @@ function expectAll(content, needles) {
 	}
 }
 
+function fencedLineIndexes(content) {
+	const indexes = new Set();
+	let insideFence = false;
+
+	content.split("\n").forEach((line, index) => {
+		if (line.trim().startsWith("```")) {
+			insideFence = !insideFence;
+			indexes.add(index);
+			return;
+		}
+
+		if (insideFence) {
+			indexes.add(index);
+		}
+	});
+
+	return indexes;
+}
+
+function splitMarkdownTableRow(line) {
+	const cells = [];
+	let cell = "";
+	let escaped = false;
+
+	for (const character of line.trim().slice(1, -1)) {
+		if (escaped) {
+			cell += character === "|" ? character : `\\${character}`;
+			escaped = false;
+			continue;
+		}
+
+		if (character === "\\") {
+			escaped = true;
+			continue;
+		}
+
+		if (character === "|") {
+			cells.push(cell.trim());
+			cell = "";
+			continue;
+		}
+
+		cell += character;
+	}
+
+	if (escaped) {
+		cell += "\\";
+	}
+
+	cells.push(cell.trim());
+	return cells;
+}
+
 function markdownRows(content) {
+	const codeFenceLineNumbers = fencedLineIndexes(content);
+
 	return content
 		.split("\n")
+		.filter((_, index) => !codeFenceLineNumbers.has(index))
 		.filter((line) => line.trim().startsWith("|"))
-		.map((line) =>
-			line
-				.trim()
-				.slice(1, -1)
-				.split("|")
-				.map((cell) => cell.trim()),
-		)
+		.map(splitMarkdownTableRow)
 		.filter((cells) => !cells.every((cell) => /^-+$/.test(cell)));
 }
 
-function expectTableRow(content, firstCell, expectedCells) {
+function findTableRow(content, firstCell) {
 	const row = markdownRows(content).find((cells) => cells[0] === firstCell);
 	assert.ok(row, `expected table row for ${firstCell}`);
+	return row;
+}
 
-	for (const expectedCell of expectedCells) {
+function expectTableRowCells(content, firstCell, expectedCellsByColumn) {
+	const row = findTableRow(content, firstCell);
+
+	for (const [columnIndex, expectedCells] of Object.entries(
+		expectedCellsByColumn,
+	)) {
+		const cell = row[Number(columnIndex)];
 		assert.ok(
-			row.some((cell) => normalize(cell).includes(normalize(expectedCell))),
-			`expected ${firstCell} row to include ${expectedCell}`,
+			cell,
+			`expected ${firstCell} row to include column ${columnIndex}`,
 		);
+
+		for (const expectedCell of expectedCells) {
+			assert.ok(
+				normalize(cell).includes(normalize(expectedCell)),
+				`expected ${firstCell} column ${columnIndex} to include ${expectedCell}`,
+			);
+		}
 	}
 }
 
@@ -114,16 +179,15 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Do not claim launch readiness from this runbook",
 		"runbooks/FINAL_LAUNCH_CHECKLIST.md",
 		"runbooks/LAUNCH_EVIDENCE.md",
+		"Canonical hosting source: `docs/ARCHITECTURE.md#9-hosting-architecture`",
 	]);
 
-	expectTableRow(runbook, "Portfolio assistant scope", [
-		"B-064",
-		"#70",
-		"Blocked until B-063",
-		"docs/ASSISTANT_SCOPE_DECISION.md",
-		"privacy",
-		"cost",
-	]);
+	expectTableRowCells(runbook, "Portfolio assistant scope", {
+		1: ["B-064", "#70"],
+		2: ["Blocked until B-063"],
+		3: ["docs/ASSISTANT_SCOPE_DECISION.md", "privacy", "cost"],
+		4: ["HumanKaylee-approved", "build/defer/reject"],
+	});
 
 	expectAll(assistantDecision, [
 		"# Portfolio Assistant Scope Decision",
@@ -141,45 +205,47 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"public portfolio content only",
 		"no raw contact submissions",
 		"no private repositories",
+		"no private hostnames",
+		"credentials",
+		"unpublished case-study drafts",
+		"redaction open items",
 		"server-side only",
 		"rate limit",
 		"monthly cost cap",
 		"kill switch",
+		"does not authorize B-065",
 	]);
-	expectTableRow(runbook, "Portfolio assistant prototype", [
-		"B-065",
-		"#71",
-		"Blocked until B-064 approved build recommendation",
-		"Do not build",
-		"disabled-mode",
-	]);
-	expectTableRow(runbook, "Public status or metadata page", [
-		"B-066",
-		"#72",
-		"Blocked until B-063",
-		"/api/health",
-		"/api/projects/live",
-		"static fallback",
-		"no private deployment details",
-	]);
-	expectTableRow(runbook, "Additional notes and postmortems", [
-		"B-067",
-		"#73",
-		"Blocked until B-063",
-		"draft outlines only",
-		"redaction review",
-	]);
-	expectTableRow(runbook, "API hosting migration", [
-		"B-068",
-		"#74",
-		"Blocked until B-058 and B-063",
-		"Shuttle is not a viable new launch target",
-		"Shuttle",
-		"Fly.io",
-		"Railway",
-		"Cloudflare",
-		"Hetzner",
-	]);
+	expectTableRowCells(runbook, "Portfolio assistant prototype", {
+		1: ["B-065", "#71"],
+		2: ["Blocked until B-064", "build recommendation"],
+		3: ["Do not build", "disabled-mode"],
+		4: ["Prompt/content tests", "disabled-mode smoke test"],
+	});
+	expectTableRowCells(runbook, "Public status or metadata page", {
+		1: ["B-066", "#72"],
+		2: ["Blocked until B-063"],
+		3: ["/api/health", "/api/projects/live", "static fallback"],
+		4: ["API-up and API-down"],
+	});
+	expectTableRowCells(runbook, "Additional notes and postmortems", {
+		1: ["B-067", "#73"],
+		2: ["Blocked until B-063"],
+		3: ["draft outlines only", "redaction review"],
+		4: ["Feed and notes index review"],
+	});
+	expectTableRowCells(runbook, "API hosting migration", {
+		1: ["B-068", "#74"],
+		2: ["Blocked until B-058 and B-063"],
+		3: [
+			"Decision matrix only",
+			"Shuttle is not a viable new launch target",
+			"Fly.io",
+			"Railway",
+			"Cloudflare",
+			"Hetzner",
+		],
+		4: ["Stay-or-migrate recommendation"],
+	});
 
 	expectAll(runbook, [
 		"https://docs.shuttle.dev/docs/shuttle-shutdown",
@@ -190,31 +256,48 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Official-source snapshot date: 2026-05-24",
 	]);
 
-	for (const [label, content] of [
-		["architecture", architecture],
-		["implementation plan", implementationPlan],
-		["operations", operations],
-		["deployment", deployment],
-		["readme", readme],
-		["research", research],
-		["launch blockers", blockers],
+	for (const content of [
+		architecture,
+		implementationPlan,
+		operations,
+		deployment,
+		readme,
+		research,
+		blockers,
 	]) {
 		expectAll(content, [
 			"Shuttle is not a viable new launch target",
 			"https://docs.shuttle.dev/docs/shuttle-shutdown",
 		]);
-		expectContains(
-			content,
-			"Fly.io and Railway",
-			`${label} current Axum host candidates`,
-		);
 	}
+	for (const content of [
+		architecture,
+		implementationPlan,
+		operations,
+		deployment,
+		readme,
+		research,
+		blockers,
+	]) {
+		expectAll(content, ["Fly.io", "Railway"]);
+	}
+	expectAll(architecture, [
+		"## 9. Hosting Architecture",
+		"Fly.io",
+		"Railway",
+		"Cloudflare Pages plus Workers",
+		"Hetzner VPS",
+		"Home self-hosting plus Cloudflare Tunnel",
+	]);
 
 	expectAll(githubSync, [
 		"Phase 8 prep status: pre-launch planning only",
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
 		"docs/ASSISTANT_SCOPE_DECISION.md",
-		"not authorization to build the assistant before #70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome of `build`",
+		"not authorization to build the assistant before",
+		"#70 has B-063 launch evidence",
+		"HumanKaylee approval",
+		"approved outcome of `build`",
 		"#70 remains open until B-063 launch evidence and HumanKaylee approval exist",
 		"B-065 remains blocked until #70 has that approval",
 		"#70 through #74 remain open",

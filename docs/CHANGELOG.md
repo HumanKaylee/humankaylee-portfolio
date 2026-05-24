@@ -11,6 +11,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added Phase 7 blocker traceability coverage so #63, #64, #65, and #69 map
   from the launch blockers register to controlling decisions and replacement
   evidence rows without changing their open/blocked status.
+- Hardened the Phase 8 post-launch feature prep contract so assistant and API
+  hosting gates are checked structurally while hosting candidates point back to
+  the architecture source of truth.
 - Added Phase 7 Deployment Decision Packets coverage for #63, #64, #65, and
   #69 so frontend deployment, API host, production domain, and final launch
   evidence requirements are explicit without claiming production launch
