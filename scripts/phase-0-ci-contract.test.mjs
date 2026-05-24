@@ -165,6 +165,17 @@ function expectNode24ActionRuntime(workflow) {
 		/^\s{2,4}FORCE_JAVASCRIPT_ACTIONS_TO_NODE24:\s*["']?true["']?/m,
 		"expected workflow to opt JavaScript actions into Node.js 24 via FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true",
 	);
+	for (const action of [
+		"actions/checkout@v6",
+		"actions/setup-node@v6",
+		"pnpm/action-setup@v6",
+	]) {
+		assert.match(
+			workflow,
+			new RegExp(`uses:\\s+${action.replace("/", "\\/")}`),
+			`expected workflow to use Node 24-native JavaScript action ${action}`,
+		);
+	}
 }
 
 test("phase-0 CI exposes dedicated launch gate steps in the expected order", () => {

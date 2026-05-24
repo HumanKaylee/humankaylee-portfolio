@@ -106,7 +106,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   for narrative/artifact surfaces, with reduced-motion and no-JS visibility
   coverage.
 - Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
-  before GitHub's forced migration.
+  and use Node 24-native action majors before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,
   custom domains, contact storage, secret stores, production smoke checks, and
   rollback evidence remain explicit prerequisites for launch.
