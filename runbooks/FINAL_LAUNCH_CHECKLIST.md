@@ -1,6 +1,6 @@
 # Final Launch Checklist
 
-Date: 2026-05-24T05:00:39-04:00
+Date: 2026-05-24T17:14:26-04:00
 Branch: `goal/portfolio-implementation`
 Head: see git history for this checklist commit
 Status: not launch-ready
@@ -24,8 +24,8 @@ of this checklist update:
 
 | Check                 | Status | Duration | Evidence URL                                                                                    |
 | --------------------- | ------ | -------- | ----------------------------------------------------------------------------------------------- |
-| Frontend verification | pass   | 5m50s    | `https://github.com/HumanKaylee/humankaylee-portfolio/actions/runs/26356797852/job/77584884076` |
-| Rust verification     | pass   | 2m3s     | `https://github.com/HumanKaylee/humankaylee-portfolio/actions/runs/26356797852/job/77584884086` |
+| Frontend verification | pass   | 6m15s    | `https://github.com/HumanKaylee/humankaylee-portfolio/actions/runs/26372667551/job/77627477189` |
+| Rust verification     | pass   | 1m57s    | `https://github.com/HumanKaylee/humankaylee-portfolio/actions/runs/26372667551/job/77627477195` |
 
 These checks are CI evidence, not production launch evidence.
 

@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the embedded launch-evidence snapshot and final launch checklist PR
+  rows for PR #6 head `dadb641` and CI run `26372667551` while preserving
+  blocked production rows and not-launch-ready status.
 - Added B-067 Draft Outline Records for three future post-launch notes while
   preserving the rule that no notes content, RSS entries, publication approval,
   or issue closure happens before B-063 launch evidence and approved content.
