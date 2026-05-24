@@ -197,6 +197,22 @@ views:
 | #26   | B-020: Build resume content source                                                 | #3     | `priority:p0`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
 | #27   | B-021: Create notes/build-log starter content                                      | #3     | `priority:p1`, `type:content`, `area:content`, `phase:2-content`, `agent-standard`                           |
 
+Phase 3 backlog issues now live as the next granular sync layer, with #3
+remaining the parent epic until the GitHub Project board can take over status
+views:
+
+| Issue | Backlog item                                                        | Parent | Labels                                                                                               |
+| ----- | ------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| #28   | B-022: Implement static home page                                   | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #29   | B-023: Implement project index and category filters                 | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #30   | B-024: Implement case-study routes                                  | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #31   | B-025: Implement resume HTML page and PDF link                      | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+| #32   | B-026: Implement contact page or section with fallback              | #3     | `priority:p0`, `type:feature`, `area:frontend`, `area:privacy`, `phase:3-static-experience`, `agent-standard` |
+| #33   | B-027: Implement notes/build-log pages and RSS                      | #3     | `priority:p1`, `type:feature`, `area:frontend`, `area:seo`, `phase:3-static-experience`, `agent-standard` |
+| #34   | B-028: Add SEO metadata and structured data                         | #3     | `priority:p0`, `type:feature`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard` |
+| #35   | B-029: Add sitemap and robots.txt                                   | #3     | `priority:p0`, `type:task`, `area:seo`, `area:frontend`, `phase:3-static-experience`, `agent-standard` |
+| #36   | B-030: Add static project metadata fallback                         | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard` |
+
 Next sync passes should add granular issues one phase at a time, preserving the
 coarse issues as parent epics until a GitHub Project board can take over status
 views.

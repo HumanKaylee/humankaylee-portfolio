@@ -159,6 +159,14 @@ function expectLaunchGateSteps(workflow) {
 	);
 }
 
+function expectNode24ActionRuntime(workflow) {
+	assert.match(
+		workflow,
+		/^\s{2,4}FORCE_JAVASCRIPT_ACTIONS_TO_NODE24:\s*["']?true["']?/m,
+		"expected workflow to opt JavaScript actions into Node.js 24 via FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true",
+	);
+}
+
 test("phase-0 CI exposes dedicated launch gate steps in the expected order", () => {
 	expectLaunchGateSteps(readWorkflow());
 });
@@ -186,6 +194,10 @@ jobs:
 		() => expectLaunchGateSteps(collapsedWorkflow),
 		/expected frontend job to include dedicated @keyboard gate step/,
 	);
+});
+
+test("phase-0 CI guards JavaScript action runtime deprecation", () => {
+	expectNode24ActionRuntime(readWorkflow());
 });
 
 test("phase-0 CI contract requires gates in the frontend job", () => {

@@ -138,6 +138,36 @@ html {
 	}
 }
 
+@keyframes atelier-evidence-reveal {
+	from {
+		filter: saturate(0.86);
+		opacity: 0.86;
+		transform: translate3d(0, 1rem, 0);
+	}
+
+	to {
+		filter: saturate(1);
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.case-study-section,
+	.evidence-drawer {
+		animation: atelier-evidence-reveal 520ms cubic-bezier(0.2, 0.78, 0.2, 1)
+			both;
+	}
+
+	@supports (animation-timeline: view()) {
+		.case-study-section,
+		.evidence-drawer {
+			animation-timeline: view();
+			animation-range: entry 0% cover 26%;
+		}
+	}
+}
+
 body {
 	min-height: 100vh;
 	margin: 0;

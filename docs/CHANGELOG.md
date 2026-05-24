@@ -97,9 +97,16 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   issues B-006 through B-012.
 - Expanded GitHub sync docs and live repo issue state with Phase 2 granular
   issues B-013 through B-021.
+- Expanded GitHub sync docs and live repo issue state with Phase 3 granular
+  issues B-022 through B-030.
 - Added a B-037 visual regression gate with desktop/mobile snapshots for home,
   projects, a representative case study, resume, and contact, plus dedicated
   `pnpm test:visual` and `pnpm test:visual:update` commands.
+- Added a B-035 purposeful motion gate and CSS-only evidence reveal treatment
+  for narrative/artifact surfaces, with reduced-motion and no-JS visibility
+  coverage.
+- Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
+  before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,
   custom domains, contact storage, secret stores, production smoke checks, and
   rollback evidence remain explicit prerequisites for launch.
