@@ -326,6 +326,13 @@ before provider accounts, domains, production secrets, or rollback targets
 exist. #63, #64, #65, and #69 remain open until real production evidence and
 four approved case studies exist.
 
+Phase 7 blocker traceability status: issue-to-evidence mapping only; production
+remains blocked. `runbooks/LAUNCH_BLOCKERS_REGISTER.md` now maps #63, #64, #65,
+and #69 to their controlling launch-blocker decisions and the replacement
+evidence rows required before issue closure. This is traceability evidence only;
+it is not production deploy evidence, launch-readiness evidence, or permission
+to close #63, #64, #65, or #69.
+
 Phase 8 backlog issues now live as the next granular sync layer, with #5
 remaining the parent epic until the GitHub Project board can take over status
 views:

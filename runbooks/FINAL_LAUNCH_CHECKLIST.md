@@ -50,6 +50,9 @@ These checks are CI evidence, not production launch evidence.
   domain, and launch evidence exist.
 - Review `runbooks/LAUNCH_BLOCKERS_REGISTER.md` before Phase 7 launch work and
   update it when a blocker decision is resolved.
+- Phase 7 issue traceability in `runbooks/LAUNCH_BLOCKERS_REGISTER.md` maps
+  #63, #64, #65, and #69 to their controlling decisions and required
+  replacement evidence.
 - The final resume PDF source decision is resolved locally, but production
   `/resume/` and PDF-link smoke evidence is still not run.
 - Final frontend domain and frontend provider project are not selected.

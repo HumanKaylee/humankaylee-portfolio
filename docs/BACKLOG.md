@@ -1446,6 +1446,8 @@ Phase 7 local readiness guard:
 - The contract is progress evidence only; #63, #64, #65, and #69 stay open
   until real provider, domain, production smoke, rollback, contact, Lighthouse,
   four approved case studies, and redaction approval evidence exists.
+- Phase 7 issue traceability maps #63, #64, #65, and #69 to their controlling
+  launch-blocker decisions and replacement evidence rows.
 
 ### B-057: Configure Cloudflare Pages frontend deployment
 
@@ -1656,6 +1658,9 @@ Verification evidence:
   pre-provider local readiness boundary so local build, Lighthouse, e2e, Rust
   API, metadata, and contract evidence cannot be mistaken for production launch
   evidence.
+- `scripts/phase-7-blocker-traceability-contract.test.mjs` verifies Phase 7
+  issue traceability maps #63, #64, #65, and #69 to their controlling
+  launch-blocker decisions and replacement evidence rows.
 
 ## Phase 8: Post-Launch Enhancements
 
