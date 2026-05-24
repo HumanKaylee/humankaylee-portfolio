@@ -511,7 +511,8 @@ Verification evidence:
 
 - `runbooks/PUBLICATION_SAFETY_DECISIONS.md` records public-safe,
   redacted-only, excluded, risk, recommendation, owner, and user-decision status
-  for this candidate without approving publication.
+  for this candidate without approving publication, and defines a synthetic
+  proof pack review gate.
 - `node --test scripts/publication-safety-decisions-contract.test.mjs`
   verifies the decision-support record and blocked publication status.
 
@@ -537,7 +538,8 @@ Verification evidence:
 
 - `runbooks/PUBLICATION_SAFETY_DECISIONS.md` records public-safe,
   redacted-only, excluded, risk, recommendation, owner, and user-decision status
-  for this candidate without approving publication.
+  for this candidate without approving publication, and defines a synthetic
+  proof pack review gate.
 - `node --test scripts/publication-safety-decisions-contract.test.mjs`
   verifies the decision-support record and blocked publication status.
 

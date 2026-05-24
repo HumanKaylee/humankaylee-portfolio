@@ -23,6 +23,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   Kalshi/analytics and YouTube AI pipeline candidates have explicit
   recommendation, risk, owner, and pending-decision records without approving
   publication.
+- Added a synthetic proof pack review gate for B-018 and B-019 so future review
+  evidence cannot be mistaken for publication approval and does not replace the
+  Content Redaction Guide launch gate.
 - Added a B-005 launch blockers register with owner, impact, phase, status, and
   next-evidence fields for unresolved launch decisions without claiming launch
   readiness.

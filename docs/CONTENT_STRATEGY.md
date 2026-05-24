@@ -165,7 +165,9 @@ Select from real work in `/home/joe`, prior runbooks, and GitHub repositories. P
 `runbooks/PUBLICATION_SAFETY_DECISIONS.md` is the current decision-support
 record only for the Kalshi/analytics and YouTube AI pipeline candidates. It
 records safe/redacted/excluded material, recommendations, owner, and pending
-user-decision state without approving publication.
+user-decision state without approving publication. A synthetic proof pack is not
+publication approval and does not replace the Content Redaction Guide launch
+gate.
 
 ## Redaction Rules
 

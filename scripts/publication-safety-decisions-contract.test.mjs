@@ -86,6 +86,14 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 		"# Publication Safety Decisions",
 		"Status: decision-support record only; not publication approval",
 		"Scope: B-018 and B-019",
+		"## Synthetic Proof Pack Review Gate",
+		"A synthetic proof pack is not publication approval",
+		"only supplies evidence for a later content decision",
+		"v1 launch minimum",
+		"`publicationStatus` is `publish`",
+		"`redactionStatus` is `approved`",
+		"Every artifact linked from the page has passed the checklist",
+		"real account, financial, channel, credential, prompt, private asset, raw log, or private repository evidence",
 		"docs/CONTENT_REDACTION_GUIDE.md",
 		"runbooks/CONTENT_REDACTION_STATUS.md",
 		"apps/web/src/content/case-studies/kalshi-migration-or-analytics-tooling.md",
@@ -120,15 +128,33 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 		"YouTube AI Video Pipeline",
 		"`needs-redaction`",
 		"runbooks/PUBLICATION_SAFETY_DECISIONS.md",
+		"synthetic proof pack is not approval evidence",
+		"does not replace the Content Redaction Guide launch gate",
 	]);
 
 	expectAll(contentStrategy, [
 		"runbooks/PUBLICATION_SAFETY_DECISIONS.md",
 		"decision-support record only",
+		"synthetic proof pack is not publication approval",
+		"does not replace the Content Redaction Guide launch gate",
 	]);
-	expectAll(changelog, ["Publication Safety Decisions", "B-018", "B-019"]);
+	expectAll(backlog, ["synthetic proof pack review gate"]);
+	expectAll(changelog, [
+		"Publication Safety Decisions",
+		"B-018",
+		"B-019",
+		"synthetic proof pack review gate",
+		"does not replace the Content Redaction Guide launch gate",
+	]);
+	expectAll(decision, [
+		"synthetic proof pack review gate",
+		"reviewer validates the public narrative and artifact boundary",
+	]);
 
 	expectNotContains(decision, "Status: publication approved");
 	expectNotContains(decision, "redactionStatus: approved");
 	expectNotContains(decision, "launch-ready");
+	expectNotContains(decision, "publication eligibility");
+	expectNotContains(decision, "fresh approval packet");
+	expectNotContains(decision, "reviewer approves");
 });

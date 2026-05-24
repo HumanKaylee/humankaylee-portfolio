@@ -207,11 +207,12 @@ Phase 2 issue sync status: partial. #22 and #23 are closed as draft-content
 tasks with local route, quality, and visual evidence while keeping their
 case-study redaction status at `reviewed`. #20 and #21 remain open for final
 redaction checklist/artifact review; their non-approval evidence inventory is
-progress evidence only and does not change redaction status or launch
-eligibility. #24 and #25 remain open because the
+progress evidence only and does not change redaction status or the Content
+Redaction Guide launch gate. #24 and #25 remain open because the
 publication-safety record recommends excluding/deferring sensitive candidates
-from v1 and records HumanKaylee owner decision as pending. This is not launch
-approval and does not satisfy the four approved case-study launch gate.
+from v1, records HumanKaylee owner decision as pending, and treats any
+synthetic proof pack as review evidence only. This is not publication approval
+and does not replace the Content Redaction Guide launch gate.
 
 Phase 3 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
