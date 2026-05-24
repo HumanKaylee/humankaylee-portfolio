@@ -7,6 +7,13 @@ Scope: private repository implementation preflight. This file avoids storing sec
 ## Purpose
 
 Record the Phase 0 readiness state before scaffolding the HumanKaylee portfolio implementation.
+Future preflight refreshes should keep this file sanitized and record command
+output for `date`, `git status --short --branch`, `git remote -v`,
+`node --version`, `corepack --version`, `pnpm --version`, `rustc --version`,
+`cargo --version`, `gh auth status`, `git --version`, and `codex --version`.
+Do not store tokens, private paths, hostnames, or secrets. Track missing GitHub
+Project scopes as a Project-board blocker, not as a repository readiness
+failure.
 
 ## Repository
 

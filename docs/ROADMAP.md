@@ -64,8 +64,9 @@ Execution rules:
 - If WebGL, animation, backend, or analytics work threatens performance,
   accessibility, or recruiter clarity, preserve the simpler static path first.
 - Pause and ask for direction when an open decision blocks irreversible work:
-  final domain, final resume source, public-safe case-study selection, API host,
-  or AI assistant launch scope.
+  final domain, production resume smoke target, public-safe case-study
+  selection, API host, or AI assistant launch scope. Final resume PDF source is resolved locally; production `/resume/` and PDF-link smoke evidence is still
+  required for launch.
 
 ## Release Strategy
 
@@ -100,8 +101,10 @@ Key deliverables:
 Dependencies:
 
 - Source docs already exist.
-- Requires user input for final resume content, domain, and public-safe project
-  set before launch, but implementation can begin with safe draft content.
+- Requires user input for domain and public-safe project set before launch, but
+  implementation can begin with safe draft content. The approved local resume
+  PDF source is already present; production resume route/PDF smoke remains a
+  launch gate.
 
 Exit criteria:
 
@@ -159,7 +162,8 @@ Key deliverables:
 
 - Finalized positioning statement for first viewport.
 - Recruiter and engineer fast-path content blocks.
-- Resume PDF source, HTML resume route, and print-friendly styling.
+- Approved local resume PDF source, HTML resume route, downloadable PDF link,
+  and print-friendly styling.
 - 4 to 6 selected flagship case studies drafted with the PRD case-study
   structure.
 - Each case study includes summary, problem, constraints, architecture, build
@@ -176,8 +180,8 @@ Exit criteria:
 
 - At least four case studies are publication-ready or explicitly marked blocked
   by redaction/user review.
-- Resume route and PDF link exist, even if the final PDF source remains an open
-  decision.
+- Resume route and PDF link exist from the approved local PDF source, while
+  production `/resume/` and PDF-link smoke evidence is still required.
 - The home page can explain HumanKaylee's value without relying on 3D, motion, or
   API data.
 
@@ -362,7 +366,8 @@ Key deliverables:
 
 Dependencies:
 
-- Open decisions resolved: domain, resume source, case-study approvals, API host.
+- Open decisions resolved: domain, production resume smoke target, case-study
+  approvals, API host.
 - Phase 6 quality gates.
 
 Exit criteria:
@@ -415,8 +420,8 @@ Entry criteria:
 4. Contact fallback before Rust contact endpoint.
 5. Backend tests and abuse controls before public contact endpoint launch.
 6. Accessibility and performance hardening before production launch.
-7. Domain, resume source, case-study approvals, and a current API host before
-   final launch.
+7. Domain, production resume smoke evidence, case-study approvals, and a
+   current API host before final launch.
 
 ## Definition of Ready for Implementation Issues
 

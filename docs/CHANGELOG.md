@@ -8,6 +8,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened live GitHub issue sync coverage for Phase 7 issues so #63, #64,
+  #65, and #69 preserve production-blocker body text and reject stale
+  Shuttle-primary API host wording.
+- Clarified agent source order, implementation-plan preflight requirements,
+  resume-source status, and Shuttle legacy-only boundaries so future
+  non-colliding swarms do not reopen resolved local resume work or treat
+  Shuttle as a new production host.
 - Refreshed the embedded launch-evidence snapshot and final launch checklist PR
   rows for PR #6 head `dadb641` and CI run `26372667551` while preserving
   blocked production rows and not-launch-ready status.

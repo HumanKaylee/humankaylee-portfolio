@@ -40,6 +40,12 @@ function expectAll(content, needles) {
 	}
 }
 
+function embeddedPrHead(evidence) {
+	const match = evidence.match(/Embedded verified PR head: `([a-f0-9]{40})`/);
+	assert.ok(match, "expected launch evidence to include embedded PR head");
+	return match[1];
+}
+
 function markdownRows(content) {
 	return content
 		.split("\n")
@@ -70,6 +76,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const checklist = readRequiredFile(files.checklist);
 	const evidence = readRequiredFile(files.evidence);
+	const embeddedHead = embeddedPrHead(evidence);
 
 	expectAll(backlog, [
 		"### B-063: Complete launch checklist",
@@ -80,7 +87,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 	expectAll(checklist, [
 		"# Final Launch Checklist",
 		"Status: not launch-ready",
-		"Head: see git history for this checklist commit",
+		`Head: embedded verified PR head \`${embeddedHead}\``,
 		"B-063",
 		"Do not mark launch-ready",
 		"Home is live",

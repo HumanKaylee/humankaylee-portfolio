@@ -14,9 +14,12 @@ of truth for implementation state, launch blockers, and production evidence.
 4. `docs/ARCHITECTURE.md`
 5. `docs/ROADMAP.md`
 6. `docs/BACKLOG.md`
-7. `docs/OPERATIONS.md`
-8. `docs/GITHUB_SYNC.md`
-9. `runbooks/LAUNCH_EVIDENCE.md`
+7. `docs/CONTENT_STRATEGY.md`
+8. `docs/CONTENT_REDACTION_GUIDE.md`
+9. `docs/PRIVACY.md`
+10. `docs/OPERATIONS.md`
+11. `docs/GITHUB_SYNC.md`
+12. `runbooks/LAUNCH_EVIDENCE.md`
 
 ## Build Direction
 
@@ -35,6 +38,9 @@ of truth for implementation state, launch blockers, and production evidence.
 
 - Use the implementation plan before touching product code, and check the
   launch evidence runbook before claiming any production state.
+- Content, case-study, notes, resume, contact, or analytics work must also read
+  the content strategy, redaction guide, and privacy summary before changing
+  public-facing evidence.
 - Prefer non-colliding agents by ownership area: content, shell/layout, visual/WebGL, Rust API, CI/deployment, accessibility/performance.
 - Smaller/cheaper models may own mechanical tasks with exact file paths and acceptance criteria.
 - Use stronger models for design, architecture, visual-system, security, and final review.

@@ -143,3 +143,37 @@ test("Phase 5 docs record local backend evidence without overstating production 
 		"roadmap must not approve production contact handling",
 	);
 });
+
+test("implementation plan is swarm-ready for content privacy and legacy API host boundaries", () => {
+	containsAll(
+		plan,
+		[
+			"docs/CONTENT_STRATEGY.md",
+			"docs/CONTENT_REDACTION_GUIDE.md",
+			"docs/PRIVACY.md",
+			"Preflight evidence must include sanitized command output for",
+			"Final resume PDF source is resolved locally",
+			"Shuttle remains legacy compatibility only",
+			"Do not use Shuttle as a new production API host",
+		],
+		"swarm-ready plan guidance",
+	);
+
+	containsAll(
+		roadmap,
+		[
+			"Final resume PDF source is resolved locally",
+			"production `/resume/` and PDF-link smoke evidence is still required",
+		],
+		"resume source boundary",
+	);
+
+	assert.ok(
+		!plan.includes("final PDF source remains an open decision"),
+		"plan must not reopen the resolved local resume source decision",
+	);
+	assert.ok(
+		!roadmap.includes("final PDF source remains an open decision"),
+		"roadmap must not reopen the resolved local resume source decision",
+	);
+});

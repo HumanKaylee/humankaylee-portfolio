@@ -128,6 +128,40 @@ function phase8StatusRequirements(backlogId) {
 	return requirements;
 }
 
+function phase7StatusRequirements(backlogId) {
+	const requirements = [];
+
+	if (backlogId === "B-057") {
+		requirements.push(
+			"Deploy the static frontend to Cloudflare Pages.",
+			"Production frontend smoke remains blocked until provider, project, domain, deployment URL, and rollback evidence exist.",
+		);
+	}
+
+	if (backlogId === "B-058") {
+		requirements.push(
+			"Deploy API to Fly.io, Railway, or another approved host.",
+			"Shuttle is legacy compatibility only, not a new production launch host.",
+			"No production API evidence exists until public or approved-preview `/api/health`, CORS, secret storage, contact handling, and rollback evidence are recorded.",
+		);
+	}
+
+	if (backlogId === "B-059") {
+		requirements.push(
+			"Final domain, canonical URL, DNS, TLS, sitemap, Open Graph, robots, RSS, and production metadata smoke evidence are required before closure.",
+		);
+	}
+
+	if (backlogId === "B-063") {
+		requirements.push(
+			"Current approved launch case studies: 0.",
+			"Production frontend/API smoke, production Lighthouse, contact production handling, rollback evidence, and redaction approvals remain blocked.",
+		);
+	}
+
+	return requirements;
+}
+
 test(
 	"live GitHub issue sync mirrors the documented granular bridge",
 	{
@@ -213,6 +247,21 @@ test(
 						`expected #${expected.number} body to preserve Phase 8 guard: ${required}`,
 					);
 				}
+			} else if (expected.number >= 63) {
+				assert.ok(
+					issue.body.includes(`Parent epic: ${expected.parent}`),
+					`expected #${expected.number} body to preserve parent epic`,
+				);
+				for (const required of phase7StatusRequirements(expected.backlogId)) {
+					assert.ok(
+						issue.body.includes(required),
+						`expected #${expected.number} body to preserve Phase 7 guard: ${required}`,
+					);
+				}
+				assert.ok(
+					!issue.body.includes("Shuttle Community or a chosen fallback host"),
+					`expected #${expected.number} body to avoid stale Shuttle-primary host wording`,
+				);
 			} else {
 				assert.ok(
 					issue.body.includes(`Parent epic: ${expected.parent}`),

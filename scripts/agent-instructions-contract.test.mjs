@@ -80,6 +80,9 @@ test("repository agent instructions use current hosting and launch-blocker guida
 	const agents = readRequiredFile(AGENTS_PATH);
 
 	expectCurrentHostingTarget(agents);
+	expectContains(agents, "docs/CONTENT_STRATEGY.md");
+	expectContains(agents, "docs/CONTENT_REDACTION_GUIDE.md");
+	expectContains(agents, "docs/PRIVACY.md");
 	expectContains(agents, "Shuttle is not a viable new launch target");
 	expectContains(agents, "https://docs.shuttle.dev/docs/shuttle-shutdown");
 	expectContains(agents, "Do not use Shuttle for a new production launch");

@@ -16,6 +16,9 @@ Read these before executing any phase:
 
 - `docs/PRD.md`: product requirements, success metrics, journeys, feature requirements, launch definition, open decisions.
 - `docs/RESEARCH.md`: recommended stack, visual concept, hosting recommendations, content strategy, risk controls.
+- `docs/CONTENT_STRATEGY.md`: current content model, route inventory, schema names, and public-safe messaging boundaries.
+- `docs/CONTENT_REDACTION_GUIDE.md`: publication safety checklist for case studies, projects, artifacts, logs, screenshots, and links.
+- `docs/PRIVACY.md`: implemented privacy posture for contact handling, optional events, logging, and visitor data boundaries.
 - `README.md`: repository status and working decision.
 
 If this plan conflicts with `docs/PRD.md` or `docs/RESEARCH.md`, pause and ask for a planning update before changing code.
@@ -36,6 +39,7 @@ Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IM
 
 - Do not start implementation until the executor has read `docs/PRD.md`, `docs/RESEARCH.md`, and this plan.
 - Start with a read-only preflight that records local tool versions, GitHub auth status, available package managers, Rust version, Node version, and current repository remotes in `runbooks/PREFLIGHT.md`.
+- Preflight evidence must include sanitized command output for `date`, `git status --short --branch`, `git remote -v`, `node --version`, `corepack --version`, `pnpm --version`, `rustc --version`, `cargo --version`, `gh auth status`, `git --version`, and `codex --version`. Omit tokens, private paths, hostnames, and secrets; record missing Project scopes separately from repository readiness.
 - Do not let two agents edit the same file or directory ownership lane at the same time.
 - Do not treat visual polish as a substitute for case-study substance.
 - Do not put secrets, private keys, API tokens, private email provider credentials, or unredacted sensitive project details in the repo.
@@ -271,7 +275,7 @@ cargo test --manifest-path apps/api/Cargo.toml
 - [ ] Mark each candidate case study as `publish`, `needs-redaction`, or `defer`.
 - [ ] Create initial project category taxonomy: AI, automation, infrastructure, backend, creative web, operations.
 - [ ] Define required SEO fields for each page and content type.
-- [ ] Define resume data fields and PDF source workflow.
+- [ ] Define resume data fields and PDF source workflow. Final resume PDF source is resolved locally; production `/resume/` and PDF-link smoke evidence remains blocked until a frontend deployment target exists.
 
 **Acceptance Criteria:**
 
@@ -292,7 +296,7 @@ pnpm build
 **Pause Conditions:**
 
 - Fewer than 4 safe case studies can be published.
-- Resume source content or PDF source is unavailable.
+- Resume source content or approved PDF source is unavailable in a future replacement workflow.
 - A case study requires sensitive details that cannot be redacted without losing credibility.
 
 ## Phase 2: Static Shell, Visual System, and Accessibility Baseline
@@ -475,7 +479,7 @@ pnpm lighthouse:local
 - [ ] Implement gated `POST /api/events` for privacy-safe events only when explicitly enabled.
 - [ ] Add tower-http CORS restricted to configured origins, trace layer, compression for text/JSON responses, request body limits for write routes, and timeout layers for all public routes.
 - [ ] Add integration tests for success, validation failure, rate limit, CORS denial, disabled-events behavior, and health response shape.
-- [ ] Add Dockerfile and Shuttle deployment config.
+- [ ] Add Dockerfile and keep feature-gated Shuttle legacy compatibility config only.
 
 **Acceptance Criteria:**
 
@@ -485,6 +489,7 @@ pnpm lighthouse:local
 - Events are disabled by default.
 - Backend logs are structured and do not contain secrets or full private message bodies.
 - API downtime does not block static frontend builds.
+- Shuttle remains legacy compatibility only. Do not use Shuttle as a new production API host.
 
 **Verification Commands:**
 
@@ -513,7 +518,7 @@ Expected `xh :8787/api/health` result shape:
 - Contact delivery provider is not chosen and local storage mode is not acceptable.
 - Provider credentials would need to be committed to the repo.
 - Rate limiting cannot be implemented without adding unapproved infrastructure.
-- Shuttle deployment constraints conflict with the API design.
+- Shuttle legacy compatibility checks conflict with the API design.
 
 ### Phase 5 Implementation Contract Snapshot
 
@@ -697,7 +702,7 @@ xh https://<production-api-domain>/api/health
 xh https://<production-frontend-domain>/
 ```
 
-Provider CLI commands must be confirmed during this phase because provider CLIs change over time. The runbook must record the exact working commands and CLI versions used for Cloudflare Pages plus the selected API host. Shuttle is not a viable new launch target; see https://docs.shuttle.dev/docs/shuttle-shutdown.
+Provider CLI commands must be confirmed during this phase because provider CLIs change over time. The runbook must record the exact working commands and CLI versions used for Cloudflare Pages plus the selected API host. Shuttle is not a viable new launch target; see https://docs.shuttle.dev/docs/shuttle-shutdown. Shuttle remains legacy compatibility only. Do not use Shuttle as a new production API host.
 
 **Pause Conditions:**
 
@@ -837,7 +842,7 @@ Pause implementation and ask for direction if any condition occurs:
 - The single product objective changes.
 - Final domain name is required for deployment and has not been chosen.
 - Fewer than 4 publishable case studies remain after redaction review.
-- Resume PDF source is missing or unapproved.
+- Approved resume PDF source is missing in a future replacement workflow, or production `/resume/` smoke evidence is required and no frontend target exists.
 - Contact provider is not chosen and mailto fallback is not acceptable for launch.
 - A required provider account, token, or domain setting is unavailable.
 - Tooling cannot satisfy the command contract on the target environment.
