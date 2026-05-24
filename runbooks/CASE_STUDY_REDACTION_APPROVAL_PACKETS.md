@@ -33,6 +33,18 @@ A case study can count toward launch only after all of these are true:
 
 Until those conditions are met, the packet remains review evidence only.
 
+## Packet Readiness Matrix
+
+This matrix shows exactly which approval evidence remains missing for each
+current publish-intended case study. It does not mark any case study approved.
+
+| Candidate                                             | Current state          | Missing approval evidence                                                                                                     |
+| ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| CLI Fleet Synchronization and MCP Rollout             | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing artifact evidence source for the sanitized rollout set. |
+| Creative Web Systems Atlas Demo                       | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing atlas fallback artifact inspection evidence.            |
+| HumanKaylee Portfolio Build                           | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing production domain evidence for launch claims.           |
+| Remote Workstation Recovery and Operational Debugging | `publish` / `reviewed` | Missing checklist answers, missing `openItems` clearance, and missing redacted incident summary inspection evidence.          |
+
 ## Packet Template
 
 Use this template when preparing a future approval request. Do not mark the

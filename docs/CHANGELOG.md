@@ -39,6 +39,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a content redaction status runbook that keeps every case-study
   candidate out of launch approval until its guide checklist and public-safe
   evidence are complete.
+- Added a case-study redaction approval packet readiness matrix that lists the
+  exact missing approval evidence for each publish-intended candidate while
+  preserving the zero-approved launch state.
 - Added a content update and redaction runbook with an executable contract test
   covering project, case-study, notes/build-log, schema field, redaction
   checklist, publication review, and verification-command expectations.
@@ -76,6 +79,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a B-063 final launch checklist and contract that preserve
   not-launch-ready status while production domains, provider projects, contact
   handling, rollback targets, and case-study redaction approvals remain blocked.
+- Clarified quality, launch-checklist, and launch-evidence runbooks so launch
+  gate wording stays phase-neutral and blocker scope includes operations,
+  contact handling, rollback targets, and redaction approvals.
 - Scoped Phase 0 CI branch pushes to `main` while keeping pull-request checks
   active, preventing duplicate PR-branch Lighthouse runs for the same commit.
 - Added a non-scored Lighthouse warm-up audit before the scored route audits so
@@ -130,6 +136,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added Phase 8 granular GitHub issues B-064 through B-068 while preserving the
   post-launch, assistant-approval, Project-board, and launch-readiness
   boundaries, plus an optional live GitHub issue-sync verifier.
+- Broadened the opt-in live GitHub issue-sync verifier to bulk-check the
+  documented granular bridge from #7 through #74 while preserving the
+  Project-board scope blocker wording in the sync runbook.
 - Hardened Phase 0 CI to opt GitHub JavaScript actions into the Node 24 runtime
   and use Node 24-native action majors before GitHub's forced migration.
 - Hardened deployment and operations runbooks so frontend/API providers,

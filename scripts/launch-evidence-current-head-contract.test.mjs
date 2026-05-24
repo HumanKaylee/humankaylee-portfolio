@@ -120,6 +120,11 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 		"stale CI run in latest PR rows",
 	);
 	expectContains(evidence, "Production Blockers");
+	expectContains(
+		evidence,
+		"contact handling, rollback targets, and redaction approvals",
+		"expanded scope blockers",
+	);
 	expectContains(evidence, "Production frontend smoke");
 	expectContains(evidence, "Production API smoke");
 	expectContains(evidence, "Rollback evidence");

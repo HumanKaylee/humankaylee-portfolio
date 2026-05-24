@@ -1,118 +1,143 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
 const repo = "HumanKaylee/humankaylee-portfolio";
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const githubSyncPath = resolve(repoRoot, "docs/GITHUB_SYNC.md");
 const liveVerificationEnabled = process.env.HK_VERIFY_GITHUB_LIVE === "1";
 
-const expectedPhase8Issues = [
-	{
-		number: 70,
-		title: "B-064: Evaluate portfolio assistant scope",
-		labels: [
-			"agent-standard",
-			"area:backend",
-			"area:privacy",
-			"phase:8-post-launch",
-			"priority:p2",
-			"type:research",
-		],
-		bodyIncludes: ["Parent epic: #5", "Backlog ID: B-064", "B-063"],
-	},
-	{
-		number: 71,
-		title: "B-065: Add portfolio assistant prototype",
-		labels: [
-			"agent-standard",
-			"area:backend",
-			"area:frontend",
-			"area:privacy",
-			"phase:8-post-launch",
-			"priority:p2",
-			"type:feature",
-		],
-		bodyIncludes: [
-			"Parent epic: #5",
-			"Backlog ID: B-065",
-			"B-064",
-			"Do not build the assistant before B-064 is approved.",
-		],
-	},
-	{
-		number: 72,
-		title: "B-066: Add richer public status or metadata page",
-		labels: [
-			"agent-standard",
-			"area:backend",
-			"area:frontend",
-			"phase:8-post-launch",
-			"priority:p2",
-			"type:feature",
-		],
-		bodyIncludes: [
-			"Parent epic: #5",
-			"Backlog ID: B-066",
-			"B-039",
-			"B-040",
-			"B-063",
-		],
-	},
-	{
-		number: 73,
-		title: "B-067: Add additional notes and postmortems",
-		labels: [
-			"agent-standard",
-			"area:content",
-			"phase:8-post-launch",
-			"priority:p2",
-			"type:content",
-		],
-		bodyIncludes: ["Parent epic: #5", "Backlog ID: B-067", "B-027", "B-063"],
-	},
-	{
-		number: 74,
-		title: "B-068: Evaluate API hosting migration",
-		labels: [
-			"agent-standard",
-			"area:backend",
-			"area:infra",
-			"phase:8-post-launch",
-			"priority:p2",
-			"type:research",
-		],
-		bodyIncludes: ["Parent epic: #5", "Backlog ID: B-068", "B-058", "B-063"],
-	},
-];
+function readGitHubSync() {
+	return readFileSync(githubSyncPath, "utf8");
+}
 
-function issueView(number) {
+function parseLabels(cell) {
+	return Array.from(cell.matchAll(/`([^`]+)`/g), ([, label]) => label).sort();
+}
+
+function parseGranularIssues(syncDoc) {
+	const granularSection = syncDoc.split("## Granular Issue Sync")[1];
+
+	assert.ok(granularSection, "expected granular issue sync section");
+
+	const issues = [];
+	for (const line of granularSection.split("\n")) {
+		const match = line.match(
+			/^\|\s*(#\d+)\s*\|\s*(.*?)\s*\|\s*(#\d+)\s*\|\s*(.*?)\s*\|$/,
+		);
+		if (!match) continue;
+
+		const [, issueRef, title, parent, labelsCell] = match;
+		const number = Number.parseInt(issueRef.slice(1), 10);
+		const backlogId = title.match(/\bB-\d{3}\b/)?.[0];
+
+		assert.ok(backlogId, `expected backlog id in ${issueRef}`);
+
+		issues.push({
+			backlogId,
+			labels: parseLabels(labelsCell),
+			number,
+			parent,
+			title,
+		});
+	}
+
+	return issues;
+}
+
+function fetchAllIssues() {
 	const output = execFileSync(
 		"gh",
 		[
-			"issue",
-			"view",
-			String(number),
-			"--repo",
-			repo,
-			"--json",
-			"number,title,state,labels,body",
+			"api",
+			"--paginate",
+			"--slurp",
+			`repos/${repo}/issues?state=all&per_page=100`,
 		],
 		{ encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
 	);
-	return JSON.parse(output);
+	return JSON.parse(output)
+		.flat()
+		.filter((issue) => !issue.pull_request)
+		.map((issue) => ({
+			body: issue.body ?? "",
+			labels: issue.labels.map((label) => ({ name: label.name })),
+			number: issue.number,
+			state: issue.state.toUpperCase(),
+			title: issue.title,
+		}));
+}
+
+function phase8StatusRequirements(backlogId) {
+	const requirements = [
+		"Phase: 8-post-launch",
+		"Deferred until B-063 launch completion.",
+	];
+
+	if (backlogId === "B-064") {
+		requirements.push(
+			"Do not approve implementation before B-063 is closed and reviewed.",
+		);
+	}
+
+	if (backlogId === "B-065") {
+		requirements.push(
+			"Blocked until B-064 recommends implementation.",
+			"Do not build the assistant before B-064 is approved.",
+		);
+	}
+
+	if (backlogId === "B-066") {
+		requirements.push(
+			"Do not expose post-launch metadata until the launch checklist is complete.",
+		);
+	}
+
+	if (backlogId === "B-067") {
+		requirements.push(
+			"Do not publish post-launch notes until the launch checklist is complete.",
+		);
+	}
+
+	if (backlogId === "B-068") {
+		requirements.push(
+			"Do not evaluate migration options as a replacement for launch work.",
+		);
+	}
+
+	return requirements;
 }
 
 test(
-	"live GitHub Phase 8 issues mirror the documented issue-sync table",
+	"live GitHub issue sync mirrors the documented granular bridge",
 	{
 		skip: liveVerificationEnabled
 			? false
 			: "Set HK_VERIFY_GITHUB_LIVE=1 to query GitHub.",
 	},
 	() => {
-		for (const expected of expectedPhase8Issues) {
-			const issue = issueView(expected.number);
-			const labels = issue.labels.map((label) => label.name).sort();
+		const expectedIssues = parseGranularIssues(readGitHubSync());
+		const issuesByNumber = new Map(
+			fetchAllIssues().map((issue) => [issue.number, issue]),
+		);
 
+		assert.equal(
+			expectedIssues.length,
+			68,
+			"expected granular bridge to cover #7 through #74",
+		);
+
+		for (const expected of expectedIssues) {
+			const issue = issuesByNumber.get(expected.number);
+			assert.ok(issue, `missing live GitHub issue #${expected.number}`);
+			const expectedAgent = expected.labels.find((label) =>
+				label.startsWith("agent-"),
+			);
+
+			const labels = issue.labels.map((label) => label.name).sort();
 			assert.equal(issue.number, expected.number);
 			assert.equal(issue.title, expected.title);
 			assert.equal(
@@ -122,19 +147,41 @@ test(
 			);
 			assert.deepEqual(
 				labels,
-				expected.labels.sort(),
+				expected.labels,
 				`unexpected labels for #${expected.number}`,
 			);
-			assert.match(
-				issue.body,
-				/Deferred until B-063 launch completion\./,
-				`expected #${expected.number} to preserve post-launch deferral`,
-			);
-
-			for (const expectedBodyText of expected.bodyIncludes) {
+			if (expected.number <= 11) {
 				assert.ok(
-					issue.body.includes(expectedBodyText),
-					`expected #${expected.number} body to include ${expectedBodyText}`,
+					issue.body.includes(`Source: docs/BACKLOG.md ${expected.backlogId}`),
+					`expected #${expected.number} body to preserve source reference`,
+				);
+				assert.ok(
+					issue.body.includes(`Parent: ${expected.parent}`),
+					`expected #${expected.number} body to preserve parent`,
+				);
+				assert.ok(
+					issue.body.includes(`Agent lane: ${expectedAgent}`),
+					`expected #${expected.number} body to preserve agent lane`,
+				);
+			} else if (expected.number >= 70) {
+				assert.ok(
+					issue.body.includes(`Parent epic: ${expected.parent}`),
+					`expected #${expected.number} body to preserve parent epic`,
+				);
+				assert.ok(
+					issue.body.includes(`Backlog ID: ${expected.backlogId}`),
+					`expected #${expected.number} body to preserve backlog id`,
+				);
+				for (const required of phase8StatusRequirements(expected.backlogId)) {
+					assert.ok(
+						issue.body.includes(required),
+						`expected #${expected.number} body to preserve Phase 8 guard: ${required}`,
+					);
+				}
+			} else {
+				assert.ok(
+					issue.body.includes(`Parent epic: ${expected.parent}`),
+					`expected #${expected.number} body to preserve parent epic`,
 				);
 			}
 		}

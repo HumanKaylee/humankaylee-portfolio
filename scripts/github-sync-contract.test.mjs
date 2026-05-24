@@ -9,6 +9,10 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const files = {
 	backlog: resolve(repoRoot, "docs/BACKLOG.md"),
 	githubSync: resolve(repoRoot, "docs/GITHUB_SYNC.md"),
+	githubLiveIssueSync: resolve(
+		repoRoot,
+		"scripts/github-live-issue-sync.test.mjs",
+	),
 };
 
 function readRequiredFile(path) {
@@ -44,6 +48,7 @@ function expectContains(content, needle, label = needle) {
 test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const githubSync = readRequiredFile(files.githubSync);
+	const githubLiveIssueSync = readRequiredFile(files.githubLiveIssueSync);
 	const labels = uniqueLabelsFromBacklog(backlog);
 
 	assert.ok(labels.length >= 20, "expected backlog taxonomy labels");
@@ -229,7 +234,24 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"authorization to build the assistant before",
 		"B-064 is approved",
 		"HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs",
+		"Granular live GitHub issue verification",
+		"issues #7 through #74",
 	]) {
 		expectContains(githubSync, required);
 	}
+
+	for (const required of [
+		"Deferred until B-063 launch completion.",
+		"Do not build the assistant before B-064 is approved.",
+		"Do not approve implementation before B-063 is closed and reviewed.",
+		"fetchAllIssues",
+		"--paginate",
+	]) {
+		expectContains(githubLiveIssueSync, required);
+	}
+
+	assert.ok(
+		!githubLiveIssueSync.includes('"--limit",\n\t\t\t"100"'),
+		"live issue verifier should not rely on a 100-issue result ceiling",
+	);
 });

@@ -308,7 +308,12 @@ board recovery, production launch, launch-readiness claim, or post-launch
 feature approval, and it is not authorization to build the assistant before
 B-064 is approved.
 
-Run live Phase 8 issue verification explicitly with:
+Granular live GitHub issue verification now covers all documented granular
+issues #7 through #74 with paginated GitHub API results. This keeps the Project
+board scope blocker wording above unchanged while verifying the repo issue
+bridge more broadly.
+
+Run live granular issue verification explicitly with:
 
 ```bash
 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs

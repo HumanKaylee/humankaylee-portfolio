@@ -106,6 +106,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"redaction approvals",
 		"runbooks/LAUNCH_EVIDENCE.md",
 		"runbooks/CONTENT_REDACTION_STATUS.md",
+		"docs/OPERATIONS.md",
 	]);
 
 	for (const requirement of [
@@ -128,6 +129,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 	);
 	expectTableRow(checklist, "Deployment and rollback docs are complete", [
 		"Pass for docs only",
+		"docs/OPERATIONS.md",
 	]);
 
 	for (const evidenceRow of [

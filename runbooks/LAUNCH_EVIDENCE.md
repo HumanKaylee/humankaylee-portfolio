@@ -8,8 +8,9 @@ Status: not launch-ready. This file records current evidence and blockers only.
 
 This runbook is the current launch evidence index for future goal execution. It
 does not certify production readiness. Production verification is blocked until
-the frontend domain, API domain, provider projects, provider auth, and required
-secrets or environment variables are selected and configured.
+the frontend domain, API domain, provider projects, provider auth, required
+secrets or environment variables, contact handling, rollback targets, and
+redaction approvals are selected, configured, approved, or recorded.
 
 Do not replace blocked rows with production evidence until real target URLs,
 deployment IDs, command outputs, and artifacts exist.

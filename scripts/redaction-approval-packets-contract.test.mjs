@@ -129,6 +129,24 @@ function expectPacketMapping(packet, guideCheck, schemaFields) {
 	}
 }
 
+function expectReadinessRow(packet, candidateTitle, expectedFragments) {
+	const rowPattern = new RegExp(
+		`\\|\\s*${escapedRegex(candidateTitle)}\\s*\\|([^\\n]+)`,
+	);
+	const row = packet.match(rowPattern);
+	assert.ok(row, `expected packet readiness row for ${candidateTitle}`);
+
+	const normalizedRow = row[1].replace(/`/g, "").toLowerCase();
+
+	for (const fragment of expectedFragments) {
+		const normalizedFragment = fragment.replace(/`/g, "").toLowerCase();
+		assert.ok(
+			normalizedRow.includes(normalizedFragment),
+			`expected ${candidateTitle} readiness row to include ${fragment}`,
+		);
+	}
+}
+
 test("case-study redaction approval packets preserve not-approved launch state", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const contentContract = readRequiredFile(files.contentContract);
@@ -161,6 +179,12 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectContains(
 		packet,
 		"Status: approval packets only; no case study is launch-approved",
+	);
+	expectContains(packet, "## Packet Readiness Matrix");
+	expectContains(
+		packet,
+		"exactly which approval evidence remains missing",
+		"missing-evidence framing",
 	);
 	expectContains(packet, "docs/CONTENT_REDACTION_GUIDE.md");
 	expectContains(packet, "runbooks/CONTENT_REDACTION_STATUS.md");
@@ -197,6 +221,31 @@ test("case-study redaction approval packets preserve not-approved launch state",
 			`${candidate.title} must remain reviewed in the status matrix`,
 		);
 	}
+
+	expectReadinessRow(packet, "CLI Fleet Synchronization and MCP Rollout", [
+		"missing checklist answers",
+		"missing openItems clearance",
+		"missing artifact evidence source",
+	]);
+	expectReadinessRow(packet, "Creative Web Systems Atlas Demo", [
+		"missing checklist answers",
+		"missing openItems clearance",
+		"missing atlas fallback artifact inspection evidence",
+	]);
+	expectReadinessRow(packet, "HumanKaylee Portfolio Build", [
+		"missing checklist answers",
+		"missing openItems clearance",
+		"missing production domain evidence",
+	]);
+	expectReadinessRow(
+		packet,
+		"Remote Workstation Recovery and Operational Debugging",
+		[
+			"missing checklist answers",
+			"missing openItems clearance",
+			"missing redacted incident summary inspection evidence",
+		],
+	);
 
 	for (const [guideCheck, schemaFields, contractFields] of checklistMappings) {
 		expectContains(guide, guideCheck, `guide check ${guideCheck}`);
