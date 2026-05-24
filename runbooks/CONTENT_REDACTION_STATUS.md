@@ -40,6 +40,20 @@ Guide launch gate.
 | Remote Workstation Recovery and Operational Debugging | `publish`          | `reviewed`       | Generalized body now includes a public-safe troubleshooting narrative, sanitized diagnostic flow, verification matrix, and prevention checklist.                                                           | Review recorded checklist answers and inspect linked artifacts before changing status to `approved`; keep hostnames, access paths, credentials, exact recovery sequences, and raw logs out of public evidence. |
 | YouTube AI Video Pipeline                             | `needs-redaction`  | `blocked`        | Blocked candidate; the draft says private channel details, account identifiers, and private-asset workflow edges still need removal.                                                                       | Keep blocked until a public-safe proof narrative, synthetic examples, and sanitized artifact pack are reviewed and approved.                                                                                   |
 
+## GitHub Issue Traceability
+
+Traceability rows are approval aids only; they do not close issues, approve
+publication, or change launch eligibility. The `issueTrace` frontmatter in the
+listed case-study records mirrors these rows so issue ownership, backlog
+identity, and closure rules travel with the content metadata.
+
+| Candidate                                             | Issue trace | Current state                 | Approval blocker                                             | Closure rule                                                                                               |
+| ----------------------------------------------------- | ----------- | ----------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| CLI Fleet Synchronization and MCP Rollout             | B-014 / #20 | `publish` / `reviewed`        | openItems clearance, artifact inspection, and human signoff. | Keep #20 open until open items, artifact inspection, and human signoff are complete.                       |
+| Remote Workstation Recovery and Operational Debugging | B-015 / #21 | `publish` / `reviewed`        | openItems clearance, artifact inspection, and human signoff. | Keep #21 open until open items, artifact inspection, and human signoff are complete.                       |
+| Kalshi Migration or Analytics Tooling                 | B-018 / #24 | `defer` / `blocked`           | HumanKaylee decision and synthetic proof pack review.        | Keep #24 open until HumanKaylee records a publication decision and any synthetic proof pack passes review. |
+| YouTube AI Video Pipeline                             | B-019 / #25 | `needs-redaction` / `blocked` | HumanKaylee decision and synthetic proof pack review.        | Keep #25 open until HumanKaylee records a publication decision and any synthetic proof pack passes review. |
+
 ## Launch Implications
 
 - Launch still needs at least four `publish` case studies with

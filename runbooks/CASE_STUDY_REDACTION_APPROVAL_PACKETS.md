@@ -37,6 +37,8 @@ Until those conditions are met, the packet remains review evidence only.
 
 This matrix shows exactly which approval evidence remains missing for each
 current publish-intended case study. It does not mark any case study approved.
+#20 and #21 remain open until open items, artifact inspection, and human signoff
+are complete.
 
 | Candidate                                             | Current state          | Missing approval evidence                                                                                                     |
 | ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |

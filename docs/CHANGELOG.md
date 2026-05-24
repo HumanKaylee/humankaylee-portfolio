@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added content issue traceability coverage for #20, #21, #24, and #25 so
+  open content/privacy issues map to case-study metadata, redaction runbooks,
+  and closure rules without approving publication or launch eligibility.
 - Added Phase 7 blocker traceability coverage so #63, #64, #65, and #69 map
   from the launch blockers register to controlling decisions and replacement
   evidence rows without changing their open/blocked status.

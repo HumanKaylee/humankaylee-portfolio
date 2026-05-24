@@ -36,6 +36,11 @@ links:
     - "operator runbook excerpt"
 publicationStatus: "publish"
 redactionStatus: "reviewed"
+issueTrace:
+  backlogId: "B-015"
+  githubIssue: 21
+  parentIssue: 3
+  closureRule: "Keep #21 open until open items, artifact inspection, and human signoff are complete."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "phase-1-content-review"

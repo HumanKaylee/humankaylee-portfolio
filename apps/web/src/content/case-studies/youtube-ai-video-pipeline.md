@@ -33,6 +33,11 @@ links:
     - "redaction checklist"
 publicationStatus: "needs-redaction"
 redactionStatus: "blocked"
+issueTrace:
+  backlogId: "B-019"
+  githubIssue: 25
+  parentIssue: 3
+  closureRule: "Keep #25 open until HumanKaylee records a publication decision and any synthetic proof pack passes review."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "phase-1-content-review"

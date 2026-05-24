@@ -32,6 +32,11 @@ links:
     - "redaction review pending"
 publicationStatus: "defer"
 redactionStatus: "blocked"
+issueTrace:
+  backlogId: "B-018"
+  githubIssue: 24
+  parentIssue: 3
+  closureRule: "Keep #24 open until HumanKaylee records a publication decision and any synthetic proof pack passes review."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "phase-1-content-review"

@@ -214,6 +214,12 @@ from v1, records HumanKaylee owner decision as pending, and treats any
 synthetic proof pack as review evidence only. This is not publication approval
 and does not replace the Content Redaction Guide launch gate.
 
+Content issue traceability status: approval-blocker mapping only; #20, #21,
+#24, and #25 remain open. `issueTrace` frontmatter now maps the four open
+content/privacy issue records to their backlog IDs, parent issue, and closure
+rules without changing publication status, redaction status, or launch
+eligibility.
+
 Phase 3 backlog issues now live as the next granular sync layer, with #3
 remaining the parent epic until the GitHub Project board can take over status
 views:

@@ -99,6 +99,13 @@ export const redactionReviewSchema = z.object({
 	checklist: redactionChecklistSchema.optional(),
 });
 
+export const issueTraceSchema = z.object({
+	backlogId: z.string().regex(/^B-\d{3}$/),
+	githubIssue: z.number().int().positive(),
+	parentIssue: z.number().int().positive(),
+	closureRule: z.string().min(1),
+});
+
 export const caseStudySchema = z
 	.object({
 		title: z.string().min(1),
@@ -122,6 +129,7 @@ export const caseStudySchema = z
 		links: linkTargetsSchema.optional(),
 		publicationStatus: publicationStatusSchema,
 		redactionStatus: caseStudyRedactionStatusSchema,
+		issueTrace: issueTraceSchema.optional(),
 		redactionReview: redactionReviewSchema,
 		seo: seoSchema,
 	})
@@ -254,6 +262,7 @@ export type CaseStudyRedactionStatus = z.infer<
 export type AudienceFit = z.infer<typeof audienceFitSchema>;
 export type SeoFields = z.infer<typeof seoSchema>;
 export type RedactionReview = z.infer<typeof redactionReviewSchema>;
+export type IssueTrace = z.infer<typeof issueTraceSchema>;
 export type CaseStudyEntry = z.infer<typeof caseStudySchema>;
 export type ProjectMetadataEntry = z.infer<typeof projectMetadataSchema>;
 export type NotesEntry = z.infer<typeof notesEntrySchema>;
