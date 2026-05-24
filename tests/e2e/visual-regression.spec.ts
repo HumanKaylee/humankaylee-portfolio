@@ -29,6 +29,14 @@ const visualRoutes = [
 		path: "/resume/",
 	},
 	{
+		label: "notes",
+		path: "/notes/",
+	},
+	{
+		label: "note-detail",
+		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+	},
+	{
 		label: "contact",
 		path: "/contact/",
 	},

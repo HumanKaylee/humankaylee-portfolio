@@ -26,7 +26,8 @@ pnpm test:e2e -- --grep "@responsive" --browser=all
 ```
 
 The dedicated spec is `tests/e2e/responsive-cross-browser.spec.ts`. It checks
-the home, projects, representative case study, resume, and contact routes for:
+the home, projects, representative case study, resume, notes/build-log, note
+detail, and contact routes for:
 
 - Visible first-load heading and proof copy.
 - Recruiter-path links to resume, project evidence, or contact.
@@ -34,6 +35,11 @@ the home, projects, representative case study, resume, and contact routes for:
 - Static fallback note visibility.
 - Mobile, tablet, and desktop viewport readability.
 - A LinkedIn in-app mobile user-agent approximation for first-load readability.
+
+The notes coverage currently includes `/notes/` and
+`/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/` because that
+build-log entry exercises long note titles, tag chips, and the static-first Rust
+API boundary without relying on private project details.
 
 ## Browser And Viewport Matrix
 

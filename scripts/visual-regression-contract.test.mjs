@@ -47,6 +47,21 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	expectContains(ci, "Run visual regression gate");
 	expectContains(ci, "pnpm test:visual");
 	expectContains(runbook, "Run visual regression gate");
+	expectContains(runbook, "notes");
+	expectContains(runbook, "note-detail");
+	expectContains(runbook, "/notes/");
+	expectContains(
+		runbook,
+		"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+	);
+	const visualSpec = readRequiredFile(files.visualSpec);
+	expectContains(visualSpec, 'label: "notes"');
+	expectContains(visualSpec, 'label: "note-detail"');
+	expectContains(visualSpec, 'path: "/notes/"');
+	expectContains(
+		visualSpec,
+		'path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"',
+	);
 	expectContains(playwrightConfig, "testIgnore");
 	expectContains(playwrightConfig, "visual-regression.spec.ts");
 	assert.ok(

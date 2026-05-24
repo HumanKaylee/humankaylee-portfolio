@@ -51,6 +51,12 @@ test("B-055 responsive QA artifacts cover browser and viewport launch criteria",
 	expectContains(runbook, "mobile");
 	expectContains(runbook, "tablet");
 	expectContains(runbook, "desktop");
+	expectContains(runbook, "notes/build-log");
+	expectContains(runbook, "/notes/");
+	expectContains(
+		runbook,
+		"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+	);
 	expectContains(runbook, "LinkedIn in-app mobile");
 	expectContains(runbook, "launch blocker");
 	expectContains(runbook, "polish");
@@ -68,6 +74,11 @@ test("B-055 responsive QA artifacts cover browser and viewport launch criteria",
 	expectContains(spec, "browserName");
 	expectContains(spec, "horizontal overflow");
 	expectContains(spec, "resume");
+	expectContains(spec, "/notes/");
+	expectContains(
+		spec,
+		"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+	);
 	expectContains(spec, "contact");
 
 	expectContains(

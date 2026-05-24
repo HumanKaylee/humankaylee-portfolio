@@ -94,6 +94,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a B-055 cross-browser responsive QA runbook, Playwright `@responsive`
   launch gate, and CI step covering Chromium, Firefox, WebKit, mobile, tablet,
   desktop, and a LinkedIn in-app mobile first-load approximation.
+- Expanded the responsive and visual-regression launch gates to include the
+  notes index and API-offline note detail surface after notes became part of the
+  public evidence trail.
 - Added case-study redaction approval packets and a contract test that maps
   guide checklist items to schema fields while preserving the zero-approved
   launch state.

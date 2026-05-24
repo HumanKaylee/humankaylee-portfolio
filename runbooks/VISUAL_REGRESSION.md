@@ -13,6 +13,8 @@ It captures baseline screenshots for:
 - Project index
 - One representative case study
 - Resume
+- Notes index
+- API-offline note detail
 - Contact
 
 Desktop and mobile snapshots are generated in a deterministic reduced-motion context.
@@ -61,6 +63,8 @@ The artifact set must include desktop and mobile variants for:
 - `projects`
 - `case-study`
 - `resume`
+- `notes` (`/notes/`)
+- `note-detail` (`/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/`)
 - `contact`
 
 ## Stabilization Notes

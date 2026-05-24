@@ -30,6 +30,20 @@ const launchRoutes = [
 		primaryText: undefined,
 	},
 	{
+		path: "/notes/",
+		heading: /notes from the systems atelier/i,
+		marker: /How the portfolio stays useful when the API is offline/i,
+		primaryLink: /How the portfolio stays useful when the API is offline/i,
+		primaryText: undefined,
+	},
+	{
+		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		heading: /How the portfolio stays useful when the API is offline/i,
+		marker: /The static shell carries the recruiting story/i,
+		primaryLink: undefined,
+		primaryText: /Rust API/i,
+	},
+	{
 		path: "/contact/",
 		heading: /contact route/i,
 		marker: /mailto fallback/i,
