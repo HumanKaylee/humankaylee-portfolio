@@ -71,6 +71,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added a rollback and incident runbook contract for B-062, including dry-run
   evidence requirements for frontend rollback, API rollback or disablement,
   contact fallback, DNS/custom-domain issues, and recovery verification records.
+- Added a B-063 final launch checklist and contract that preserve
+  not-launch-ready status while production domains, provider projects, contact
+  handling, rollback targets, and case-study redaction approvals remain blocked.
 
 ### Remaining Blockers
 

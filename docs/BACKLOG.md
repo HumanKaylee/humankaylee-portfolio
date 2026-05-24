@@ -1567,6 +1567,13 @@ Verification evidence:
 
 - Final launch checklist with links to production pages, CI run, Lighthouse
   reports, API health, and runbooks.
+- `runbooks/FINAL_LAUNCH_CHECKLIST.md` records current B-063 acceptance status
+  with explicit blocker rows for production pages, API health, production
+  Lighthouse, contact production handling, rollback evidence, and case-study
+  redaction approvals.
+- `scripts/final-launch-checklist-contract.test.mjs` verifies the checklist and
+  launch evidence keep not-launch-ready status explicit until real production
+  targets and approval evidence exist.
 
 ## Phase 8: Post-Launch Enhancements
 
