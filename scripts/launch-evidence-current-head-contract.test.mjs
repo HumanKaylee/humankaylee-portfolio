@@ -148,6 +148,29 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	expectContains(evidence, rustJob, "latest verified Rust job");
 	expectContains(
 		evidence,
+		"Boundary wording guard hardening",
+		"boundary wording historical evidence row",
+	);
+	expectContains(
+		evidence,
+		"c4be290b638547b9c0ec10095b00018d2858c622",
+		"boundary wording verified commit",
+	);
+	expectContains(evidence, "26380864515", "boundary wording CI run");
+	expectContains(evidence, "77649642797", "boundary wording frontend job");
+	expectContains(evidence, "77649642806", "boundary wording Rust job");
+	expectContains(
+		evidence,
+		"not production launch evidence",
+		"boundary wording production-readiness caveat",
+	);
+	expectContains(
+		changelog,
+		"Recorded boundary wording guard CI evidence",
+		"boundary wording changelog entry",
+	);
+	expectContains(
+		evidence,
 		"Phase 8 backlog issues #70 through #74 are open and mirror B-064 through B-068",
 		"latest GitHub issue-sync row",
 	);

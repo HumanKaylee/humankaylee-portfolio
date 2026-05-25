@@ -99,6 +99,7 @@ Current retention posture:
 - If `store` mode is enabled, accepted contact submissions are stored in the
   configured JSONL file until that backend host or operator deletes, rotates, or
   exports the file.
+- Store mode is JSONL-only in this repository.
 - No analytics storage is enabled by default.
 - No public deletion workflow is promised until production contact handling is
   finalized.

@@ -14,6 +14,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Tightened B-063 checklist wording so the resume launch gate requires
   production `/resume/` and PDF smoke evidence instead of saying the resume is
   live while the row remains blocked.
+- Recorded boundary wording guard CI evidence for PR head
+  `c4be290b638547b9c0ec10095b00018d2858c622` as historical PR/local/CI
+  evidence without converting it into production launch evidence.
+- Hardened privacy and operations docs so contact storage stays off by default,
+  `store` mode remains JSONL-only, and production contact storage must define
+  backup handling before launch.
 - Hardened architecture, operations, and privacy wording so optional analytics
   cannot be mistaken for a shipped provider, event sink, or retention policy,
   and the resume PDF remains scoped to approved local-source evidence.

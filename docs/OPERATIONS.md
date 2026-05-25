@@ -148,6 +148,11 @@ Backend variables may contain secrets and must be configured in the backend host
 | `RUST_LOG`                              | No     | Recommended | Structured logging verbosity.                                                                                             |
 | Future provider/database variables      | Yes    | Future only | Add only if JSONL storage is replaced or supplemented.                                                                    |
 
+Contact storage is off by default. Set `HK_API_CONTACT_DELIVERY_MODE=store`
+only when `HK_API_CONTACT_STORE_PATH` points at an approved JSONL path. Store
+mode is JSONL-only in this repository. Production contact storage must also
+define backup handling before launch.
+
 ### 4.3 Secret Storage Locations
 
 Use the host-native secret store:

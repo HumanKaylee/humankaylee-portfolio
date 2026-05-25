@@ -173,6 +173,42 @@ test("events docs do not imply a shipped analytics provider, sink, or retention 
 	}
 });
 
+test("privacy and operations docs align contact storage retention boundaries", () => {
+	const privacy = readRequiredFile(privacyPath);
+	const operations = readRequiredFile(operationsPath);
+
+	for (const [label, content] of [
+		["privacy notes", privacy],
+		["operations", operations],
+	]) {
+		expectContains(
+			content,
+			"Contact storage is off by default.",
+			`${label} contact storage default`,
+		);
+		expectContains(
+			content,
+			"`HK_API_CONTACT_DELIVERY_MODE=store`",
+			`${label} store mode flag`,
+		);
+		expectContains(
+			content,
+			"`HK_API_CONTACT_STORE_PATH`",
+			`${label} store path flag`,
+		);
+		expectContains(
+			content,
+			"Store mode is JSONL-only in this repository.",
+			`${label} JSONL-only storage boundary`,
+		);
+		expectContains(
+			content,
+			"Production contact storage must also define backup handling before launch.",
+			`${label} backup-before-launch boundary`,
+		);
+	}
+});
+
 test("privacy scope keeps resume PDF wording local-source scoped", () => {
 	const content = readRequiredFile(privacyPath);
 
