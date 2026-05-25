@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T14:18:48-04:00 permission recheck: Project #1 write access is
+  healthy, PR #6 is tracked as `In Progress` at
+  `0094a2b99470d3b7dbbabb2630b2c309a217de2b`, Phase 0 CI run `26413621250`
+  passed, and the completed proof-surface polish is now recorded as finished
+  local evidence rather than in-flight work.
 - Added home and project proof-surface copy guards so public static routes do
   not expose scaffold, placeholder, or future-promise wording, then polished the
   home telemetry, systems-map hero, and atlas copy while preserving the

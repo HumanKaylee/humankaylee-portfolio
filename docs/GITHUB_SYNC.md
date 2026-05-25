@@ -184,6 +184,45 @@ Observed current-state evidence:
 - The current-head PR/CI verifier passes with `1` test, `1` pass, and `0`
   failures.
 
+### Latest PR #6 Project write recheck as of 2026-05-25T14:18:48-04:00
+
+PR #6 remains tracked on Project #1 with status `In Progress`. Project #1 write
+access is healthy for the current local `gh` token. This is active-PR triage
+evidence only; it is not launch-readiness evidence and does not close any issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh auth status
+GH_PROMPT_DISABLED=1 gh repo view HumanKaylee/humankaylee-portfolio --json viewerPermission,isPrivate,nameWithOwner,url
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json --limit 100
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --format json --limit 100
+GH_PROMPT_DISABLED=1 gh api graphql -f owner='HumanKaylee' -f repo='humankaylee-portfolio' -F pr=6 -F project=1 -f query='query($owner:String!, $repo:String!, $pr:Int!, $project:Int!) { repository(owner:$owner, name:$repo) { nameWithOwner visibility viewerPermission pullRequest(number:$pr) { number state isDraft headRefName headRefOid baseRefName mergeStateStatus viewerCanUpdate viewerCanClose } } user(login:$owner) { projectV2(number:$project) { number title url public closed viewerCanUpdate } } }'
+GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefName,headRefOid,mergeStateStatus,statusCheckRollup,projectItems,url
+```
+
+Observed current-state evidence:
+
+- Token scopes include `repo`, full-control `project`, `workflow`, and other
+  broad account scopes needed for private repo and Project maintenance.
+- Private repo access reports `viewerPermission:"ADMIN"`.
+- Project #1 lists and views successfully with id `PVT_kwHOB69SNc4BYuyc`,
+  `19` fields, and `16` items.
+- GraphQL reports PR #6 `viewerCanUpdate:true` / `viewerCanClose:true`, PR
+  head `0094a2b99470d3b7dbbabb2630b2c309a217de2b`,
+  `mergeStateStatus:"CLEAN"`, and Project #1 `viewerCanUpdate:true`.
+- `gh project item-edit` returned Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` with no permission error.
+- `gh pr view` reports PR #6 open, not draft, tracked on Project #1 with
+  status `In Progress`, and Phase 0 CI run `26413621250` succeeded through
+  Frontend verification job `77753216749` and Rust verification job
+  `77753216723`.
+- Project work should now remain maintenance for newly opened or relabeled
+  issues and active PR tracking unless a live verifier regresses.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.

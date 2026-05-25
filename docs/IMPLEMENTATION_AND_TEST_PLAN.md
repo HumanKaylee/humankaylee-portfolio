@@ -53,15 +53,15 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T13:47:38-04:00 found
-  PR #6 open/non-draft at `f03ba78edab3086e7d6b11eb70566ff254b19c53`,
+- Current live recheck snapshot captured at 2026-05-25T14:18:48-04:00 found
+  PR #6 open/non-draft at `0094a2b99470d3b7dbbabb2630b2c309a217de2b`,
   `mergeStateStatus: CLEAN`, PR #6 tracked on Project #1 with status
-  `In Progress`, and Phase 0 CI run `26412306994` successful for
-  Frontend verification job `77749231069` and Rust verification job
-  `77749231091`.
+  `In Progress`, and Phase 0 CI run `26413621250` successful for
+  Frontend verification job `77753216749` and Rust verification job
+  `77753216723`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
-- Latest non-blocked local slice snapshot before this overlay refresh:
+- Latest non-blocked guardrail slice before the proof-surface refresh:
   active PR Project tracking guardrails in `AGENTS.md`, the installed
   `humankaylee-portfolio` Codex and agents skill mirrors,
   `scripts/agent-instructions-contract.test.mjs`, and `docs/CHANGELOG.md`,
@@ -75,14 +75,18 @@ or launch status.
   including Project #1 item/field checks in
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
-- Current in-flight local polish slice: public proof surfaces on home and
-  projects are guarded against visible scaffold, placeholder, or future-promise
-  wording; the static shell, telemetry strip, systems-map hero, project atlas,
-  and Creative Web Systems Atlas Demo proof copy now use additive
-  progressive-enhancement language. Treat this as Phase 4 copy/quality polish
-  only, not as production launch evidence or case-study approval.
+- Latest completed local proof-surface polish slice: public proof surfaces on
+  home and projects are guarded against visible scaffold, placeholder, or
+  future-promise wording; the static shell, telemetry strip, systems-map hero,
+  project atlas, and Creative Web Systems Atlas Demo proof copy now use
+  additive progressive-enhancement language. This slice was committed as
+  `b992f7300eca35b571836376e62a8e5b0cbff004`, then the no-WebGL fallback
+  snapshot was updated as
+  `0094a2b99470d3b7dbbabb2630b2c309a217de2b`. Treat this as Phase 4
+  copy/quality polish only, not as production launch evidence or case-study
+  approval.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T13:47:38-04:00: the local `gh` token has `repo`,
+  2026-05-25T14:18:48-04:00: the local `gh` token has `repo`,
   full-control `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`

@@ -238,16 +238,21 @@ test("implementation plan has a current-state overlay for blocked goal continuat
 			"Phase 0 CI run",
 			"Frontend verification job",
 			"Rust verification job",
-			"2026-05-25T13:47:38-04:00",
-			"f03ba78edab3086e7d6b11eb70566ff254b19c53",
-			"26412306994",
-			"77749231069",
-			"77749231091",
+			"2026-05-25T14:18:48-04:00",
+			"0094a2b99470d3b7dbbabb2630b2c309a217de2b",
+			"26413621250",
+			"77753216749",
+			"77753216723",
 			"GitHub Project permissions are no longer a current blocker",
-			"Latest non-blocked local slice snapshot",
-			"Current in-flight local polish slice",
-			"public proof surfaces on home and",
-			"projects are guarded against visible scaffold, placeholder, or future-promise",
+			"Latest completed local proof-surface polish slice",
+			"b992f7300eca35b571836376e62a8e5b0cbff004",
+			"0094a2b99470d3b7dbbabb2630b2c309a217de2b",
+			"no-WebGL fallback",
+			"snapshot was updated",
+			"public proof surfaces on",
+			"home and projects are guarded against",
+			"visible scaffold, placeholder, or",
+			"future-promise wording",
 			"active PR Project tracking guardrails",
 			"`AGENTS.md`",
 			"installed",
@@ -268,6 +273,10 @@ test("implementation plan has a current-state overlay for blocked goal continuat
 	assert.ok(
 		!plan.includes("- Current live recheck at "),
 		"plan must label embedded evidence as a snapshot, not live-current truth",
+	);
+	assert.ok(
+		!plan.includes("Current in-flight local polish slice"),
+		"plan must not describe a completed local proof-surface slice as in-flight",
 	);
 
 	assert.equal(
