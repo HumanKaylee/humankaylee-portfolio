@@ -100,6 +100,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"Contact path works",
 		"Rust API health is live",
 		"CI is green",
+		"Static quality matrix gate is green",
 		"Lighthouse targets pass or exceptions are documented",
 		"Deployment and rollback docs are complete",
 		"Current approved launch case studies: 0",
@@ -116,6 +117,8 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"runbooks/LAUNCH_EVIDENCE.md",
 		"runbooks/CONTENT_REDACTION_STATUS.md",
 		"docs/OPERATIONS.md",
+		'pnpm test:e2e -- --grep "@quality"',
+		"local/PR CI evidence only",
 	]);
 
 	for (const requirement of [
@@ -131,6 +134,12 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 	}
 
 	expectTableRow(checklist, "CI is green", ["Pass for PR only"]);
+	expectTableRow(checklist, "Static quality matrix gate is green", [
+		"Pass for PR/local CI only",
+		'pnpm test:e2e -- --grep "@quality"',
+		"local/PR CI evidence only",
+		"not production launch evidence",
+	]);
 	expectTableRow(
 		checklist,
 		"Lighthouse targets pass or exceptions are documented",

@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added the `@quality` static quality matrix to the B-063 final launch checklist
+  as PR/local CI evidence only, without clearing production smoke, Lighthouse,
+  rollback, contact handling, provider, domain, or redaction blockers.
 - Added a dedicated Phase 0 CI Playwright `@quality` static quality matrix gate
   for no-JS, reduced-motion, privacy, route-coverage, and accessibility checks
   on the core route set while keeping the evidence scoped to local/PR CI.
