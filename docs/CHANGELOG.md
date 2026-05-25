@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened the installed `humankaylee-portfolio` Codex and agents skill
+  mirrors so future goal continuations treat fresh live verifier output as
+  authoritative over embedded snapshots and avoid current-head snapshot churn
+  unless guidance or blocker state materially changes.
 - Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T12:17:20-04:00 Project permission recheck: the local token can
   list/view Project #1, inspect fields and items, update Project #1, the

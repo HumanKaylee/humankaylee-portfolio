@@ -196,6 +196,8 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"every currently open live-bridge issue has a Project item with phase, priority, type, area, agent size, status, and blocker fields",
 		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks; do not run `gh auth refresh` from unattended automation unless Project scopes regress.",
 		"Future Project sync is not current until every open issue in the live issue bridge has a Project item or a documented skip reason.",
+		"Fresh verifier output is authoritative for live GitHub, PR, CI, issue, and Project state; embedded skill snapshots and the Current Repo State / Issue Overlay are execution guidance only after live verification.",
+		"Do not rewrite snapshots only to chase the checked-out commit after guardrail-only docs commits; update snapshots only when guidance or blocker state materially changes future execution.",
 		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
 		"Blocked/deferred case-study candidates must not count toward the four-case-study launch minimum.",
 		"B-037 visual regression snapshots are implementation evidence only, not production launch evidence",
