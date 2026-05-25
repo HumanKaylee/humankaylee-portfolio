@@ -51,25 +51,25 @@ verifiers before acting on issue, PR, CI, or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T09:21:51-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T10:12:07-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `2aebedafff1d7c9b208ba0fac6ef809bcd84e5f8`, and Phase 0 CI run
-  `26402120167` successful for Frontend verification job `77716697424` and
-  Rust verification job `77716697391`.
-- Latest non-blocked local slice snapshot before this overlay refresh: live
-  GitHub Project item verification hardening in
-  `scripts/github-live-issue-sync.test.mjs`,
-  `scripts/github-sync-contract.test.mjs`, `docs/GITHUB_SYNC.md`, and
-  `docs/CHANGELOG.md`, committed as
-  `8ecad622aae38ae66af8af8f7d414fd4ab675126`. Treat the B-051 bundle-budget,
+  `2c201d541b068fda29f123350e846aa078544a06`, and Phase 0 CI run
+  `26404384808` successful for Frontend verification job `77724111650` and
+  Rust verification job `77724111614`.
+- Latest non-blocked local slice snapshot before this overlay refresh: B-068
+  deployment sync guardrail hardening in `docs/GITHUB_SYNC.md`,
+  `scripts/github-sync-contract.test.mjs`, and `docs/CHANGELOG.md`, committed as
+  `2c201d541b068fda29f123350e846aa078544a06`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
-  preflight evidence, and Project #1 item/field checks in
+  preflight evidence, B-068 deployment sync guardrails, and GitHub Project item
+  verification hardening, including Project #1 item/field checks in
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
 - GitHub Project access and open-issue bridge sync were rechecked on
-  2026-05-25T09:21:51-04:00. The local `gh` token has `repo` and `project`
+  2026-05-25T10:12:07-04:00. The local `gh` token has `repo` and `project`
   scopes, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+  succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, Project #1 is private with 19 fields and 15 issue items, Project #1
   permissions and item sync are healthy, item listing confirms populated phase,
   priority, type, area, agent size, status, and blocker fields, and

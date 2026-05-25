@@ -8,6 +8,11 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the GitHub Project permission and continuation-plan snapshot after a
+  live recheck confirmed Project #1 list/view/field/item access, PR #6 green at
+  `2c201d541b068fda29f123350e846aa078544a06`, and the remaining work limited
+  to external redaction, deployment, domain, contact, rollback, Lighthouse, and
+  Phase 8 approval gates.
 - Hardened GitHub deployment sync notes so B-068 remains compare-only: provider
   commands, migration procedures, env/secrets configuration, DNS cutover, and
   rollback steps stay deferred until selected-host, launch, and approval
