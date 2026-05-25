@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Mirrored the local redaction-readiness guard into `AGENTS.md` and the
+  installed portfolio skill mirrors so future agents run
+  `pnpm redaction:readiness` as reviewer handoff evidence only, without
+  approving content or closing #20/#21/#24/#25.
 - Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T15:19:50-04:00 permission recheck: Project #1 read/write access
   remains healthy, PR #6 is tracked as `In Progress` at

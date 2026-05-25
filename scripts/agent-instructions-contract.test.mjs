@@ -108,6 +108,12 @@ test("repository agent instructions use current hosting and launch-blocker guida
 	expectContains(agents, "not launch-ready");
 	expectContains(agents, "production frontend/API targets");
 	expectContains(agents, "redaction approvals");
+	expectContains(agents, "pnpm redaction:readiness");
+	expectContains(agents, "local/redaction-readiness");
+	expectContains(
+		agents,
+		"Use the generated summary as reviewer handoff input only; it cannot approve case studies, clear open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.",
+	);
 	expectContains(agents, REVIEWED_LAUNCH_BOUNDARY);
 	expectContains(
 		agents,
@@ -215,6 +221,7 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Contact store config must fail fast when `HK_API_CONTACT_DELIVERY_MODE=store` lacks `HK_API_CONTACT_STORE_PATH`.",
 		"Blocked/deferred case-study candidates should use explicit unpublished body boundaries, not generic placeholder body copy.",
 		"Content/redaction docs must not use approval-adjacent wording unless directly negated.",
+		"`pnpm redaction:readiness` records local/redaction-readiness reviewer handoff evidence only; it cannot approve case studies, clear open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.",
 		"Swarm execution is opt-in for tasks that span multiple ownership lanes or need reviewed parallel-safe split work",
 		"single-lane docs/contract fixes should stay with one owner in single-session execution unless the Coordinator records a concrete parallelization benefit",
 		"B-067/#73 publication requires B-063 launch evidence and approved public-safe content before any note or postmortem is published, added to RSS, or used for issue closure.",
