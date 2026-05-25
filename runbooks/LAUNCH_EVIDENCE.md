@@ -92,6 +92,23 @@ Launch evidence can only be recorded here after the template values are
 replaced with owner approval plus real production or owner-approved
 production-equivalent provider preview contact evidence.
 
+## Latest Phase 7 launch readiness audit evidence
+
+`pnpm phase7:launch-audit -- --summary test-results/phase-7-launch-readiness-audit.json`
+is a local/readiness-audit helper for summarizing the unresolved external launch
+gates before a goal continuation claims readiness or closes issues. It reports
+status `blocked`, `launchReady:false`, and `canCloseIssues:false` while
+frontend/API deploy, final domain, contact production handling, rollback,
+production Lighthouse, and redaction approvals remain unresolved.
+
+This is not production evidence. It does not deploy, authenticate providers,
+change DNS/TLS, submit contact payloads, approve redaction, close
+#20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or replace any blocked production row.
+Future operators may write an ignored local summary to
+`test-results/phase-7-launch-readiness-audit.json`; launch evidence can only be
+recorded here after the blocked rows are replaced with real production or
+owner-approved production-equivalent provider preview evidence.
+
 ## Latest Local Phase 5 Backend Evidence
 
 Captured locally on `goal/portfolio-implementation` at
@@ -127,6 +144,24 @@ contact storage, production smoke, rollback, or redaction blockers.
   repeat-contact rate-limit, and JSONL single-record smoke checks passed on
   `127.0.0.1:8788`; `sudo podman stop --time 1 humankaylee-api-local-check`
   removed the container and `lsof -ti tcp:8788` returned no listener.
+
+## Latest GitHub Project permission recheck evidence
+
+Captured at `2026-05-25T17:45:51-04:00` with the current local `gh` token:
+Project #1 permissions are healthy, no auth refresh is required, Project #1
+lists/views as private with id `PVT_kwHOB69SNc4BYuyc`, 19 fields, and 16 items,
+GraphQL reports `viewerCanUpdate:true`, PR #6 is attached to Project #1 as
+`In Progress`, and all 15 open live-bridge issues report Project item status
+`Todo`.
+
+PR #6 was open, non-draft, clean, and at head
+`97e49c1fcdbdfa9328d563846c571c147d44f82f`; Phase 0 CI run `26420545976`
+passed Frontend verification job `77774225153` and Rust verification job
+`77774225138`.
+
+This is issue/PR/Project triage evidence only. It does not change production
+launch readiness, redaction approval, provider deployment, DNS/TLS, contact
+handling, rollback, Lighthouse, or B-063 final launch checklist status.
 
 ## Current Evidence Matrix
 

@@ -8,13 +8,19 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a Phase 7 launch readiness audit CLI and package script so resumed goal
+  runs can write a public-safe `local/readiness-audit` summary of unresolved
+  external launch gates before any launch-readiness or issue-closure claim,
+  without deploying, changing DNS/TLS, approving content/contact handling, or
+  replacing blocked production evidence.
 - Refreshed the continuation plan, GitHub sync runbook, and launch-evidence
-  Project row after the 2026-05-25T17:26:34-04:00 permission recheck: Project
+  Project row after the 2026-05-25T17:45:51-04:00 permission recheck: Project
   #1 read/write access remains healthy, all 15 open live-bridge issues are on
   Project #1, PR #6 is tracked as `In Progress` at
-  `b9d0ece31ed64b47b4322a91c2271ce461c59f3c`, Phase 0 CI run `26420081492`
+  `97e49c1fcdbdfa9328d563846c571c147d44f82f`, Phase 0 CI run `26420545976`
   passed, and the paste-ready `/goal` prompt now starts from external launch
-  and approval blockers instead of Project-auth recovery.
+  and approval blockers plus the local launch-readiness audit guard instead of
+  Project-auth recovery.
 - Added `wrangler` as a repo-managed dev dependency and updated Phase 7
   provider preflight evidence, AGENTS.md, and installed portfolio skills so
   resumed agents can detect Cloudflare Pages CLI readiness without running

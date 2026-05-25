@@ -478,6 +478,51 @@ Observed current-state evidence:
   if private repo reads also fail, use
   `gh auth refresh --hostname github.com -s repo -s project`.
 
+### Latest GitHub Project permission recheck as of 2026-05-25T17:45:51-04:00
+
+Project #1 permissions remain healthy for the current local `gh` token. No auth
+refresh is required right now. This is Project triage/sync evidence only; it is
+not launch-readiness evidence and does not close any issue.
+
+Commands run:
+
+```bash
+gh auth status -h github.com
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json
+GH_PROMPT_DISABLED=1 gh api graphql -f query='query { user(login:"HumanKaylee") { projectV2(number:1) { id title viewerCanUpdate } } }' --jq '.data.user.projectV2'
+GH_PROMPT_DISABLED=1 gh api graphql -f query='query { repository(owner:"HumanKaylee", name:"humankaylee-portfolio") { pullRequest(number:6) { number projectItems(first:10) { nodes { id project { title } fieldValues(first:20) { nodes { ... on ProjectV2ItemFieldSingleSelectValue { name optionId field { ... on ProjectV2SingleSelectField { name } } } } } } } } } }' --jq '.data.repository.pullRequest.projectItems.nodes'
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,title,state,url,projectItems,headRefName,headRefOid,isDraft,mergeStateStatus,statusCheckRollup
+GH_PROMPT_DISABLED=1 gh issue list --repo HumanKaylee/humankaylee-portfolio --state open --limit 100 --json number,title,state,projectItems
+```
+
+Observed current-state evidence:
+
+- `gh auth status` reports the active `HumanKaylee` account with the
+  full-control `project` scope plus `repo` and `workflow`.
+- Project #1 views successfully with id `PVT_kwHOB69SNc4BYuyc`, 19 fields, 16
+  items, private visibility, and URL
+  `https://github.com/users/HumanKaylee/projects/1`.
+- Field list includes `Status`, `Phase`, `Priority`, `Type`, `Area`,
+  `Agent Size`, and `Blocker`; the `Status` options include `Todo`,
+  `In Progress`, and `Done`.
+- Item list reports 15 issue-backed items for the open live bridge
+  (`#3`, `#5`, `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and
+  `#70`-`#74`) plus PR #6 with status `In Progress`.
+- GraphQL reports Project #1 `viewerCanUpdate:true`; PR #6 has Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` on Project #1 with `Status` set to
+  `In Progress`.
+- `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`,
+  tracked on Project #1 with status `In Progress`, and at head
+  `97e49c1fcdbdfa9328d563846c571c147d44f82f`.
+- Phase 0 CI run `26420545976` passed for the same head: Frontend verification
+  job `77774225153` and Rust verification job `77774225138`.
+- Missing scopes: none observed. If this regresses with a missing Project-scope
+  error, use `gh auth refresh --hostname github.com -s project,read:project`;
+  if private repo reads also fail, use
+  `gh auth refresh --hostname github.com -s repo -s project`.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.

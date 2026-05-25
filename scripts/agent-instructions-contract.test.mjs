@@ -125,6 +125,12 @@ test("repository agent instructions use current hosting and launch-blocker guida
 		agents,
 		"Use the template only to shape owner approval, retention, backup, rotation, deletion, store/provider, smoke, rollback/disable, and privacy fields; it cannot approve contact handling, capture production smoke, close #64/#69, or replace the blocked production contact row.",
 	);
+	expectContains(agents, "pnpm phase7:launch-audit");
+	expectContains(agents, "local/readiness-audit");
+	expectContains(
+		agents,
+		"It summarizes unresolved external launch gates only; it cannot deploy, approve redaction, approve contact handling, replace production rows, close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove launch readiness.",
+	);
 	expectContains(agents, REVIEWED_LAUNCH_BOUNDARY);
 	expectContains(
 		agents,
@@ -236,6 +242,7 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"`pnpm phase7:evidence-template` is a local/readiness helper for shaping future provider-neutral evidence rows only; it cannot select providers, run deployment commands, change DNS/TLS, run production smoke, replace blocked production rows, or close #63/#64/#65/#69.",
 		"`pnpm phase7:provider-preflight` records local/preflight provider CLI and environment-name availability only; the repo-managed `wrangler` dev dependency proves local Cloudflare Pages CLI availability, not provider authentication, deployment, DNS/TLS, production smoke, or issue closure.",
 		"`pnpm phase7:contact-decision` is a local/decision-template helper for shaping the #64/#69 contact handling decision only; it cannot approve contact handling, capture production smoke, close #64/#69, or replace the blocked production contact row.",
+		"`pnpm phase7:launch-audit` records local/readiness-audit blocker summary evidence only; it cannot deploy, approve redaction, approve contact handling, replace production rows, close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove launch readiness.",
 		"Swarm execution is opt-in for tasks that span multiple ownership lanes or need reviewed parallel-safe split work",
 		"single-lane docs/contract fixes should stay with one owner in single-session execution unless the Coordinator records a concrete parallelization benefit",
 		"B-067/#73 publication requires B-063 launch evidence and approved public-safe content before any note or postmortem is published, added to RSS, or used for issue closure.",

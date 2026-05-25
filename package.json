@@ -19,6 +19,7 @@
 		"phase7:provider-preflight": "node scripts/phase-7-provider-preflight.mjs",
 		"phase7:evidence-template": "node scripts/phase-7-evidence-template.mjs",
 		"phase7:contact-decision": "node scripts/phase-7-contact-decision-template.mjs",
+		"phase7:launch-audit": "node scripts/phase-7-launch-readiness-audit.mjs",
 		"redaction:readiness": "node scripts/case-study-redaction-readiness.mjs",
 		"audit:frontend": "pnpm audit --audit-level moderate",
 		"audit:backend": "cargo audit --file apps/api/Cargo.lock",

@@ -53,12 +53,12 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T17:26:34-04:00 found
-  PR #6 open/non-draft at `b9d0ece31ed64b47b4322a91c2271ce461c59f3c`,
+- Current live recheck snapshot captured at 2026-05-25T17:45:51-04:00 found
+  PR #6 open/non-draft at `97e49c1fcdbdfa9328d563846c571c147d44f82f`,
   `mergeStateStatus: CLEAN`, PR #6 tracked on Project #1 with status
-  `In Progress`, and Phase 0 CI run `26420081492` successful for
-  Frontend verification job `77772849305` and Rust verification job
-  `77772849309`.
+  `In Progress`, and Phase 0 CI run `26420545976` successful for
+  Frontend verification job `77774225153` and Rust verification job
+  `77774225138`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked guardrail slice before the proof-surface refresh:
@@ -86,7 +86,7 @@ or launch status.
   copy/quality polish only, not as production launch evidence or case-study
   approval.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T17:26:34-04:00: the local `gh` token has `repo`,
+  2026-05-25T17:45:51-04:00: the local `gh` token has `repo`,
   full-control `project`, and `workflow` scopes; private repo access reports `ADMIN`;
   `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds for private Project #1 with id `PVT_kwHOB69SNc4BYuyc`, 19 fields,
@@ -96,11 +96,19 @@ or launch status.
   and `Done`; GraphQL reports Project #1 `viewerCanUpdate: true`; PR #6 has
   Project item `PVTI_lAHOB69SNc4BYuyczgtwPwg` with status `In Progress`; PR #6 is tracked as a
   Project item with status `In Progress`; and
-  all 15 open live-bridge issues report Project item status `Todo`. The safe write proof re-applied PR #6 status `In Progress` with no permission error.
-  PR #6 is open, non-draft, clean, and at head
+  all 15 open live-bridge issues report Project item status `Todo`.
+  The safe write proof from 2026-05-25T17:26:34-04:00 re-applied PR #6 status
+  `In Progress` with no permission error at head
   `b9d0ece31ed64b47b4322a91c2271ce461c59f3c`; Phase 0 CI run `26420081492`
   passed Frontend verification job `77772849305` and Rust verification job
-  `77772849309`; the live issue/Project verifier and current-head PR/CI verifier pass.
+  `77772849309`. The 2026-05-25T17:45:51-04:00 permission recheck was
+  intentionally read-only.
+  PR #6 is open, non-draft, clean, and at head
+  `97e49c1fcdbdfa9328d563846c571c147d44f82f`; Phase 0 CI run `26420545976`
+  passed Frontend verification job `77774225153` and Rust verification job
+  `77774225138`. A read-only GraphQL recheck reports Project #1
+  `viewerCanUpdate: true`, and PR #6 Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` remains `In Progress`.
   GitHub Project permissions are no longer a current blocker. Treat future Project
   work as maintenance for newly opened or relabeled issues and active PR
   tracking, not as launch readiness or as a current launch blocker.
@@ -122,6 +130,14 @@ or launch status.
   rollback or disable plan, blocked issues, and privacy redaction. This helper
   cannot approve contact handling, capture production smoke, close #64/#69, or
   replace the blocked production contact row.
+- Latest launch-readiness local audit guardrail:
+  `pnpm phase7:launch-audit -- --summary test-results/phase-7-launch-readiness-audit.json`
+  records `local/readiness-audit` evidence only. It reports
+  `status: "blocked"`, `launchReady: false`, and `canCloseIssues: false` while
+  frontend/API deploy, final domain, contact handling, rollback, production
+  Lighthouse, and redaction approvals remain unresolved. This helper cannot
+  deploy, approve redaction, approve contact handling, replace production rows,
+  close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove launch readiness.
 - Latest case-study redaction-readiness slice: `pnpm redaction:readiness`
   captured at `2026-05-25T19:22:49.138Z` records
   `local/redaction-readiness` evidence only. The generated ignored summary at
@@ -146,7 +162,8 @@ or launch status.
   and contact-handling evidence for #64, domain/DNS/TLS metadata evidence for
   #65, or the B-063 production smoke/Lighthouse/rollback checklist for #69.
 - If a next goal run resumes before those external blockers are resolved, it
-  should first re-run the live checks above, confirm GitHub Project checks do
+  should first re-run the live checks above, run `pnpm phase7:launch-audit`
+  before any readiness or issue-closure claim, confirm GitHub Project checks do
   not regress, then choose only a small
   non-blocked docs-sync, guardrail, or verification-hardening slice with
   explicit contract evidence. Do not invent deployment, redaction, contact, or
@@ -163,7 +180,7 @@ or launch status.
 ## Ready-To-Use Codex Goal Objective
 
 ```text
-/goal Continue the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md using the current repo state. First read AGENTS.md and the Source of Truth docs listed in the plan, then run the current-state preflight/live verifiers named in the Current Repo State / Issue Overlay. Treat the 2026-05-25T17:26:34-04:00 Project recheck as evidence that GitHub Project permissions are healthy unless a live verifier regresses; do not spend the first slice on Project auth recovery. Do not reboot or restart any machine, service, process manager, or remote host. Do not revert or overwrite other agents' work. Treat local, PR, CI, docs, Project, and issue-sync evidence as non-launch-readiness evidence only. Do not claim launch readiness unless runbooks/LAUNCH_EVIDENCE.md blocked production rows are replaced with real production or owner-approved production-equivalent provider-preview evidence and runbooks/FINAL_LAUNCH_CHECKLIST.md requirements are satisfied. Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external gates truly prove closure: redaction/human signoff for #20/#21/#24/#25, provider deploy evidence for #63/#64, final domain DNS/TLS/canonical metadata for #65, production smoke/Lighthouse/contact/rollback/redaction evidence for #69, and B-063 plus HumanKaylee approval dependencies for #70-#74. If external provider/domain/contact/redaction blockers remain unresolved, choose exactly one small non-blocked local-readiness, docs-sync, guardrail, or verification-hardening slice with exact contract evidence; otherwise prioritize one external launch gate. Preserve static-first behavior without JavaScript/WebGL/API availability, preserve "reviewed is not approved", and stop when the selected slice is verified or a documented pause condition is reached.
+/goal Continue the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md using the current repo state. First read AGENTS.md and the Source of Truth docs listed in the plan, then run the current-state preflight/live verifiers named in the Current Repo State / Issue Overlay. Treat the 2026-05-25T17:45:51-04:00 Project recheck as evidence that GitHub Project permissions are healthy unless a live verifier regresses; do not spend the first slice on Project auth recovery. Do not reboot or restart any machine, service, process manager, or remote host. Do not revert or overwrite other agents' work. Treat local, PR, CI, docs, Project, and issue-sync evidence as non-launch-readiness evidence only. Run `pnpm phase7:launch-audit -- --summary test-results/phase-7-launch-readiness-audit.json` before any launch-readiness or issue-closure claim. Do not claim launch readiness unless runbooks/LAUNCH_EVIDENCE.md blocked production rows are replaced with real production or owner-approved production-equivalent provider-preview evidence and runbooks/FINAL_LAUNCH_CHECKLIST.md requirements are satisfied. Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external gates truly prove closure: redaction/human signoff for #20/#21/#24/#25, provider deploy evidence for #63/#64, final domain DNS/TLS/canonical metadata for #65, production smoke/Lighthouse/contact/rollback/redaction evidence for #69, and B-063 plus HumanKaylee approval dependencies for #70-#74. If external provider/domain/contact/redaction blockers remain unresolved, choose exactly one small non-blocked local-readiness, docs-sync, guardrail, or verification-hardening slice with exact contract evidence; otherwise prioritize one external launch gate. Preserve static-first behavior without JavaScript/WebGL/API availability, preserve "reviewed is not approved", and stop when the selected slice is verified or a documented pause condition is reached.
 ```
 
 ## Optional Claude Code Execution Prompt

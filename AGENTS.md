@@ -60,6 +60,12 @@ of truth for implementation state, launch blockers, and production evidence.
   rollback/disable, and privacy fields; it cannot approve contact handling,
   capture production smoke, close #64/#69, or replace the blocked production
   contact row.
+- Run `pnpm phase7:launch-audit -- --summary test-results/phase-7-launch-readiness-audit.json`
+  before any launch-readiness or issue-closure claim. Evidence Authority is
+  `local/readiness-audit`. It summarizes unresolved external launch gates only;
+  it cannot deploy, approve redaction, approve contact handling, replace
+  production rows, close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove
+  launch readiness.
 - Prefer non-colliding agents by ownership area: content, shell/layout, visual/WebGL, Rust API, CI/deployment, accessibility/performance.
 - Smaller/cheaper models may own mechanical tasks with exact file paths and acceptance criteria.
 - Use stronger models for design, architecture, visual-system, security, and final review.
