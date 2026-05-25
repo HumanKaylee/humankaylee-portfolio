@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a `Privacy Redaction Rule` column to the current launch evidence matrix
+  so historical and blocked evidence rows carry the same public-safe evidence
+  shape required for future provider, domain, API, contact, rollback, and
+  redaction captures.
 - Split Phase 7 blocker traceability launch-evidence coverage into separate
   frontend/domain and API/contact/rollback rows so #63/#65 and #64/#69 keep
   clearer replacement-evidence boundaries without clearing production blockers.

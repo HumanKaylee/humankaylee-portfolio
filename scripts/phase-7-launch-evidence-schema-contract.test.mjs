@@ -32,14 +32,40 @@ function markdownRows(content) {
 	return content
 		.split("\n")
 		.filter((line) => line.trim().startsWith("|"))
-		.map((line) =>
-			line
-				.trim()
-				.slice(1, -1)
-				.split("|")
-				.map((cell) => cell.trim()),
-		)
+		.map((line) => splitMarkdownTableLine(line.trim()))
 		.filter((cells) => !cells.every((cell) => /^-+$/.test(cell)));
+}
+
+function splitMarkdownTableLine(line) {
+	const trimmed = line.replace(/^\|/, "").replace(/\|$/, "");
+	const cells = [];
+	let cell = "";
+	let escaped = false;
+
+	for (const char of trimmed) {
+		if (escaped) {
+			cell += char === "|" ? "\\|" : `\\${char}`;
+			escaped = false;
+			continue;
+		}
+
+		if (char === "\\") {
+			escaped = true;
+			continue;
+		}
+
+		if (char === "|") {
+			cells.push(cell.trim());
+			cell = "";
+			continue;
+		}
+
+		cell += char;
+	}
+
+	if (escaped) cell += "\\";
+	cells.push(cell.trim());
+	return cells;
 }
 
 function expectTableRow(content, firstCell, expectedCells) {
@@ -54,11 +80,69 @@ function expectTableRow(content, firstCell, expectedCells) {
 	}
 }
 
+function sectionBetween(content, startHeading, endHeading) {
+	const start = content.indexOf(startHeading);
+	assert.ok(start >= 0, `expected section ${startHeading}`);
+	const end = content.indexOf(endHeading, start + startHeading.length);
+	assert.ok(end >= 0, `expected following section ${endHeading}`);
+	return content.slice(start, end);
+}
+
+function expectCurrentEvidenceMatrixPrivacyRules(evidence) {
+	const matrix = sectionBetween(
+		evidence,
+		"## Current Evidence Matrix",
+		"## Production Blockers",
+	);
+	const rows = markdownRows(matrix);
+	assert.ok(rows.length > 1, "expected current evidence matrix rows");
+	assert.doesNotMatch(
+		matrix,
+		/\/home\/joe\//,
+		"current evidence matrix must not expose absolute local home paths",
+	);
+
+	const header = rows[0];
+	const privacyIndex = header.indexOf("Privacy Redaction Rule");
+	assert.notEqual(
+		privacyIndex,
+		-1,
+		"expected Current Evidence Matrix to include Privacy Redaction Rule column",
+	);
+
+	for (const row of rows.slice(1)) {
+		assert.equal(
+			row.length,
+			header.length,
+			`expected ${row[0]} row to match current evidence matrix column count`,
+		);
+		assert.ok(
+			row[privacyIndex] && !/^(tbd|n\/a|-)?$/i.test(row[privacyIndex]),
+			`expected ${row[0]} row to include a privacy redaction rule`,
+		);
+	}
+
+	expectTableRow(matrix, "Production frontend smoke", [
+		"Blocked / not run",
+		"No target URL exists yet; future evidence must redact provider account IDs, private logs, secrets, and tokens before capture.",
+	]);
+	expectTableRow(matrix, "Production API smoke", [
+		"Blocked / not run",
+		"No API origin or response body exists yet; future evidence must redact provider account IDs, private logs, secrets, tokens, and contact payloads before capture.",
+	]);
+	expectTableRow(matrix, "Content redaction", [
+		"Blocked:",
+		"Approval summaries only; do not copy raw artifacts, private paths, private hostnames, raw logs, or reviewer-private notes.",
+	]);
+}
+
 test("Phase 7 launch evidence schema stays provider-neutral and public-safe", () => {
 	const changelog = readRequiredFile(files.changelog);
 	const evidence = readRequiredFile(files.evidence);
 	const operations = readRequiredFile(files.operations);
 	const packet = readRequiredFile(files.packet);
+
+	expectCurrentEvidenceMatrixPrivacyRules(evidence);
 
 	expectContains(evidence, "## Future Evidence Capture Contract");
 	expectContains(evidence, "Exact command.");

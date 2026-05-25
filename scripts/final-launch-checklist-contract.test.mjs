@@ -119,12 +119,13 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"docs/OPERATIONS.md",
 		'pnpm test:e2e -- --grep "@quality"',
 		"local/PR CI evidence only",
+		"Every B-063 launch-evidence row must include a populated Privacy Redaction Rule cell before it can support launch approval.",
+		"`reviewed` case studies are not launch-eligible.",
 	]);
 
 	for (const requirement of [
 		"Home is live",
 		"Projects are live",
-		"At least four case studies are live and redacted",
 		"Resume route and PDF production smoke evidence exists",
 		"Notes/build-log is live",
 		"Contact path works",
@@ -132,6 +133,17 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 	]) {
 		expectTableRow(checklist, requirement, ["Blocked / not run"]);
 	}
+
+	expectTableRow(
+		checklist,
+		"At least four case studies are live and redacted",
+		[
+			"Blocked / not run",
+			"Current approved launch case studies: 0",
+			"Privacy Redaction Rule",
+			"`reviewed` case studies are not launch-eligible",
+		],
+	);
 
 	expectTableRow(checklist, "CI is green", ["Pass for PR only"]);
 	expectTableRow(checklist, "Static quality matrix gate is green", [
