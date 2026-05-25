@@ -53,12 +53,12 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T14:18:48-04:00 found
-  PR #6 open/non-draft at `0094a2b99470d3b7dbbabb2630b2c309a217de2b`,
+- Current live recheck snapshot captured at 2026-05-25T14:42:32-04:00 found
+  PR #6 open/non-draft at `5acb8d657caef849309955e9b538c7f45a6b36b4`,
   `mergeStateStatus: CLEAN`, PR #6 tracked on Project #1 with status
-  `In Progress`, and Phase 0 CI run `26413621250` successful for
-  Frontend verification job `77753216749` and Rust verification job
-  `77753216723`.
+  `In Progress`, and Phase 0 CI run `26414235173` successful for
+  Frontend verification job `77755108595` and Rust verification job
+  `77755108581`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked guardrail slice before the proof-surface refresh:
@@ -86,7 +86,7 @@ or launch status.
   copy/quality polish only, not as production launch evidence or case-study
   approval.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T14:18:48-04:00: the local `gh` token has `repo`,
+  2026-05-25T14:42:32-04:00: the local `gh` token has `repo`,
   full-control `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
@@ -103,6 +103,15 @@ or launch status.
   GitHub Project permissions are no longer a current blocker. Treat future Project work as
   maintenance for newly opened or relabeled issues and active PR tracking, not
   as launch readiness or as a current launch blocker.
+- Latest provider-auth local preflight slice: `scripts/phase-7-provider-preflight.mjs`
+  captured at 2026-05-25T18:41:47.441Z records `local/preflight`
+  evidence by checking provider CLI presence and environment variable names
+  only. Provider preflight reports `wrangler`, `fly`, and
+  `railway` missing on this machine, no provider/API env names present, and keeps deployment,
+  DNS/TLS, rollback, production smoke, contact handling, and case-study approval
+  work blocked until real provider targets and owner decisions exist. Only environment variable names and command presence are
+  recorded; secret values, provider account IDs, URLs, contact payloads, and raw
+  provider logs are not captured.
 - What remains is external launch and approval work: complete redaction
   approvals for at least four launch case studies; record HumanKaylee
   publication-safety decisions for #24 and #25; deploy the frontend for #63;

@@ -8,6 +8,15 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a Phase 7 provider preflight script and runbook evidence row that checks
+  provider CLI presence and approved environment variable names without
+  recording values, authenticating, deploying, changing DNS, or clearing #63,
+  #64, #65, or #69.
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T14:42:32-04:00 permission recheck: no missing GitHub scopes were
+  observed, Project #1 lists/views with 19 fields and 16 items, PR #6 is
+  tracked as `In Progress` at `5acb8d657caef849309955e9b538c7f45a6b36b4`, and
+  Phase 0 CI run `26414235173` passed.
 - Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T14:18:48-04:00 permission recheck: Project #1 write access is
   healthy, PR #6 is tracked as `In Progress` at

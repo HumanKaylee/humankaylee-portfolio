@@ -1446,6 +1446,10 @@ Phase 7 local readiness guard:
 - `scripts/phase-7-local-readiness-contract.test.mjs` verifies the safe local
   frontend, API, metadata, and evidence commands that can run before provider
   accounts, domains, production secrets, or rollback targets exist.
+- `scripts/phase-7-provider-preflight.mjs` provides a provider auth and target
+  preflight that records CLI presence and environment variable names only; it is
+  safe to run before provider credentials exist and does not deploy, change DNS,
+  run production smoke, or clear launch blockers.
 - The contract is progress evidence only; #63, #64, #65, and #69 stay open
   until real provider, domain, production smoke, rollback, contact, Lighthouse,
   four approved case studies, and redaction approval evidence exists.

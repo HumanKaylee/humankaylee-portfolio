@@ -32,6 +32,11 @@ test("package scripts cover the Phase 1 frontend scaffold contract", () => {
 		"pnpm typecheck",
 		"check script should route to the existing Astro and TypeScript checks",
 	);
+	assert.equal(
+		scripts["phase7:provider-preflight"],
+		"node scripts/phase-7-provider-preflight.mjs",
+		"phase7 provider preflight should run the safe local provider readiness check",
+	);
 	assert.match(
 		scripts.format,
 		/^biome format --write /,

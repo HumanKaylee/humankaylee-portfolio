@@ -180,6 +180,14 @@ test("Phase 7 local readiness records safe local gates without clearing producti
 		"four approved case studies",
 		"redaction approvals",
 	]);
+	expectTableRow(packet, "Provider auth and target preflight", [
+		"node scripts/phase-7-provider-preflight.mjs --summary test-results/phase-7-provider-preflight.json",
+		"local/preflight",
+		"only environment variable names and command presence",
+		"no `wrangler pages deploy`, `fly deploy`, `railway up`, production `xh`, or DNS/TLS changes",
+		"frontend provider/project target",
+		"API host decision",
+	]);
 
 	expectTableRow(evidence, "Phase 7 local readiness contract", [
 		"node --test scripts/phase-7-local-readiness-contract.test.mjs",
@@ -187,15 +195,27 @@ test("Phase 7 local readiness records safe local gates without clearing producti
 		"not production evidence",
 		"production deploy, DNS/TLS, API health, contact handling, rollback, Lighthouse, four approved case studies, and redaction approvals remain blocked",
 	]);
+	expectTableRow(evidence, "Phase 7 provider preflight", [
+		"node scripts/phase-7-provider-preflight.mjs --summary test-results/phase-7-provider-preflight.json",
+		"local/preflight",
+		"not production evidence",
+		"wrangler",
+		"fly",
+		"railway",
+		"Only environment variable names and command presence are recorded",
+	]);
 
 	expectAll(backlog, [
 		"scripts/phase-7-local-readiness-contract.test.mjs",
+		"scripts/phase-7-provider-preflight.mjs",
 		"Pre-provider local readiness contract",
+		"provider auth and target preflight",
 		"local-readiness only; production remains blocked",
 		"four approved case studies",
 	]);
 	expectAll(githubSync, [
 		"Phase 7 local readiness contract status: local-readiness only; production remains blocked.",
+		"Phase 7 provider preflight status: local/preflight evidence only; production remains blocked.",
 		"four approved case studies",
 		"#63, #64, #65, and #69 remain open",
 	]);

@@ -223,6 +223,42 @@ Observed current-state evidence:
 - Project work should now remain maintenance for newly opened or relabeled
   issues and active PR tracking unless a live verifier regresses.
 
+### Latest GitHub Project permission recheck as of 2026-05-25T14:42:32-04:00
+
+Project #1 still lists/views successfully for the current local `gh` token. PR #6 remains tracked on Project #1 with status `In Progress` at head `5acb8d657caef849309955e9b538c7f45a6b36b4`. This is active-PR and Project triage evidence only; it is not launch-readiness evidence and does not close any issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh auth status --hostname github.com
+GH_PROMPT_DISABLED=1 gh repo view HumanKaylee/humankaylee-portfolio --json nameWithOwner,viewerPermission,isPrivate,url
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefOid,mergeStateStatus,projectItems,url
+GH_PROMPT_DISABLED=1 gh api graphql -f owner='HumanKaylee' -F number=1 -f query='query($owner:String!,$number:Int!){ user(login:$owner){ projectV2(number:$number){ id title viewerCanUpdate closed items(first:100){ totalCount nodes{ id content{ __typename ... on PullRequest{ number title repository{nameWithOwner} } ... on Issue{ number title repository{nameWithOwner} } } fieldValues(first:20){ nodes{ __typename ... on ProjectV2ItemFieldSingleSelectValue{ name field{ ... on ProjectV2SingleSelectField{ name } } } ... on ProjectV2ItemFieldTextValue{ text field{ ... on ProjectV2FieldCommon{ name } } } } } } } } } }'
+```
+
+Observed current-state evidence:
+
+- `gh auth status` reports the active `HumanKaylee` account with `repo`,
+  full-control `project`, and `workflow` scopes.
+- Private repo access reports `viewerPermission:"ADMIN"`.
+- Project #1 lists and views successfully with id `PVT_kwHOB69SNc4BYuyc`,
+  `19` fields, and `16` items.
+- Field list includes `Status`, `Phase`, `Priority`, `Type`, `Area`,
+  `Agent Size`, and `Blocker`.
+- Item list reports the 15 open issue bridge items plus PR #6.
+- GraphQL reports Project #1 `viewerCanUpdate:true`.
+- `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`,
+  tracked on Project #1 with status `In Progress`, and at head
+  `5acb8d657caef849309955e9b538c7f45a6b36b4`.
+- Phase 0 CI run `26414235173` passed for the same head: Frontend verification
+  job `77755108595` and Rust verification job `77755108581`.
+- Missing scopes: none observed. Do not run `gh auth refresh` unless a live
+  verifier regresses or a future Project write command returns a scope error.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.
@@ -601,6 +637,13 @@ remains blocked. `scripts/phase-7-local-readiness-contract.test.mjs` now guards
 the safe local frontend, API, metadata, and evidence commands that can run
 before provider accounts, domains, production secrets, or rollback targets
 exist. #63, #64, #65, and #69 remain open until real production evidence and
+four approved case studies exist.
+
+Phase 7 provider preflight status: local/preflight evidence only; production
+remains blocked. `scripts/phase-7-provider-preflight.mjs` records provider CLI
+presence and environment variable names only so resumed agents can distinguish
+missing provider auth/targets from deployable state without running provider
+commands. #63, #64, #65, and #69 remain open until real production evidence and
 four approved case studies exist.
 
 Phase 7 metadata readiness verifies RSS uses shared site metadata with the

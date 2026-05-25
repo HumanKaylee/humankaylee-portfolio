@@ -16,6 +16,7 @@
 		"preview": "astro preview --host 127.0.0.1",
 		"bundle:budget": "node scripts/bundle-budget.mjs",
 		"lighthouse:local": "pnpm build && node scripts/lighthouse-local.mjs",
+		"phase7:provider-preflight": "node scripts/phase-7-provider-preflight.mjs",
 		"audit:frontend": "pnpm audit --audit-level moderate",
 		"audit:backend": "cargo audit --file apps/api/Cargo.lock",
 		"audit": "pnpm audit:frontend && pnpm audit:backend"
