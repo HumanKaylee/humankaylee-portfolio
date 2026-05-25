@@ -140,6 +140,19 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"local/PR CI evidence only",
 		"not production launch evidence",
 	]);
+	expectTableRow(evidence, "Static quality matrix gate", [
+		'pnpm test:e2e -- --grep "@quality"',
+		"no-JS",
+		"reduced-motion",
+		"private-content",
+		"route coverage",
+		"accessibility",
+		"project detail route",
+		"tests/e2e/quality-gates.spec.ts",
+		"tests/e2e/route-coverage.spec.ts",
+		"local/PR CI evidence only",
+		"not production launch evidence",
+	]);
 	expectTableRow(
 		checklist,
 		"Lighthouse targets pass or exceptions are documented",

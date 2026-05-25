@@ -15,6 +15,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   a HumanKaylee-approved #70/B-064 `build` outcome, status/metadata prep avoids
   raw private release identifiers, and B-068 cannot become provider choice,
   DNS, migration, secret setup, or rollback procedure work before approval.
+- Added a dedicated launch-evidence row for the `@quality` static quality matrix
+  gate so the B-063 final checklist points to no-JS, reduced-motion,
+  private-content, route-coverage, and accessibility evidence without converting
+  it into production launch evidence.
 - Added Downloaded resume recheck evidence for the latest 2026-05-25
   `~/Downloads` resume note: `sha256sum` confirmed
   `~/Downloads/'Joe Poznanski Resume February 2026.pdf'` and
