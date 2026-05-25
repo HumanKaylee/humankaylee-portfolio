@@ -276,8 +276,16 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"`CLOUDFLARE_ACCOUNT_ID`",
 		"`FLY_API_TOKEN`",
 		"`RAILWAY_TOKEN`",
-		"Exact provider commands and rollback steps are maintained in",
+		"Provider-neutral deployment and rollback guardrails are maintained in",
 		"`runbooks/DEPLOYMENT.md`.",
+		"Provider-specific commands, migration procedures, and rollback steps stay deferred until provider/domain decisions and required external evidence exist.",
+		"Future B-068 work must re-check official provider docs before any recommendation",
+		"must not choose a provider",
+		"perform DNS cutover",
+		"run migration commands",
+		"configure env/secrets",
+		"write rollback steps before",
+		"B-058/B-063 evidence and HumanKaylee approval.",
 	]) {
 		expectContains(githubSync, required);
 	}
@@ -292,6 +300,7 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"### Current auth snapshot",
 		"## Current live issue bridge",
 		"current launch host evidence",
+		"Exact provider commands and rollback steps are maintained in",
 	]) {
 		assert.ok(
 			!githubSync.includes(staleCurrentLabel),

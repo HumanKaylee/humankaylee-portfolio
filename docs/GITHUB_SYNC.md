@@ -563,5 +563,10 @@ setup.
 | `FLY_API_TOKEN`         | Fly.io API deploy              | Only if Fly.io is selected.                   |
 | `RAILWAY_TOKEN`         | Railway API deploy             | Only if Railway is selected.                  |
 
-Exact provider commands and rollback steps are maintained in
-`runbooks/DEPLOYMENT.md`.
+Provider-neutral deployment and rollback guardrails are maintained in
+`runbooks/DEPLOYMENT.md`. Provider-specific commands, migration procedures, and rollback steps stay deferred until provider/domain decisions and required external evidence exist.
+
+Future B-068 work must re-check official provider docs before any
+recommendation and must not choose a provider, perform DNS cutover, run
+migration commands, configure env/secrets, or write rollback steps before
+B-058/B-063 evidence and HumanKaylee approval.

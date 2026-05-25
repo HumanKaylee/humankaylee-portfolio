@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened GitHub deployment sync notes so B-068 remains compare-only: provider
+  commands, migration procedures, env/secrets configuration, DNS cutover, and
+  rollback steps stay deferred until selected-host, launch, and approval
+  evidence exist.
 - Made the preflight runbook snapshot-aware so local readiness evidence can
   intentionally trail later guardrail-only docs commits, and live repo, PR, CI,
   issue, and Project verifiers remain the source for current state.
