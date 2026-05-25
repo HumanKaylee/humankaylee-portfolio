@@ -71,6 +71,9 @@ jobs:
       - name: Run API outage resilience gate
         run: pnpm test:e2e -- --grep "@api-down"
 
+      - name: Run API telemetry gate
+        run: pnpm test:e2e -- --grep "@api-telemetry"
+
       - name: Run journey smoke gate
         run: pnpm test:e2e -- --grep "@journey"
 

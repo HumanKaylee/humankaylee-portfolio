@@ -7,9 +7,11 @@ enforced by CI.
 Pull requests run the full Phase 0 CI suite through the `pull_request` trigger.
 The `push` trigger is scoped to `main` so feature-branch PR commits do not run
 duplicate push and PR Lighthouse jobs for the same head.
-Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`, and
-`@journey` as dedicated Playwright gates before the umbrella E2E sweep so
-journey failures remain easy to identify.
+Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`,
+`@api-telemetry`, and `@journey` as dedicated Playwright gates before the
+umbrella E2E sweep so stubbed API telemetry and journey failures remain easy to
+identify. These focused gates intentionally duplicate part of the later
+umbrella sweep to keep CI failures diagnosable.
 
 ## Local Checks
 
@@ -21,6 +23,9 @@ journey failures remain easy to identify.
   security header policy used by local Astro middleware and static hosting.
 - `pnpm test:e2e -- --grep "@api-down"` verifies representative static routes
   and contact fallback behavior when API requests fail.
+- `pnpm test:e2e -- --grep "@api-telemetry"` verifies the frontend telemetry
+  enhancement path with stubbed API responses while preserving the static
+  fallback boundary.
 - `pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and
   contact evaluator journeys across the existing static launch paths.
 - `pnpm test:e2e -- --grep "@static-shell|@visual-surfaces"` verifies core

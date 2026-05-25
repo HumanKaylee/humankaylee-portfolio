@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a dedicated Phase 0 CI Playwright `@api-telemetry` gate for the
+  frontend telemetry enhancement path with stubbed API responses while keeping
+  static fallback behavior and production launch blockers separate.
 - Hardened resume inventory validation wording so invalid-example reasons and
   schema error messages do not imply a live or production-scoped resume claim
   while the PDF remains local approved-source evidence only.

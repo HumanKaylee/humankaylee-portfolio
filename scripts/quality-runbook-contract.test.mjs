@@ -33,8 +33,18 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 	);
 	expectContains(
 		quality,
-		"Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`, and `@journey` as dedicated Playwright gates before the umbrella E2E sweep so journey failures remain easy to identify.",
-		"dedicated Phase 0 CI journey gate",
+		"Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`, `@api-telemetry`, and `@journey` as dedicated Playwright gates before the umbrella E2E sweep so stubbed API telemetry and journey failures remain easy to identify.",
+		"dedicated Phase 0 CI API telemetry and journey gates",
+	);
+	expectContains(
+		quality,
+		"These focused gates intentionally duplicate part of the later umbrella sweep to keep CI failures diagnosable.",
+		"focused gate duplicate-coverage tradeoff",
+	);
+	expectContains(
+		quality,
+		'`pnpm test:e2e -- --grep "@api-telemetry"` verifies the frontend telemetry enhancement path with stubbed API responses while preserving the static fallback boundary.',
+		"API telemetry local gate",
 	);
 	expectContains(
 		quality,

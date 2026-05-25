@@ -25,11 +25,29 @@ const launchGates = [
 		command: 'pnpm test:e2e -- --grep "@api-down"',
 	},
 	{
+		label: "@api-telemetry",
+		name: "Run API telemetry gate",
+		command: 'pnpm test:e2e -- --grep "@api-telemetry"',
+	},
+	{
 		label: "@journey",
 		name: "Run journey smoke gate",
 		command: 'pnpm test:e2e -- --grep "@journey"',
 	},
 ];
+
+function launchGateRunLines(indent = "          ") {
+	return launchGates.map(({ command }) => `${indent}${command}`).join("\n");
+}
+
+function launchGateStepsYaml(indent = "      ") {
+	return launchGates
+		.map(
+			({ name, command }) =>
+				`${indent}- name: ${name}\n${indent}  run: ${command}`,
+		)
+		.join("\n");
+}
 
 function readWorkflow() {
 	assert.ok(existsSync(workflowPath), `missing workflow: ${workflowPath}`);
@@ -218,11 +236,7 @@ jobs:
     steps:
       - name: Run grouped launch gates
         run: |
-          pnpm test:e2e -- --grep "@keyboard"
-          pnpm test:e2e -- --grep "@accessibility"
-          pnpm test:e2e -- --grep "@security"
-          pnpm test:e2e -- --grep "@api-down"
-          pnpm test:e2e -- --grep "@journey"
+${launchGateRunLines()}
       - name: Run frontend end-to-end tests
         run: pnpm test:e2e
 `;
@@ -246,16 +260,7 @@ jobs:
         run: pnpm test:e2e
   backend:
     steps:
-      - name: Run keyboard navigation gate
-        run: pnpm test:e2e -- --grep "@keyboard"
-      - name: Run accessibility gate
-        run: pnpm test:e2e -- --grep "@accessibility"
-      - name: Run security headers gate
-        run: pnpm test:e2e -- --grep "@security"
-      - name: Run API outage resilience gate
-        run: pnpm test:e2e -- --grep "@api-down"
-      - name: Run journey smoke gate
-        run: pnpm test:e2e -- --grep "@journey"
+${launchGateStepsYaml()}
 `;
 
 	assert.throws(
