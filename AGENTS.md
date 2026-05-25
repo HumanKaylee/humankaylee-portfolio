@@ -59,6 +59,8 @@ of truth for implementation state, launch blockers, and production evidence.
 - Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks.
 - Do not run `gh auth refresh` from unattended automation.
 - Project board recovery requires every open issue in the live issue bridge to have a Project item or a documented skip reason.
+- Active pull requests that need portfolio execution visibility must be tracked on Project #1; PR #6 is the current active implementation PR and should keep a Project item until it is merged or closed.
+- Project item tracking for active PRs is triage evidence only, not launch readiness or issue-closure evidence.
 - Issue sync evidence is not launch readiness, production deployment evidence, post-launch feature approval, assistant-build approval, or Project board recovery.
 
 ## Verification

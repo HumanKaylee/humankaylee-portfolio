@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Mirrored active PR Project tracking guardrails into `AGENTS.md` and the
+  installed `humankaylee-portfolio` skill mirrors so PR #6 stays tracked on
+  Project #1 as triage evidence without becoming launch readiness or
+  issue-closure evidence.
 - Added PR #6 to Project #1 and hardened the live GitHub verifier so Project
   maintenance checks cover the open issue bridge and active PR tracking while
   preserving the boundary that Project sync is triage evidence only, not launch

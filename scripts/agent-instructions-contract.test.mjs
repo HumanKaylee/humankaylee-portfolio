@@ -148,6 +148,14 @@ test("repository agent instructions surface GitHub Project board guardrails", ()
 		agents,
 		"Issue sync evidence is not launch readiness, production deployment evidence, post-launch feature approval, assistant-build approval, or Project board recovery.",
 	);
+	expectContains(
+		agents,
+		"Active pull requests that need portfolio execution visibility must be tracked on Project #1; PR #6 is the current active implementation PR and should keep a Project item until it is merged or closed.",
+	);
+	expectContains(
+		agents,
+		"Project item tracking for active PRs is triage evidence only, not launch readiness or issue-closure evidence.",
+	);
 });
 
 test("repository agent instructions reject Shuttle as the active hosting target even with legacy warning text", () => {
@@ -194,6 +202,8 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Do not reboot `rog-strix-joe` or the local laptop as part of portfolio work.",
 		"GitHub Project #1 exists at `https://github.com/users/HumanKaylee/projects/1`",
 		"every currently open live-bridge issue has a Project item with phase, priority, type, area, agent size, status, and blocker fields",
+		"PR #6 is tracked on Project #1 as the current active implementation PR; keep active PR Project items current until each PR is merged or closed.",
+		"Project item tracking for active PRs is triage evidence only, not launch readiness or issue-closure evidence.",
 		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks; do not run `gh auth refresh` from unattended automation unless Project scopes regress.",
 		"Future Project sync is not current until every open issue in the live issue bridge has a Project item or a documented skip reason.",
 		"Fresh verifier output is authoritative for live GitHub, PR, CI, issue, and Project state; embedded skill snapshots and the Current Repo State / Issue Overlay are execution guidance only after live verification.",
