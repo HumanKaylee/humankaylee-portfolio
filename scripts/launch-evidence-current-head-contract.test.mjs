@@ -171,8 +171,8 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	);
 	expectContains(
 		evidence,
-		"Phase 8 backlog issues #70 through #74 are open and mirror B-064 through B-068",
-		"latest GitHub issue-sync row",
+		"every currently open live-bridge issue (`#3`, `#5`, `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and `#70`-`#74`) has a Project item",
+		"latest GitHub issue and Project sync row",
 	);
 	expectContains(
 		evidence,
@@ -186,7 +186,7 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	);
 	expectNotContains(
 		evidence.match(
-			/## Current Evidence Matrix[\s\S]*?\| GitHub issue sync/,
+			/## Current Evidence Matrix[\s\S]*?\| GitHub issue and Project sync/,
 		)?.[0] ?? "",
 		"26349194779",
 		"stale CI run in latest PR rows",

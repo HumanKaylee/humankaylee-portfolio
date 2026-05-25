@@ -206,8 +206,8 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 	expectContains(preflight, "Scope: local read-only readiness refresh");
 	expectContains(
 		preflight,
-		"Project board access remains blocked by missing `read:project` / `project` scopes.",
-		"Project scope blocker",
+		"Project board access is available. Project #1 exists and contains the current",
+		"Project board current-state evidence",
 	);
 	expectContains(
 		preflight,
@@ -243,9 +243,11 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 		2: [
 			"## goal/portfolio-implementation...origin/goal/portfolio-implementation",
 			"M docs/CHANGELOG.md",
+			"M docs/GITHUB_SYNC.md",
+			"M docs/IMPLEMENTATION_AND_TEST_PLAN.md",
 			"M runbooks/LAUNCH_EVIDENCE.md",
-			"M runbooks/PREFLIGHT.md",
-			"?? scripts/preflight-contract.test.mjs",
+			"M scripts/agent-instructions-contract.test.mjs",
+			"M scripts/github-sync-contract.test.mjs",
 		],
 		3: ["ready"],
 	});
@@ -253,8 +255,14 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 		1: [
 			"GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json",
 		],
-		2: ["read:project", "project"],
-		3: ["blocked"],
+		2: [
+			"Project #1",
+			"HumanKaylee Portfolio",
+			"https://github.com/users/HumanKaylee/projects/1",
+			"19 fields",
+			"15 synced items",
+		],
+		3: ["ready"],
 	});
 	expectTableRowCells(preflight, "Downloaded resume recheck", {
 		1: ["sha256sum", "cmp -s"],
@@ -273,7 +281,7 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 		2: ["Local checkout on `goal/portfolio-implementation`"],
 		4: ["Passed locally", "local readiness only"],
 		5: ["runbooks/PREFLIGHT.md", "scripts/preflight-contract.test.mjs"],
-		6: ["GitHub Project recovery", "production deploy", "redaction approvals"],
+		6: ["production deploy", "redaction approvals"],
 		7: ["Public-safe summary only", "absolute local home paths"],
 	});
 

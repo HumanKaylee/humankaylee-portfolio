@@ -1,8 +1,8 @@
 # Preflight
 
-Date: 2026-05-25T03:17:25-04:00
+Date: 2026-05-25T07:19:58-04:00
 Branch: `goal/portfolio-implementation`
-Checkout head at refresh: `ed52d8ba1a392e84588a413fae0707a99edbd5e1`
+Checkout head at refresh: `24700f7c4430b641e8e05363a1521133f1e44332`
 Scope: local read-only readiness refresh. This file avoids storing secrets,
 private hostnames, private access paths, and full local home-directory paths.
 
@@ -16,20 +16,20 @@ command output for `date -Is`, `git status --short --branch`,
 `corepack --version`, `pnpm --version`, `rustc --version`,
 `cargo --version`, `gh auth status`, `git --version`, and `codex --version`.
 Do not store credentials, private paths, hostnames, raw logs, or secrets.
-Track missing GitHub Project scopes as a Project-board blocker, not as a
-repository readiness failure. Do not run `gh auth refresh` from unattended
-automation.
+Track GitHub Project scope or sync regressions as Project-board maintenance
+issues, not as repository readiness failures. Do not run `gh auth refresh` from
+unattended automation.
 
 ## Repository
 
 ```text
 path: humankaylee-portfolio checkout
 branch: goal/portfolio-implementation
-checkout head at refresh: ed52d8ba1a392e84588a413fae0707a99edbd5e1
+checkout head at refresh: 24700f7c4430b641e8e05363a1521133f1e44332
 remote fetch: https://github.com/HumanKaylee/humankaylee-portfolio.git
 remote push: https://github.com/HumanKaylee/humankaylee-portfolio.git
 base branch: main
-status at evidence collection: working tree contained this preflight refresh, launch-evidence refresh, changelog update, and new preflight contract test before commit
+status at evidence collection: working tree contained GitHub Project recovery docs, launch-evidence refresh, preflight refresh, and contract updates before commit
 ```
 
 ## GitHub Authentication
@@ -41,7 +41,7 @@ authenticated: yes
 account: HumanKaylee
 credential value: omitted
 repository scopes: present for repo and workflow operations
-missing for GitHub Projects: read:project, project
+GitHub Project scopes: available for Project list/create/update maintenance
 ```
 
 GitHub repository exists and is private:
@@ -67,7 +67,7 @@ Linux Mint 22.3 / Ubuntu 24.04 noble base per local operator instructions
 | pnpm     | 10.33.2                       | user pnpm installation      | ready                              |
 | rustc    | 1.95.0 (59807616e 2026-04-14) | user Rust toolchain         | ready                              |
 | cargo    | 1.95.0 (f2d3ce0bd 2026-03-21) | user Rust toolchain         | ready                              |
-| gh       | 2.92.0 (2026-04-28)           | system GitHub CLI           | ready, except Project board scopes |
+| gh       | 2.92.0 (2026-04-28)           | system GitHub CLI           | ready                              |
 | git      | 2.43.0                        | system git                  | ready                              |
 | codex    | codex-cli 0.133.0             | user Codex CLI installation | ready                              |
 
@@ -84,9 +84,9 @@ Linux Mint 22.3 / Ubuntu 24.04 noble base per local operator instructions
 
 | Check                     | Command                                                                                                                                                                                                                                                        | Sanitized Output                                                                                                                                                                                       | Status                              |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
-| Timestamp                 | `date -Is`                                                                                                                                                                                                                                                     | `2026-05-25T03:17:25-04:00`                                                                                                                                                                            | recorded                            |
-| Git branch                | `git status --short --branch`                                                                                                                                                                                                                                  | `## goal/portfolio-implementation...origin/goal/portfolio-implementation`; `M docs/CHANGELOG.md`; `M runbooks/LAUNCH_EVIDENCE.md`; `M runbooks/PREFLIGHT.md`; `?? scripts/preflight-contract.test.mjs` | ready                               |
-| Git head                  | `git rev-parse HEAD`                                                                                                                                                                                                                                           | `ed52d8ba1a392e84588a413fae0707a99edbd5e1`                                                                                                                                                             | recorded                            |
+| Timestamp                 | `date -Is`                                                                                                                                                                                                                                                     | `2026-05-25T07:19:58-04:00`                                                                                                                                                                            | recorded                            |
+| Git branch                | `git status --short --branch`                                                                                                                                                                                                                                  | `## goal/portfolio-implementation...origin/goal/portfolio-implementation`; `M docs/CHANGELOG.md`; `M docs/GITHUB_SYNC.md`; `M docs/IMPLEMENTATION_AND_TEST_PLAN.md`; `M runbooks/LAUNCH_EVIDENCE.md`; `M scripts/agent-instructions-contract.test.mjs`; `M scripts/github-sync-contract.test.mjs` | ready                               |
+| Git head                  | `git rev-parse HEAD`                                                                                                                                                                                                                                           | `24700f7c4430b641e8e05363a1521133f1e44332`                                                                                                                                                             | recorded                            |
 | Git remotes               | `git remote -v`                                                                                                                                                                                                                                                | `origin https://github.com/HumanKaylee/humankaylee-portfolio.git (fetch)`; `origin https://github.com/HumanKaylee/humankaylee-portfolio.git (push)`                                                    | ready                               |
 | Node                      | `node --version`                                                                                                                                                                                                                                               | `v22.22.2`                                                                                                                                                                                             | ready                               |
 | Corepack                  | `corepack --version`                                                                                                                                                                                                                                           | `0.34.6`                                                                                                                                                                                               | ready                               |
@@ -94,7 +94,7 @@ Linux Mint 22.3 / Ubuntu 24.04 noble base per local operator instructions
 | Rust compiler             | `rustc --version`                                                                                                                                                                                                                                              | `rustc 1.95.0 (59807616e 2026-04-14)`                                                                                                                                                                  | ready                               |
 | Cargo                     | `cargo --version`                                                                                                                                                                                                                                              | `cargo 1.95.0 (f2d3ce0bd 2026-03-21)`                                                                                                                                                                  | ready                               |
 | GitHub auth               | `gh auth status`                                                                                                                                                                                                                                               | Logged in to `github.com` as `HumanKaylee`; active account true; Git operations use HTTPS; credential value omitted; repository/workflow operations available                                          | ready for repo operations           |
-| GitHub Project discovery  | `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`                                                                                                                                                                                       | Command exited `1`: authentication is missing required `read:project` scope; `project` is also required before Project create/update work                                                              | blocked                             |
+| GitHub Project discovery  | `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`                                                                                                                                                                                       | Command exited `0`: private Project #1 `HumanKaylee Portfolio` exists at `https://github.com/users/HumanKaylee/projects/1` with 19 fields and 15 synced items                                           | ready                               |
 | Git                       | `git --version`                                                                                                                                                                                                                                                | `git version 2.43.0`                                                                                                                                                                                   | ready                               |
 | Codex                     | `codex --version`                                                                                                                                                                                                                                              | `codex-cli 0.133.0`                                                                                                                                                                                    | ready                               |
 | Downloaded resume recheck | `sha256sum ~/Downloads/'Joe Poznanski Resume February 2026.pdf' apps/web/public/downloads/humankaylee-resume.pdf`; `cmp -s ~/Downloads/'Joe Poznanski Resume February 2026.pdf' apps/web/public/downloads/humankaylee-resume.pdf; printf 'cmp_exit=%s\n' "$?"` | Both files hashed to `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`; `cmp_exit=0`                                                                                                  | local approved-source evidence only |
@@ -103,12 +103,13 @@ Linux Mint 22.3 / Ubuntu 24.04 noble base per local operator instructions
 
 - Local development and verification can proceed with the selected Astro,
   pnpm, and Rust Axum stack.
-- Project board access remains blocked by missing `read:project` / `project`
-  scopes.
+- Project board access is available. Project #1 exists and contains the current
+  open live-bridge issue set; future Project work is maintenance for new or
+  relabeled issues.
 - Resume source recheck remained byte-identical to the committed static PDF
   asset and did not require an asset update.
 - No credentials, private hostnames, private access paths, raw logs, or full
   local home-directory paths are stored in this file.
 - This is local preflight evidence only. It does not clear production deploy,
-  DNS/TLS, API health, contact handling, rollback, Lighthouse, redaction
-  approval, or GitHub Project recovery blockers.
+  DNS/TLS, API health, contact handling, rollback, Lighthouse, or redaction
+  approval blockers.

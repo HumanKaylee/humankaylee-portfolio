@@ -9,10 +9,23 @@
 
 ## GitHub Project Board
 
-GitHub Project auth is available for the active HumanKaylee CLI token, but the
-`HumanKaylee Portfolio` Project board does not exist yet. Repo issues remain
-the synchronization surface until the board is created and every open issue in
-the live bridge has a Project item or a documented skip reason.
+GitHub Project recovery is complete for the current open issue bridge as of
+2026-05-25T11:14:53Z.
+
+- Project: `HumanKaylee Portfolio`
+- Number: `1`
+- URL: `https://github.com/users/HumanKaylee/projects/1`
+- Visibility: private
+- Synced open bridge issues: `#3`, `#5`, `#20`, `#21`, `#24`, `#25`, `#63`,
+  `#64`, `#65`, `#69`, `#70`, `#71`, `#72`, `#73`, and `#74`
+- Project fields: default `Status` plus `Phase`, `Priority`, `Type`, `Area`,
+  `Agent Size`, and `Blocker`
+- Skip reasons: none; every currently open issue in the live bridge has a
+  Project item.
+
+Repo issue bodies remain the source of truth for acceptance criteria, closure
+rules, and launch-blocker language. Use the Project for triage/status views,
+not as launch-readiness evidence.
 
 Earlier blocked create attempt before auth refresh:
 
@@ -51,10 +64,10 @@ creation and issue sync are complete.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Latest Project auth snapshot as of 2026-05-25
+### Latest Project recovery snapshot as of 2026-05-25
 
-Captured 2026-05-25T10:57:47Z from the local GitHub CLI after the owner updated
-Project permissions:
+Captured 2026-05-25T11:14:53Z from the local GitHub CLI after Project creation
+and open-issue sync:
 
 ```bash
 gh auth status -h github.com
@@ -67,7 +80,8 @@ Current token scopes:
 `workflow`, `write:discussion`, `write:network_configurations`,
 `write:packages`
 
-The read-only Project check now succeeds:
+The read-only Project check now succeeds and returns Project #1 with 15 synced
+items:
 
 ```bash
 GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
@@ -75,14 +89,13 @@ GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
 
 Result:
 
-```json
-{"projects":[],"totalCount":0}
+```text
+{"projects":[{"closed":false,"fields":{"totalCount":19},"items":{"totalCount":15},"number":1,"owner":{"login":"HumanKaylee","type":"User"},"public":false,"title":"HumanKaylee Portfolio","url":"https://github.com/users/HumanKaylee/projects/1"}],"totalCount":1}
 ```
 
-The empty result means the token can list Projects for the HumanKaylee user, but
-no `HumanKaylee Portfolio` board exists yet. Use user-owner Project commands for
-this account; `organization(login: "HumanKaylee")` is not a valid lookup because
-HumanKaylee is a user account, not an organization.
+Use user-owner Project commands for this account; `organization(login:
+"HumanKaylee")` is not a valid lookup because HumanKaylee is a user account, not
+an organization.
 
 Do not run `gh auth refresh` from unattended automation. It requires
 interactive account approval and should be performed by HumanKaylee only if
@@ -91,9 +104,9 @@ Project scope checks regress.
 Use `GH_PROMPT_DISABLED=1` for Project discovery checks so automation fails fast
 instead of opening an interactive prompt.
 
-### Project board recovery steps
+### Project board maintenance steps
 
-Current Project board recovery steps:
+Current Project board maintenance steps:
 
 0. If `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
    fails with missing Project scopes, run
@@ -107,13 +120,16 @@ Current Project board recovery steps:
    `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json | jq -r '.projects[] | select(.title == "HumanKaylee Portfolio") | [.number, .title, .url] | @tsv'`.
 2. If absent, run
    `gh project create --owner HumanKaylee --title "HumanKaylee Portfolio" --format json`.
-3. Add the existing repo issues from the current live issue bridge to the board.
+3. Add any newly opened repo issues from the current live issue bridge to the
+   board.
    Use:
    `gh project item-add <project-number> --owner HumanKaylee --url https://github.com/HumanKaylee/humankaylee-portfolio/issues/<issue-number>`.
-4. Add fields for phase, priority, type, area, agent size, status, and blocker.
+4. Keep fields for phase, priority, type, area, agent size, status, and blocker
+   current when issue labels or blocker text changes.
 5. Keep issue bodies as the source of truth; use the project board for triage
    and status views only.
-6. Do not mark the Project board recovered until every open issue in the live issue bridge has a Project item or a documented skip reason.
+6. Do not mark a future Project sync current until every open issue in the live
+   issue bridge has a Project item or a documented skip reason.
 
 ## Issue Sync Plan
 
@@ -200,8 +216,9 @@ Issue bodies should include:
 
 ## Live issue bridge snapshot as of 2026-05-24
 
-The first sync layer is intentionally coarse because GitHub Project scopes are
-not available yet. Keep these issues current until the project board exists:
+The first sync layer was intentionally coarse before Project recovery. Keep
+these issues current because issue bodies are still authoritative and Project #1
+is a triage/status view:
 
 Legacy `phase-0` through `phase-5` labels remain on the coarse issues for
 compatibility with the first sync pass. Do not treat them as the current backlog
@@ -235,8 +252,7 @@ Frontend verification job `77589342600`, and Rust verification job
 `77589342623`.
 
 Phase 1 backlog issues now live as the next granular sync layer, with #3
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                | Parent | Labels                                                                                              |
 | ----- | ------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------- |
@@ -249,8 +265,7 @@ views:
 | #18   | B-012: Add Playwright smoke-test harness    | #3     | `priority:p1`, `type:qa`, `area:frontend`, `area:a11y`, `phase:1-foundation`, `agent-strong`        |
 
 Phase 2 backlog issues now live as the next granular sync layer, with #3
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                                                   | Parent | Labels                                                                                              |
 | ----- | ------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
@@ -291,8 +306,7 @@ rules without changing publication status, redaction status, or launch
 eligibility.
 
 Phase 3 backlog issues now live as the next granular sync layer, with #3
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                           | Parent | Labels                                                                                                        |
 | ----- | ------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------- |
@@ -307,8 +321,7 @@ views:
 | #36   | B-030: Add static project metadata fallback            | #3     | `priority:p0`, `type:task`, `area:frontend`, `area:content`, `phase:3-static-experience`, `agent-standard`    |
 
 Phase 4 backlog issues now live as the next granular sync layer, with #2
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                       | Parent | Labels                                                                                                    |
 | ----- | -------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------- |
@@ -321,12 +334,12 @@ views:
 | #43   | B-037: Add visual regression snapshots             | #2     | `priority:p1`, `type:qa`, `area:design`, `area:frontend`, `phase:4-visual-motion`, `agent-standard`       |
 
 Phase 4 issue sync status: complete. B-031 through B-037 are mirrored as #37
-through #43. This is only GitHub issue mirror evidence; it is not a Project
-board recovery, production launch, or launch-readiness claim.
+through #43. This is GitHub issue mirror evidence only; Project #1 sync is
+tracked separately and neither source is production launch or launch-readiness
+evidence.
 
 Phase 5 backlog issues now live as the next granular sync layer, with #4
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                           | Parent | Labels                                                                                              |
 | ----- | ------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
@@ -342,12 +355,12 @@ views:
 | #53   | B-047: Integrate frontend with API fallbacks           | #4     | `priority:p0`, `type:feature`, `area:frontend`, `area:backend`, `phase:5-backend`, `agent-standard` |
 
 Phase 5 issue sync status: complete. B-038 through B-047 are mirrored as #44
-through #53. This is only GitHub issue mirror evidence; it is not a Project
-board recovery, production launch, or launch-readiness claim.
+through #53. This is GitHub issue mirror evidence only; Project #1 sync is
+tracked separately and neither source is production launch or launch-readiness
+evidence.
 
 Phase 6 backlog issues now live as the next granular sync layer, with #4
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                       | Parent | Labels                                                                                                       |
 | ----- | -------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------ |
@@ -362,12 +375,12 @@ views:
 | #62   | B-056: Add API outage resilience test              | #4     | `priority:p0`, `type:qa`, `area:backend`, `area:frontend`, `phase:6-hardening`, `agent-standard`             |
 
 Phase 6 issue sync status: complete. B-048 through B-056 are mirrored as #54
-through #62. This is only GitHub issue mirror evidence; it is not a Project
-board recovery, production launch, or launch-readiness claim.
+through #62. This is GitHub issue mirror evidence only; Project #1 sync is
+tracked separately and neither source is production launch or launch-readiness
+evidence.
 
 Phase 7 backlog issues now live as the next granular sync layer, with #5
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                          | Parent | Labels                                                                                         |
 | ----- | ----------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
@@ -386,8 +399,9 @@ deploy evidence are not complete; #64 remains open because the API
 host/provider and public /api/health evidence are not complete; #65 remains
 open because the final domain, canonical URLs, DNS, and TLS evidence are not
 complete; #69 remains open because launch validation evidence is not complete.
-This is only GitHub issue mirror evidence; it is not a Project board recovery,
-production deployment, or launch-readiness claim.
+This is GitHub issue mirror evidence only; Project #1 sync is tracked
+separately and neither source is production deployment or launch-readiness
+evidence.
 
 Phase 7 deployment decision packet status: progress evidence only.
 `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the provider, API,
@@ -416,8 +430,7 @@ it is not production deploy evidence, launch-readiness evidence, or permission
 to close #63, #64, #65, or #69.
 
 Phase 8 backlog issues now live as the next granular sync layer, with #5
-remaining the parent epic until the GitHub Project board can take over status
-views:
+remaining the parent epic while Project #1 provides the triage/status view:
 
 | Issue | Backlog item                                     | Parent | Labels                                                                                                                  |
 | ----- | ------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------- |
@@ -428,9 +441,9 @@ views:
 | #74   | B-068: Evaluate API hosting migration            | #5     | `priority:p2`, `type:research`, `area:infra`, `area:backend`, `phase:8-post-launch`, `agent-standard`                   |
 
 Phase 8 issue sync status: complete. B-064 through B-068 are mirrored as #70
-through #74. This is only GitHub issue-sync evidence; it is not a Project
-board recovery, production launch, launch-readiness claim, or post-launch
-feature approval, and it is not authorization to build the assistant before
+through #74. This is GitHub issue-sync evidence only; Project #1 sync is tracked
+separately and neither source is production launch, launch-readiness evidence,
+or post-launch feature approval. It is not authorization to build the assistant before
 #70 has B-063 launch evidence, HumanKaylee approval, and an approved outcome
 of `build`.
 
@@ -484,8 +497,8 @@ issues may be open or closed as execution advances. Parent epics #3 and #5 stay
 open while any child blocker remains open, and unresolved blocker,
 content-redaction, deployment, launch-checklist, and post-launch guard issues
 must remain open until their external decision or evidence gate is satisfied.
-This keeps the Project board scope blocker wording above unchanged while
-verifying the repo issue bridge more broadly.
+This keeps Project #1 sync and blocker wording current while verifying the repo
+issue bridge more broadly.
 
 Run live granular issue verification explicitly with:
 
@@ -493,9 +506,9 @@ Run live granular issue verification explicitly with:
 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
 ```
 
-Next sync passes should add granular issues one phase at a time, preserving the
-coarse issues as parent epics until a GitHub Project board can take over status
-views.
+Future sync passes should add granular issues one phase at a time, preserve the
+coarse issues as parent epics, and add new open bridge issues to Project #1 with
+phase, priority, type, area, agent size, status, and blocker fields.
 
 ## Deployment Sync Notes
 

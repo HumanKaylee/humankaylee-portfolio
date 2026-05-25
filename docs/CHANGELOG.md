@@ -16,8 +16,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   state, and keep production, Project, redaction, local-laptop, and
   `rog-strix-joe` blockers separate from local portfolio guard work.
 - Refreshed the GitHub Project permission snapshot after a 2026-05-25 recheck;
-  `project` scope is now available and read-only listing succeeds with zero
-  Projects, so the remaining work is Project board creation and issue sync.
+  `project` scope is now available and read-only listing works for the
+  HumanKaylee user account.
+- Created the private `HumanKaylee Portfolio` GitHub Project, synced every
+  currently open live-bridge issue, and populated phase, priority, type, area,
+  agent size, status, and blocker fields while keeping production launch
+  blockers open.
 - Added a Lighthouse dry-run audit-plan summary so B-050 route, warm-up, scored
   artifact, and summary paths can be verified cheaply before launching Chrome.
 - Added a contract guard for the operations runbook's minimum viable production
@@ -50,8 +54,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   in the static `@quality` route matrix without changing redaction status,
   issue state, or production launch readiness.
 - Refreshed the sanitized local preflight record with current read-only tool,
-  Git, GitHub auth, Project-scope blocker, and downloaded-resume comparison
-  evidence; added a preflight contract guard so future refreshes keep
+  Git, GitHub auth, Project #1 discovery, and downloaded-resume comparison
+  evidence; updated the preflight contract guard so future refreshes keep
   public-safe summaries and do not become production readiness evidence.
 - Added a `Privacy Redaction Rule` column to the current launch evidence matrix
   so historical and blocked evidence rows carry the same public-safe evidence
@@ -385,8 +389,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   launch state.
 - Updated GitHub sync docs and live repo issue state with the current backlog
   label taxonomy, Phase 0 granular issues B-001 through B-005, and a contract
-  test that preserves the Project-scope blocker until interactive auth refresh
-  is completed.
+  test that historically preserved the Project-scope blocker before interactive
+  auth refresh was completed.
 - Added native CSS route-continuity hints for browsers with View Transitions
   support, with reduced-motion opt-out and a Playwright `@route-continuity`
   keyboard smoke gate.

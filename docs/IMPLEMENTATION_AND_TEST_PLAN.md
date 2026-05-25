@@ -65,18 +65,18 @@ verifiers before acting on issue, PR, CI, or launch status.
   API/contact/rollback, tightening the shared `reviewed` versus `approved`
   redaction invariant, and mirroring B-068 compare-only hosting evidence without
   choosing a provider.
-- GitHub Project access was rechecked on 2026-05-25T10:57:47Z and is no longer
-  scope-blocked for the active HumanKaylee token: `gh auth status -h github.com`
-  lists `project`, and
-  `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
-  returns `{"projects":[],"totalCount":0}`. No `HumanKaylee Portfolio` Project
-  exists yet, so board creation and issue sync remain the next GitHub Project
-  work.
-- External blockers that still require owner or production action are: GitHub
-  Project board creation/sync, at least four approved case
-  studies, final frontend domain and production frontend deployment, approved
-  API host and production `/api/health`, approved contact handling, rollback
-  evidence, and production Lighthouse evidence.
+- GitHub Project access and open-issue bridge sync were rechecked on
+  2026-05-25T11:14:53Z. The `HumanKaylee Portfolio` Project now exists at
+  `https://github.com/users/HumanKaylee/projects/1`, is private, has 19 fields,
+  and contains 15 items for every currently open live-bridge issue: `#3`, `#5`,
+  `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and `#70` through
+  `#74`. Project fields are populated for phase, priority, type, area, agent
+  size, status, and blocker. Treat future Project work as maintenance for newly
+  opened or relabeled issues, not as a current launch blocker.
+- External blockers that still require owner or production action are: at least
+  four approved case studies, final frontend domain and production frontend
+  deployment, approved API host and production `/api/health`, approved contact
+  handling, rollback evidence, and production Lighthouse evidence.
 - Local laptop and `rog-strix-joe` operational checks are outside this
   portfolio repo. Do not reboot either machine from this goal. Current local
   laptop power policy evidence shows suspend/hibernate/DPMS disabled, but a
