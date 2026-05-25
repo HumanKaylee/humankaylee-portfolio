@@ -51,31 +51,35 @@ verifiers before acting on issue, PR, CI, or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T10:35:36-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T11:03:06-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `5ef82e43a6ec14fe60deb4b98f6dd805b277a997`, and Phase 0 CI run
-  `26405426905` successful for Frontend verification job `77727505816` and
-  Rust verification job `77727505878`.
-- Latest non-blocked local slice snapshot before this overlay refresh: Phase 7
-  evidence-authority guardrail hardening in `runbooks/LAUNCH_EVIDENCE.md`,
-  `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md`, `docs/OPERATIONS.md`,
-  `scripts/phase-7-launch-evidence-schema-contract.test.mjs`, and
+  `fe90a4a4134be14f5a2c5988f398bfa050f5a258`, and Phase 0 CI run
+  `26406392201` successful for Frontend verification job `77731898752` and
+  Rust verification job `77731899139` after rerunning the transient visual gate.
+  Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
+  as the authoritative current-head PR/CI check for future continuations.
+- Latest non-blocked local slice snapshot before this overlay refresh: B-063
+  final launch checklist Evidence Authority guardrail hardening in
+  `runbooks/FINAL_LAUNCH_CHECKLIST.md`,
+  `scripts/final-launch-checklist-contract.test.mjs`, and
   `docs/CHANGELOG.md`, committed as
-  `5ef82e43a6ec14fe60deb4b98f6dd805b277a997`. Treat the B-051 bundle-budget,
+  `fe90a4a4134be14f5a2c5988f398bfa050f5a258`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
-  preflight evidence, B-068 deployment sync guardrails, and GitHub Project item
-  verification hardening, including Project #1 item/field checks in
-  `scripts/github-live-issue-sync.test.mjs` as guard evidence only and Phase 7
-  evidence-authority checks, as guard evidence only; do not reimplement them
-  when PR CI and the focused contracts are green.
+  preflight evidence, B-068 deployment sync guardrails, Phase 7
+  evidence-authority checks, and GitHub Project item verification hardening,
+  including Project #1 item/field checks in
+  `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
+  reimplement them when PR CI and the focused contracts are green.
 - GitHub Project access and open-issue bridge sync were rechecked on
-  2026-05-25T10:35:36-04:00. The local `gh` token has `repo` and `project`
-  scopes, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+  2026-05-25T11:03:06-04:00. The local `gh` token has `repo` and full-control
+  `project` scopes, private repo access is `ADMIN`, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
+  succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`
+  succeeds, `GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json`
   succeeds, Project #1 is private with 19 fields and 15 issue items, Project #1
-  permissions and item sync are healthy, item listing confirms populated phase,
-  priority, type, area, agent size, status, and blocker fields, and
+  permissions and item sync are healthy, item listing confirms populated status,
+  phase, priority, type, area, agent size, and blocker fields, and
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
   passes. Treat future Project work as maintenance for newly opened or
   relabeled issues, not as a current launch blocker.

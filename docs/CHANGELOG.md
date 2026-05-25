@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the latest
+  Project permission recheck: `repo` and full-control `project` scope are
+  available, private repo access reports `ADMIN`, Project #1 list/view,
+  field-list, item-list, and live issue/Project verification pass, and PR #6
+  was open and green at `fe90a4a4134be14f5a2c5988f398bfa050f5a258`
+  after Phase 0 CI run `26406392201` passed both Frontend and Rust jobs.
 - Hardened the B-063 final launch checklist so future launch approval evidence
   must carry Evidence Authority as production or owner-approved
   production-equivalent provider preview before replacing blocked production
