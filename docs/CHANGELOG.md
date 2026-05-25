@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the sanitized local preflight record with current read-only tool,
+  Git, GitHub auth, Project-scope blocker, and downloaded-resume comparison
+  evidence; added a preflight contract guard so future refreshes keep
+  public-safe summaries and do not become production readiness evidence.
 - Added a `Privacy Redaction Rule` column to the current launch evidence matrix
   so historical and blocked evidence rows carry the same public-safe evidence
   shape required for future provider, domain, API, contact, rollback, and
