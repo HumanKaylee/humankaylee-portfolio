@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a dedicated Phase 0 CI Playwright `@quality` static quality matrix gate
+  for no-JS, reduced-motion, privacy, route-coverage, and accessibility checks
+  on the core route set while keeping the evidence scoped to local/PR CI.
 - Added a dedicated Phase 0 CI Playwright `@api-telemetry` gate for the
   frontend telemetry enhancement path with stubbed API responses while keeping
   static fallback behavior and production launch blockers separate.

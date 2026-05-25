@@ -33,8 +33,29 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 	);
 	expectContains(
 		quality,
-		"Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`, `@api-telemetry`, and `@journey` as dedicated Playwright gates before the umbrella E2E sweep so stubbed API telemetry and journey failures remain easy to identify.",
-		"dedicated Phase 0 CI API telemetry and journey gates",
+		"Phase 0 CI keeps",
+		"Phase 0 CI dedicated gate summary",
+	);
+	for (const gate of [
+		"@keyboard",
+		"@accessibility",
+		"@security",
+		"@api-down",
+		"@api-telemetry",
+		"@journey",
+		"@quality",
+	]) {
+		expectContains(quality, `\`${gate}\``, `dedicated ${gate} gate tag`);
+	}
+	expectContains(
+		quality,
+		"dedicated Playwright gates before the umbrella E2E sweep",
+		"dedicated gates before umbrella E2E",
+	);
+	expectContains(
+		quality,
+		"static quality matrix",
+		"static quality matrix label",
 	);
 	expectContains(
 		quality,
@@ -50,6 +71,11 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 		quality,
 		'`pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and contact evaluator journeys across the existing static launch paths.',
 		"journey smoke local gate",
+	);
+	expectContains(
+		quality,
+		'`pnpm test:e2e -- --grep "@quality"` runs the static quality matrix: no-JS, reduced-motion, privacy, route-coverage, and accessibility checks on the core route set.',
+		"static quality matrix local gate",
 	);
 	expectContains(quality, "test-results/lighthouse-summary.json");
 	expectContains(quality, "test-results/bundle-budget-summary.json");

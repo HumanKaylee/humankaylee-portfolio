@@ -77,6 +77,9 @@ jobs:
       - name: Run journey smoke gate
         run: pnpm test:e2e -- --grep "@journey"
 
+      - name: Run static quality matrix gate
+        run: pnpm test:e2e -- --grep "@quality"
+
       - name: Run responsive browser/device gate
         run: pnpm test:e2e -- --grep "@responsive" --browser=all
 

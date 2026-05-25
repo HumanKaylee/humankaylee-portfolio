@@ -8,10 +8,11 @@ Pull requests run the full Phase 0 CI suite through the `pull_request` trigger.
 The `push` trigger is scoped to `main` so feature-branch PR commits do not run
 duplicate push and PR Lighthouse jobs for the same head.
 Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`,
-`@api-telemetry`, and `@journey` as dedicated Playwright gates before the
-umbrella E2E sweep so stubbed API telemetry and journey failures remain easy to
-identify. These focused gates intentionally duplicate part of the later
-umbrella sweep to keep CI failures diagnosable.
+`@api-telemetry`, `@journey`, and `@quality` as dedicated Playwright gates
+before the umbrella E2E sweep so stubbed API telemetry, journey, and static
+quality matrix failures remain easy to identify. These focused gates
+intentionally duplicate part of the later umbrella sweep to keep CI failures
+diagnosable.
 
 ## Local Checks
 
@@ -31,8 +32,9 @@ umbrella sweep to keep CI failures diagnosable.
 - `pnpm test:e2e -- --grep "@static-shell|@visual-surfaces"` verifies core
   static shell and art-directed surface coverage, including notes/build-log
   index and detail routes, as local QA evidence only.
-- `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
-  and route-quality checks on the core route set.
+- `pnpm test:e2e -- --grep "@quality"` runs the static quality matrix: no-JS,
+  reduced-motion, privacy, route-coverage, and accessibility checks on the core
+  route set.
 - `runbooks/ACCESSIBILITY_AUDIT.md` records the B-048 page-by-page
   accessibility checklist and the local/CI evidence boundary.
 - `runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md` records the B-049 reduced-motion

@@ -34,6 +34,11 @@ const launchGates = [
 		name: "Run journey smoke gate",
 		command: 'pnpm test:e2e -- --grep "@journey"',
 	},
+	{
+		label: "@quality",
+		name: "Run static quality matrix gate",
+		command: 'pnpm test:e2e -- --grep "@quality"',
+	},
 ];
 
 function launchGateRunLines(indent = "          ") {
