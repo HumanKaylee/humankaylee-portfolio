@@ -426,6 +426,58 @@ Observed current-state evidence:
 - Missing scopes: none observed. Do not run `gh auth refresh` unless a live
   verifier regresses or a future Project write command returns a scope error.
 
+### Latest GitHub Project permission recheck as of 2026-05-25T17:26:34-04:00
+
+Project #1 permissions remain healthy for the current local `gh` token after
+HumanKaylee's permission update. No auth refresh is required right now. This is
+Project triage/sync evidence only; it is not launch-readiness evidence and does
+not close any issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh auth status -h github.com
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json --limit 100
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --format json --limit 100
+GH_PROMPT_DISABLED=1 gh api graphql -f owner='HumanKaylee' -f repo='humankaylee-portfolio' -F pr=6 -F project=1 -f query='query($owner:String!, $repo:String!, $pr:Int!, $project:Int!) { repository(owner:$owner, name:$repo) { nameWithOwner visibility viewerPermission pullRequest(number:$pr) { number state isDraft headRefName headRefOid baseRefName mergeStateStatus viewerCanUpdate viewerCanClose projectItems(first:10) { nodes { project { title url } fieldValues(first:20) { nodes { ... on ProjectV2ItemFieldSingleSelectValue { name field { ... on ProjectV2FieldCommon { name } } } } } } } } } user(login:$owner) { projectV2(number:$project) { id number title url public closed viewerCanUpdate fields(first:30) { totalCount nodes { ... on ProjectV2FieldCommon { name dataType } } } items(first:1) { totalCount } } } }'
+GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefName,headRefOid,mergeStateStatus,statusCheckRollup,projectItems,url
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+GH_PROMPT_DISABLED=1 HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs
+```
+
+Observed current-state evidence:
+
+- `gh auth status` reports the active `HumanKaylee` account with the
+  full-control `project` scope plus `repo` and `workflow`.
+- Project #1 views successfully with id `PVT_kwHOB69SNc4BYuyc`, 19 fields, 16
+  items, private visibility, and URL
+  `https://github.com/users/HumanKaylee/projects/1`.
+- Field list includes `Status`, `Phase`, `Priority`, `Type`, `Area`,
+  `Agent Size`, and `Blocker`; the `Status` options include `Todo`,
+  `In Progress`, and `Done`.
+- Item list reports 15 issue-backed items for the open live bridge
+  (`#3`, `#5`, `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and
+  `#70`-`#74`) plus PR #6 with status `In Progress`.
+- GraphQL reports private repo access with `viewerPermission:"ADMIN"`,
+  Project #1 `viewerCanUpdate:true`, and PR #6 `viewerCanUpdate:true` /
+  `viewerCanClose:true`.
+- The safe no-op Project write re-applied PR #6 status `In Progress` and
+  returned Project item `PVTI_lAHOB69SNc4BYuyczgtwPwg` with no permission
+  error.
+- `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`,
+  tracked on Project #1 with status `In Progress`, and at head
+  `b9d0ece31ed64b47b4322a91c2271ce461c59f3c`.
+- Phase 0 CI run `26420081492` passed for the same head: Frontend verification
+  job `77772849305` and Rust verification job `77772849309`.
+- The live issue/Project verifier and the current-head PR/CI verifier both
+  pass with `1` test, `1` pass, and `0` failures.
+- Missing scopes: none observed. If this regresses with a missing Project-scope
+  error, use `gh auth refresh --hostname github.com -s project,read:project`;
+  if private repo reads also fail, use
+  `gh auth refresh --hostname github.com -s repo -s project`.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.
