@@ -459,6 +459,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"https://developers.cloudflare.com/workers/platform/pricing/",
 		"https://docs.hetzner.com/cloud/servers/overview",
 		"Official-source snapshot date: 2026-05-24",
+		"be disableable without changing core portfolio navigation",
 	]);
 
 	for (const content of [

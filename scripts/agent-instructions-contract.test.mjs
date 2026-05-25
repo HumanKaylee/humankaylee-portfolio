@@ -106,6 +106,10 @@ test("repository agent instructions use current hosting and launch-blocker guida
 	expectContains(agents, "not launch-ready");
 	expectContains(agents, "production frontend/API targets");
 	expectContains(agents, "redaction approvals");
+	expectContains(
+		agents,
+		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
+	);
 
 	assert.ok(
 		!agents.includes("Shuttle Rust API initially"),
@@ -187,6 +191,7 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Do not reboot `rog-strix-joe` or the local laptop as part of portfolio work.",
 		"GitHub Project board creation is blocked by missing `project` and `read:project` scopes.",
 		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks; do not run `gh auth refresh` from unattended automation.",
+		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
 		"Blocked/deferred case-study candidates must not count toward the four-case-study launch minimum.",
 		"B-037 visual regression snapshots are implementation evidence only, not production launch evidence",
 	];

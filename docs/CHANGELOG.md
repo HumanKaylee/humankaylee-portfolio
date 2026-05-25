@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened Phase 7 metadata-readiness, launch-blocker, and Phase 8 assistant
+  boundary contracts so #65 cannot close from local metadata wiring, installed
+  portfolio skills reject local/PR/docs-only launch-blocker closure, and future
+  assistant planning must stay disableable without changing core navigation.
 - Hardened visual-regression, Phase 8, and redaction guardrails so visual
   snapshots stay implementation evidence only, B-065 remains blocked by both
   B-064 and B-063, and blocked/deferred case-study candidates cannot count

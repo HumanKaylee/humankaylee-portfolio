@@ -41,6 +41,8 @@ function expectNotContains(content, needle, label = needle) {
 }
 
 test("Phase 7 metadata readiness uses shared site metadata without clearing domain blockers", () => {
+	const metadataReadinessBoundary =
+		"Phase 7 metadata readiness verifies RSS uses shared site metadata with the sitemap, robots, canonical URL, and Open Graph path; this is local readiness only and does not close #65 until final domain, DNS/TLS, and production metadata smoke evidence exist.";
 	const backlog = readRequiredFile(files.backlog);
 	const baseLayout = readRequiredFile(files.baseLayout);
 	const evidence = readRequiredFile(files.evidence);
@@ -123,6 +125,11 @@ test("Phase 7 metadata readiness uses shared site metadata without clearing doma
 	);
 
 	for (const content of [backlog, evidence, githubSync]) {
+		expectContains(
+			content,
+			metadataReadinessBoundary,
+			"full Phase 7 metadata readiness launch boundary",
+		);
 		expectContains(
 			content,
 			"Phase 7 metadata readiness",
