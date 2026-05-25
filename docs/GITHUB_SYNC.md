@@ -69,7 +69,9 @@ creation and issue sync are complete.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Latest Project recovery snapshot as of 2026-05-25
+### Embedded Project recovery snapshot as of 2026-05-25
+
+Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.
 
 Captured 2026-05-25T11:03:06-04:00 from the local GitHub CLI after Project
 creation, open-issue sync, permission recheck, and live verifier re-run:
@@ -78,14 +80,14 @@ creation, open-issue sync, permission recheck, and live verifier re-run:
 gh auth status -h github.com
 ```
 
-Current token scopes:
+Snapshot token scopes:
 
 `admin:org`, `admin:org_hook`, `admin:public_key`, `admin:repo_hook`,
 `codespace`, `delete:packages`, `notifications`, `project`, `repo`,
 `workflow`, `write:discussion`, `write:network_configurations`,
 `write:packages`
 
-The read-only Project check now succeeds and returns Project #1 with 15 synced
+The embedded read-only Project check succeeded and returned Project #1 with 15 synced
 items; the project list also reports it as private with 19 fields. Current
 `gh` permissions are sufficient for listing the private repo and private
 Project #1; `gh repo view HumanKaylee/humankaylee-portfolio --json visibility,viewerPermission`
@@ -104,14 +106,14 @@ Result:
 {"projects":[{"closed":false,"fields":{"totalCount":19},"items":{"totalCount":15},"number":1,"owner":{"login":"HumanKaylee","type":"User"},"public":false,"title":"HumanKaylee Portfolio","url":"https://github.com/users/HumanKaylee/projects/1"}],"totalCount":1}
 ```
 
-Current field and item checks also succeed:
+Snapshot field and item checks also succeeded:
 
 ```bash
 GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json
 GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 200 --format json
 ```
 
-The latest item-list result contains 15 issue-backed items for `#3`, `#5`,
+The embedded item-list result contains 15 issue-backed items for `#3`, `#5`,
 `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and `#70` through
 `#74`, with `Status`, `Phase`, `Priority`, `Type`, `Area`, `Agent Size`, and
 `Blocker` fields populated. The corrected JSON check must read the field as
@@ -119,7 +121,7 @@ The latest item-list result contains 15 issue-backed items for `#3`, `#5`,
 that key with a space and lowercase `a`. The live verifier now checks Project #1
 item presence and populated fields in addition to issue bodies:
 `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`.
-The latest live run returned no missing Project items.
+The snapshot live run returned no missing Project items.
 
 Use user-owner Project commands for this account; `organization(login:
 "HumanKaylee")` is not a valid lookup because HumanKaylee is a user account, not

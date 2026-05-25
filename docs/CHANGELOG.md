@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Made the GitHub Project recovery snapshot wording explicitly point-in-time so
+  `docs/GITHUB_SYNC.md` routes current issue and Project truth through the live
+  verifier instead of stale embedded permission evidence.
 - Hardened launch evidence authority boundaries so Current Evidence Matrix rows
   remain historical/readiness evidence until replaced by production or
   owner-approved production-equivalent provider preview evidence using the
