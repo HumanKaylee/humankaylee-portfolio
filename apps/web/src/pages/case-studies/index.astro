@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 type CaseStudy = CollectionEntry<"caseStudies">;
@@ -15,6 +16,7 @@ const caseStudies = ((await getCollection("caseStudies")) as CaseStudy[])
 	title="Case Studies | HumanKaylee"
 	description="Public-safe case studies from HumanKaylee's systems, operations, backend, and creative web work."
 	canonicalPath="/case-studies/"
+	ogImage={routeInventoryById["case-studies"].seo.ogImage}
 >
 	<section class="page-shell" aria-labelledby="case-studies-title">
 		<header class="page-header">

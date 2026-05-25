@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 type NoteEntry = CollectionEntry<"notes">;
@@ -24,6 +25,7 @@ const notes = ((await getCollection("notes")) as NoteEntry[])
 	title="Notes and Build Log | HumanKaylee"
 	description="Published engineering notes and build-log entries from HumanKaylee's static-first portfolio."
 	canonicalPath="/notes/"
+	ogImage={routeInventoryById["notes-build-log"].seo.ogImage}
 >
 	<section class="page-shell" aria-labelledby="notes-title">
 		<header class="page-header">

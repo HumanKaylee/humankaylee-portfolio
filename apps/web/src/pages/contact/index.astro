@@ -1,5 +1,6 @@
 ---
 import ContactForm from "../../components/ContactForm.astro";
+import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
@@ -7,6 +8,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 	title="Contact | HumanKaylee"
 	description="API-enhanced contact route with a visible mailto fallback for recruiter and project inquiries."
 	canonicalPath="/contact/"
+	ogImage={routeInventoryById.contact.seo.ogImage}
 >
 	<section class="page-shell" aria-labelledby="contact-title">
 		<header class="page-header">

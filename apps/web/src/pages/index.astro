@@ -6,6 +6,7 @@ import BuildTelemetryStrip from "../components/BuildTelemetryStrip.astro";
 import CtaCluster from "../components/CtaCluster.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import SystemsMapHero from "../components/SystemsMapHero.astro";
+import { routeInventoryById } from "../data/routes";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { homeScaffold } from "../lib/home-scaffold";
 
@@ -24,6 +25,7 @@ const projects = allProjects
 	title="HumanKaylee | Systems Atelier"
 	description="A static-first portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and creative web work."
 	canonicalPath="/"
+	ogImage={routeInventoryById.home.seo.ogImage}
 >
 	<section class="hero-shell" aria-labelledby="hero-title">
 		<div class="hero-copy">

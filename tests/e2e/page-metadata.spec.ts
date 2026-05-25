@@ -1,5 +1,59 @@
 import { expect, test } from "@playwright/test";
 
+const routeSpecificSocialImageCases = [
+	{
+		label: "home",
+		path: "/",
+		image: "https://humankaylee.example/social/home.png",
+	},
+	{
+		label: "projects index",
+		path: "/projects/",
+		image: "https://humankaylee.example/social/projects.png",
+	},
+	{
+		label: "case studies index",
+		path: "/case-studies/",
+		image: "https://humankaylee.example/social/case-studies.png",
+	},
+	{
+		label: "notes index",
+		path: "/notes/",
+		image: "https://humankaylee.example/social/notes.png",
+	},
+	{
+		label: "contact",
+		path: "/contact/",
+		image: "https://humankaylee.example/social/contact.png",
+	},
+] as const;
+
+const itemSpecificSocialImageCases = [
+	{
+		label: "project detail",
+		path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
+		image:
+			"https://humankaylee.example/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
+	},
+	{
+		label: "case-study detail",
+		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+		image:
+			"https://humankaylee.example/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
+	},
+	{
+		label: "note detail",
+		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		image:
+			"https://humankaylee.example/social/notes/api-offline-resilience.png",
+	},
+	{
+		label: "resume",
+		path: "/resume/",
+		image: "https://humankaylee.example/social/resume.png",
+	},
+] as const;
+
 test.describe("page metadata @metadata", () => {
 	test("renders canonical, Open Graph, Twitter card, and JSON-LD on the home page", async ({
 		page,
@@ -16,11 +70,11 @@ test.describe("page metadata @metadata", () => {
 		);
 		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 			"content",
-			"https://humankaylee.example/social/default.svg",
+			"https://humankaylee.example/social/home.png",
 		);
 		await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 			"content",
-			"https://humankaylee.example/social/default.svg",
+			"https://humankaylee.example/social/home.png",
 		);
 
 		const structuredData = await page
@@ -43,6 +97,11 @@ test.describe("page metadata @metadata", () => {
 		request,
 	}) => {
 		for (const socialPath of [
+			"/social/home.png",
+			"/social/projects.png",
+			"/social/case-studies.png",
+			"/social/notes.png",
+			"/social/contact.png",
 			"/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
 			"/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
 			"/social/notes/api-offline-resilience.png",
@@ -57,32 +116,10 @@ test.describe("page metadata @metadata", () => {
 		}
 	});
 
-	test("renders item-specific social images on detail and resume routes", async ({
-		page,
-	}) => {
-		const cases = [
-			{
-				path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
-				image:
-					"https://humankaylee.example/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
-			},
-			{
-				path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-				image:
-					"https://humankaylee.example/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
-			},
-			{
-				path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-				image:
-					"https://humankaylee.example/social/notes/api-offline-resilience.png",
-			},
-			{
-				path: "/resume/",
-				image: "https://humankaylee.example/social/resume.png",
-			},
-		];
-
-		for (const testCase of cases) {
+	for (const testCase of routeSpecificSocialImageCases) {
+		test(`renders route-specific social images on ${testCase.label}`, async ({
+			page,
+		}) => {
 			await page.goto(testCase.path);
 
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
@@ -93,8 +130,25 @@ test.describe("page metadata @metadata", () => {
 				"content",
 				testCase.image,
 			);
-		}
-	});
+		});
+	}
+
+	for (const testCase of itemSpecificSocialImageCases) {
+		test(`renders item-specific social images on ${testCase.label}`, async ({
+			page,
+		}) => {
+			await page.goto(testCase.path);
+
+			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+				"content",
+				testCase.image,
+			);
+			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+				"content",
+				testCase.image,
+			);
+		});
+	}
 
 	test("renders item-specific JSON-LD on project and case-study detail pages", async ({
 		page,

@@ -8,6 +8,11 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Wired committed route-specific social preview PNG assets into the home,
+  projects, case-studies, notes, and contact index pages, with Playwright
+  coverage that keeps those core routes from falling back to the default SVG.
+  This remains static metadata readiness only, not production metadata smoke or
+  launch readiness evidence.
 - Added generated 1200x630 PNG social preview assets for all current
   `/social/...` metadata references, plus a contract test and Playwright
   coverage that keep item-specific project, case-study, note, and resume routes
