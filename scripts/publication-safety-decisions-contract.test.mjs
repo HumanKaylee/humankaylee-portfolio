@@ -191,4 +191,11 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 	expectNotContains(decision, "publication eligibility");
 	expectNotContains(decision, "fresh approval packet");
 	expectNotContains(decision, "reviewer approves");
+	expectNotContains(kalshi, "safe abstraction can be approved");
+	expectNotContains(
+		kalshi,
+		"safe abstraction of the migration or analytics system is approved",
+	);
+	expectNotContains(youtube, "redaction and approval work");
+	expectNotContains(youtube, "public-safe proof narrative is approved");
 });

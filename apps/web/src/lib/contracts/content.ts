@@ -240,7 +240,7 @@ export const resumeDataSchema = z
 		if (entry.sourceStatus === "placeholder") {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: "published resume state requires an approved source",
+				message: "final PDF state requires an approved source",
 				path: ["sourceStatus"],
 			});
 		}
@@ -248,7 +248,7 @@ export const resumeDataSchema = z
 		if (entry.workflowSteps.some((step) => step.status !== "complete")) {
 			context.addIssue({
 				code: z.ZodIssueCode.custom,
-				message: "published resume state requires completed workflow steps",
+				message: "final PDF state requires completed workflow steps",
 				path: ["workflowSteps"],
 			});
 		}

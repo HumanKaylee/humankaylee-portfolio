@@ -2,7 +2,7 @@
 title: "YouTube AI Video Pipeline"
 slug: "youtube-ai-video-pipeline"
 category: "AI"
-summary: "A promising automation story that cannot ship yet because the public-safe version still needs redaction and approval work."
+summary: "A promising automation story that cannot ship yet because the public-safe version still needs redaction, artifact inspection, and human signoff."
 audienceFit:
   - "collaborator"
   - "senior-engineer"
@@ -54,7 +54,7 @@ redactionReview:
     securitySensitiveProceduresRemoved: "yes"
   openItems:
     - "Remove private channel details, account identifiers, and workflow edges tied to private assets."
-  notes: "Candidate is blocked until a public-safe proof narrative is approved."
+  notes: "Candidate is blocked until a public-safe proof narrative clears review gates."
 seo:
   title: "YouTube AI Video Pipeline"
   description: "A deferred AI workflow case-study candidate awaiting redaction review."

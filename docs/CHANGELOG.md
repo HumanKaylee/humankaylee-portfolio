@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened resume inventory validation wording so invalid-example reasons and
+  schema error messages do not imply a live or production-scoped resume claim
+  while the PDF remains local approved-source evidence only.
+- Tightened B-063 checklist wording so the resume launch gate requires
+  production `/resume/` and PDF smoke evidence instead of saying the resume is
+  live while the row remains blocked.
 - Hardened architecture, operations, and privacy wording so optional analytics
   cannot be mistaken for a shipped provider, event sink, or retention policy,
   and the resume PDF remains scoped to approved local-source evidence.
@@ -82,7 +88,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   before launch.
 - Hardened Phase 7 API-host, deployment, and resume wording guards so docs and
   agent instructions align with #64's approved-host comparison boundary, keep
-  Shuttle snippets legacy-only, and reject production resume overclaims.
+  Shuttle snippets legacy-only, and reject production-scoped resume overclaims.
 - Tightened B-018/B-019 publication-safety wording so decision support cannot
   imply publication-ready proof, close #24/#25, or count either candidate toward
   launch.

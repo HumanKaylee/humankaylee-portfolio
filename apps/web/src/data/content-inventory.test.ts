@@ -127,4 +127,25 @@ describe("phase 1 content inventory", () => {
 			),
 		).toBe(true);
 	});
+
+	it("keeps resume inventory guard wording local-source scoped", () => {
+		const forbiddenResumeOverclaim =
+			/\bpublished resume\b|\bpublished PDF\b|\bpublic resume\b|\bpublic PDF\b|\blive resume\b|\bproduction resume\b|\bproduction-ready resume\b/i;
+		const resumeInventory = CONTENT_VALIDATION_EXAMPLES.resume;
+		const invalidReasons = resumeInventory.invalidExamples
+			.map((invalidExample) => invalidExample.reason)
+			.join("\n");
+
+		expect(invalidReasons).not.toMatch(forbiddenResumeOverclaim);
+
+		for (const invalidExample of resumeInventory.invalidExamples) {
+			const parsed = resumeDataSchema.safeParse(invalidExample.entry);
+			expect(parsed.success).toBe(false);
+			if (!parsed.success) {
+				expect(
+					parsed.error.issues.map((issue) => issue.message).join("\n"),
+				).not.toMatch(forbiddenResumeOverclaim);
+			}
+		}
+	});
 });

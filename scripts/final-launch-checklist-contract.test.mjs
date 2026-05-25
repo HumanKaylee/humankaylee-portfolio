@@ -95,7 +95,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"Home is live",
 		"Projects are live",
 		"At least four case studies are live and redacted",
-		"Resume HTML and PDF are live",
+		"Resume route and PDF production smoke evidence exists",
 		"Notes/build-log is live",
 		"Contact path works",
 		"Rust API health is live",
@@ -122,7 +122,7 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"Home is live",
 		"Projects are live",
 		"At least four case studies are live and redacted",
-		"Resume HTML and PDF are live",
+		"Resume route and PDF production smoke evidence exists",
 		"Notes/build-log is live",
 		"Contact path works",
 		"Rust API health is live",
@@ -172,6 +172,11 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		checklist,
 		"Current checks at the time",
 		"stale-prone current PR checks wording",
+	);
+	expectNotContains(
+		checklist,
+		"Resume HTML and PDF are live",
+		"resume production-state overclaim",
 	);
 	expectNotContains(
 		checklist,

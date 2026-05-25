@@ -179,6 +179,11 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	expectContains(evidence, "Rollback evidence");
 	expectContains(evidence, "Blocked / not run");
 	expectNotContains(evidence, "Status: launch-ready");
+	expectNotContains(
+		evidence,
+		"committed public resume asset",
+		"resume asset should stay local-source scoped",
+	);
 
 	if (process.env.HK_EXPECTED_PR_HEAD) {
 		assert.equal(

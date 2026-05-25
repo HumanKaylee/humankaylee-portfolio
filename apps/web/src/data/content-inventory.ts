@@ -354,7 +354,7 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 		},
 		invalidExamples: [
 			{
-				reason: "claims a final published PDF before source approval",
+				reason: "claims a final PDF before source approval",
 				entry: {
 					title: "HumanKaylee Resume",
 					slug: "resume",

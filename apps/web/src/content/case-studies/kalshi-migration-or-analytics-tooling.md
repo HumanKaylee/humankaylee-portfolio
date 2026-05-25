@@ -2,7 +2,7 @@
 title: "Kalshi Migration or Analytics Tooling"
 slug: "kalshi-migration-or-analytics-tooling"
 category: "backend"
-summary: "A deferred backend and analytics candidate that may be useful later if a safe abstraction can be approved."
+summary: "A deferred backend and analytics candidate that may be useful later if a redacted abstraction can be proven."
 audienceFit:
   - "senior-engineer"
 problem: "The underlying work may be strong, but the current publication boundary is not public-safe for a trustworthy portfolio narrative."
@@ -12,7 +12,7 @@ constraints:
   - "Cannot expose private repository names or internal paths."
   - "Must not weaken trust by overspecifying an unsafe story."
 architecture:
-  overview: "The public outline remains broad until a safe abstraction of the migration or analytics system is approved."
+  overview: "The public outline remains broad until a safe abstraction of the migration or analytics system passes a later review."
   diagramAlt: "A deferred backend analytics outline with no private data included."
 implementation:
   - "Keep the draft in reserve until a later redaction review can make it public-safe."

@@ -1636,7 +1636,7 @@ Acceptance criteria:
 - Home is live.
 - Projects are live.
 - At least four case studies are live and redacted.
-- Resume HTML and PDF are live.
+- Resume route and PDF production smoke evidence exists.
 - Notes/build-log is live.
 - Contact path works.
 - Rust API health is live.

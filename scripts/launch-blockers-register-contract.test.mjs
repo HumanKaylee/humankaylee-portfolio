@@ -159,4 +159,9 @@ test("B-005 launch blockers register tracks unresolved launch decisions without 
 
 	expectNotContains(register, "Status: launch-ready", "launch-ready status");
 	expectNotContains(register, "No blockers", "false blocker clearance");
+	expectNotContains(
+		register,
+		"public resume source",
+		"resume source should not imply production publication",
+	);
 });
