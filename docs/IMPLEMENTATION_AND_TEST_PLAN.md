@@ -86,7 +86,7 @@ or launch status.
   copy/quality polish only, not as production launch evidence or case-study
   approval.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T15:00:35-04:00: the local `gh` token has `repo`,
+  2026-05-25T15:19:50-04:00: the local `gh` token has `repo`,
   full-control `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
@@ -100,6 +100,10 @@ or launch status.
   `viewerCanUpdate: true` / `viewerCanClose: true`. The safe write proof
   `GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json`
   succeeds. PR #6 is tracked as a Project item with status `In Progress`.
+  PR #6 is open, non-draft, clean, and at head
+  `6e03535d7607e326c2e7690baa777bf10c0e6c5e`; Phase 0 CI run
+  `26415659503` passed Frontend verification job `77759452052` and Rust
+  verification job `77759452060`; the current-head live PR/CI verifier passes.
   GitHub Project permissions are no longer a current blocker. Treat future Project work as
   maintenance for newly opened or relabeled issues and active PR tracking, not
   as launch readiness or as a current launch blocker.
@@ -112,6 +116,15 @@ or launch status.
   work blocked until real provider targets and owner decisions exist. Only environment variable names and command presence are
   recorded; secret values, provider account IDs, URLs, contact payloads, and raw
   provider logs are not captured.
+- Latest case-study redaction-readiness slice: `pnpm redaction:readiness`
+  captured at `2026-05-25T19:22:49.138Z` records
+  `local/redaction-readiness` evidence only. The generated ignored summary at
+  `test-results/case-study-redaction-readiness.json` reports `0` approved
+  publish candidates out of `4` required, four publish candidates that still
+  have `reviewed` redaction status, `partial` checklist status, open-item
+  counts, and missing `approvalEvidence`, plus deferred/blocked #24/#25
+  candidates. This is reviewer handoff evidence only; it cannot approve case
+  studies, clear open items, close #20/#21/#24/#25, or count toward launch.
 - What remains is external launch and approval work: complete redaction
   approvals for at least four launch case studies; record HumanKaylee
   publication-safety decisions for #24 and #25; deploy the frontend for #63;

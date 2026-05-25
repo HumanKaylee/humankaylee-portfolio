@@ -42,6 +42,12 @@ any case study approved.
 #20 and #21 remain open until open items, artifact inspection, and human signoff
 are complete.
 
+Run `pnpm redaction:readiness` to refresh a machine-readable local readiness
+summary at `test-results/case-study-redaction-readiness.json`. The summary is
+reviewer handoff input only with Evidence Authority `local/redaction-readiness`;
+it cannot approve case studies, clear open items, close issues, or satisfy the
+v1 launch minimum.
+
 | Candidate                                             | Current state          | Missing approval evidence                                                                                                     |
 | ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | CLI Fleet Synchronization and MCP Rollout             | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing artifact evidence source for the sanitized rollout set. |
@@ -197,6 +203,7 @@ Before changing any case study to `approved`, run:
 
 ```bash
 pnpm test -- --run content
+pnpm redaction:readiness
 node --test scripts/redaction-approval-packets-contract.test.mjs
 node --test scripts/content-runbook-contract.test.mjs
 node --test scripts/final-launch-checklist-contract.test.mjs

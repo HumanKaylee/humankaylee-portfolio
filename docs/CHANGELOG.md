@@ -9,6 +9,17 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 ### Added
 
 - Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T15:19:50-04:00 permission recheck: Project #1 read/write access
+  remains healthy, PR #6 is tracked as `In Progress` at
+  `6e03535d7607e326c2e7690baa777bf10c0e6c5e`, Phase 0 CI run
+  `26415659503` passed, the live issue/Project verifier and current-head PR/CI
+  verifier pass, and Project permissions remain maintenance-only rather than a
+  current blocker.
+- Added a local case-study redaction readiness CLI and package script that
+  turns current case-study frontmatter into a public-safe reviewer handoff JSON
+  without approving content, clearing open items, closing #20/#21/#24/#25, or
+  counting `reviewed` case studies toward launch.
+- Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T15:00:35-04:00 permission recheck: Project #1 read/write access
   is healthy, PR #6 is tracked as `In Progress` at
   `f318798e2d090892fb53ebb1eb0b1817cbb7bc85`, Phase 0 CI run

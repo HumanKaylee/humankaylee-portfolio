@@ -29,6 +29,12 @@ reviewer routing, plus a Non-approval evidence inventory for all four current
 the two operational case-study bodies; those packets do not approve any case
 study.
 
+`scripts/case-study-redaction-readiness.mjs` can generate a public-safe
+machine-readable readiness summary with Evidence Authority
+`local/redaction-readiness`. The summary reports candidate metadata, issue
+numbers, open-item counts, and missing approval evidence labels only; it does
+not copy open-item text, approve content, clear issues, or replace human review.
+
 Publication-safety decisions for the Kalshi/analytics and YouTube AI pipeline
 blocked candidates live in `runbooks/PUBLICATION_SAFETY_DECISIONS.md`. That
 record is decision support only; it does not approve publication. Its synthetic

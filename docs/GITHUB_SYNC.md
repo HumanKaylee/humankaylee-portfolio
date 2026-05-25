@@ -268,6 +268,58 @@ Observed current-state evidence:
 - Missing scopes: none observed. Do not run `gh auth refresh` unless a live
   verifier regresses or a future Project write command returns a scope error.
 
+### Latest GitHub Project permission recheck as of 2026-05-25T15:19:50-04:00
+
+Project #1 still lists/views successfully for the current local `gh` token. PR
+#6 remains tracked on Project #1 with status `In Progress` at head
+`6e03535d7607e326c2e7690baa777bf10c0e6c5e`. This is active-PR and Project
+triage evidence only; it is not launch-readiness evidence and does not close any
+issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh auth status --hostname github.com
+GH_PROMPT_DISABLED=1 gh repo view HumanKaylee/humankaylee-portfolio --json nameWithOwner,viewerPermission,isPrivate,url
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json --limit 100
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json
+GH_PROMPT_DISABLED=1 gh api graphql -f owner=HumanKaylee -f repo=humankaylee-portfolio -F pr=6 -F project=1 -f query='query($owner:String!, $repo:String!, $pr:Int!, $project:Int!) { repository(owner:$owner, name:$repo) { nameWithOwner visibility viewerPermission pullRequest(number:$pr) { number state isDraft headRefName headRefOid baseRefName mergeStateStatus viewerCanUpdate viewerCanClose } } user(login:$owner) { projectV2(number:$project) { id number title url public closed viewerCanUpdate } } }'
+GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup,projectItems,url
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs
+```
+
+Observed current-state evidence:
+
+- `gh auth status` reports the active `HumanKaylee` account with `repo`,
+  full-control `project`, and `workflow` scopes.
+- Private repo access reports `viewerPermission:"ADMIN"`.
+- Project #1 lists and views successfully with id `PVT_kwHOB69SNc4BYuyc`,
+  `19` fields, and `16` items.
+- Field list includes `Status`, `Phase`, `Priority`, `Type`, `Area`,
+  `Agent Size`, and `Blocker`; the `Status` options include `Todo`,
+  `In Progress`, and `Done`.
+- Item list reports the 15 open issue bridge items plus PR #6.
+- GraphQL reports Project #1 `viewerCanUpdate:true`, PR #6
+  `viewerCanUpdate:true`, PR #6 `viewerCanClose:true`, PR #6 head
+  `6e03535d7607e326c2e7690baa777bf10c0e6c5e`, and
+  `mergeStateStatus:"CLEAN"`.
+- The safe no-op Project write re-applied PR #6 status `In Progress` and
+  returned Project item `PVTI_lAHOB69SNc4BYuyczgtwPwg` with no permission
+  error.
+- `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`,
+  tracked on Project #1 with status `In Progress`, and at head
+  `6e03535d7607e326c2e7690baa777bf10c0e6c5e`.
+- Phase 0 CI run `26415659503` passed for the same head: Frontend verification
+  job `77759452052` and Rust verification job `77759452060`.
+- The live issue/Project verifier and the current-head PR/CI verifier both
+  pass with `1` test, `1` pass, and `0` failures.
+- Missing scopes: none observed. Do not run `gh auth refresh` unless a live
+  verifier regresses or a future Project write command returns a scope error.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.

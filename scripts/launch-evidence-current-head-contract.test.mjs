@@ -181,7 +181,7 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	);
 	expectContains(
 		evidence,
-		"PR #6 has a Project item with status `Todo`",
+		"PR #6 has a Project item with status `In Progress`",
 		"PR Project sync row",
 	);
 	expectContains(
