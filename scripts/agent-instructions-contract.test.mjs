@@ -194,6 +194,9 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
 		"Blocked/deferred case-study candidates must not count toward the four-case-study launch minimum.",
 		"B-037 visual regression snapshots are implementation evidence only, not production launch evidence",
+		'Project constellation import failure is a handled progressive-enhancement fallback: `document.body.dataset.constellationReady === "module-error"` while the static atlas remains usable.',
+		"Contact store config must fail fast when `HK_API_CONTACT_DELIVERY_MODE=store` lacks `HK_API_CONTACT_STORE_PATH`.",
+		"Blocked/deferred case-study candidates should use explicit unpublished body boundaries, not generic placeholder body copy.",
 	];
 
 	for (const mirror of mirrorContents) {

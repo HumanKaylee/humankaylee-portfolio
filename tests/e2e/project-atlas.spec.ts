@@ -157,6 +157,31 @@ test.describe("project atlas @atlas", () => {
 		);
 	});
 
+	test("keeps the static atlas usable if the desktop constellation module fails @constellation", async ({
+		page,
+	}) => {
+		const pageErrors: string[] = [];
+		page.on("pageerror", (error) => pageErrors.push(error.message));
+		await page.setViewportSize({ width: 1440, height: 1100 });
+		await page.route("**/scripts/project-constellation.mjs", (route) =>
+			route.abort("failed"),
+		);
+
+		await page.goto("/projects/");
+
+		await expect(
+			page.getByRole("region", { name: "Accessible project atlas" }),
+		).toBeVisible();
+		await expect(page.locator("[data-project-constellation]")).toBeVisible();
+		await expect
+			.poll(
+				() => page.evaluate(() => document.body.dataset.constellationReady),
+				{ timeout: 2000 },
+			)
+			.toBe("module-error");
+		expect(pageErrors).toEqual([]);
+	});
+
 	test("keeps mobile users on the static atlas instead of the desktop constellation @constellation", async ({
 		page,
 	}) => {

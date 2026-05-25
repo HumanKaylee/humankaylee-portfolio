@@ -53,4 +53,8 @@ seo:
   ogImage: "/social/case-studies/youtube-ai-video-pipeline.png"
 ---
 
-Draft body placeholder. This candidate is intentionally blocked until redaction review is complete.
+# YouTube AI Video Pipeline
+
+This blocked candidate is intentionally not published as a public case-study route. It remains blocked until a public-safe proof narrative removes private channel details, account identifiers, and workflow edges tied to private assets.
+
+The current source record is decision support only. Do not promote workflow diagrams, media artifacts, screenshots, or automation claims from this candidate until the publication-safety review in `runbooks/PUBLICATION_SAFETY_DECISIONS.md` is complete.

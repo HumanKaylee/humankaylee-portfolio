@@ -246,6 +246,11 @@ test("content issue traceability ties open content issues to approval blockers w
 		"Attach actual atlas fallback evidence after the visual layer exists.",
 		"Creative Web Systems Atlas Demo open item",
 	);
+	expectContains(
+		creative,
+		"Any heavier interactive atlas implementation still needs a separate scope approval before build work begins",
+		"Creative Web Systems Atlas Demo interactive scope boundary",
+	);
 	expectIssueTrace(
 		kalshi,
 		{
@@ -257,6 +262,21 @@ test("content issue traceability ties open content issues to approval blockers w
 		},
 		"Kalshi Migration or Analytics Tooling",
 	);
+	expectNotContains(
+		kalshi,
+		"Draft body placeholder",
+		"Kalshi blocked candidate placeholder copy",
+	);
+	expectContains(
+		kalshi,
+		"This deferred candidate is intentionally not published as a public case-study route.",
+		"Kalshi explicit unpublished boundary",
+	);
+	expectContains(
+		kalshi,
+		"private financial, account, repository, and path details",
+		"Kalshi explicit redaction boundary",
+	);
 	expectIssueTrace(
 		youtube,
 		{
@@ -267,6 +287,21 @@ test("content issue traceability ties open content issues to approval blockers w
 			parentIssue: 3,
 		},
 		"YouTube AI Video Pipeline",
+	);
+	expectNotContains(
+		youtube,
+		"Draft body placeholder",
+		"YouTube blocked candidate placeholder copy",
+	);
+	expectContains(
+		youtube,
+		"This blocked candidate is intentionally not published as a public case-study route.",
+		"YouTube explicit unpublished boundary",
+	);
+	expectContains(
+		youtube,
+		"private channel details, account identifiers, and workflow edges tied to private assets",
+		"YouTube explicit redaction boundary",
 	);
 
 	expectContains(status, "## GitHub Issue Traceability");

@@ -8,6 +8,7 @@ const files = {
 	evidence: "runbooks/LAUNCH_EVIDENCE.md",
 	fallbackRunbook: "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md",
 	noWebglSpec: "tests/e2e/no-webgl.spec.ts",
+	projectAtlasSpec: "tests/e2e/project-atlas.spec.ts",
 	quality: "runbooks/QUALITY.md",
 };
 
@@ -77,6 +78,7 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	const evidence = readRequiredFile(files.evidence);
 	const fallback = readRequiredFile(files.fallbackRunbook);
 	const noWebglSpec = readRequiredFile(files.noWebglSpec);
+	const projectAtlasSpec = readRequiredFile(files.projectAtlasSpec);
 	const quality = readRequiredFile(files.quality);
 
 	expectContains(backlog, "### B-049: Add reduced-motion and no-WebGL QA pass");
@@ -115,6 +117,10 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@constellation"');
 	expectContains(fallback, "mobile-skipped");
 	expectContains(fallback, "reduced-motion");
+	expectContains(fallback, "lazy desktop constellation import fails");
+	expectContains(fallback, "module-error");
+	expectContains(projectAtlasSpec, "project-constellation.mjs");
+	expectContains(projectAtlasSpec, "module-error");
 	expectContains(
 		fallback,
 		"node --test scripts/accessibility-and-fallback-qa-contract.test.mjs",

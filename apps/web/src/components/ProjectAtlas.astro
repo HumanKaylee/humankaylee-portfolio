@@ -245,15 +245,18 @@ function constellationNodePosition(project: ProjectEntry) {
 </section>
 
 <script type="module" data-constellation-loader="idle-module" is:inline>
-	const loadConstellation = () => import("/scripts/project-constellation.mjs");
+	const loadConstellation = () =>
+		import("/scripts/project-constellation.mjs").catch(() => {
+			document.body.dataset.constellationReady = "module-error";
+		});
 
 	if (!matchMedia("(min-width: 821px)").matches) {
 		document.body.dataset.constellationReady = "mobile-skipped";
 	} else if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
 		document.body.dataset.constellationReady = "reduced-motion";
 	} else if ("requestIdleCallback" in window) {
-		window.requestIdleCallback(loadConstellation, { timeout: 1500 });
+		window.requestIdleCallback(() => void loadConstellation(), { timeout: 1500 });
 	} else {
-		window.setTimeout(loadConstellation, 1);
+		window.setTimeout(() => void loadConstellation(), 1);
 	}
 </script>

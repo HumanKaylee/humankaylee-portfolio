@@ -367,6 +367,25 @@ fn config_parses_typed_environment_values_without_secrets() {
 }
 
 #[test]
+fn config_requires_contact_store_path_when_store_mode_is_enabled() {
+    for pairs in [
+        vec![("HK_API_CONTACT_DELIVERY_MODE", "store")],
+        vec![
+            ("HK_API_CONTACT_DELIVERY_MODE", "store"),
+            ("HK_API_CONTACT_STORE_PATH", "   "),
+        ],
+    ] {
+        let error = AppConfig::from_env_pairs(pairs).expect_err(
+            "store contact delivery must fail fast when HK_API_CONTACT_STORE_PATH is missing",
+        );
+        assert!(
+            error.to_string().contains("HK_API_CONTACT_STORE_PATH"),
+            "error should name missing store path: {error}"
+        );
+    }
+}
+
+#[test]
 fn telemetry_defaults_to_structured_json_with_api_and_http_filters() {
     assert_eq!(humankaylee_api::telemetry::log_encoding(), "json");
     let default_filter = humankaylee_api::telemetry::default_filter_directive();

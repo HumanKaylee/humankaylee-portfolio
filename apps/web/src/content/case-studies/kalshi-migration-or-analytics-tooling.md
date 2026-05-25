@@ -52,4 +52,8 @@ seo:
   ogImage: "/social/case-studies/kalshi-migration-or-analytics-tooling.png"
 ---
 
-Draft body placeholder. This candidate remains deferred until a safe public abstraction is approved.
+# Kalshi Migration Or Analytics Tooling
+
+This deferred candidate is intentionally not published as a public case-study route. It remains blocked until HumanKaylee records a publication decision and a synthetic abstraction removes private financial, account, repository, and path details.
+
+The current source record is decision support only. Do not promote screenshots, diagrams, proof packs, or implementation claims from this candidate until the publication-safety review in `runbooks/PUBLICATION_SAFETY_DECISIONS.md` is complete.

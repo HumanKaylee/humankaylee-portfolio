@@ -96,6 +96,9 @@ Fallback artifact evidence:
   desktop constellation is skipped.
 - `tests/e2e/project-atlas.spec.ts` verifies the mobile fallback state with
   `mobile-skipped`.
+- `tests/e2e/project-atlas.spec.ts` also verifies the static atlas remains
+  visible when the lazy desktop constellation import fails and records
+  `module-error` instead of throwing an uncaught page error.
 - `tests/e2e/no-webgl.spec.ts` disables WebGL contexts, keeps the semantic
   project atlas visible, verifies no `canvas` is required, and captures
   `no-webgl-projects-fallback`.
@@ -104,13 +107,13 @@ Fallback artifact evidence:
 
 ## QA Matrix
 
-| Surface | Reduced motion | No-WebGL / low capability | Native scrolling | Evidence | Result |
-| --- | --- | --- | --- | --- | --- |
-| Home systems map | Static poster remains visible | Core links and proof copy are semantic HTML | Page scrolls normally | `static systems map hero`, visual snapshots | Pass locally |
-| Project atlas | Motion helper is skipped or simplified | Static atlas and mobile `mobile-skipped` path remain usable | Filter and artifact anchors use native links | `@constellation`, `@reduced-motion` | Pass locally |
-| Case-study narrative | Reveal effects are non-essential | Markdown body renders as static HTML | Long-form reading uses normal document flow | `@quality`, visual snapshots | Pass locally |
-| Route continuity | Named transitions disabled | Navigation still uses standard links | Browser handles scroll and navigation | `@route-continuity` | Pass locally |
-| Contact fallback | Status changes are text-based | Mailto fallback remains available | Form remains native and keyboard reachable | `@api-down`, `@accessibility` | Pass locally |
+| Surface              | Reduced motion                         | No-WebGL / low capability                                   | Native scrolling                             | Evidence                                    | Result       |
+| -------------------- | -------------------------------------- | ----------------------------------------------------------- | -------------------------------------------- | ------------------------------------------- | ------------ |
+| Home systems map     | Static poster remains visible          | Core links and proof copy are semantic HTML                 | Page scrolls normally                        | `static systems map hero`, visual snapshots | Pass locally |
+| Project atlas        | Motion helper is skipped or simplified | Static atlas and mobile `mobile-skipped` path remain usable | Filter and artifact anchors use native links | `@constellation`, `@reduced-motion`         | Pass locally |
+| Case-study narrative | Reveal effects are non-essential       | Markdown body renders as static HTML                        | Long-form reading uses normal document flow  | `@quality`, visual snapshots                | Pass locally |
+| Route continuity     | Named transitions disabled             | Navigation still uses standard links                        | Browser handles scroll and navigation        | `@route-continuity`                         | Pass locally |
+| Contact fallback     | Status changes are text-based          | Mailto fallback remains available                           | Form remains native and keyboard reachable   | `@api-down`, `@accessibility`               | Pass locally |
 
 ## Production Review Notes
 

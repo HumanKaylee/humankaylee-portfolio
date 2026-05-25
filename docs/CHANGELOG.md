@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened GitHub deployment sync notes and blocked-candidate body contracts so
+  deployment smoke evidence stays in `runbooks/LAUNCH_EVIDENCE.md`, blocked
+  Kalshi/analytics and YouTube pipeline candidates no longer carry generic
+  placeholder body copy, the static atlas stays usable if the lazy desktop
+  constellation import fails, and the Rust API fails fast when
+  `HK_API_CONTACT_DELIVERY_MODE=store` lacks `HK_API_CONTACT_STORE_PATH`.
 - Hardened Phase 7 metadata-readiness, launch-blocker, and Phase 8 assistant
   boundary contracts so #65 cannot close from local metadata wiring, installed
   portfolio skills reject local/PR/docs-only launch-blocker closure, and future

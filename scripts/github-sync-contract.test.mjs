@@ -8,6 +8,7 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const files = {
 	backlog: resolve(repoRoot, "docs/BACKLOG.md"),
+	changelog: resolve(repoRoot, "docs/CHANGELOG.md"),
 	githubSync: resolve(repoRoot, "docs/GITHUB_SYNC.md"),
 	githubLiveIssueSync: resolve(
 		repoRoot,
@@ -47,6 +48,7 @@ function expectContains(content, needle, label = needle) {
 
 test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", () => {
 	const backlog = readRequiredFile(files.backlog);
+	const changelog = readRequiredFile(files.changelog);
 	const githubSync = readRequiredFile(files.githubSync);
 	const githubLiveIssueSync = readRequiredFile(files.githubLiveIssueSync);
 	const labels = uniqueLabelsFromBacklog(backlog);
@@ -255,9 +257,25 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"open while any child blocker remains open",
 		"open or closed as execution advances",
 		"must remain open until their external decision or evidence gate is satisfied",
+		"## Deployment Sync Notes",
+		"Deployment IDs, URLs, and smoke-check evidence belong in",
+		"`runbooks/LAUNCH_EVIDENCE.md`, not in issue comments that might expose",
+		"Required secret names if CI later deploys directly:",
+		"`CLOUDFLARE_API_TOKEN`",
+		"`CLOUDFLARE_ACCOUNT_ID`",
+		"`FLY_API_TOKEN`",
+		"`RAILWAY_TOKEN`",
+		"Exact provider commands and rollback steps are maintained in",
+		"`runbooks/DEPLOYMENT.md`.",
 	]) {
 		expectContains(githubSync, required);
 	}
+
+	expectContains(
+		changelog,
+		"Hardened GitHub deployment sync notes and blocked-candidate body contracts",
+		"deployment sync and blocked content changelog entry",
+	);
 
 	for (const staleCurrentLabel of [
 		"### Current auth snapshot",

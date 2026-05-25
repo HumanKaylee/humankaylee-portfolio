@@ -116,6 +116,19 @@ impl AppConfig {
             config.version = value.trim().to_owned();
         }
 
+        if config.contact_delivery_mode == ContactDeliveryMode::Store
+            && config.contact_store_path.is_none()
+        {
+            return Err(ConfigError {
+                key: "HK_API_CONTACT_STORE_PATH",
+                value: values
+                    .get("HK_API_CONTACT_STORE_PATH")
+                    .cloned()
+                    .unwrap_or_default(),
+                reason: "required when HK_API_CONTACT_DELIVERY_MODE=store",
+            });
+        }
+
         Ok(config)
     }
 }
