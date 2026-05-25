@@ -10,7 +10,7 @@
 ## GitHub Project Board
 
 GitHub Project recovery is complete for the current open issue bridge as of
-2026-05-25T08:18:42-04:00.
+2026-05-25T08:41:29-04:00.
 
 - Project: `HumanKaylee Portfolio`
 - Number: `1`
@@ -71,7 +71,7 @@ Auth refresh only proves the token has scopes; it does not prove the Project boa
 
 ### Latest Project recovery snapshot as of 2026-05-25
 
-Captured 2026-05-25T08:18:42-04:00 from the local GitHub CLI after Project
+Captured 2026-05-25T08:41:29-04:00 from the local GitHub CLI after Project
 creation, open-issue sync, and permission recheck:
 
 ```bash
@@ -86,7 +86,7 @@ Current token scopes:
 `write:packages`
 
 The read-only Project check now succeeds and returns Project #1 with 15 synced
-items:
+items; the project list also reports it as private with 19 fields:
 
 ```bash
 GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
@@ -108,8 +108,11 @@ GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 200 --fo
 The latest item-list result contains 15 issue-backed items for `#3`, `#5`,
 `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and `#70` through
 `#74`, with `Status`, `Phase`, `Priority`, `Type`, `Area`, `Agent Size`, and
-`Blocker` fields populated. The latest open-issue diff returned no missing
-Project items.
+`Blocker` fields populated. The corrected JSON check must read the field as
+`.["agent Size"]` because `gh project item-list --format json` currently emits
+that key with a space and lowercase `a`. The latest open-issue/project diff and
+`HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
+returned no missing Project items.
 
 Use user-owner Project commands for this account; `organization(login:
 "HumanKaylee")` is not a valid lookup because HumanKaylee is a user account, not

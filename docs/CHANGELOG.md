@@ -13,7 +13,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   clean worktree before any failed-job rerun or snapshot/threshold change.
 - Refreshed the implementation plan and GitHub sync runbook after the latest
   live recheck showed Project #1 permissions and item sync healthy, PR #6 green
-  at `a963b86d460f24cb02bec950ec2e207a46b554fa`, and the remaining work limited
+  at `3bd6eca81d5189108e011cf32d089e2e0b23f3cc`, and the remaining work limited
   to external redaction, deployment, domain, contact, rollback, Lighthouse, and
   Phase 8 approval gates.
 - Refreshed the sanitized local preflight record at PR head

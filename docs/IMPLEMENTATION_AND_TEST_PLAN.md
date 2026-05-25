@@ -49,23 +49,25 @@ verifiers before acting on issue, PR, CI, or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck at 2026-05-25T08:18:42-04:00 found a clean worktree on
-  `goal/portfolio-implementation`, PR #6 open/non-draft/mergeable at
-  `a963b86d460f24cb02bec950ec2e207a46b554fa`, and Phase 0 CI run
-  `26399651670` successful for Frontend verification job `77708582883` and
-  Rust verification job `77708582867`.
-- The latest committed non-blocked local slice is visual CI triage protocol
-  hardening in `runbooks/QUALITY.md`, guarded by
-  `scripts/quality-runbook-contract.test.mjs` and committed as
-  `a963b86d460f24cb02bec950ec2e207a46b554fa`. Treat the B-051 bundle-budget,
-  case-study approval-evidence, Project-sync recovery, and visual-CI-triage
-  slices as guard evidence only; do not reimplement them when PR CI and the
-  focused contracts are green.
+- Current live recheck at 2026-05-25T08:41:29-04:00 found a clean worktree at
+  the start of this plan refresh on `goal/portfolio-implementation`, PR #6
+  open/non-draft at `3bd6eca81d5189108e011cf32d089e2e0b23f3cc`, and Phase 0
+  CI run `26400750991` successful for Frontend verification job `77712232559`
+  and Rust verification job `77712232522`.
+- The latest committed non-blocked local slice is sanitized preflight baseline
+  evidence hardening in `runbooks/PREFLIGHT.md`,
+  `runbooks/LAUNCH_EVIDENCE.md`, and `scripts/preflight-contract.test.mjs`,
+  committed as `3bd6eca81d5189108e011cf32d089e2e0b23f3cc`. Treat the B-051
+  bundle-budget, case-study approval-evidence, Project-sync recovery,
+  visual-CI-triage, and preflight evidence slices as guard evidence only; do
+  not reimplement them when PR CI and the focused contracts are green.
 - GitHub Project access and open-issue bridge sync were rechecked on
-  2026-05-25T08:18:42-04:00. The local `gh` token has `repo` and `project`
+  2026-05-25T08:41:29-04:00. The local `gh` token has `repo` and `project`
   scopes, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
-  succeeds, Project #1 field and item listing succeeds, and every currently
-  open live-bridge issue has a Project item. Treat future Project work as
+  succeeds, Project #1 is private with 19 fields and 15 issue items, Project #1
+  item listing confirms populated phase, priority, type, area, agent size,
+  status, and blocker fields, and `HK_VERIFY_GITHUB_LIVE=1 node --test
+  scripts/github-live-issue-sync.test.mjs` passes. Treat future Project work as
   maintenance for newly opened or relabeled issues, not as a current launch
   blocker.
 - What remains is external launch and approval work: complete redaction
