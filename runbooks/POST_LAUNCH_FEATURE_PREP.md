@@ -39,7 +39,7 @@ Authoritative blockers:
 | Portfolio assistant scope        | B-064 / #70     | Blocked until B-063 launch evidence exists.                                                        | Draft decision note only: `docs/ASSISTANT_SCOPE_DECISION.md` defines user value, public data sources, privacy model, cost controls, rate limits, and no-secret frontend architecture without approving implementation. | HumanKaylee-approved build/defer/reject decision after launch.               |
 | Portfolio assistant prototype    | B-065 / #71     | Blocked until B-063 launch evidence exists and #70/B-064 has a HumanKaylee-approved outcome of `build`. | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                              | Prompt/content tests and disabled-mode smoke test after approved scope.      |
 | Public status or metadata page   | B-066 / #72     | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details.                                                                                      | API-up and API-down page checks against production or owner-approved production-equivalent provider preview URLs. |
-| Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence exists.                                                        | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                              | Feed and notes index review after launch with approved public-safe content.  |
+| Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence and approved public-safe content both exist.                    | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                              | Feed and notes index review after launch with approved public-safe content.  |
 | API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: use `docs/ARCHITECTURE.md#9-hosting-architecture` as the canonical candidate source and compare every candidate without selecting a provider.                                                    | Future host-retention recommendation after real API host production evidence. |
 
 ## Status Page Safe Boundary
@@ -131,6 +131,9 @@ Do not create `apps/web/src/content/notes/*.md` entries before B-063 launch
 evidence exists. Draft outline records can live in planning docs or issue
 comments only, and must not update the live notes collection, notes index, or RSS
 feed before approved content exists.
+
+Draft outlines can exist before launch, but publication requires both B-063
+launch evidence and approved public-safe content.
 
 Every future B-067 note or postmortem outline must include:
 

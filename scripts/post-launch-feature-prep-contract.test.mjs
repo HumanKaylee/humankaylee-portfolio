@@ -349,14 +349,20 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 	]);
 	expectTableRowCells(runbook, "Additional notes and postmortems", {
 		1: ["B-067", "#73"],
-		2: ["Blocked until B-063"],
+		2: ["B-063 launch evidence", "approved public-safe content", "both exist"],
 		3: ["draft outlines only", "redaction review"],
 		4: ["Feed and notes index review"],
 	});
+	expectNotContains(
+		findTableRow(runbook, "Additional notes and postmortems")[2],
+		"published",
+		"B-067 prep gate should not make publication a prerequisite",
+	);
 	expectAll(runbook, [
 		"## B-067 Draft Outline Contract",
 		"Outline status: draft only; not published content",
 		"Do not create `apps/web/src/content/notes/*.md` entries before B-063 launch evidence exists",
+		"publication requires both B-063 launch evidence and approved public-safe content",
 		"Working title",
 		"Problem",
 		"Approach",
@@ -549,7 +555,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"B-065 remains blocked until B-063 launch evidence exists and #70/B-064 has a HumanKaylee-approved outcome of `build`",
 		"#70 through #74 remain open",
 		"B-067 draft outline contract status: pre-launch planning only",
-		"#73 remains open until B-063 launch evidence exists and approved public-safe content is published",
+		"#73 remains open until B-063 launch evidence exists, approved public-safe content exists, and the resulting note or postmortem is published with RSS/index verification",
 		"B-067 draft outline records status: pre-launch planning only",
 		"three draft-only outline records",
 		"B-068 source-cited comparison matrix status: pre-launch planning only",

@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Clarified the implementation plan so swarm execution is opt-in for multi-lane
+  or reviewed parallel-safe work, while single-lane docs/contract fixes stay in
+  single-session execution unless there is a concrete parallelization benefit.
+- Tightened the B-067 notes/postmortem prep gate so draft outlines remain
+  allowed, but publication stays blocked until B-063 launch evidence and
+  approved public-safe content both exist.
 - Hardened the draft portfolio assistant scope decision with a source-backed
   retrieval and answer contract, plus future prompt/source test planning that
   remains blocked and does not authorize B-065 implementation.

@@ -1,6 +1,6 @@
 # HumanKaylee Portfolio Implementation and Test Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for swarm execution, or `superpowers:executing-plans` for single-session execution. Steps use checkbox syntax for tracking, and every task must respect the path ownership boundaries in this plan.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for swarm execution, or `superpowers:executing-plans` for single-session execution. Swarm execution is opt-in: use it when work spans multiple ownership lanes or needs reviewed parallel-safe split work; keep single-lane docs/contract fixes in single-session execution unless the Coordinator identifies a real parallelization benefit. Steps use checkbox syntax for tracking, and every task must respect the path ownership boundaries in this plan.
 
 **Goal:** Build, test, and launch a static-first, visually distinctive `HumanKaylee` portfolio that proves engineering depth within 30 seconds while preserving performance, accessibility, privacy, and reliable static fallbacks.
 
@@ -153,6 +153,10 @@ coordinator instead of broad-editing `apps/web/src/components/`.
 
 ## Non-Colliding Swarm Protocol
 
+- Swarm execution is opt-in for tasks that span multiple ownership lanes or
+  need reviewed parallel-safe split work; single-lane docs/contract fixes should
+  stay with one owner in single-session execution unless the Coordinator records
+  a concrete parallelization benefit.
 - Use one branch or worktree per owner lane.
 - Each task request must include exact owned paths, phase number, acceptance checks, and forbidden paths.
 - Small agents should receive one phase task, one owner lane, and no more than 6 source files.

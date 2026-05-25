@@ -217,6 +217,21 @@ test("implementation plan has a current-state overlay for blocked goal continuat
 	);
 });
 
+test("implementation plan scopes swarm execution to multi-lane work", () => {
+	containsAll(
+		plan,
+		[
+			"Swarm execution is opt-in",
+			"multiple ownership lanes",
+			"reviewed parallel-safe split work",
+			"single-lane docs/contract fixes",
+			"single-session execution",
+			"concrete parallelization benefit",
+		],
+		"swarm opt-in guidance",
+	);
+});
+
 test("implementation plan ownership lanes match current repo paths", () => {
 	containsAll(
 		plan,

@@ -452,8 +452,8 @@ feature prep runbook now requires future #73 writing outlines to include a
 working title, problem, approach, evidence plan, lesson, redaction review, launch
 dependency, and RSS/index verification after launch. It does not create notes
 content, does not update RSS, and does not authorize publication. #73 remains
-open until B-063 launch evidence exists and approved public-safe content is
-published.
+open until B-063 launch evidence exists, approved public-safe content exists,
+and the resulting note or postmortem is published with RSS/index verification.
 
 B-067 draft outline records status: pre-launch planning only. The feature prep
 runbook now carries three draft-only outline records for a static-first launch

@@ -198,6 +198,9 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Contact store config must fail fast when `HK_API_CONTACT_DELIVERY_MODE=store` lacks `HK_API_CONTACT_STORE_PATH`.",
 		"Blocked/deferred case-study candidates should use explicit unpublished body boundaries, not generic placeholder body copy.",
 		"Content/redaction docs must not use approval-adjacent wording unless directly negated.",
+		"Swarm execution is opt-in for tasks that span multiple ownership lanes or need reviewed parallel-safe split work",
+		"single-lane docs/contract fixes should stay with one owner in single-session execution unless the Coordinator records a concrete parallelization benefit",
+		"B-067/#73 publication requires B-063 launch evidence and approved public-safe content before any note or postmortem is published, added to RSS, or used for issue closure.",
 	];
 
 	for (const mirror of mirrorContents) {
