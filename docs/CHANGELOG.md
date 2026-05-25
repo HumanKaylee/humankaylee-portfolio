@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Split Phase 7 blocker traceability launch-evidence coverage into separate
+  frontend/domain and API/contact/rollback rows so #63/#65 and #64/#69 keep
+  clearer replacement-evidence boundaries without clearing production blockers.
 - Added an explicit content/redaction boundary that `reviewed` case studies are
   never launch-eligible and the launch-eligible case-study count remains `0`
   until real human approval evidence exists.

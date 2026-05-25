@@ -122,6 +122,11 @@ function expectTableRowCells(content, firstCell, expectedCellsByColumn) {
 	}
 }
 
+function expectNoTableRow(content, firstCell) {
+	const row = markdownRows(content).find((cells) => cells[0] === firstCell);
+	assert.equal(row, undefined, `expected no table row for ${firstCell}`);
+}
+
 test("Phase 7 launch blockers are traceable from decision register to open issues and evidence rows", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const checklist = readRequiredFile(files.checklist);
@@ -198,13 +203,58 @@ test("Phase 7 launch blockers are traceable from decision register to open issue
 		checklist,
 		"Phase 7 issue traceability in `runbooks/LAUNCH_BLOCKERS_REGISTER.md` maps #63, #64, #65, and #69 to their controlling decisions and required replacement evidence.",
 	);
-	expectContains(evidence, "Phase 7 blocker traceability");
-	expectTableRowCells(evidence, "Phase 7 blocker traceability", {
+	expectNoTableRow(evidence, "Phase 7 blocker traceability");
+	expectTableRowCells(evidence, "Phase 7 frontend/domain traceability", {
 		1: ["node --test scripts/phase-7-blocker-traceability-contract.test.mjs"],
+		2: ["#63", "#65"],
 		4: [
 			"Traceability only",
-			"#63, #64, #65, and #69 remain open",
 			"not production evidence",
+			"#63 and #65 remain open",
+			"frontend provider",
+			"final domain",
+			"DNS/TLS",
+			"canonical metadata",
+		],
+		5: [
+			"runbooks/LAUNCH_BLOCKERS_REGISTER.md",
+			"runbooks/FINAL_LAUNCH_CHECKLIST.md",
+			"docs/GITHUB_SYNC.md",
+			"scripts/phase-7-blocker-traceability-contract.test.mjs",
+		],
+		6: [
+			"real frontend provider project",
+			"production URL",
+			"deployment ID",
+			"DNS/TLS",
+			"canonical metadata",
+		],
+	});
+	expectTableRowCells(evidence, "Phase 7 API/contact/rollback traceability", {
+		1: ["node --test scripts/phase-7-blocker-traceability-contract.test.mjs"],
+		2: ["#64", "#69"],
+		4: [
+			"Traceability only",
+			"not production evidence",
+			"#64 and #69 remain open",
+			"API host",
+			"contact handling",
+			"rollback",
+			"redaction approvals",
+		],
+		5: [
+			"runbooks/LAUNCH_BLOCKERS_REGISTER.md",
+			"runbooks/FINAL_LAUNCH_CHECKLIST.md",
+			"docs/GITHUB_SYNC.md",
+			"scripts/phase-7-blocker-traceability-contract.test.mjs",
+		],
+		6: [
+			"real API origin",
+			"secret storage",
+			"contact handling",
+			"rollback",
+			"production Lighthouse",
+			"four approved case studies",
 		],
 	});
 
