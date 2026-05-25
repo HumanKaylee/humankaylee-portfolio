@@ -22,7 +22,8 @@ Authoritative blockers:
 
 - Do not close Phase 8 issues from this runbook alone.
 - Do not claim launch readiness from this runbook.
-- Do not build a portfolio assistant before B-064 has an approved decision note;
+- Do not build a portfolio assistant before B-063 launch evidence exists and
+  #70/B-064 has a HumanKaylee-approved outcome of `build`;
   `docs/ASSISTANT_SCOPE_DECISION.md` is draft decision support only.
 - Do not expose private deployment details, provider account IDs, logs, private
   paths, credentials, raw contact data, or unapproved case-study evidence.
@@ -36,7 +37,7 @@ Authoritative blockers:
 | Feature lane                     | Backlog / issue | Current gate                                                                                       | Safe prep now                                                                                                                                                                                                          | Required later evidence                                                      |
 | -------------------------------- | --------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | Portfolio assistant scope        | B-064 / #70     | Blocked until B-063 launch evidence exists.                                                        | Draft decision note only: `docs/ASSISTANT_SCOPE_DECISION.md` defines user value, public data sources, privacy model, cost controls, rate limits, and no-secret frontend architecture without approving implementation. | HumanKaylee-approved build/defer/reject decision after launch.               |
-| Portfolio assistant prototype    | B-065 / #71     | Blocked until B-064 approved build recommendation.                                                 | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                              | Prompt/content tests and disabled-mode smoke test after approved scope.      |
+| Portfolio assistant prototype    | B-065 / #71     | Blocked until B-063 launch evidence exists and #70/B-064 has a HumanKaylee-approved outcome of `build`. | Do not build; document disabled-mode expectations, public-content-only prompt boundaries, and abuse/cost controls for a future prototype.                                                                              | Prompt/content tests and disabled-mode smoke test after approved scope.      |
 | Public status or metadata page   | B-066 / #72     | Blocked until B-063 launch evidence exists, with B-039 and B-040 already providing API primitives. | Contract only: limit public data to `/api/health`, `/api/projects/live`, static fallback copy, and no private deployment details.                                                                                      | API-up and API-down page checks against production or owner-approved production-equivalent provider preview URLs. |
 | Additional notes and postmortems | B-067 / #73     | Blocked until B-063 launch evidence exists.                                                        | draft outlines only; require problem, approach, evidence, lesson, and redaction review before publishing.                                                                                                              | Feed and notes index review after launch with approved public-safe content.  |
 | API hosting migration            | B-068 / #74     | Blocked until B-058 and B-063 provide selected-host and production launch evidence.                | Decision matrix only: use `docs/ARCHITECTURE.md#9-hosting-architecture` as the canonical candidate source and compare every candidate without selecting a provider.                                                    | Future host-retention recommendation after real API host production evidence. |
@@ -45,8 +46,9 @@ Authoritative blockers:
 
 A future status or metadata page can use only public-safe API data:
 
-- `GET /api/health`: service name, status, version, commit, uptime, and
-  environment if the environment label is public-safe.
+- `GET /api/health`: service name, status, version, public release label or
+  build version, uptime, and generic environment if the environment label is
+  public-safe.
 - `GET /api/projects/live`: bounded project metadata from the existing static
   provider/cache shape.
 - Static fallback copy that says live metadata is unavailable without implying
@@ -66,6 +68,9 @@ remains launch-blocked until B-063.
 - API-up check.
 - API-down fallback check.
 - No private deployment, provider, log, or contact data.
+- Public release label or build version only.
+- No raw private commit SHA, deployment ID, provider account name, or
+  non-generic environment label unless explicitly approved for public evidence.
 - No JavaScript requirement for core content.
 - Launch-blocked until B-063.
 - No route or UI implementation yet.
@@ -85,6 +90,26 @@ portfolio navigation. The scope decision must explicitly answer:
 Current draft: `docs/ASSISTANT_SCOPE_DECISION.md` recommends deferring
 implementation until B-063 launch evidence exists and HumanKaylee approves the
 post-launch assistant decision. This is not B-065 implementation approval.
+
+## B-065 Future Prompt And Source Test Checklist
+
+This checklist is future test-planning only. No assistant route, endpoint, model
+provider, retrieval index, or UI implementation is authorized by this checklist.
+
+- Source-backed answer test: verifies factual project, case-study, resume,
+  runbook, or launch-evidence claims cite at least one approved public route,
+  section, or artifact label.
+- Unsupported-claim refusal test: verifies the assistant says it cannot verify
+  claims that lack approved public sources or depend on blocked production
+  evidence.
+- Private-source request refusal test: verifies requests for local files,
+  private repositories, private GitHub issues, memory folders, contact payloads,
+  unpublished drafts, or reviewer notes are refused or redirected to public
+  navigation.
+- Prompt-injection resistance test: verifies visitor prompts or retrieved text
+  cannot override source limits, reveal secrets, or authorize excluded content.
+- Disabled-mode smoke test: verifies normal resume, projects, case studies,
+  notes, and contact paths remain visible when the assistant is disabled.
 
 ## Notes And Postmortem Boundary
 
@@ -208,12 +233,20 @@ Decision inputs must cover uptime expectations, cost, deploy complexity, custom
 domain and TLS support, observability/logs, rollback or deployment history, Rust
 Axum fit, cold-start or sleep behavior, and operational risks.
 
+Re-check official provider docs before any future recommendation. Do not choose
+a provider, perform DNS cutover, run migration commands, configure env/secrets,
+or write rollback steps before B-058/B-063 evidence and HumanKaylee approval.
+
 ## B-068 Migration Comparison Inputs
 
 Compare-only evidence capture for the future API-hosting recommendation. This
 is no ranking, no provider choice, and not launch evidence. Step-by-step
 provider-move procedures and rollback procedures are deferred until a later
 approved decision exists.
+
+Re-check official provider docs before any future recommendation. Do not choose
+a provider, perform DNS cutover, run migration commands, configure env/secrets,
+or write rollback steps before B-058/B-063 evidence and HumanKaylee approval.
 
 - Current launch host evidence.
 - Uptime/availability expectation.

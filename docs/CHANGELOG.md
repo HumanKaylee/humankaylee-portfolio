@@ -8,6 +8,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened the draft portfolio assistant scope decision with a source-backed
+  retrieval and answer contract, plus future prompt/source test planning that
+  remains blocked and does not authorize B-065 implementation.
+- Tightened Phase 8 prep guardrails so B-065 requires B-063 launch evidence plus
+  a HumanKaylee-approved #70/B-064 `build` outcome, status/metadata prep avoids
+  raw private release identifiers, and B-068 cannot become provider choice,
+  DNS, migration, secret setup, or rollback procedure work before approval.
 - Added Downloaded resume recheck evidence for the latest 2026-05-25
   `~/Downloads` resume note: `sha256sum` confirmed
   `~/Downloads/'Joe Poznanski Resume February 2026.pdf'` and

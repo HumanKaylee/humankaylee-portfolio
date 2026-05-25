@@ -425,9 +425,10 @@ for the assistant scope, assistant prototype gate, public status/metadata page,
 additional notes/postmortems, and API hosting migration. The assistant scope
 note recommends deferring implementation until B-063 launch evidence and
 HumanKaylee approval exist. #70 remains open until B-063 launch evidence and
-HumanKaylee approval exist. B-065 remains blocked until #70 has that approval
-and the approved outcome is `build`. #70 through #74 remain open until their
-launch, approval, and production-evidence dependencies are satisfied.
+HumanKaylee approval exist. B-065 remains blocked until B-063 launch evidence
+exists and #70/B-064 has a HumanKaylee-approved outcome of `build`. #70
+through #74 remain open until their launch, approval, and production-evidence
+dependencies are satisfied.
 
 B-068 now also carries compare-only migration comparison inputs in
 `runbooks/POST_LAUNCH_FEATURE_PREP.md` for eventual launch-host evidence inputs,
@@ -435,6 +436,10 @@ uptime/availability expectation, monthly cost estimate, deploy complexity,
 custom domain/TLS support, observability/logs, rollback/deployment history,
 Rust Axum fit, cold-start/sleep behavior, and operational risk. Provider-move
 and rollback procedures stay deferred until a future recommendation exists.
+Future B-068 work must re-check official provider docs before any recommendation
+and must not choose a provider, perform DNS cutover, run migration commands,
+configure env/secrets, or write rollback steps before B-058/B-063 evidence and
+HumanKaylee approval.
 
 B-068 source-cited comparison matrix status: pre-launch planning only. The
 matrix records official provider source and snapshot date for Shuttle legacy

@@ -4,13 +4,13 @@ Date: 2026-05-24
 Backlog / issue: B-064 / #70
 Depends on: B-063 launch evidence
 Status: draft decision support only; not approved for implementation
-Current recommendation: defer
+Current assistant recommendation: defer; non-binding, not HumanKaylee approval, not #70 closure
 
 This note defines the safe decision boundary for a future portfolio assistant.
 It does not authorize B-065 implementation, does not change launch readiness,
 and does not close #70. Implementation can only begin after B-063 launch
-evidence exists and HumanKaylee explicitly approves a build/defer/reject
-decision.
+evidence exists and HumanKaylee explicitly approves a build/defer/reject decision;
+only a later HumanKaylee-approved `build` outcome can unblock B-065.
 
 ## User Value Beyond Novelty
 
@@ -34,12 +34,15 @@ site has production launch evidence.
 Any future assistant must answer from public portfolio content only. Allowed
 source classes after launch:
 
-- Published public pages generated from `apps/web/src/content/`.
+- Published public routes listed in an approved public route/source manifest
+  after launch.
 - Public project metadata already visible on `/projects/`.
 - Public resume page content, plus the downloadable resume PDF link only after
   production `/resume/` and PDF smoke checks pass.
 - Published notes/build-log entries.
 - Public-safe runbook summaries that are already linked from the portfolio.
+- Case-study facts only after the case-study record has completed human
+  redaction approval and has public route evidence.
 
 Excluded source classes:
 
@@ -101,9 +104,40 @@ The disabled state must be a first-class user experience:
 - No page should throw, hydrate-fail, or show empty chat chrome when disabled.
 - API-down behavior must not imply the portfolio itself is down.
 
+## Retrieval And Answer Contract
+
+Any future assistant must be evaluated as a source-backed navigation aid, not as
+an open-ended chat system.
+
+Required answer behavior:
+
+- Produce source-backed answers from approved public portfolio content only.
+- Cite at least one public source route, section, or artifact label for factual
+  claims about projects, resume details, case studies, runbooks, or launch
+  evidence.
+- Say it cannot verify a claim when an approved public source is missing,
+  stale, blocked by redaction, or outside the published portfolio.
+- Point users back to normal navigation, resume, projects, case studies, notes,
+  or contact paths instead of inventing private context.
+- Ignore prompt-injection instructions from visitor prompts, retrieved content,
+  URLs, or artifact text that ask it to reveal secrets, bypass source limits,
+  change its policy, or access excluded material.
+
+Forbidden retrieval behavior:
+
+- no runtime access to local files, private repositories, private GitHub issues,
+  private CI logs, memory folders, contact submissions, unpublished drafts, or
+  reviewer notes.
+- no hidden crawl of local runbooks or operator transcripts unless the excerpt is
+  already published through the approved public content workflow.
+- no claim that a blocked case study, production deploy, production Lighthouse
+  run, contact storage decision, rollback target, or domain is complete without
+  matching public launch evidence.
+
 ## Build / Defer / Reject Decision
 
-Current recommendation: defer.
+Current assistant recommendation: defer; non-binding, not HumanKaylee approval,
+not #70 closure.
 
 Reason: the main launch goal is a fast, static-first portfolio that already has
 clear resume, projects, case studies, notes, and contact paths. The assistant

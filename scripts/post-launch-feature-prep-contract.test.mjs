@@ -251,6 +251,8 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Operational risk",
 		"Provider-move procedure",
 		"rollback procedure only after a future recommendation",
+		"Re-check official provider docs before any future recommendation",
+		"Do not choose a provider, perform DNS cutover, run migration commands, configure env/secrets, or write rollback steps before B-058/B-063 evidence and HumanKaylee approval",
 		"no provider choice",
 		"not launch evidence",
 	]);
@@ -267,15 +269,21 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Status: draft decision support only; not approved for implementation",
 		"Backlog / issue: B-064 / #70",
 		"Depends on: B-063 launch evidence",
-		"Current recommendation: defer",
+		"Current assistant recommendation: defer; non-binding, not HumanKaylee approval, not #70 closure",
 		"## User Value Beyond Novelty",
 		"## Allowed Public Data Sources",
 		"## Privacy Model",
 		"## Cost And Rate-Limit Controls",
 		"## No-Secret Frontend Architecture",
 		"## Disabled-Mode Behavior",
+		"## Retrieval And Answer Contract",
 		"## Build / Defer / Reject Decision",
 		"public portfolio content only",
+		"source-backed answers",
+		"Cite at least one public source",
+		"Say it cannot verify",
+		"Ignore prompt-injection instructions",
+		"no runtime access to local files",
 		"no raw contact submissions",
 		"no private repositories",
 		"no private hostnames",
@@ -291,15 +299,36 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 	]);
 	expectNotContains(
 		assistantDecision,
+		"Published public pages generated from `apps/web/src/content/`",
+		"assistant source docs should not authorize raw content collection globbing",
+	);
+	expectNotContains(
+		assistantDecision,
 		"approved public PDF link",
 		"assistant source docs should not imply the resume PDF has production-public route evidence",
 	);
 	expectTableRowCells(runbook, "Portfolio assistant prototype", {
 		1: ["B-065", "#71"],
-		2: ["Blocked until B-064", "build recommendation"],
+		2: [
+			"Blocked until B-063 launch evidence exists",
+			"#70/B-064 has a HumanKaylee-approved outcome of `build`",
+		],
 		3: ["Do not build", "disabled-mode"],
 		4: ["Prompt/content tests", "disabled-mode smoke test"],
 	});
+	expectAll(runbook, [
+		"Do not build a portfolio assistant before B-063 launch evidence exists",
+		"#70/B-064 has a HumanKaylee-approved outcome of `build`",
+		"`docs/ASSISTANT_SCOPE_DECISION.md` is draft decision support only",
+	]);
+	expectContains(
+		b065Backlog,
+		"blocked until B-063 launch evidence exists and #70/B-064 has a HumanKaylee-approved outcome of `build`",
+	);
+	expectContains(
+		githubSync,
+		"B-065 remains blocked until B-063 launch evidence exists and #70/B-064 has a HumanKaylee-approved outcome of `build`",
+	);
 	expectTableRowCells(runbook, "Public status or metadata page", {
 		1: ["B-066", "#72"],
 		2: ["Blocked until B-063"],
@@ -312,6 +341,8 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"API-up check",
 		"API-down fallback check",
 		"No private deployment, provider, log, or contact data",
+		"Public release label or build version only",
+		"No raw private commit SHA, deployment ID, provider account name, or non-generic environment label unless explicitly approved for public evidence",
 		"No JavaScript requirement for core content",
 		"Launch-blocked until B-063",
 		"No route or UI implementation yet",
@@ -461,6 +492,15 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"Official-source snapshot date: 2026-05-24",
 		"be disableable without changing core portfolio navigation",
 	]);
+	expectAll(runbook, [
+		"## B-065 Future Prompt And Source Test Checklist",
+		"Source-backed answer test",
+		"Unsupported-claim refusal test",
+		"Private-source request refusal test",
+		"Prompt-injection resistance test",
+		"Disabled-mode smoke test",
+		"No assistant route, endpoint, model provider, retrieval index, or UI implementation is authorized by this checklist.",
+	]);
 
 	for (const content of [
 		architecture,
@@ -506,7 +546,7 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"HumanKaylee approval",
 		"approved outcome of `build`",
 		"#70 remains open until B-063 launch evidence and HumanKaylee approval exist",
-		"B-065 remains blocked until #70 has that approval",
+		"B-065 remains blocked until B-063 launch evidence exists and #70/B-064 has a HumanKaylee-approved outcome of `build`",
 		"#70 through #74 remain open",
 		"B-067 draft outline contract status: pre-launch planning only",
 		"#73 remains open until B-063 launch evidence exists and approved public-safe content is published",

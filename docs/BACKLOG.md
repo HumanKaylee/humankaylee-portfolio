@@ -1707,8 +1707,8 @@ Depends on: B-064, B-063
 
 Scope:
 
-- Build only if B-064 has a HumanKaylee-approved build recommendation after
-  B-063 launch evidence exists.
+- Build only if B-063 launch evidence exists and #70/B-064 has a
+  HumanKaylee-approved outcome of `build`.
 
 Acceptance criteria:
 
@@ -1724,7 +1724,8 @@ Verification evidence:
 - Disabled-mode smoke test.
 - `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the do-not-build gate, public
   content boundary, disabled-mode expectation, and abuse/cost control inputs
-  while #71 remains blocked by a B-064 approved build recommendation.
+  while #71 remains blocked until B-063 launch evidence exists and #70/B-064
+  has a HumanKaylee-approved outcome of `build`.
 
 ### B-066: Add richer public status or metadata page
 
@@ -1741,6 +1742,9 @@ Acceptance criteria:
 - Status page shows safe public uptime or project metadata.
 - API failure has static fallback.
 - No private deployment details are exposed.
+- Public release labels or build versions are used instead of raw private commit
+  SHAs, deployment IDs, provider account names, or non-generic environment
+  labels unless explicitly approved for public evidence.
 
 Verification evidence:
 
@@ -1793,6 +1797,10 @@ Acceptance criteria:
   evidence exists.
 - If a future host change is recommended, defines provider-move and rollback
   procedures.
+- Re-checks official provider docs before any future recommendation.
+- Does not choose a provider, perform DNS cutover, run migration commands,
+  configure env/secrets, or write rollback steps before B-058/B-063 evidence and
+  HumanKaylee approval.
 
 Verification evidence:
 
