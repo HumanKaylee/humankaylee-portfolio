@@ -118,11 +118,24 @@ test.describe("static shell @static-shell", () => {
 			page.getByRole("navigation", { name: "Primary calls to action" }),
 		).toBeVisible();
 		await expect(
-			page.getByText("Static evidence until API integration"),
+			page.getByText("Static evidence with optional API telemetry"),
 		).toBeVisible();
 		await expect(
 			page.getByRole("article", { name: /Rendering/i }),
 		).toBeVisible();
+	});
+
+	test("keeps public proof surfaces free of scaffold or future-promise copy", async ({
+		page,
+	}) => {
+		for (const route of ["/", "/projects/"]) {
+			await page.goto(route);
+			const visibleCopy = await page.locator("main").innerText();
+
+			expect(visibleCopy).not.toMatch(
+				/\b(scaffold|placeholder)\b|will enhance|canvas later|layer on top later|prepared for future/i,
+			);
+		}
 	});
 
 	test("renders a static systems map hero with project links before any WebGL enhancement", async ({

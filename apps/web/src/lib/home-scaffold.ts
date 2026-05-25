@@ -40,7 +40,7 @@ export function homeScaffold(): HomeScaffold {
 		intro:
 			"A static-first portfolio for automation, infrastructure, backend services, creative web systems, and the evidence that proves they work.",
 		noJsNote:
-			"Core content is available without JavaScript or WebGL. Interactive systems maps will enhance this shell later without replacing it.",
+			"Core content is available without JavaScript or WebGL. Optional systems-map enhancements stay additive and never replace the static story.",
 		audienceOrder: ["recruiter", "senior-engineer", "collaborator"],
 		supportStatements: [
 			"Practical AI-assisted systems that turn ambiguous operational work into repeatable tools.",
@@ -82,7 +82,7 @@ export function homeScaffold(): HomeScaffold {
 				label: "Verification",
 				value: "Local coverage",
 				detail:
-					"Vitest and Playwright keep the scaffold and fallback paths covered.",
+					"Vitest and Playwright keep the static shell and fallback paths covered.",
 			},
 			{
 				label: "Accessibility",

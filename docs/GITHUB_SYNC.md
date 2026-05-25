@@ -155,6 +155,35 @@ Observed current-state evidence:
 - The live issue/Project verifier and the current-head PR/CI verifier both
   pass.
 
+### PR #6 Project write recheck as of 2026-05-25T13:47:38-04:00
+
+PR #6 Project permissions now support safe status updates. The Project item was
+changed from `Todo` to `In Progress` as active-PR triage evidence only. This
+does not change launch readiness or close any issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefOid,mergeStateStatus,projectItems,url
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 200 --format json | jq -r '.items[] | select(.content.type == "PullRequest" and .content.number == 6) | {id,title,status}'
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs
+```
+
+Observed current-state evidence:
+
+- `gh project item-edit` returned Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` for PR #6 with no permission error.
+- `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`, head
+  `f03ba78edab3086e7d6b11eb70566ff254b19c53`, and Project status
+  `In Progress`.
+- `gh project item-list` reports the PR #6 item status as `In Progress`.
+- The live issue/Project verifier passes with `1` test, `1` pass, and `0`
+  failures.
+- The current-head PR/CI verifier passes with `1` test, `1` pass, and `0`
+  failures.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.

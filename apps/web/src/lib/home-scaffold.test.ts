@@ -49,4 +49,24 @@ describe("homeScaffold", () => {
 		expect(supportCopy).toContain("automation workflows");
 		expect(supportCopy).toContain("backend services");
 	});
+
+	it("keeps public home copy polished instead of scaffold or future-promise language", () => {
+		const scaffold = homeScaffold();
+		const publicCopy = [
+			scaffold.kicker,
+			scaffold.heroTitle,
+			scaffold.intro,
+			scaffold.noJsNote,
+			...scaffold.supportStatements,
+			...scaffold.telemetry.flatMap((item) => [
+				item.label,
+				item.value,
+				item.detail,
+			]),
+		].join(" ");
+
+		expect(publicCopy).not.toMatch(
+			/\b(scaffold|placeholder)\b|will enhance|later without replacing/i,
+		);
+	});
 });

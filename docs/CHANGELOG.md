@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added home and project proof-surface copy guards so public static routes do
+  not expose scaffold, placeholder, or future-promise wording, then polished the
+  home telemetry, systems-map hero, and atlas copy while preserving the
+  static-first fallback and production-evidence boundary.
 - Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T13:23:35-04:00 Project permission recheck: Project #1 remains
   listable/updatable with 19 fields and 16 total items, the private repo

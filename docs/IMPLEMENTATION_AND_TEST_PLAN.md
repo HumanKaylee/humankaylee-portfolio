@@ -53,13 +53,12 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T13:23:35-04:00 found a
-  clean worktree at the start of this plan refresh on
-  `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `4bc6674586fa66c76ba673006cdf1192d6230774`, `mergeStateStatus: CLEAN`,
-  PR #6 tracked on Project #1 with status `Todo`, and Phase 0 CI run
-  `26411894455` successful for Frontend verification job `77747955199` and
-  Rust verification job `77747955200`.
+- Current live recheck snapshot captured at 2026-05-25T13:47:38-04:00 found
+  PR #6 open/non-draft at `f03ba78edab3086e7d6b11eb70566ff254b19c53`,
+  `mergeStateStatus: CLEAN`, PR #6 tracked on Project #1 with status
+  `In Progress`, and Phase 0 CI run `26412306994` successful for
+  Frontend verification job `77749231069` and Rust verification job
+  `77749231091`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked local slice snapshot before this overlay refresh:
@@ -76,8 +75,14 @@ or launch status.
   including Project #1 item/field checks in
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
+- Current in-flight local polish slice: public proof surfaces on home and
+  projects are guarded against visible scaffold, placeholder, or future-promise
+  wording; the static shell, telemetry strip, systems-map hero, project atlas,
+  and Creative Web Systems Atlas Demo proof copy now use additive
+  progressive-enhancement language. Treat this as Phase 4 copy/quality polish
+  only, not as production launch evidence or case-study approval.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T13:23:35-04:00: the local `gh` token has `repo`,
+  2026-05-25T13:47:38-04:00: the local `gh` token has `repo`,
   full-control `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
@@ -88,8 +93,10 @@ or launch status.
   status, phase, priority, type, area, agent size, and blocker fields, and
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
   passes. GraphQL reports Project #1 `viewerCanUpdate: true` and PR #6
-  `viewerCanUpdate: true` / `viewerCanClose: true`. PR #6 is tracked as a
-  Project item with status `Todo`. GitHub Project permissions are no longer a current blocker. Treat future Project work as
+  `viewerCanUpdate: true` / `viewerCanClose: true`. The safe write proof
+  `GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json`
+  succeeds. PR #6 is tracked as a Project item with status `In Progress`.
+  GitHub Project permissions are no longer a current blocker. Treat future Project work as
   maintenance for newly opened or relabeled issues and active PR tracking, not
   as launch readiness or as a current launch blocker.
 - What remains is external launch and approval work: complete redaction
@@ -100,6 +107,12 @@ or launch status.
   rollback evidence, production Lighthouse, production route/API/contact smoke,
   and the full B-063 final launch checklist for #69; keep #70 through #74
   planning-only until B-063 launch evidence exists.
+- The next goal run should not spend its first slice on Project auth unless a
+  live verifier regresses. Prioritize one of these remaining external gates
+  instead: content/redaction approval evidence for #20/#21/#24/#25,
+  Cloudflare Pages frontend deploy evidence for #63, approved Rust API hosting
+  and contact-handling evidence for #64, domain/DNS/TLS metadata evidence for
+  #65, or the B-063 production smoke/Lighthouse/rollback checklist for #69.
 - If a next goal run resumes before those external blockers are resolved, it
   should first re-run the live checks above, confirm GitHub Project checks do
   not regress, then choose only a small
