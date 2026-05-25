@@ -53,28 +53,30 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T12:17:20-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T12:44:49-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `a1abdfe4514d6c2e0213ed110dc237c3f084ae61`, and Phase 0 CI run
-  `26409403768` successful for Frontend verification job `77740295220` and
-  Rust verification job `77740295189`.
+  `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`, and Phase 0 CI run
+  `26410386944` successful for Frontend verification job `77743299736` and
+  Rust verification job `77743299741`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked local slice snapshot before this overlay refresh:
-  operations deployment command boundary hardening in `docs/OPERATIONS.md`,
-  `scripts/operations-production-standard-contract.test.mjs`, and
+  installed skill snapshot authority hardening in
+  `scripts/agent-instructions-contract.test.mjs` and
   `docs/CHANGELOG.md`, committed as
-  `a1abdfe4514d6c2e0213ed110dc237c3f084ae61`. Treat the B-051 bundle-budget,
+  `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
   preflight evidence, B-068 deployment sync guardrails, Phase 7
-  evidence-authority checks, GitHub Project item verification hardening, and
-  the deployment-summary rule that provider-specific commands, migration procedures, and rollback steps remain reference-only,
+  evidence-authority checks, GitHub Project item verification hardening, the
+  deployment-summary rule that provider-specific commands, migration procedures,
+  and rollback steps remain reference-only, and the skill-mirror rule that
+  fresh verifier output stays authoritative over embedded skill snapshots,
   including Project #1 item/field checks in
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T12:17:20-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
+  2026-05-25T12:44:49-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`

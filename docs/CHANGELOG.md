@@ -8,6 +8,14 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T12:44:49-04:00 Project permission recheck: Project #1 remains
+  listable/updatable with 19 fields and 15 synced issue items, the private repo
+  permission remains `ADMIN`, PR #6 is clean at
+  `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`, and Phase 0 CI run
+  `26410386944` passed Frontend and Rust verification. GitHub Project work is
+  now maintenance for newly opened or relabeled bridge issues; the remaining
+  plan work is external launch and approval evidence.
 - Hardened the installed `humankaylee-portfolio` Codex and agents skill
   mirrors so future goal continuations treat fresh live verifier output as
   authoritative over embedded snapshots and avoid current-head snapshot churn

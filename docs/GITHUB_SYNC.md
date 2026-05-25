@@ -69,7 +69,7 @@ creation and issue sync are complete.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Live Project permission recheck as of 2026-05-25T12:17:20-04:00
+### Live Project permission recheck as of 2026-05-25T12:44:49-04:00
 
 Project #1 permission recheck passed after HumanKaylee's permission update. The
 current local token can list the private repository, list/view Project #1,
@@ -100,6 +100,7 @@ Observed current-state evidence:
   `Area`, `Agent Size`, and `Blocker`.
 - Item list reports 15 issue-backed items for the open live bridge.
 - GraphQL reports repo `viewerPermission:"ADMIN"`, PR #6
+  head `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`, PR #6
   `viewerCanUpdate:true`, PR #6 `viewerCanClose:true`, and Project #1
   `viewerCanUpdate:true`.
 - `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
