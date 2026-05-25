@@ -120,6 +120,8 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		'pnpm test:e2e -- --grep "@quality"',
 		"local/PR CI evidence only",
 		"Every B-063 launch-evidence row must include a populated Privacy Redaction Rule cell before it can support launch approval.",
+		"Every B-063 launch-evidence row must include a populated Evidence Authority cell before it can support launch approval.",
+		"Local/PR evidence cannot satisfy a production-live launch requirement.",
 		"`reviewed` case studies are not launch-eligible.",
 	]);
 
@@ -193,6 +195,11 @@ test("B-063 final launch checklist preserves blocker honesty", () => {
 		"Contact production handling",
 		"Rollback evidence",
 		"Blocked / not run",
+	]);
+
+	expectAll(checklist, [
+		"Each row must label Evidence Authority as production or owner-approved production-equivalent provider preview before it can replace a Blocked / not run production row.",
+		"Rows labeled local/PR can support readiness only; they cannot support launch approval.",
 	]);
 
 	expectNotContains(checklist, "Status: launch-ready", "launch-ready status");

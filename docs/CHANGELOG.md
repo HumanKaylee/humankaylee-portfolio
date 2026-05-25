@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened the B-063 final launch checklist so future launch approval evidence
+  must carry Evidence Authority as production or owner-approved
+  production-equivalent provider preview before replacing blocked production
+  rows; local/PR evidence stays readiness-only.
 - Refreshed the continuation plan after the latest Project permission recheck:
   `repo` and full-control `project` scope are available, Project #1 list/view,
   field-list, item-list, and live issue/Project verification pass, PR #6 is

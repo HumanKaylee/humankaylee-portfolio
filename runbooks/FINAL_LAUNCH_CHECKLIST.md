@@ -17,8 +17,10 @@ Decision Packets at `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` identify
 the missing provider, API, domain, smoke, Lighthouse, rollback, contact, and
 redaction evidence for #63, #64, #65, and #69 without approving launch.
 Every B-063 launch-evidence row must include a populated Privacy Redaction Rule
-cell before it can support launch approval. `reviewed` case studies are not
-launch-eligible.
+cell before it can support launch approval. Every B-063 launch-evidence row
+must include a populated Evidence Authority cell before it can support launch
+approval. Local/PR evidence cannot satisfy a production-live launch
+requirement. `reviewed` case studies are not launch-eligible.
 
 ## Embedded PR Evidence Snapshot
 
@@ -82,6 +84,11 @@ target URL, date, result, artifact, and blocker/next-action fields for:
 - Contact production handling.
 - Rollback evidence.
 - Redaction approvals for at least four case studies.
+
+Each row must label Evidence Authority as production or owner-approved
+production-equivalent provider preview before it can replace a Blocked / not run
+production row. Rows labeled local/PR can support readiness only; they cannot
+support launch approval.
 
 Any future launch approval claim must be supported by the affected production URL,
 deployment ID, check URL, Lighthouse report, API response, redaction approval
