@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added AGENTS.md and installed portfolio skill guardrails for
+  `pnpm phase7:contact-decision` so future goal runs treat it as
+  local/decision-template evidence only, not contact approval or launch
+  evidence.
 - Added a Phase 7 contact decision template helper and package script so future
   contact handling choices can capture owner, retention, backup, rotation,
   deletion, store/provider, smoke, rollback/disable, and privacy fields before

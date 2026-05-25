@@ -114,6 +114,12 @@ test("repository agent instructions use current hosting and launch-blocker guida
 		agents,
 		"Use the generated summary as reviewer handoff input only; it cannot approve case studies, clear open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.",
 	);
+	expectContains(agents, "pnpm phase7:contact-decision");
+	expectContains(agents, "local/decision-template");
+	expectContains(
+		agents,
+		"Use the template only to shape owner approval, retention, backup, rotation, deletion, store/provider, smoke, rollback/disable, and privacy fields; it cannot approve contact handling, capture production smoke, close #64/#69, or replace the blocked production contact row.",
+	);
 	expectContains(agents, REVIEWED_LAUNCH_BOUNDARY);
 	expectContains(
 		agents,
@@ -223,6 +229,7 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Content/redaction docs must not use approval-adjacent wording unless directly negated.",
 		"`pnpm redaction:readiness` records local/redaction-readiness reviewer handoff evidence only; it cannot approve case studies, clear open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.",
 		"`pnpm phase7:evidence-template` is a local/readiness helper for shaping future provider-neutral evidence rows only; it cannot select providers, run deployment commands, change DNS/TLS, run production smoke, replace blocked production rows, or close #63/#64/#65/#69.",
+		"`pnpm phase7:contact-decision` is a local/decision-template helper for shaping the #64/#69 contact handling decision only; it cannot approve contact handling, capture production smoke, close #64/#69, or replace the blocked production contact row.",
 		"Swarm execution is opt-in for tasks that span multiple ownership lanes or need reviewed parallel-safe split work",
 		"single-lane docs/contract fixes should stay with one owner in single-session execution unless the Coordinator records a concrete parallelization benefit",
 		"B-067/#73 publication requires B-063 launch evidence and approved public-safe content before any note or postmortem is published, added to RSS, or used for issue closure.",

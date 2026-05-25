@@ -48,6 +48,13 @@ of truth for implementation state, launch blockers, and production evidence.
   work. Evidence Authority is `local/redaction-readiness`. Use the generated
   summary as reviewer handoff input only; it cannot approve case studies, clear
   open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.
+- Run `pnpm phase7:contact-decision -- --mode defer --dry-run` before contact
+  handling decision handoff work. Evidence Authority is
+  `local/decision-template`. Use the template only to shape owner approval,
+  retention, backup, rotation, deletion, store/provider, smoke,
+  rollback/disable, and privacy fields; it cannot approve contact handling,
+  capture production smoke, close #64/#69, or replace the blocked production
+  contact row.
 - Prefer non-colliding agents by ownership area: content, shell/layout, visual/WebGL, Rust API, CI/deployment, accessibility/performance.
 - Smaller/cheaper models may own mechanical tasks with exact file paths and acceptance criteria.
 - Use stronger models for design, architecture, visual-system, security, and final review.
