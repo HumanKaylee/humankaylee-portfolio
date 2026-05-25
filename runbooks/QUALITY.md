@@ -23,6 +23,9 @@ journey failures remain easy to identify.
   and contact fallback behavior when API requests fail.
 - `pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and
   contact evaluator journeys across the existing static launch paths.
+- `pnpm test:e2e -- --grep "@static-shell|@visual-surfaces"` verifies core
+  static shell and art-directed surface coverage, including notes/build-log
+  index and detail routes, as local QA evidence only.
 - `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
   and route-quality checks on the core route set.
 - `runbooks/ACCESSIBILITY_AUDIT.md` records the B-048 page-by-page

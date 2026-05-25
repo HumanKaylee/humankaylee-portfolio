@@ -5,6 +5,8 @@ const desktopRoutes = [
 	"/projects/",
 	"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
 	"/resume/",
+	"/notes/",
+	"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
 	"/contact/",
 ] as const;
 
@@ -118,6 +120,14 @@ test.describe("visual surfaces @visual-surfaces", () => {
 		await page.goto("/resume/");
 		await expectSurfaceTreatment(page, ".paper-panel");
 		await expectSurfaceTreatment(page, ".workflow-list");
+
+		await page.goto("/notes/");
+		await expectSurfaceTreatment(page, ".project-card");
+
+		await page.goto(
+			"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		);
+		await expectSurfaceTreatment(page, "article.paper-panel");
 
 		await page.goto("/contact/");
 		await expectSurfaceTreatment(page, ".paper-panel");

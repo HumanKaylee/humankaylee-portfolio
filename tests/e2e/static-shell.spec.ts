@@ -17,6 +17,16 @@ const coreRoutes = [
 		copy: /approved local source/i,
 	},
 	{
+		path: "/notes/",
+		heading: /notes from the systems atelier/i,
+		copy: /build decisions/i,
+	},
+	{
+		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		heading: /How the portfolio stays useful when the API is offline/i,
+		copy: /The static shell carries the recruiting story/i,
+	},
+	{
 		path: "/contact/",
 		heading: /contact/i,
 		copy: /mailto fallback/i,

@@ -15,6 +15,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Hardened API startup configuration so a present `HK_API_ALLOWED_ORIGINS`
   value must contain one or more comma-separated valid `http`/`https` origins
   with no blank entries.
+- Expanded notes/build-log local QA parity across `@static-shell` and
+  `@visual-surfaces` without changing production launch status.
 - Added a dedicated Phase 0 CI Playwright `@journey` smoke gate for the
   recruiter resume path, engineer project-detail path, and contact mailto
   fallback.
