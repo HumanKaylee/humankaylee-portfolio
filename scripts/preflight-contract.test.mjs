@@ -206,6 +206,26 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 	expectContains(preflight, "Scope: local read-only readiness refresh");
 	expectContains(
 		preflight,
+		"This preflight is a point-in-time local-readiness snapshot.",
+		"point-in-time preflight snapshot wording",
+	);
+	expectContains(
+		preflight,
+		"Do not rewrite it only to chase the checked-out commit after guardrail-only docs commits.",
+		"preflight snapshot anti-churn guard",
+	);
+	expectContains(
+		preflight,
+		"Run live repo, PR, CI, issue, and Project verifiers for current state before acting.",
+		"preflight live-verifier guard",
+	);
+	expectNotContains(
+		preflight,
+		"Record the current local readiness state",
+		"stale current-state preflight wording",
+	);
+	expectContains(
+		preflight,
 		"Project board access is available. Project #1 exists and contains the current",
 		"Project board current-state evidence",
 	);
@@ -288,11 +308,21 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 	expectTableRowCells(matrix, "Preflight", {
 		1: ["node --test scripts/preflight-contract.test.mjs"],
 		2: ["Local checkout on `goal/portfolio-implementation`"],
-		4: ["Passed locally", "local readiness only"],
+		4: [
+			"Passed locally",
+			"point-in-time local readiness snapshot",
+			"may trail the checked-out commit",
+			"local readiness only",
+		],
 		5: ["runbooks/PREFLIGHT.md", "scripts/preflight-contract.test.mjs"],
 		6: ["production deploy", "redaction approvals"],
 		7: ["Public-safe summary only", "absolute local home paths"],
 	});
+	expectNotContains(
+		matrix,
+		"Current preflight records",
+		"stale current preflight evidence wording",
+	);
 
 	expectContains(
 		changelog,

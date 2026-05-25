@@ -8,17 +8,22 @@ private hostnames, private access paths, and full local home-directory paths.
 
 ## Purpose
 
-Record the current local readiness state for the HumanKaylee portfolio
-implementation without turning local, PR, or docs evidence into production
-readiness evidence. Future refreshes should keep this file sanitized and record
-command output for `date -Is`, `git status --short --branch`,
-`git rev-parse HEAD`, `git remote -v`, `node --version`,
-`corepack --version`, `pnpm --version`, `rustc --version`,
-`cargo --version`, `gh auth status`, `git --version`, and `codex --version`.
-Do not store credentials, private paths, hostnames, raw logs, or secrets.
-Track GitHub Project scope or sync regressions as Project-board maintenance
-issues, not as repository readiness failures. Do not run `gh auth refresh` from
-unattended automation.
+This preflight is a point-in-time local-readiness snapshot. It can
+intentionally trail the checked-out commit after later guardrail-only docs
+commits. Do not rewrite it only to chase the checked-out commit after
+guardrail-only docs commits. Run live repo, PR, CI, issue, and Project verifiers
+for current state before acting.
+
+Record local readiness evidence for the HumanKaylee portfolio implementation
+without turning local, PR, or docs evidence into production readiness evidence.
+Future refreshes should keep this file sanitized and record command output for
+`date -Is`, `git status --short --branch`, `git rev-parse HEAD`,
+`git remote -v`, `node --version`, `corepack --version`, `pnpm --version`,
+`rustc --version`, `cargo --version`, `gh auth status`, `git --version`, and
+`codex --version`. Do not store credentials, private paths, hostnames, raw logs,
+or secrets. Track GitHub Project scope or sync regressions as Project-board
+maintenance issues, not as repository readiness failures. Do not run
+`gh auth refresh` from unattended automation.
 
 ## Repository
 

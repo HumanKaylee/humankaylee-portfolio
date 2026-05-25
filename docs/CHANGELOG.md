@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Made the preflight runbook snapshot-aware so local readiness evidence can
+  intentionally trail later guardrail-only docs commits, and live repo, PR, CI,
+  issue, and Project verifiers remain the source for current state.
 - Made the current goal-resume overlay snapshot-aware so guardrail-only docs
   commits do not force self-rewriting commit churn; live verifiers are now the
   authoritative current PR, CI, issue, and Project source before each resumed
