@@ -1,7 +1,7 @@
 # Case Study Redaction Approval Packets
 
 Date: 2026-05-24
-Status: approval packets only; no case study is launch-approved
+Status: review-only launch-blocking evidence index; no launch approval; no issue closure.
 Scope: launch-candidate case-study approval evidence
 
 ## Purpose
@@ -35,8 +35,10 @@ Until those conditions are met, the packet remains review evidence only.
 
 ## Packet Readiness Matrix
 
-This matrix shows exactly which approval evidence remains missing for each
-current publish-intended case study. It does not mark any case study approved.
+This Packet Readiness Matrix is the canonical non-approval evidence for the
+four current `publish` candidates. It shows exactly which approval evidence
+remains missing for each current publish-intended case study. It does not mark
+any case study approved.
 #20 and #21 remain open until open items, artifact inspection, and human signoff
 are complete.
 
@@ -49,8 +51,8 @@ are complete.
 
 ## Non-Approval Evidence Inventory
 
-These inventory notes are mechanical preparation only; they are not approval
-decisions. They identify which public-safe evidence exists in the current
+These inventory notes are review-only; they do not grant launch approval or
+close issues. They identify which public-safe evidence exists in the current
 content and which artifact inspections still need a human reviewer before any
 candidate can move from `reviewed` to `approved`.
 

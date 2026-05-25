@@ -6,7 +6,7 @@ Source: `docs/CONTENT_STRATEGY.md`
 
 ## Purpose
 
-This guide prevents portfolio content from publishing secrets, private infrastructure details, private account data, or operational details that increase risk. Every real-work case study must link to this guide and record a redaction status before it can be treated as launch-approved.
+This guide prevents portfolio content from publishing secrets, private infrastructure details, private account data, or operational details that increase risk. Every real-work case study can count toward launch only after it links to this guide and records a redaction status.
 
 ## Redaction Statuses
 

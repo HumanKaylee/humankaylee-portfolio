@@ -96,8 +96,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   agent instructions align with #64's approved-host comparison boundary, keep
   Shuttle snippets legacy-only, and reject production-scoped resume overclaims.
 - Tightened B-018/B-019 publication-safety wording so decision support cannot
-  imply publication-ready proof, close #24/#25, or count either candidate toward
-  launch.
+  imply proof clears publication review, close #24/#25, or count either
+  candidate toward launch.
 - Hardened live GitHub issue sync coverage for Phase 7 issues so #63, #64,
   #65, and #69 preserve production-blocker body text and reject stale
   Shuttle-primary API host wording.
@@ -373,7 +373,7 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Remaining Blockers
 
-- Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked launch-approved.
+- Four launch case studies still need completed redaction checklists, approved public-safe evidence, and cleared open items before they can be marked approved.
 - Final public domain is still unresolved, so metadata currently uses the reserved configured site URL from `apps/web/src/content/site/site.json`.
 - Production provider projects and domains still need to be created before
   Cloudflare Pages, Shuttle, Fly.io, or Railway deployment evidence can be

@@ -197,6 +197,7 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		'Project constellation import failure is a handled progressive-enhancement fallback: `document.body.dataset.constellationReady === "module-error"` while the static atlas remains usable.',
 		"Contact store config must fail fast when `HK_API_CONTACT_DELIVERY_MODE=store` lacks `HK_API_CONTACT_STORE_PATH`.",
 		"Blocked/deferred case-study candidates should use explicit unpublished body boundaries, not generic placeholder body copy.",
+		"Content/redaction docs must not use approval-adjacent wording unless directly negated.",
 	];
 
 	for (const mirror of mirrorContents) {

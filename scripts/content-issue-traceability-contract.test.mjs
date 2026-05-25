@@ -71,9 +71,28 @@ function expectNoUnsafeApprovalParaphrases(content, label) {
 		);
 	}
 
+	const approvalAdjacentPattern =
+		/\b(launch[- ]approved|approved for launch|launch[- ]ready|ready to launch|publication[- ]ready)\b/gi;
+	const directlyNegatedApprovalPhrase =
+		/\b(?:not[- ]|no\s+|without(?: being)?\s+|until(?: being| it is)?\s+|before(?: being| it is)?\s+)(?:launch[- ]approved|approved for launch|launch[- ]ready|ready to launch|publication[- ]ready)$|\bcannot\s+(?:(?:be\s+)?treated\s+as\s+)?(?:launch[- ]approved|approved for launch|launch[- ]ready|ready to launch|publication[- ]ready)$|\b(?:do not|does not)\s+(?:(?:treat|mark|call|consider)\s+(?:as\s+)?|make\s+.*?\s+|(?:claim|call|consider)\s+)?(?:launch[- ]approved|approved for launch|launch[- ]ready|ready to launch|publication[- ]ready)$/i;
+
 	for (const line of content.split("\n")) {
+		for (const match of line.matchAll(approvalAdjacentPattern)) {
+			const prefixThroughMatch = line.slice(
+				0,
+				(match.index ?? 0) + match[0].length,
+			);
+			const sameClausePrefix =
+				prefixThroughMatch.split(/[.;:!?,]/).at(-1) ?? "";
+			assert.match(
+				sameClausePrefix,
+				directlyNegatedApprovalPhrase,
+				`${label} can only mention approval-adjacent launch wording in a directly negated phrase: ${line}`,
+			);
+		}
+
 		if (!/\bcounts? toward launch\b/i.test(line)) {
-			if (!/\blaunch-ready\b/i.test(line)) {
+			if (!/\blaunch[- ]ready\b/i.test(line)) {
 				continue;
 			}
 
@@ -156,6 +175,85 @@ function expectIssueTrace(content, expected, label) {
 	);
 	expectFrontmatterLine(content, "closureRule", expected.closureRule, label);
 }
+
+function expectReviewOnlyBoundary(content, label) {
+	expectContains(
+		content,
+		"Status: review-only launch-blocking evidence index; no launch approval; no issue closure.",
+		`${label} review-only boundary`,
+	);
+	expectContains(
+		content,
+		"canonical non-approval evidence for the four current `publish` candidates",
+		`${label} canonical non-approval evidence boundary`,
+	);
+	for (const pattern of [
+		/\blaunch[- ]approved\b/i,
+		/\bapproved for launch\b/i,
+		/\blaunch[- ]ready\b/i,
+		/\bready to launch\b/i,
+		/\bpublication[- ]ready\b/i,
+		/\bready for approval\b/i,
+		/\bsafe enough to publish\b/i,
+	]) {
+		assert.doesNotMatch(
+			content,
+			pattern,
+			`${label} should not use approval-adjacent wording ${pattern}`,
+		);
+	}
+}
+
+test("content approval paraphrase guard rejects launch-readiness variants", () => {
+	for (const unsafeVariant of [
+		"launch approved",
+		"launch ready",
+		"ready to launch",
+		"publication-ready",
+		"approved for launch, but not yet deployed",
+		"blocked; approved for launch",
+		"pending review, launch ready",
+		"not only approved for launch",
+	]) {
+		assert.throws(
+			() =>
+				expectNoUnsafeApprovalParaphrases(unsafeVariant, "synthetic content"),
+			/approval paraphrase|approval-adjacent launch wording|launch-ready/,
+			`expected content guard to reject ${unsafeVariant}`,
+		);
+	}
+
+	assert.doesNotThrow(() =>
+		expectNoUnsafeApprovalParaphrases(
+			"This content is not launch-ready without human signoff.",
+			"synthetic negative launch boundary",
+		),
+	);
+});
+
+test("content traceability review-only boundary rejects approval-adjacent variants", () => {
+	const baseBoundary = [
+		"Status: review-only launch-blocking evidence index; no launch approval; no issue closure.",
+		"canonical non-approval evidence for the four current `publish` candidates",
+	].join("\n");
+
+	for (const unsafeVariant of [
+		"launch approved",
+		"launch ready",
+		"ready to launch",
+		"publication-ready",
+	]) {
+		assert.throws(
+			() =>
+				expectReviewOnlyBoundary(
+					`${baseBoundary}\n${unsafeVariant}`,
+					"synthetic boundary",
+				),
+			/approval-adjacent wording/,
+			`expected helper to reject ${unsafeVariant}`,
+		);
+	}
+});
 
 test("content issue traceability ties open content issues to approval blockers without approving publication", () => {
 	const changelog = readRequiredFile(files.changelog);
@@ -312,8 +410,9 @@ test("content issue traceability ties open content issues to approval blockers w
 	expectContains(status, "## GitHub Issue Traceability");
 	expectContains(
 		status,
-		"Traceability rows are approval aids only; they do not close issues, approve publication, or change launch eligibility.",
+		"Traceability rows are review-only evidence; they do not grant launch approval, close issues, or change launch eligibility.",
 	);
+	expectReviewOnlyBoundary(status, "status");
 
 	expectTableRowCells(status, "CLI Fleet Synchronization and MCP Rollout", {
 		1: ["B-014 / #20"],

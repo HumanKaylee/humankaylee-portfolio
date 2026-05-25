@@ -2,7 +2,7 @@
 
 Date: 2026-05-24
 Branch: `goal/portfolio-implementation`
-Status: launch-blocking evidence index only; this file does not approve content.
+Status: review-only launch-blocking evidence index; no launch approval; no issue closure.
 
 ## Scope
 
@@ -21,11 +21,13 @@ approval wording explicit until every launch gate is actually complete.
 Approval packet templates for the four current `publish` candidates live in
 `runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md`. Those packets now include a
 readiness matrix that identifies exactly which approval evidence remains
-missing for each candidate, a B-014/B-015 Artifact Inspection Handoff Queue for
-#20/#21 reviewer routing, plus a Non-approval evidence inventory for all four
-current `publish` candidates. The counts-only mechanical scan note remains
-limited to the two operational case-study bodies; those packets do not approve
-any case study.
+missing for each candidate. That packet/readiness matrix is the canonical
+non-approval evidence for the four current `publish` candidates. The packets
+also include a B-014/B-015 Artifact Inspection Handoff Queue for #20/#21
+reviewer routing, plus a Non-approval evidence inventory for all four current
+`publish` candidates. The counts-only mechanical scan note remains limited to
+the two operational case-study bodies; those packets do not approve any case
+study.
 
 Publication-safety decisions for the Kalshi/analytics and YouTube AI pipeline
 blocked candidates live in `runbooks/PUBLICATION_SAFETY_DECISIONS.md`. That
@@ -46,8 +48,8 @@ Guide launch gate.
 
 ## GitHub Issue Traceability
 
-Traceability rows are approval aids only; they do not close issues, approve
-publication, or change launch eligibility. The `issueTrace` frontmatter in the
+Traceability rows are review-only evidence; they do not grant launch approval,
+close issues, or change launch eligibility. The `issueTrace` frontmatter in the
 listed case-study records mirrors these rows so issue ownership, backlog
 identity, and closure rules travel with the content metadata.
 

@@ -280,6 +280,58 @@ function expectHandoffQueueRow(packet, artifactLabel, expectedFragments) {
 	}
 }
 
+function expectReviewOnlyBoundary(packet, label) {
+	expectContains(
+		packet,
+		"Status: review-only launch-blocking evidence index; no launch approval; no issue closure.",
+		`${label} review-only boundary`,
+	);
+	expectContains(
+		packet,
+		"canonical non-approval evidence for the four current `publish` candidates",
+		`${label} canonical non-approval evidence boundary`,
+	);
+	for (const pattern of [
+		/\blaunch[- ]approved\b/i,
+		/\bapproved for launch\b/i,
+		/\blaunch[- ]ready\b/i,
+		/\bready to launch\b/i,
+		/\bpublication[- ]ready\b/i,
+		/\bready for approval\b/i,
+		/\bsafe enough to publish\b/i,
+	]) {
+		assert.doesNotMatch(
+			packet,
+			pattern,
+			`${label} should not use approval-adjacent wording ${pattern}`,
+		);
+	}
+}
+
+test("redaction packet review-only boundary rejects approval-adjacent variants", () => {
+	const baseBoundary = [
+		"Status: review-only launch-blocking evidence index; no launch approval; no issue closure.",
+		"canonical non-approval evidence for the four current `publish` candidates",
+	].join("\n");
+
+	for (const unsafeVariant of [
+		"launch approved",
+		"launch ready",
+		"ready to launch",
+		"publication-ready",
+	]) {
+		assert.throws(
+			() =>
+				expectReviewOnlyBoundary(
+					`${baseBoundary}\n${unsafeVariant}`,
+					"synthetic packet",
+				),
+			/approval-adjacent wording/,
+			`expected helper to reject ${unsafeVariant}`,
+		);
+	}
+});
+
 test("case-study redaction approval packets preserve not-approved launch state", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const cliFleetCaseStudy = readRequiredFile(files.cliFleetCaseStudy);
@@ -353,9 +405,10 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectContains(packet, "# Case Study Redaction Approval Packets");
 	expectContains(
 		packet,
-		"Status: approval packets only; no case study is launch-approved",
+		"Status: review-only launch-blocking evidence index; no launch approval; no issue closure.",
 	);
 	expectContains(packet, "## Packet Readiness Matrix");
+	expectReviewOnlyBoundary(packet, "packet");
 	expectContains(
 		packet,
 		"exactly which approval evidence remains missing",
@@ -381,7 +434,7 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	expectContains(packet, "## Non-Approval Evidence Inventory");
 	expectContains(
 		packet,
-		"These inventory notes are mechanical preparation only; they are not approval decisions.",
+		"These inventory notes are review-only; they do not grant launch approval or close issues.",
 		"non-approval evidence inventory boundary",
 	);
 	expectContains(packet, "Counts-only mechanical scan note");
