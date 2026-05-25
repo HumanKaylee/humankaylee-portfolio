@@ -14,9 +14,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   goal slice.
 - Rechecked GitHub Project permissions and sync after the latest auth update:
   the local token has `repo` and `project` scopes, Project #1 is private with 19
-  fields and 15 synced issue items, PR #6 is green at
-  `2aebedafff1d7c9b208ba0fac6ef809bcd84e5f8`, and Phase 0 CI run
-  `26402120167` passed.
+  fields and 15 synced issue items, and the pre-refresh live snapshot recorded
+  PR #6 green at `2aebedafff1d7c9b208ba0fac6ef809bcd84e5f8` with Phase 0 CI
+  run `26402120167` passing.
 - Added visual CI triage guidance to the quality runbook so screenshot failures
   require job-log inspection, focused reproduction, full E2E reproduction, and a
   clean worktree before any failed-job rerun or snapshot/threshold change.
