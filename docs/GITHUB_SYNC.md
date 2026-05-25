@@ -70,7 +70,7 @@ creation and issue sync are complete.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Live Project permission recheck as of 2026-05-25T12:44:49-04:00
+### Live Project permission recheck as of 2026-05-25T13:23:35-04:00
 
 Project #1 permission recheck passed after HumanKaylee's permission update. The
 current local token can list the private repository, list/view Project #1,
@@ -93,15 +93,15 @@ GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-iss
 Observed current-state evidence:
 
 - `gh auth status` reports the active `HumanKaylee` account with `repo`,
-  `project`, and `workflow` scopes.
+  full-control `project`, and `workflow` scopes.
 - `gh repo view` reports `visibility:"PRIVATE"` and `viewerPermission:"ADMIN"`.
-- Project list/view reports Project #1 as private with 19 fields, 15 items, and
+- Project list/view reports Project #1 as private with 19 fields, 16 items, and
   URL `https://github.com/users/HumanKaylee/projects/1`.
 - Field list reports the default fields plus `Phase`, `Priority`, `Type`,
   `Area`, `Agent Size`, and `Blocker`.
-- Item list reports 15 issue-backed items for the open live bridge.
+- Item list reports 15 issue-backed items for the open live bridge plus PR #6.
 - GraphQL reports repo `viewerPermission:"ADMIN"`, PR #6
-  head `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`, PR #6
+  head `4bc6674586fa66c76ba673006cdf1192d6230774`, PR #6
   `viewerCanUpdate:true`, PR #6 `viewerCanClose:true`, and Project #1
   `viewerCanUpdate:true`.
 - `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
@@ -131,6 +131,29 @@ Observed current-state evidence:
 - `projectItems` reports `HumanKaylee Portfolio` with status `Todo`.
 - The live verifier passes after checking open issue Project items and PR #6
   Project tracking.
+
+### PR #6 active tracking recheck as of 2026-05-25T13:23:35-04:00
+
+PR #6 remains tracked on Project #1 as triage/sync evidence only.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup,projectItems,url
+GH_PROMPT_DISABLED=1 gh run view 26411894455 --repo HumanKaylee/humankaylee-portfolio --json databaseId,headSha,status,conclusion,workflowName,jobs,url
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs
+```
+
+Observed current-state evidence:
+
+- PR #6 is open, not draft, clean, and at head
+  `4bc6674586fa66c76ba673006cdf1192d6230774`.
+- `projectItems` reports `HumanKaylee Portfolio` with status `Todo`.
+- Phase 0 CI run `26411894455` passed for the same head: Frontend
+  verification job `77747955199` and Rust verification job `77747955200`.
+- The live issue/Project verifier and the current-head PR/CI verifier both
+  pass.
 
 ### Embedded Project recovery snapshot as of 2026-05-25
 

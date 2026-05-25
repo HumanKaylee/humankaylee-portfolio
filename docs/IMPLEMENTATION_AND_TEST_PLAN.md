@@ -53,19 +53,20 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T12:44:49-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T13:23:35-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`, and Phase 0 CI run
-  `26410386944` successful for Frontend verification job `77743299736` and
-  Rust verification job `77743299741`.
+  `4bc6674586fa66c76ba673006cdf1192d6230774`, `mergeStateStatus: CLEAN`,
+  PR #6 tracked on Project #1 with status `Todo`, and Phase 0 CI run
+  `26411894455` successful for Frontend verification job `77747955199` and
+  Rust verification job `77747955200`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked local slice snapshot before this overlay refresh:
-  installed skill snapshot authority hardening in
-  `scripts/agent-instructions-contract.test.mjs` and
-  `docs/CHANGELOG.md`, committed as
-  `dd3467e85eca4ddaf4b0724c3c0cab0066a71bf3`. Treat the B-051 bundle-budget,
+  active PR Project tracking guardrails in `AGENTS.md`, the installed
+  `humankaylee-portfolio` Codex and agents skill mirrors,
+  `scripts/agent-instructions-contract.test.mjs`, and `docs/CHANGELOG.md`,
+  committed as `4bc6674586fa66c76ba673006cdf1192d6230774`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
   preflight evidence, B-068 deployment sync guardrails, Phase 7
   evidence-authority checks, GitHub Project item verification hardening, the
@@ -76,16 +77,19 @@ or launch status.
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T12:44:49-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
+  2026-05-25T13:23:35-04:00: the local `gh` token has `repo`,
+  full-control `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json`
-  succeeds, Project #1 lists/views with 19 fields, 15 issue items, and PR #6,
-  Project #1 permissions and item sync are healthy, item listing confirms populated
+  succeeds, Project #1 lists/views with 19 fields and 16 total items (15 open
+  issue bridge items plus PR #6), Project #1 permissions and item sync are healthy, item listing confirms populated
   status, phase, priority, type, area, agent size, and blocker fields, and
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
-  passes. PR #6 is tracked as a Project item with status `Todo`. GitHub Project permissions are no longer a current blocker. Treat future Project work as
+  passes. GraphQL reports Project #1 `viewerCanUpdate: true` and PR #6
+  `viewerCanUpdate: true` / `viewerCanClose: true`. PR #6 is tracked as a
+  Project item with status `Todo`. GitHub Project permissions are no longer a current blocker. Treat future Project work as
   maintenance for newly opened or relabeled issues and active PR tracking, not
   as launch readiness or as a current launch blocker.
 - What remains is external launch and approval work: complete redaction
@@ -97,7 +101,8 @@ or launch status.
   and the full B-063 final launch checklist for #69; keep #70 through #74
   planning-only until B-063 launch evidence exists.
 - If a next goal run resumes before those external blockers are resolved, it
-  should first re-run the live checks above, then choose only a small
+  should first re-run the live checks above, confirm GitHub Project checks do
+  not regress, then choose only a small
   non-blocked docs-sync, guardrail, or verification-hardening slice with
   explicit contract evidence. Do not invent deployment, redaction, contact, or
   production evidence.

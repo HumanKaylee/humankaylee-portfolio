@@ -8,6 +8,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T13:23:35-04:00 Project permission recheck: Project #1 remains
+  listable/updatable with 19 fields and 16 total items, the private repo
+  permission remains `ADMIN`, PR #6 is clean at
+  `4bc6674586fa66c76ba673006cdf1192d6230774`, and Phase 0 CI run
+  `26411894455` passed Frontend and Rust verification. The remaining plan work
+  is still external launch and approval evidence, not Project permissions.
 - Mirrored active PR Project tracking guardrails into `AGENTS.md` and the
   installed `humankaylee-portfolio` skill mirrors so PR #6 stays tracked on
   Project #1 as triage evidence without becoming launch readiness or
