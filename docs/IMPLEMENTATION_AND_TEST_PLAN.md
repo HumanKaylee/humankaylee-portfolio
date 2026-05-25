@@ -81,12 +81,12 @@ or launch status.
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json`
-  succeeds, Project #1 lists/views with 19 fields and 15 issue items, Project
-  #1 permissions and item sync are healthy, item listing confirms populated
+  succeeds, Project #1 lists/views with 19 fields, 15 issue items, and PR #6,
+  Project #1 permissions and item sync are healthy, item listing confirms populated
   status, phase, priority, type, area, agent size, and blocker fields, and
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
-  passes. GitHub Project permissions are no longer a current blocker. Treat
-  future Project work as maintenance for newly opened or relabeled issues, not
+  passes. PR #6 is tracked as a Project item with status `Todo`. GitHub Project permissions are no longer a current blocker. Treat future Project work as
+  maintenance for newly opened or relabeled issues and active PR tracking, not
   as launch readiness or as a current launch blocker.
 - What remains is external launch and approval work: complete redaction
   approvals for at least four launch case studies; record HumanKaylee

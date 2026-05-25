@@ -18,6 +18,7 @@ GitHub Project recovery is complete for the current open issue bridge as of
 - Visibility: private
 - Synced open bridge issues: `#3`, `#5`, `#20`, `#21`, `#24`, `#25`, `#63`,
   `#64`, `#65`, `#69`, `#70`, `#71`, `#72`, `#73`, and `#74`
+- Tracked pull requests: `#6`
 - Project fields: default `Status` plus `Phase`, `Priority`, `Type`, `Area`,
   `Agent Size`, and `Blocker`
 - Skip reasons: none; every currently open issue in the live bridge has a
@@ -110,6 +111,27 @@ This is GitHub triage/sync evidence only. It does not change production launch
 readiness, redaction approval, provider deployment, DNS/TLS, contact handling,
 rollback, Lighthouse, or B-063 final launch checklist status.
 
+### PR #6 Project tracking recheck as of 2026-05-25T12:58:14-04:00
+
+PR #6 is tracked on Project #1 as triage/sync evidence only. This does not
+change launch readiness or close any issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh project item-add 1 --owner HumanKaylee --url https://github.com/HumanKaylee/humankaylee-portfolio/pull/6 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,title,state,projectItems,url
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+```
+
+Observed current-state evidence:
+
+- `gh project item-add` returned Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` for PR #6.
+- `projectItems` reports `HumanKaylee Portfolio` with status `Todo`.
+- The live verifier passes after checking open issue Project items and PR #6
+  Project tracking.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.
@@ -196,6 +218,8 @@ Current Project board maintenance steps:
    board.
    Use:
    `gh project item-add <project-number> --owner HumanKaylee --url https://github.com/HumanKaylee/humankaylee-portfolio/issues/<issue-number>`.
+   Add active PRs that need project visibility with:
+   `gh project item-add <project-number> --owner HumanKaylee --url https://github.com/HumanKaylee/humankaylee-portfolio/pull/<pr-number>`.
 4. Keep fields for phase, priority, type, area, agent size, status, and blocker
    current when issue labels or blocker text changes.
 5. Keep issue bodies as the source of truth; use the project board for triage

@@ -176,6 +176,16 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	);
 	expectContains(
 		evidence,
+		"GitHub issue, PR, and Project sync",
+		"latest GitHub issue, PR, and Project sync row",
+	);
+	expectContains(
+		evidence,
+		"PR #6 has a Project item with status `Todo`",
+		"PR Project sync row",
+	);
+	expectContains(
+		evidence,
 		"HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs",
 		"live GitHub issue-sync verifier",
 	);
@@ -186,7 +196,7 @@ test("launch evidence distinguishes the embedded PR snapshot from live current c
 	);
 	expectNotContains(
 		evidence.match(
-			/## Current Evidence Matrix[\s\S]*?\| GitHub issue and Project sync/,
+			/## Current Evidence Matrix[\s\S]*?\| GitHub issue, PR, and Project sync/,
 		)?.[0] ?? "",
 		"26349194779",
 		"stale CI run in latest PR rows",

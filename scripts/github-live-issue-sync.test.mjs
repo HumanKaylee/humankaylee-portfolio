@@ -29,6 +29,7 @@ const mustRemainOpenIssueNumbers = new Set([
 const projectItemRequiredIssueNumbers = [...mustRemainOpenIssueNumbers].sort(
 	(left, right) => left - right,
 );
+const projectItemRequiredPullRequestNumbers = [6];
 
 function readGitHubSync() {
 	return readFileSync(githubSyncPath, "utf8");
@@ -114,6 +115,29 @@ function fetchProjectItems() {
 
 	const payload = JSON.parse(output);
 	return payload.items.filter((item) => item.content?.type === "Issue");
+}
+
+function fetchPullRequestProjectItems(pullRequestNumber) {
+	const output = execFileSync(
+		"gh",
+		[
+			"pr",
+			"view",
+			String(pullRequestNumber),
+			"--repo",
+			repo,
+			"--json",
+			"number,projectItems,state,title,url",
+		],
+		{
+			encoding: "utf8",
+			env: { ...process.env, GH_PROMPT_DISABLED: "1" },
+			stdio: ["ignore", "pipe", "pipe"],
+		},
+	);
+
+	const payload = JSON.parse(output);
+	return payload.projectItems ?? [];
 }
 
 function expectProjectField(item, field, issueNumber) {
@@ -340,6 +364,14 @@ test(
 			]) {
 				expectProjectField(item, field, issueNumber);
 			}
+		}
+
+		for (const pullRequestNumber of projectItemRequiredPullRequestNumbers) {
+			const projectItems = fetchPullRequestProjectItems(pullRequestNumber);
+			assert.ok(
+				projectItems.some((item) => item.title === "HumanKaylee Portfolio"),
+				`missing live Project #1 item for PR #${pullRequestNumber}`,
+			);
 		}
 	},
 );

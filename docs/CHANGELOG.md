@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added PR #6 to Project #1 and hardened the live GitHub verifier so Project
+  maintenance checks cover the open issue bridge and active PR tracking while
+  preserving the boundary that Project sync is triage evidence only, not launch
+  readiness.
 - Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T12:44:49-04:00 Project permission recheck: Project #1 remains
   listable/updatable with 19 fields and 15 synced issue items, the private repo
