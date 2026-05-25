@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added visible `/case-studies/` launch-boundary copy stating that `reviewed`
+  is not `approved`, plus Playwright coverage that keeps the case-study index
+  in the static `@quality` route matrix without changing redaction status,
+  issue state, or production launch readiness.
 - Refreshed the sanitized local preflight record with current read-only tool,
   Git, GitHub auth, Project-scope blocker, and downloaded-resume comparison
   evidence; added a preflight contract guard so future refreshes keep

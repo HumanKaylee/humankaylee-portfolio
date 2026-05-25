@@ -11,6 +11,10 @@ const coreRoutes = [
 		marker: /CLI Fleet Synchronization/i,
 	},
 	{
+		path: "/case-studies/",
+		marker: /reviewed is not approved/i,
+	},
+	{
 		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
 		marker: /sanitized rollout matrix/i,
 	},

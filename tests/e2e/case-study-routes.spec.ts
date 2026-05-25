@@ -16,6 +16,7 @@ test.describe("case-study routes @case-studies", () => {
 		await expect(
 			page.getByRole("heading", { level: 1, name: /case studies/i }),
 		).toBeVisible();
+		await expect(page.getByText(/reviewed is not approved/i)).toBeVisible();
 
 		for (const title of publishedCaseStudies) {
 			const link = page.getByRole("link", { name: new RegExp(title, "i") });
