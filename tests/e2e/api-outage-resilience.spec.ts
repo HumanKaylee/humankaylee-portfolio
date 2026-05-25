@@ -129,6 +129,9 @@ test.describe("API outage resilience @api-down @B-056", () => {
 		await page.getByRole("button", { name: "Send message" }).click();
 
 		await expect(page.getByRole("status")).toContainText(/api unavailable/i);
+		await expect(page.getByRole("status")).toContainText(
+			"Use the email link below if the API is unavailable.",
+		);
 		await expect(page.getByLabel("Message")).toHaveValue(
 			"I would like to discuss the portfolio systems work.",
 		);

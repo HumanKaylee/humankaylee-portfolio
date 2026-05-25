@@ -26,6 +26,9 @@ test.describe("contact API integration @contact", () => {
 		});
 
 		await page.goto("/contact/");
+		await expect(page.getByRole("status")).toContainText(
+			"Use the email link below if the API is unavailable.",
+		);
 		await fillContactForm(page);
 		await page.getByRole("button", { name: "Send message" }).click();
 
@@ -54,6 +57,9 @@ test.describe("contact API integration @contact", () => {
 
 		await expect(page.getByRole("status")).toContainText(
 			"API unavailable. Your message is still in the form",
+		);
+		await expect(page.getByRole("status")).toContainText(
+			"Use the email link below if the API is unavailable.",
 		);
 		await expect(page.getByLabel("Message")).toHaveValue(
 			"I would like to discuss the portfolio systems work.",

@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Clarified contact fallback status copy so the default and API-outage states
+  direct visitors to the visible email link while preserving typed form content,
+  static fallback behavior, and the unresolved production contact handling
+  blocker.
 - Added note-detail `BlogPosting` JSON-LD generated from existing public note
   and site fields, plus Playwright metadata coverage for a published build-log
   note without adding notes, RSS entries, publication approval, or launch

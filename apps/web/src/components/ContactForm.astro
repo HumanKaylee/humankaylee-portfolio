@@ -47,7 +47,9 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 		</label>
 		<button type="submit">Send message</button>
 		<p class="contact-status" role="status" aria-live="polite">
-			Ready to send through the API enhancement or the mailto fallback path.
+			Use the email link below if the API is unavailable. This mailto fallback
+			remains visible; the form can also try the Rust API enhancement when
+			JavaScript is available.
 		</p>
 	</form>
 
@@ -63,7 +65,7 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 <script>
 	const form = document.querySelector<HTMLFormElement>(".contact-form");
 	const apiUnavailableMessage =
-		"API unavailable. Your message is still in the form; use the mailto fallback below if needed.";
+		"API unavailable. Your message is still in the form. Use the email link below if the API is unavailable.";
 
 	function contactEndpoint(apiBase: string) {
 		const trimmed = apiBase.trim().replace(/\/$/, "");
