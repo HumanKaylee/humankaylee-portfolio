@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T11:50:12-04:00 Project permission recheck: the local token can
+  list/view Project #1, inspect fields and items, the private repo permission is
+  `ADMIN`, the live issue/Project verifier passes, and PR #6 was green at
+  `af91564dc9a69a6a8327cb11bacafd3c1baf1fe2` after Phase 0 CI run
+  `26408347438`.
 - Made the GitHub Project recovery snapshot wording explicitly point-in-time so
   `docs/GITHUB_SYNC.md` routes current issue and Project truth through the live
   verifier instead of stale embedded permission evidence.

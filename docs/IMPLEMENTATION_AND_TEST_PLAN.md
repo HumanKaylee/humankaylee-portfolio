@@ -52,20 +52,18 @@ verifiers before acting on issue, PR, CI, or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T11:23:35-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T11:50:12-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `c8022aa482d2409adc962df0a31625d4cb57e919`, and Phase 0 CI run
-  `26407270035` successful for Frontend verification job `77733492703` and
-  Rust verification job `77733492744`.
+  `af91564dc9a69a6a8327cb11bacafd3c1baf1fe2`, and Phase 0 CI run
+  `26408347438` successful for Frontend verification job `77736960650` and
+  Rust verification job `77736960667`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
-- Latest non-blocked local slice snapshot before this overlay refresh: B-063
-  final launch checklist Evidence Authority guardrail hardening in
-  `runbooks/FINAL_LAUNCH_CHECKLIST.md`,
-  `scripts/final-launch-checklist-contract.test.mjs`, and
-  `docs/CHANGELOG.md`, committed as
-  `fe90a4a4134be14f5a2c5988f398bfa050f5a258`. Treat the B-051 bundle-budget,
+- Latest non-blocked local slice snapshot before this overlay refresh: GitHub
+  Project recovery snapshot authority hardening in `docs/GITHUB_SYNC.md`,
+  `scripts/github-sync-contract.test.mjs`, and `docs/CHANGELOG.md`, committed as
+  `af91564dc9a69a6a8327cb11bacafd3c1baf1fe2`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
   preflight evidence, B-068 deployment sync guardrails, Phase 7
   evidence-authority checks, and GitHub Project item verification hardening,
@@ -73,7 +71,7 @@ verifiers before acting on issue, PR, CI, or launch status.
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T11:23:35-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
+  2026-05-25T11:50:12-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`
@@ -82,8 +80,9 @@ verifiers before acting on issue, PR, CI, or launch status.
   #1 permissions and item sync are healthy, item listing confirms populated
   status, phase, priority, type, area, agent size, and blocker fields, and
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
-  passes. Treat future Project work as maintenance for newly opened or
-  relabeled issues, not as a current launch blocker.
+  passes. GitHub Project permissions are no longer a current blocker. Treat
+  future Project work as maintenance for newly opened or relabeled issues, not
+  as launch readiness or as a current launch blocker.
 - What remains is external launch and approval work: complete redaction
   approvals for at least four launch case studies; record HumanKaylee
   publication-safety decisions for #24 and #25; deploy the frontend for #63;

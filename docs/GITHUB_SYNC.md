@@ -69,6 +69,42 @@ creation and issue sync are complete.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
+### Live Project permission recheck as of 2026-05-25T11:50:12-04:00
+
+Project #1 permission recheck passed after HumanKaylee's permission update. The
+current local token can list the private repository, list/view Project #1,
+inspect Project fields, inspect Project items, and pass the live issue/Project
+verifier; no auth refresh is required for the current local token.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh auth status -h github.com
+GH_PROMPT_DISABLED=1 gh repo view HumanKaylee/humankaylee-portfolio --json visibility,viewerPermission,nameWithOwner,url
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+```
+
+Observed current-state evidence:
+
+- `gh auth status` reports the active `HumanKaylee` account with `repo`,
+  `project`, and `workflow` scopes.
+- `gh repo view` reports `visibility:"PRIVATE"` and `viewerPermission:"ADMIN"`.
+- Project list/view reports Project #1 as private with 19 fields, 15 items, and
+  URL `https://github.com/users/HumanKaylee/projects/1`.
+- Field list reports the default fields plus `Phase`, `Priority`, `Type`,
+  `Area`, `Agent Size`, and `Blocker`.
+- Item list reports 15 issue-backed items for the open live bridge.
+- `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
+  passes with `1` test, `1` pass, `0` failures.
+
+This is GitHub triage/sync evidence only. It does not change production launch
+readiness, redaction approval, provider deployment, DNS/TLS, contact handling,
+rollback, Lighthouse, or B-063 final launch checklist status.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.
