@@ -3,6 +3,10 @@ import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
 const AGENTS_PATH = "AGENTS.md";
+const LOCAL_PORTFOLIO_SKILL_PATHS = [
+	"/home/joe/.codex/skills/humankaylee-portfolio/SKILL.md",
+	"/home/joe/.agents/skills/humankaylee-portfolio/SKILL.md",
+];
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -12,13 +16,22 @@ function readRequiredFile(path) {
 	return content;
 }
 
-function expectContains(content, needle, label = needle) {
+function expectContains(
+	content,
+	needle,
+	label = needle,
+	subject = "AGENTS.md",
+) {
 	const normalizedContent = content.replace(/\s+/g, " ");
 	const normalizedNeedle = needle.replace(/\s+/g, " ");
 	assert.ok(
 		normalizedContent.includes(normalizedNeedle),
-		`expected AGENTS.md to include ${label}`,
+		`expected ${subject} to include ${label}`,
 	);
+}
+
+function existingLocalSkillMirrors() {
+	return LOCAL_PORTFOLIO_SKILL_PATHS.filter((path) => existsSync(path));
 }
 
 function section(content, heading) {
@@ -144,4 +157,43 @@ test("repository agent instructions reject Shuttle as the active hosting target 
 		() => expectCurrentHostingTarget(staleAgents),
 		/Shuttle as an active API host/,
 	);
+});
+
+test("installed portfolio skill mirrors preserve local launch guardrails", (t) => {
+	const mirrorPaths = existingLocalSkillMirrors();
+	if (mirrorPaths.length === 0) {
+		t.skip("local portfolio skill mirrors are not installed on this runner");
+		return;
+	}
+
+	const mirrorContents = mirrorPaths.map((path) => ({
+		path,
+		content: readRequiredFile(path),
+	}));
+
+	if (mirrorContents.length > 1) {
+		const [firstMirror, ...remainingMirrors] = mirrorContents;
+		for (const mirror of remainingMirrors) {
+			assert.equal(
+				mirror.content,
+				firstMirror.content,
+				`${mirror.path} should match ${firstMirror.path}`,
+			);
+		}
+	}
+
+	const requiredSkillGuardrails = [
+		"Guard installed skill mirrors with `node --test scripts/agent-instructions-contract.test.mjs` after changing portfolio agent instructions.",
+		"Do not reboot `rog-strix-joe` or the local laptop as part of portfolio work.",
+		"GitHub Project board creation is blocked by missing `project` and `read:project` scopes.",
+		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks; do not run `gh auth refresh` from unattended automation.",
+		"Blocked/deferred case-study candidates must not count toward the four-case-study launch minimum.",
+		"B-037 visual regression snapshots are implementation evidence only, not production launch evidence",
+	];
+
+	for (const mirror of mirrorContents) {
+		for (const guardrail of requiredSkillGuardrails) {
+			expectContains(mirror.content, guardrail, guardrail, mirror.path);
+		}
+	}
 });

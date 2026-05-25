@@ -12,6 +12,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   snapshots stay implementation evidence only, B-065 remains blocked by both
   B-064 and B-063, and blocked/deferred case-study candidates cannot count
   toward the four-case-study launch minimum.
+- Hardened local portfolio skill mirror and Phase 7 API-host decision-packet
+  guardrails so installed Codex/Claude portfolio skills stay aligned and #64
+  keeps Shuttle legacy-only rather than active or primary.
 - Added Downloaded resume recheck evidence after the latest `~/Downloads`
   resume note: `sha256sum` confirmed
   `~/Downloads/'Joe Poznanski Resume February 2026.pdf'` and

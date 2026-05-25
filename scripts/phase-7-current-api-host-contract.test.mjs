@@ -6,6 +6,7 @@ const files = {
 	architecture: "docs/ARCHITECTURE.md",
 	blockers: "runbooks/LAUNCH_BLOCKERS_REGISTER.md",
 	changelog: "docs/CHANGELOG.md",
+	decisionPackets: "runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md",
 	githubSync: "docs/GITHUB_SYNC.md",
 	launchEvidence: "runbooks/LAUNCH_EVIDENCE.md",
 };
@@ -103,6 +104,7 @@ test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guid
 	const architecture = readRequiredFile(files.architecture);
 	const blockers = readRequiredFile(files.blockers);
 	const changelog = readRequiredFile(files.changelog);
+	const decisionPackets = readRequiredFile(files.decisionPackets);
 	const githubSync = readRequiredFile(files.githubSync);
 	const launchEvidence = readRequiredFile(files.launchEvidence);
 
@@ -153,6 +155,20 @@ test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guid
 		blockers,
 		"Fly.io, Railway, or another approved host are the approved current-host comparison set for #64",
 	);
+	expectTableRowCells(decisionPackets, "Rust API deployment", {
+		2: [
+			"Blocked until API host decision, provider project, public API origin, secret store, and contact handling decision exist.",
+		],
+		3: [
+			"Shuttle remains legacy compatibility only and is not an active or primary API host.",
+			"Compare Fly.io, Railway, or another approved host",
+			"contact handling decision",
+		],
+		4: [
+			"Public or owner-approved production-equivalent provider preview `GET /api/health`",
+			"rollback target",
+		],
+	});
 	expectNotContains(
 		launchEvidence,
 		"Final API domain and Shuttle, Fly.io, Railway",
@@ -166,7 +182,13 @@ test("Phase 7 API host guidance keeps Shuttle legacy-only and active launch guid
 
 	expectContains(changelog, "Added Phase 7 current API host guidance coverage");
 
-	for (const content of [architecture, blockers, githubSync, launchEvidence]) {
+	for (const content of [
+		architecture,
+		blockers,
+		decisionPackets,
+		githubSync,
+		launchEvidence,
+	]) {
 		expectNotContains(content, "Shuttle Rust API initially");
 		expectNotContains(content, "Shuttle as the first Rust API host");
 		expectNotContains(content, "Shuttle API deploy, if CI deploys backend");
