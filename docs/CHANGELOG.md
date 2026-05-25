@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added visual CI triage guidance to the quality runbook so screenshot failures
+  require job-log inspection, focused reproduction, full E2E reproduction, and a
+  clean worktree before any failed-job rerun or snapshot/threshold change.
 - Added schema-level `approvalEvidence` guardrails so future case studies cannot
   move to `redactionStatus: "approved"` from checklist completion alone; the
   content strategy and redaction runbook now require human signoff,

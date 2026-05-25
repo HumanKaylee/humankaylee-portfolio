@@ -57,6 +57,28 @@ diagnosable.
 - `pnpm run audit` runs the frontend pnpm audit and the Rust `cargo audit`
   check.
 
+## Visual CI Triage
+
+Do not update snapshots, raise diff thresholds, or rerun a failed job until the
+failing artifact and job log have been inspected.
+
+For Playwright screenshot or visual-regression failures:
+
+1. Fetch the exact CI job log with `gh run view <run-id> --repo HumanKaylee/humankaylee-portfolio --job <job-id> --log`.
+2. Identify the failing spec, screenshot name, expected artifact, received artifact, diff artifact, and diff pixel count from the log.
+3. Reproduce the focused failure locally. For the no-WebGL project-atlas fallback, run `pnpm exec playwright test tests/e2e/no-webgl.spec.ts --grep "captures no-webgl-projects-fallback"`.
+4. Run the umbrella local sweep with `pnpm test:e2e` to catch ordering, worker, or full-suite sensitivity.
+5. Inspect `git status --short --branch`; do not treat a dirty source, snapshot, or threshold change as a flake.
+
+Only rerun a failed CI job as a transient visual flake after the focused spec and
+the umbrella E2E sweep pass locally without source, snapshot, or threshold
+changes. Use `gh run rerun <run-id> --repo HumanKaylee/humankaylee-portfolio --failed`.
+
+If the same visual check fails again in CI, treat it as repeatable CI-only drift
+and investigate before changing snapshots. Snapshot updates are valid only when
+the visual change is intentional, public-safe, reviewed against the relevant
+route, and verified locally before pushing.
+
 ## Lighthouse Thresholds
 
 The local Lighthouse gate fails if any audited route misses the PRD thresholds:

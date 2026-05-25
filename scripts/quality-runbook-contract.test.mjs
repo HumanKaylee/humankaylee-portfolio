@@ -101,3 +101,40 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 		"quality runbook should not imply manual privacy review is fully CI-enforced",
 	);
 });
+
+test("quality runbook documents visual CI triage before reruns or snapshot changes", () => {
+	const quality = readRequiredFile(qualityPath);
+
+	expectContains(quality, "## Visual CI Triage");
+	expectContains(
+		quality,
+		"Do not update snapshots, raise diff thresholds, or rerun a failed job until the failing artifact and job log have been inspected.",
+		"snapshot-change boundary before evidence",
+	);
+	expectContains(
+		quality,
+		"`gh run view <run-id> --repo HumanKaylee/humankaylee-portfolio --job <job-id> --log`",
+		"exact CI log retrieval command",
+	);
+	expectContains(
+		quality,
+		'`pnpm exec playwright test tests/e2e/no-webgl.spec.ts --grep "captures no-webgl-projects-fallback"`',
+		"focused no-WebGL reproduction command",
+	);
+	expectContains(quality, "`pnpm test:e2e`", "full E2E reproduction command");
+	expectContains(
+		quality,
+		"`gh run rerun <run-id> --repo HumanKaylee/humankaylee-portfolio --failed`",
+		"failed-job rerun command",
+	);
+	expectContains(
+		quality,
+		"Only rerun a failed CI job as a transient visual flake after the focused spec and the umbrella E2E sweep pass locally without source, snapshot, or threshold changes.",
+		"rerun preconditions",
+	);
+	expectContains(
+		quality,
+		"If the same visual check fails again in CI, treat it as repeatable CI-only drift and investigate before changing snapshots.",
+		"repeat failure boundary",
+	);
+});
