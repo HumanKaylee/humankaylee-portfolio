@@ -183,6 +183,7 @@ test("Phase 7 local readiness records safe local gates without clearing producti
 	expectTableRow(packet, "Provider auth and target preflight", [
 		"node scripts/phase-7-provider-preflight.mjs --summary test-results/phase-7-provider-preflight.json",
 		"local/preflight",
+		"repo-managed `wrangler` dev dependency",
 		"only environment variable names and command presence",
 		"no `wrangler pages deploy`, `fly deploy`, `railway up`, production `xh`, or DNS/TLS changes",
 		"frontend provider/project target",
@@ -199,9 +200,8 @@ test("Phase 7 local readiness records safe local gates without clearing producti
 		"node scripts/phase-7-provider-preflight.mjs --summary test-results/phase-7-provider-preflight.json",
 		"local/preflight",
 		"not production evidence",
-		"wrangler",
-		"fly",
-		"railway",
+		"repo-managed `wrangler` dev dependency is present",
+		"`fly` and `railway` are still missing",
 		"Only environment variable names and command presence are recorded",
 	]);
 
@@ -216,6 +216,7 @@ test("Phase 7 local readiness records safe local gates without clearing producti
 	expectAll(githubSync, [
 		"Phase 7 local readiness contract status: local-readiness only; production remains blocked.",
 		"Phase 7 provider preflight status: local/preflight evidence only; production remains blocked.",
+		"repo-managed `wrangler` dev dependency is present",
 		"four approved case studies",
 		"#63, #64, #65, and #69 remain open",
 	]);

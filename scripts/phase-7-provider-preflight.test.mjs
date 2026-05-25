@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import {
+	chmodSync,
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -9,6 +16,7 @@ import { describe, it } from "node:test";
 import {
 	PHASE_7_PROVIDER_PREFLIGHT_BLOCKERS,
 	PHASE_7_PROVIDER_PREFLIGHT_SAFE_SKIPS,
+	currentCommandAvailability,
 	evaluateProviderPreflight,
 	phase7ProviderPreflightPlan,
 } from "./phase-7-provider-preflight.mjs";
@@ -81,6 +89,26 @@ describe("Phase 7 provider preflight", () => {
 		assert.equal(serialized.includes("portfolio.example.invalid"), false);
 	});
 
+	it("detects repo-managed provider CLIs even when they are not on PATH", () => {
+		const workspace = mkdtempSync(join(tmpdir(), "phase-7-provider-bin-"));
+		const localBin = join(workspace, "node_modules", ".bin");
+
+		try {
+			mkdirSync(localBin, { recursive: true });
+			const wranglerPath = join(localBin, "wrangler");
+			writeFileSync(wranglerPath, "#!/usr/bin/env sh\nexit 0\n");
+			chmodSync(wranglerPath, 0o755);
+
+			assert.deepEqual(currentCommandAvailability("", [localBin]), {
+				wrangler: true,
+				fly: false,
+				railway: false,
+			});
+		} finally {
+			rmSync(workspace, { force: true, recursive: true });
+		}
+	});
+
 	it("exposes a dry-run plan without writing a summary", () => {
 		const workspace = mkdtempSync(join(tmpdir(), "phase-7-provider-plan-"));
 		const summaryPath = join(workspace, "summary.json");
@@ -130,7 +158,7 @@ describe("Phase 7 provider preflight", () => {
 			const summary = JSON.parse(await readFile(summaryPath, "utf8"));
 			assert.equal(summary.status, "blocked");
 			assert.deepEqual(summary.commands, {
-				wrangler: "missing",
+				wrangler: "present",
 				fly: "missing",
 				railway: "missing",
 			});

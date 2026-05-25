@@ -48,6 +48,11 @@ of truth for implementation state, launch blockers, and production evidence.
   work. Evidence Authority is `local/redaction-readiness`. Use the generated
   summary as reviewer handoff input only; it cannot approve case studies, clear
   open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.
+- Run `pnpm phase7:provider-preflight -- --summary test-results/phase-7-provider-preflight.json`
+  before provider deployment handoff work. The repo-managed `wrangler` dev
+  dependency proves local Cloudflare Pages CLI availability only; it cannot
+  authenticate provider projects, run deployment, change DNS/TLS, capture
+  production smoke, close #63/#64/#65/#69, or replace blocked production rows.
 - Run `pnpm phase7:contact-decision -- --mode defer --dry-run` before contact
   handling decision handoff work. Evidence Authority is
   `local/decision-template`. Use the template only to shape owner approval,

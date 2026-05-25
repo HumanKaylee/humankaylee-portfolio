@@ -104,15 +104,17 @@ or launch status.
   GitHub Project permissions are no longer a current blocker. Treat future Project
   work as maintenance for newly opened or relabeled issues and active PR
   tracking, not as launch readiness or as a current launch blocker.
-- Latest provider-auth local preflight slice: `scripts/phase-7-provider-preflight.mjs`
-  captured at 2026-05-25T18:41:47.441Z records `local/preflight`
-  evidence by checking provider CLI presence and environment variable names
-  only. Provider preflight reports `wrangler`, `fly`, and
-  `railway` missing on this machine, no provider/API env names present, and keeps deployment,
-  DNS/TLS, rollback, production smoke, contact handling, and case-study approval
-  work blocked until real provider targets and owner decisions exist. Only environment variable names and command presence are
-  recorded; secret values, provider account IDs, URLs, contact payloads, and raw
-  provider logs are not captured.
+- Latest provider-auth local preflight slice:
+  `pnpm phase7:provider-preflight -- --summary test-results/phase-7-provider-preflight.json`
+  using `scripts/phase-7-provider-preflight.mjs` captured at
+  2026-05-25T21:09:30.342Z records `local/preflight` evidence by checking
+  provider CLI presence and environment variable names only. Provider preflight reports the repo-managed `wrangler` dev dependency
+  present for Cloudflare Pages local readiness, while `fly` and `railway` remain missing, no
+  provider/API env names are present, and deployment, DNS/TLS, rollback,
+  production smoke, contact handling, and case-study approval work stay blocked
+  until real provider targets and owner decisions exist. Only environment
+  variable names and command presence are recorded; secret values, provider
+  account IDs, URLs, contact payloads, and raw provider logs are not captured.
 - Latest contact-handling local decision-template slice:
   `pnpm phase7:contact-decision -- --mode defer --dry-run` records
   `local/decision-template` fields for #64/#69 owner approval, selected mode,

@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added `wrangler` as a repo-managed dev dependency and updated Phase 7
+  provider preflight evidence, AGENTS.md, and installed portfolio skills so
+  resumed agents can detect Cloudflare Pages CLI readiness without running
+  deploy, DNS, production smoke, or launch-closing commands.
 - Added AGENTS.md and installed portfolio skill guardrails for
   `pnpm phase7:contact-decision` so future goal runs treat it as
   local/decision-template evidence only, not contact approval or launch

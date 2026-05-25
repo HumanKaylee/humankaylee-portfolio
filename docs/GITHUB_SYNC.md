@@ -810,8 +810,10 @@ Phase 7 provider preflight status: local/preflight evidence only; production
 remains blocked. `scripts/phase-7-provider-preflight.mjs` records provider CLI
 presence and environment variable names only so resumed agents can distinguish
 missing provider auth/targets from deployable state without running provider
-commands. #63, #64, #65, and #69 remain open until real production evidence and
-four approved case studies exist.
+commands. The repo-managed `wrangler` dev dependency is present for Cloudflare
+Pages local readiness; `fly` and `railway` are still missing, and provider
+auth/targets are still absent. #63, #64, #65, and #69 remain open until real
+production evidence and four approved case studies exist.
 
 Phase 7 contact decision template status: local/decision-template evidence
 only; production remains blocked. `scripts/phase-7-contact-decision-template.mjs`

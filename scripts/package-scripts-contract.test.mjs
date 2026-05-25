@@ -37,6 +37,10 @@ test("package scripts cover the Phase 1 frontend scaffold contract", () => {
 		"node scripts/phase-7-provider-preflight.mjs",
 		"phase7 provider preflight should run the safe local provider readiness check",
 	);
+	assert.ok(
+		packageJson.devDependencies?.wrangler,
+		"wrangler should be a repo-managed dev dependency for Cloudflare Pages local readiness",
+	);
 	assert.match(
 		scripts.format,
 		/^biome format --write /,

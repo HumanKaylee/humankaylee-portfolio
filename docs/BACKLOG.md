@@ -1450,6 +1450,9 @@ Phase 7 local readiness guard:
   preflight that records CLI presence and environment variable names only; it is
   safe to run before provider credentials exist and does not deploy, change DNS,
   run production smoke, or clear launch blockers.
+- The provider preflight now detects the repo-managed `wrangler` dev dependency
+  for Cloudflare Pages local readiness; `fly` and `railway` remain missing
+  unless a later selected API host needs them.
 - The contract is progress evidence only; #63, #64, #65, and #69 stay open
   until real provider, domain, production smoke, rollback, contact, Lighthouse,
   four approved case studies, and redaction approval evidence exists.

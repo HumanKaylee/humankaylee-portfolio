@@ -37,7 +37,8 @@
 		"lighthouse": "^13.3.0",
 		"start-server-and-test": "^3.0.5",
 		"typescript": "^5.9.3",
-		"vitest": "^3.2.4"
+		"vitest": "^3.2.4",
+		"wrangler": "^4.94.0"
 	},
 	"pnpm": {
 		"overrides": {

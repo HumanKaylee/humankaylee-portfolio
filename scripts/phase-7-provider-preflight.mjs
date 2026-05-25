@@ -39,10 +39,19 @@ export const PHASE_7_PROVIDER_PREFLIGHT_SAFE_SKIPS = [
 
 const DEFAULT_SUMMARY_PATH = "test-results/phase-7-provider-preflight.json";
 
-function commandExists(command, pathValue = process.env.PATH ?? "") {
+function defaultLocalBinSearchDirectories() {
+	return [join(process.cwd(), "node_modules", ".bin")];
+}
+
+function commandExists(
+	command,
+	pathValue = process.env.PATH ?? "",
+	extraSearchDirectories = [],
+) {
 	return pathValue
 		.split(delimiter)
 		.filter(Boolean)
+		.concat(extraSearchDirectories)
 		.some((directory) => {
 			try {
 				accessSync(join(directory, command), constants.X_OK);
@@ -53,11 +62,14 @@ function commandExists(command, pathValue = process.env.PATH ?? "") {
 		});
 }
 
-export function currentCommandAvailability(pathValue = process.env.PATH ?? "") {
+export function currentCommandAvailability(
+	pathValue = process.env.PATH ?? "",
+	extraSearchDirectories = defaultLocalBinSearchDirectories(),
+) {
 	return Object.fromEntries(
 		PHASE_7_PROVIDER_COMMANDS.map((command) => [
 			command,
-			commandExists(command, pathValue),
+			commandExists(command, pathValue, extraSearchDirectories),
 		]),
 	);
 }
