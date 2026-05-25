@@ -74,6 +74,9 @@ Every flagship case study must include:
 - `links`: Repo, demo, screenshots, docs, or redacted artifacts where safe.
 - `publicationStatus`: Publish, needs-redaction, or defer.
 - `redactionReview`: Reviewer notes, checklist status, reviewed date, and open items.
+- `approvalEvidence`: Required only for `redactionStatus: "approved"`; records
+  human signoff, linked-artifact inspection, and production or owner-approved
+  production-equivalent provider preview evidence.
 - `issueTrace`: Optional trace to the open issue or blocking decision that shaped the work.
 - `redactionStatus`: Draft, reviewed, approved, or blocked.
 - `seo`: Page title, description, canonical path, and Open Graph image.
@@ -319,8 +322,9 @@ Each launch case study must include:
 5. Confirm every claim has safe supporting evidence.
 6. Mark `redactionStatus` as `reviewed`.
 7. Preserve `redactionStatus` as `reviewed` until open items are cleared, linked artifacts are inspected, human signoff is recorded, and any required production or owner-approved production-equivalent provider preview evidence exists.
-8. Mark `redactionStatus` as `approved` only after those gates are complete.
-9. Publish only after the case study remains understandable without private context.
+8. Add `approvalEvidence` only when human signoff, linked-artifact inspection, and production or owner-approved production-equivalent provider preview evidence are ready to be recorded for an approved case study.
+9. Mark `redactionStatus` as `approved` only after those gates are complete.
+10. Publish only after the case study remains understandable without private context.
 
 ## Launch Eligibility
 

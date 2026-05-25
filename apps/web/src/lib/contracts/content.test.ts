@@ -48,6 +48,30 @@ const completeRedactionReview = {
 	},
 };
 
+const approvalEvidence = {
+	humanSignoff: {
+		reviewer: "human-content-owner",
+		signedOffOn: "2026-05-25",
+		decision: "approved",
+		notes:
+			"Human owner approved the public-safe story after reviewing the packet.",
+	},
+	artifactInspection: {
+		source: "runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md",
+		inspectedOn: "2026-05-25",
+		result: "passed",
+		notes: "Linked artifacts were inspected against the redaction checklist.",
+	},
+	productionOrPreviewEvidence: {
+		source:
+			"https://preview.example.invalid/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+		capturedOn: "2026-05-25",
+		result: "passed",
+		notes:
+			"Owner-approved production-equivalent preview confirmed the public route.",
+	},
+};
+
 const publishableCaseStudy = {
 	title: "CLI Fleet Synchronization and MCP Rollout",
 	slug: "cli-fleet-synchronization-and-mcp-rollout",
@@ -155,7 +179,7 @@ describe("content contracts", () => {
 		);
 	});
 
-	it("requires a completed redaction checklist before approval", () => {
+	it("requires completed redaction and structured approval evidence before approval", () => {
 		expect(
 			caseStudySchema.safeParse({
 				...publishableCaseStudy,
@@ -169,7 +193,19 @@ describe("content contracts", () => {
 				redactionStatus: "approved",
 				redactionReview: completeRedactionReview,
 			}).success,
-		).toBe(true);
+		).toBe(false);
+
+		const approvedCaseStudy = caseStudySchema.parse({
+			...publishableCaseStudy,
+			redactionStatus: "approved",
+			redactionReview: completeRedactionReview,
+			approvalEvidence,
+		});
+
+		expect(approvedCaseStudy.approvalEvidence).toBeDefined();
+		expect(approvedCaseStudy.approvalEvidence?.humanSignoff.decision).toBe(
+			"approved",
+		);
 	});
 
 	it("allows incomplete evidence checklist answers only before approval", () => {

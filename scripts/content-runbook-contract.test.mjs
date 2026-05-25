@@ -124,6 +124,7 @@ test("content update and redaction runbook covers the required workflow", () => 
 	expectContains(content, "publicationStatus", "publicationStatus");
 	expectContains(content, "redactionStatus", "redactionStatus");
 	expectContains(content, "redactionReview", "redactionReview");
+	expectContains(content, "approvalEvidence", "approvalEvidence");
 	expectContains(content, "checklistStatus", "checklistStatus");
 	expectContains(content, "openItems", "openItems");
 	expectContains(content, "guidePath", "guidePath");
@@ -168,6 +169,11 @@ test("content update and redaction runbook covers the required workflow", () => 
 		content,
 		"Every linked artifact has passed the redaction checklist",
 		"linked artifact review requirement",
+	);
+	expectContains(
+		content,
+		"`approvalEvidence` records human signoff, artifact inspection, and production or owner-approved production-equivalent provider preview evidence",
+		"approved evidence record requirement",
 	);
 	expectContains(
 		content,
@@ -337,6 +343,12 @@ test("content strategy doc uses the live schema and launch eligibility wording",
 		content,
 		"artifact checklist pass",
 		"artifact checklist pass requirement",
+	);
+	expectStrategyContains(content, "approvalEvidence", "approvalEvidence field");
+	expectStrategyContains(
+		content,
+		"human signoff, linked-artifact inspection, and production or owner-approved production-equivalent provider preview evidence",
+		"approved evidence field description",
 	);
 });
 

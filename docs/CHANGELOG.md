@@ -8,6 +8,11 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added schema-level `approvalEvidence` guardrails so future case studies cannot
+  move to `redactionStatus: "approved"` from checklist completion alone; the
+  content strategy and redaction runbook now require human signoff,
+  linked-artifact inspection, and production or owner-approved
+  production-equivalent provider preview evidence before approval.
 - Added a bundle-budget dry-run plan so B-051 route-source, ignored script
   types, budget limit, and summary path can be verified before build artifacts
   exist.

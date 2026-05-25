@@ -99,6 +99,29 @@ export const redactionReviewSchema = z.object({
 	checklist: redactionChecklistSchema.optional(),
 });
 
+export const approvalEvidenceResultSchema = z.enum(["passed"]);
+
+export const approvalEvidenceSchema = z.object({
+	humanSignoff: z.object({
+		reviewer: z.string().min(1),
+		signedOffOn: dateStringSchema,
+		decision: z.literal("approved"),
+		notes: z.string().min(1),
+	}),
+	artifactInspection: z.object({
+		source: z.string().min(1),
+		inspectedOn: dateStringSchema,
+		result: approvalEvidenceResultSchema,
+		notes: z.string().min(1),
+	}),
+	productionOrPreviewEvidence: z.object({
+		source: z.string().min(1),
+		capturedOn: dateStringSchema,
+		result: approvalEvidenceResultSchema,
+		notes: z.string().min(1),
+	}),
+});
+
 export const issueTraceSchema = z.object({
 	backlogId: z.string().regex(/^B-\d{3}$/),
 	githubIssue: z.number().int().positive(),
@@ -131,6 +154,7 @@ export const caseStudySchema = z
 		redactionStatus: caseStudyRedactionStatusSchema,
 		issueTrace: issueTraceSchema.optional(),
 		redactionReview: redactionReviewSchema,
+		approvalEvidence: approvalEvidenceSchema.optional(),
 		seo: seoSchema,
 	})
 	.superRefine((entry, context) => {
@@ -177,6 +201,14 @@ export const caseStudySchema = z
 				code: z.ZodIssueCode.custom,
 				message: "approved case studies cannot have open redaction items",
 				path: ["redactionReview", "openItems"],
+			});
+		}
+
+		if (!entry.approvalEvidence) {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: "approved case studies require structured approval evidence",
+				path: ["approvalEvidence"],
 			});
 		}
 	});

@@ -83,7 +83,7 @@ Required frontmatter fields:
 - `redactionReview`
 - `seo`
 
-The `redactionReview` object must use these schema names exactly:
+The redaction fields must use these schema names exactly:
 
 - `guidePath`
 - `reviewer`
@@ -92,6 +92,7 @@ The `redactionReview` object must use these schema names exactly:
 - `openItems`
 - `notes`
 - `checklist` when the item has a completed checklist record
+- `approvalEvidence` only when moving the item to `approved`
 
 A safe case-study record normally moves through this path:
 
@@ -108,6 +109,8 @@ Launch eligibility requires all four conditions at the same time:
 - Every linked artifact has passed the redaction checklist.
 
 That means `publicationStatus` may be `publish`, but the case study is not launch-ready until `redactionStatus` is `approved`, the checklist is complete, `openItems` is empty, the story stands without private context, and linked artifacts have been reviewed.
+
+For `redactionStatus: "approved"` only, `approvalEvidence` records human signoff, artifact inspection, and production or owner-approved production-equivalent provider preview evidence. Do not add this block for `reviewed`, `blocked`, or `draft` records, and do not use it to bypass the publication safety checklist.
 
 Minimal case-study review block shape:
 
@@ -197,16 +200,18 @@ Checklist items:
 
 When the checklist is complete, the `redactionReview.checklistStatus` should be `complete`, `openItems` should be empty, and `redactionStatus` should be `approved` before launch.
 
+An approved case study also needs an `approvalEvidence` block with reviewer signoff, linked-artifact inspection, and production or owner-approved production-equivalent provider preview evidence. This block is required by the content schema only for `redactionStatus: "approved"` records.
+
 ## Publication Review Flow
 
 Use this flow for every case study:
 
 1. Draft the content with public-safe language.
 2. Mark the item `reviewed` once it is readable and the remaining gaps are explicit.
-3. Move to `approved` only after the redaction checklist is complete and the item is launch eligible.
+3. Move to `approved` only after the redaction checklist is complete, `approvalEvidence` is recorded, and the item is launch eligible.
 4. Keep the item `blocked` if a reviewer finds unsafe content, missing evidence, or unresolved private details.
 
-Review states and publication states are related but not identical. The redaction review decides whether the content is safe; `publicationStatus` decides whether the item is intended for launch. Launch eligibility requires `publicationStatus: "publish"`, `redactionStatus: "approved"`, private-context-free readability, and reviewed linked artifacts.
+Review states and publication states are related but not identical. The redaction review decides whether the content is safe; `publicationStatus` decides whether the item is intended for launch. Launch eligibility requires `publicationStatus: "publish"`, `redactionStatus: "approved"`, private-context-free readability, reviewed linked artifacts, and structured approval evidence.
 
 Current public-safe review example:
 
