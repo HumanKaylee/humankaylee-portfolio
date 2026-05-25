@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan after the latest Project permission recheck:
+  `repo` and full-control `project` scope are available, Project #1 list/view,
+  field-list, item-list, and live issue/Project verification pass, PR #6 is
+  green at `5ef82e43a6ec14fe60deb4b98f6dd805b277a997`, and the remaining work
+  is limited to external redaction, deployment, domain, contact, rollback,
+  production Lighthouse, final launch checklist, and Phase 8 approval gates.
 - Refreshed the GitHub Project permission and continuation-plan snapshot after a
   live recheck confirmed Project #1 list/view/field/item access, PR #6 green at
   `2c201d541b068fda29f123350e846aa078544a06`, and the remaining work limited

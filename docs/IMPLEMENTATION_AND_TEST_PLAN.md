@@ -51,23 +51,26 @@ verifiers before acting on issue, PR, CI, or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T10:12:07-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T10:35:36-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `2c201d541b068fda29f123350e846aa078544a06`, and Phase 0 CI run
-  `26404384808` successful for Frontend verification job `77724111650` and
-  Rust verification job `77724111614`.
-- Latest non-blocked local slice snapshot before this overlay refresh: B-068
-  deployment sync guardrail hardening in `docs/GITHUB_SYNC.md`,
-  `scripts/github-sync-contract.test.mjs`, and `docs/CHANGELOG.md`, committed as
-  `2c201d541b068fda29f123350e846aa078544a06`. Treat the B-051 bundle-budget,
+  `5ef82e43a6ec14fe60deb4b98f6dd805b277a997`, and Phase 0 CI run
+  `26405426905` successful for Frontend verification job `77727505816` and
+  Rust verification job `77727505878`.
+- Latest non-blocked local slice snapshot before this overlay refresh: Phase 7
+  evidence-authority guardrail hardening in `runbooks/LAUNCH_EVIDENCE.md`,
+  `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md`, `docs/OPERATIONS.md`,
+  `scripts/phase-7-launch-evidence-schema-contract.test.mjs`, and
+  `docs/CHANGELOG.md`, committed as
+  `5ef82e43a6ec14fe60deb4b98f6dd805b277a997`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
   preflight evidence, B-068 deployment sync guardrails, and GitHub Project item
   verification hardening, including Project #1 item/field checks in
-  `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
-  reimplement them when PR CI and the focused contracts are green.
+  `scripts/github-live-issue-sync.test.mjs` as guard evidence only and Phase 7
+  evidence-authority checks, as guard evidence only; do not reimplement them
+  when PR CI and the focused contracts are green.
 - GitHub Project access and open-issue bridge sync were rechecked on
-  2026-05-25T10:12:07-04:00. The local `gh` token has `repo` and `project`
+  2026-05-25T10:35:36-04:00. The local `gh` token has `repo` and `project`
   scopes, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, Project #1 is private with 19 fields and 15 issue items, Project #1
