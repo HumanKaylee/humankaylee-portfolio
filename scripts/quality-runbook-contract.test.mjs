@@ -82,6 +82,11 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 		"`node scripts/lighthouse-local.mjs --dry-run` prints the B-050 audit plan with warm-up/scored route boundaries and artifact paths without launching Chrome.",
 		"Lighthouse dry-run audit plan",
 	);
+	expectContains(
+		quality,
+		"`node scripts/bundle-budget.mjs --dry-run` prints the B-051 bundle-budget plan with the `dist/**/*.html` route source, ignored non-executable script types, 8 KiB route budget, and `test-results/bundle-budget-summary.json` without requiring build artifacts.",
+		"bundle budget dry-run plan",
+	);
 	expectContains(quality, "test-results/lighthouse-summary.json");
 	expectContains(quality, "test-results/bundle-budget-summary.json");
 

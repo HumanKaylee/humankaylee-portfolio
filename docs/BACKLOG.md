@@ -1296,6 +1296,9 @@ Acceptance criteria:
 
 Verification evidence:
 
+- `node scripts/bundle-budget.mjs --dry-run` prints the B-051 route source,
+  ignored non-executable script types, 8 KiB route budget, and summary path
+  without requiring build artifacts.
 - Bundle analysis output.
 - `pnpm build && pnpm bundle:budget` writes
   `test-results/bundle-budget-summary.json` and fails if executable route

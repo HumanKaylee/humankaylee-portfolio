@@ -105,6 +105,24 @@ export function evaluateBundleBudget(routes, limits = BUNDLE_BUDGET_LIMITS) {
 	};
 }
 
+export function bundleBudgetDryRunPlan({
+	distDir = DEFAULT_DIST_DIR,
+	summaryPath = DEFAULT_SUMMARY_PATH,
+} = {}) {
+	return {
+		distDir,
+		summaryPath,
+		limits: BUNDLE_BUDGET_LIMITS,
+		routeSource: `${distDir}/**/*.html`,
+		measuredAssets: "same-origin executable script assets referenced by routes",
+		ignoredScriptTypes: [
+			"application/ld+json",
+			"application/json",
+			"importmap",
+		],
+	};
+}
+
 async function findFiles(root, predicate) {
 	const entries = await readdir(root, { withFileTypes: true });
 	const files = [];
@@ -177,6 +195,7 @@ export async function analyzeDistBundle({
 
 function parseCliOptions(args) {
 	return {
+		dryRun: args.includes("--dry-run"),
 		distDir:
 			args.find((arg) => arg.startsWith("--dist="))?.slice("--dist=".length) ??
 			DEFAULT_DIST_DIR,
@@ -188,7 +207,14 @@ function parseCliOptions(args) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-	analyzeDistBundle(parseCliOptions(process.argv.slice(2)))
+	const options = parseCliOptions(process.argv.slice(2));
+
+	if (options.dryRun) {
+		console.log(JSON.stringify(bundleBudgetDryRunPlan(options), null, 2));
+		process.exit(0);
+	}
+
+	analyzeDistBundle(options)
 		.then((result) => {
 			for (const route of result.routes) {
 				console.log(

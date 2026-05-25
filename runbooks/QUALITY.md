@@ -48,6 +48,10 @@ diagnosable.
 - `pnpm lighthouse:local` builds the Astro site, serves a production-equivalent
   local preview on `127.0.0.1:4322`, runs a non-scored warm-up audit, and then
   audits home, projects, one case study, resume, and contact.
+- `node scripts/bundle-budget.mjs --dry-run` prints the B-051 bundle-budget
+  plan with the `dist/**/*.html` route source, ignored non-executable script
+  types, 8 KiB route budget, and `test-results/bundle-budget-summary.json`
+  without requiring build artifacts.
 - `pnpm build && pnpm bundle:budget` measures executable JavaScript in built
   HTML and fails if a route exceeds the critical JavaScript budget.
 - `pnpm run audit` runs the frontend pnpm audit and the Rust `cargo audit`

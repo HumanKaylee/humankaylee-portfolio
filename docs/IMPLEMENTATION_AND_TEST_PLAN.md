@@ -35,6 +35,9 @@ If this plan conflicts with `docs/PRD.md` or `docs/RESEARCH.md`, pause and ask f
 
 Current goal continuations must treat completed or local-evidence items as guard-check targets, not duplicate implementation tasks.
 
+This section is a resume overlay, not a live-state source: re-run the listed
+verifiers before acting on issue, PR, CI, or launch status.
+
 - Phase 0 through Phase 6 have substantial local and PR evidence in the current PR branch; use the guard commands and live issue verifier before reopening or reimplementing those slices.
 - Phase 7 and Phase 8 contain planning, runbook, local-readiness, and issue-sync evidence only; production deploy, provider, DNS/TLS, API health, contact handling, rollback, production Lighthouse, and redaction approval gates remain unresolved.
 - Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external evidence gates prove otherwise.
@@ -42,6 +45,39 @@ Current goal continuations must treat completed or local-evidence items as guard
 - Downloaded resume recheck evidence is recorded in `runbooks/LAUNCH_EVIDENCE.md`; do not duplicate resume import work unless a later approved source replacement is recorded.
 - Do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence.
 - Treat embedded evidence snapshots as historical unless a live verifier or fresh command output proves they match the current checkout.
+- Before resuming new feature work, run `git status --short --branch`,
+  `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
+  `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
+  and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
+- The latest read-only swarm audit found the active local slice to be B-051
+  bundle-budget dry-run support. If `git status` still shows
+  `scripts/bundle-budget.mjs`, `scripts/bundle-budget.test.mjs`,
+  `scripts/quality-runbook-contract.test.mjs`, `runbooks/QUALITY.md`, or
+  `docs/CHANGELOG.md` modified, finish that slice first with
+  `node --test scripts/bundle-budget.test.mjs scripts/quality-runbook-contract.test.mjs`,
+  `node scripts/bundle-budget.mjs --dry-run`, `pnpm lint`, `pnpm typecheck`,
+  `pnpm test`, `pnpm build && pnpm bundle:budget`, and `git diff --check`.
+- If the B-051 dry-run slice is already committed and PR CI is green, treat it
+  as guard evidence only; do not reimplement it.
+- The next non-blocked local work while production blockers remain unresolved is
+  limited to docs-sync, guardrail, and verification-hardening slices such as:
+  splitting Phase 7 blocker-traceability evidence by frontend/domain versus
+  API/contact/rollback, tightening the shared `reviewed` versus `approved`
+  redaction invariant, and mirroring B-068 compare-only hosting evidence without
+  choosing a provider.
+- External blockers that still require owner or production action are: GitHub
+  Project `read:project` / `project` scopes, at least four approved case
+  studies, final frontend domain and production frontend deployment, approved
+  API host and production `/api/health`, approved contact handling, rollback
+  evidence, and production Lighthouse evidence.
+- Local laptop and `rog-strix-joe` operational checks are outside this
+  portfolio repo. Do not reboot either machine from this goal. Current local
+  laptop power policy evidence shows suspend/hibernate/DPMS disabled, but a
+  live unplug reproduction is still needed if the blank-screen symptom returns.
+  Current `rog-strix-joe` evidence shows autologon configured and the console
+  user active, but the last reboot showed one Winlogon `1326` authentication
+  failure; reset the Windows autologon credential tuple locally before any
+  reboot validation.
 
 ## Ready-To-Use Codex Goal Objective
 
@@ -113,6 +149,9 @@ Expected command meanings:
 - `pnpm test:e2e`: run Playwright smoke, accessibility, no-JS, reduced-motion, and contact fallback checks.
 - `pnpm build`: build the static frontend.
 - `pnpm bundle:budget`: fail when generated routes exceed the critical JavaScript budget after a build.
+- `node scripts/bundle-budget.mjs --dry-run`: print the B-051 route source,
+  ignored script types, budget limit, and summary path without requiring
+  `dist/` or writing summary artifacts.
 - `pnpm preview`: serve the built frontend locally for manual and Lighthouse checks.
 - `pnpm lighthouse:local`: run Lighthouse against local preview routes with the PRD thresholds.
 - `cargo fmt`: enforce Rust formatting.

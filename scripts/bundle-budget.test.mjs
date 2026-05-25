@@ -1,9 +1,14 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, it } from "node:test";
 
 import {
 	BUNDLE_BUDGET_LIMITS,
 	analyzeHtmlForCriticalJavaScript,
+	bundleBudgetDryRunPlan,
 	evaluateBundleBudget,
 } from "./bundle-budget.mjs";
 
@@ -57,5 +62,51 @@ describe("bundle budget gate", () => {
 		assert.equal(result.passed, false);
 		assert.match(result.failures[0], /\/contact\//);
 		assert.match(result.failures[0], /critical JavaScript/);
+	});
+
+	it("exposes a dry-run plan before build artifacts exist", () => {
+		assert.deepEqual(bundleBudgetDryRunPlan(), {
+			distDir: "dist",
+			summaryPath: "test-results/bundle-budget-summary.json",
+			limits: BUNDLE_BUDGET_LIMITS,
+			routeSource: "dist/**/*.html",
+			measuredAssets:
+				"same-origin executable script assets referenced by routes",
+			ignoredScriptTypes: [
+				"application/ld+json",
+				"application/json",
+				"importmap",
+			],
+		});
+	});
+
+	it("keeps CLI dry-run independent from build artifacts and summary writes", () => {
+		const workspace = mkdtempSync(join(tmpdir(), "bundle-budget-dry-run-"));
+		const missingDistDir = join(workspace, "missing-dist");
+		const summaryPath = join(workspace, "summary.json");
+
+		try {
+			const result = spawnSync(
+				process.execPath,
+				[
+					"scripts/bundle-budget.mjs",
+					"--dry-run",
+					`--dist=${missingDistDir}`,
+					`--summary=${summaryPath}`,
+				],
+				{ encoding: "utf8" },
+			);
+
+			assert.equal(result.status, 0, result.stderr);
+			assert.equal(existsSync(summaryPath), false);
+
+			const plan = JSON.parse(result.stdout);
+			assert.equal(plan.distDir, missingDistDir);
+			assert.equal(plan.summaryPath, summaryPath);
+			assert.equal(plan.routeSource, `${missingDistDir}/**/*.html`);
+			assert.deepEqual(plan.limits, BUNDLE_BUDGET_LIMITS);
+		} finally {
+			rmSync(workspace, { force: true, recursive: true });
+		}
 	});
 });

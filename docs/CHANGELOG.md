@@ -8,6 +8,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a bundle-budget dry-run plan so B-051 route-source, ignored script
+  types, budget limit, and summary path can be verified before build artifacts
+  exist.
+- Added a current goal-resume overlay to the implementation plan so future
+  `/goal` runs finish the active B-051 slice first, reverify live issue/PR/CI
+  state, and keep production, Project, redaction, local-laptop, and
+  `rog-strix-joe` blockers separate from local portfolio guard work.
 - Added a Lighthouse dry-run audit-plan summary so B-050 route, warm-up, scored
   artifact, and summary paths can be verified cheaply before launching Chrome.
 - Added a contract guard for the operations runbook's minimum viable production
