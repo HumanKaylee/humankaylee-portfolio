@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a Phase 7 evidence template helper and package script so future
+  production or owner-authorized provider-preview evidence for
+  #63/#64/#65/#69 can be shaped with the required provider-neutral fields
+  before any blocked row is replaced.
 - Mirrored the local redaction-readiness guard into `AGENTS.md` and the
   installed portfolio skill mirrors so future agents run
   `pnpm redaction:readiness` as reviewer handoff evidence only, without

@@ -58,6 +58,20 @@ action, and privacy redaction rule.
 - Rust job: `77627477195`
 - Captured from GitHub: `2026-05-24T21:08:05Z`
 
+## Latest Phase 7 evidence template evidence
+
+`pnpm phase7:evidence-template -- --area frontend --dry-run` is a
+local/readiness helper for shaping future provider-neutral evidence rows. It
+prints the required command, target, evidence authority, timestamp, result,
+artifact, blocker, and privacy redaction fields with status `template only;
+production evidence not captured`. It does not select providers, run deployment
+commands, change DNS/TLS, run production smoke, approve contact handling,
+approve redaction, close #63/#64/#65/#69, or replace any blocked production
+row. Future operators may write an ignored local summary to
+`test-results/phase-7-evidence-template.json`, but launch evidence can only be
+recorded here after the template values are replaced with real production or
+owner-approved production-equivalent provider preview evidence.
+
 ## Latest Local Phase 5 Backend Evidence
 
 Captured locally on `goal/portfolio-implementation` at
