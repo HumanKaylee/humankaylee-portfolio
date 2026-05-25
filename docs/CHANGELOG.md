@@ -8,6 +8,14 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added Downloaded resume recheck evidence for the latest 2026-05-25
+  `~/Downloads` resume note: `sha256sum` confirmed
+  `~/Downloads/'Joe Poznanski Resume February 2026.pdf'` and
+  `apps/web/public/downloads/humankaylee-resume.pdf` both hash to
+  `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`,
+  `cmp -s` returned `cmp_exit=0`, and no resume asset update was needed; this
+  remains local approved-source evidence only, not production `/resume/`
+  readiness.
 - Added the `@quality` static quality matrix to the B-063 final launch checklist
   as PR/local CI evidence only, without clearing production smoke, Lighthouse,
   rollback, contact handling, provider, domain, or redaction blockers.
