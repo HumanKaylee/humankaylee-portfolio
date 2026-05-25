@@ -1703,7 +1703,7 @@ Verification evidence:
 
 Labels: `priority:p2`, `type:feature`, `area:backend`, `area:frontend`, `area:privacy`, `phase:8-post-launch`
 
-Depends on: B-064
+Depends on: B-064, B-063
 
 Scope:
 

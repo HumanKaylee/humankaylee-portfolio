@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened visual-regression, Phase 8, and redaction guardrails so visual
+  snapshots stay implementation evidence only, B-065 remains blocked by both
+  B-064 and B-063, and blocked/deferred case-study candidates cannot count
+  toward the four-case-study launch minimum.
 - Added Downloaded resume recheck evidence after the latest `~/Downloads`
   resume note: `sha256sum` confirmed
   `~/Downloads/'Joe Poznanski Resume February 2026.pdf'` and

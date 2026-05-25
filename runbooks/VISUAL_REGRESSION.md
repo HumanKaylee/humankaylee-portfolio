@@ -2,7 +2,7 @@
 
 Date: 2026-05-23
 Scope: B-037 visual regression snapshots
-Status: implementation evidence only
+Status: implementation evidence only; not production launch evidence
 
 ## Purpose
 

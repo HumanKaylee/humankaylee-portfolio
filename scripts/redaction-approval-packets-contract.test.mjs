@@ -547,6 +547,11 @@ test("case-study redaction approval packets preserve not-approved launch state",
 	}
 
 	expectContains(status, "No candidate currently meets that launch gate.");
+	expectContains(
+		status,
+		"The two blocked/deferred candidates must not count toward the four-case-study launch minimum.",
+		"blocked/deferred candidates do not satisfy launch minimum",
+	);
 	assert.doesNotMatch(
 		status,
 		/\|\s*[^|]+\s*\|\s*`publish`\s*\|\s*`approved`\s*\|/,

@@ -36,6 +36,11 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		existsSync(files.visualSpec),
 		`missing required file: ${files.visualSpec}`,
 	);
+	expectContains(
+		runbook,
+		"Status: implementation evidence only; not production launch evidence",
+		"visual evidence boundary",
+	);
 	expectContains(packageConfig, '"test:visual"', "test:visual package script");
 	expectContains(runbook, "pnpm test:visual:update");
 	expectContains(

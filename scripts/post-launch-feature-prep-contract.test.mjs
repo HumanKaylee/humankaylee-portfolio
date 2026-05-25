@@ -175,6 +175,26 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 	const research = readRequiredFile(files.research);
 	const roadmap = readRequiredFile(files.roadmap);
 	const runbook = readRequiredFile(files.runbook);
+	const b064Backlog = extractSection(
+		backlog,
+		"### B-064: Evaluate portfolio assistant scope",
+	);
+	const b065Backlog = extractSection(
+		backlog,
+		"### B-065: Add portfolio assistant prototype",
+	);
+	const b066Backlog = extractSection(
+		backlog,
+		"### B-066: Add richer public status or metadata page",
+	);
+	const b067Backlog = extractSection(
+		backlog,
+		"### B-067: Add additional notes and postmortems",
+	);
+	const b068Backlog = extractSection(
+		backlog,
+		"### B-068: Evaluate API hosting migration",
+	);
 	const b068MigrationInputs = extractSection(
 		runbook,
 		"## B-068 Migration Comparison Inputs",
@@ -195,6 +215,11 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"runbooks/POST_LAUNCH_FEATURE_PREP.md",
 		"scripts/post-launch-feature-prep-contract.test.mjs",
 	]);
+	expectContains(b064Backlog, "Depends on: B-063");
+	expectContains(b065Backlog, "Depends on: B-064, B-063");
+	expectContains(b066Backlog, "Depends on: B-039, B-040, B-063");
+	expectContains(b067Backlog, "Depends on: B-027, B-063");
+	expectContains(b068Backlog, "Depends on: B-058, B-063");
 
 	expectAll(runbook, [
 		"# Post-Launch Feature Prep",
