@@ -41,6 +41,39 @@ function expectContains(content, needle, label = needle) {
 	);
 }
 
+function expectNotContains(content, needle, label = needle) {
+	assert.ok(
+		!normalize(content).includes(normalize(needle)),
+		`expected content not to include ${label}`,
+	);
+}
+
+test("deployment summary keeps provider commands reference-only until launch evidence exists", () => {
+	const operations = readRequiredFile(operationsPath);
+	const deploymentSummary = section(operations, "7. Deployment Runbook");
+
+	expectContains(
+		deploymentSummary,
+		"`runbooks/DEPLOYMENT.md` as the provider-neutral deployment and rollback reference",
+		"provider-neutral deployment reference",
+	);
+	expectContains(
+		deploymentSummary,
+		"Provider-specific commands, migration procedures, and rollback steps stay deferred until provider/domain decisions and required external evidence exist.",
+		"provider command deferral boundary",
+	);
+	expectContains(
+		deploymentSummary,
+		"Do not treat this section as launch-ready while provider, domain, contact storage, or rollback evidence is still blocked or not run.",
+		"launch-ready blocker boundary",
+	);
+	expectNotContains(
+		deploymentSummary,
+		"exact Phase 8 deployment command source",
+		"Phase 8 command authorization wording",
+	);
+});
+
 test("minimum viable production standard is bounded by launch blockers and evidence", () => {
 	const operations = readRequiredFile(operationsPath);
 	const standard = section(

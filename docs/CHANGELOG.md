@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Tightened the operations deployment summary so provider-specific commands,
+  migration procedures, and rollback steps remain reference-only until
+  provider/domain decisions and required external evidence exist.
 - Refreshed the continuation plan and GitHub sync runbook after the
   2026-05-25T11:50:12-04:00 Project permission recheck: the local token can
   list/view Project #1, inspect fields and items, the private repo permission is

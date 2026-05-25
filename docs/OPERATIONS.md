@@ -285,8 +285,11 @@ Do not promote to production if:
 
 ## 7. Deployment Runbook
 
-Use `runbooks/DEPLOYMENT.md` as the exact Phase 8 deployment command source.
-This section keeps the operator-level summary and incident context.
+Use `runbooks/DEPLOYMENT.md` as the provider-neutral deployment and rollback
+reference for future launch work. This section keeps the operator-level summary
+and incident context. Provider-specific commands, migration procedures, and
+rollback steps stay deferred until provider/domain decisions and required
+external evidence exist.
 Do not treat this section as launch-ready while provider, domain, contact
 storage, or rollback evidence is still blocked or not run.
 
