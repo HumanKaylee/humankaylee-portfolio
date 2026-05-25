@@ -24,6 +24,11 @@ const launchGates = [
 		name: "Run API outage resilience gate",
 		command: 'pnpm test:e2e -- --grep "@api-down"',
 	},
+	{
+		label: "@journey",
+		name: "Run journey smoke gate",
+		command: 'pnpm test:e2e -- --grep "@journey"',
+	},
 ];
 
 function readWorkflow() {
@@ -124,7 +129,7 @@ function expectLaunchGateSteps(workflow) {
 	const steps = frontendSteps(workflow);
 
 	let previousStepIndex = -1;
-	let apiDownStepIndex = -1;
+	let finalLaunchGateStepIndex = -1;
 	for (const { label, name, command } of launchGates) {
 		const stepIndex = steps.findIndex(
 			(step) => step.name === name && step.run === command,
@@ -138,9 +143,7 @@ function expectLaunchGateSteps(workflow) {
 			`expected ${label} gate to appear after the previous launch gate`,
 		);
 		previousStepIndex = stepIndex;
-		if (label === "@api-down") {
-			apiDownStepIndex = stepIndex;
-		}
+		finalLaunchGateStepIndex = stepIndex;
 	}
 
 	const fullE2eStepIndex = steps.findIndex(
@@ -154,8 +157,8 @@ function expectLaunchGateSteps(workflow) {
 		"expected frontend job to include the full e2e step",
 	);
 	assert.ok(
-		apiDownStepIndex < fullE2eStepIndex,
-		"expected @api-down gate before the full frontend e2e run",
+		finalLaunchGateStepIndex < fullE2eStepIndex,
+		"expected the final dedicated launch gate before the full frontend e2e run",
 	);
 }
 
@@ -219,6 +222,7 @@ jobs:
           pnpm test:e2e -- --grep "@accessibility"
           pnpm test:e2e -- --grep "@security"
           pnpm test:e2e -- --grep "@api-down"
+          pnpm test:e2e -- --grep "@journey"
       - name: Run frontend end-to-end tests
         run: pnpm test:e2e
 `;
@@ -250,6 +254,8 @@ jobs:
         run: pnpm test:e2e -- --grep "@security"
       - name: Run API outage resilience gate
         run: pnpm test:e2e -- --grep "@api-down"
+      - name: Run journey smoke gate
+        run: pnpm test:e2e -- --grep "@journey"
 `;
 
 	assert.throws(

@@ -33,6 +33,11 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 	);
 	expectContains(
 		quality,
+		"Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`, and `@journey` as dedicated Playwright gates before the umbrella E2E sweep so journey failures remain easy to identify.",
+		"dedicated Phase 0 CI journey gate",
+	);
+	expectContains(
+		quality,
 		'`pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and contact evaluator journeys across the existing static launch paths.',
 		"journey smoke local gate",
 	);

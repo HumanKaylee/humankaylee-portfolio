@@ -7,6 +7,9 @@ enforced by CI.
 Pull requests run the full Phase 0 CI suite through the `pull_request` trigger.
 The `push` trigger is scoped to `main` so feature-branch PR commits do not run
 duplicate push and PR Lighthouse jobs for the same head.
+Phase 0 CI keeps `@keyboard`, `@accessibility`, `@security`, `@api-down`, and
+`@journey` as dedicated Playwright gates before the umbrella E2E sweep so
+journey failures remain easy to identify.
 
 ## Local Checks
 
