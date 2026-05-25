@@ -110,9 +110,10 @@ The latest item-list result contains 15 issue-backed items for `#3`, `#5`,
 `#74`, with `Status`, `Phase`, `Priority`, `Type`, `Area`, `Agent Size`, and
 `Blocker` fields populated. The corrected JSON check must read the field as
 `.["agent Size"]` because `gh project item-list --format json` currently emits
-that key with a space and lowercase `a`. The latest open-issue/project diff and
-`HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
-returned no missing Project items.
+that key with a space and lowercase `a`. The live verifier now checks Project #1
+item presence and populated fields in addition to issue bodies:
+`HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`.
+The latest live run returned no missing Project items.
 
 Use user-owner Project commands for this account; `organization(login:
 "HumanKaylee")` is not a valid lookup because HumanKaylee is a user account, not

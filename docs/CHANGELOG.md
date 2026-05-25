@@ -16,6 +16,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   at `3bd6eca81d5189108e011cf32d089e2e0b23f3cc`, and the remaining work limited
   to external redaction, deployment, domain, contact, rollback, Lighthouse, and
   Phase 8 approval gates.
+- Hardened the live GitHub verifier so Project #1 item presence and populated
+  phase, priority, type, area, agent size, status, and blocker fields are checked
+  alongside issue bridge state when `HK_VERIFY_GITHUB_LIVE=1` is set.
 - Refreshed the sanitized local preflight record at PR head
   `a1a98cb811f2e9708635b14e7087c9a455f4ea3d` and hardened its contract so stale
   dirty-worktree entries cannot remain in the current preflight evidence row.

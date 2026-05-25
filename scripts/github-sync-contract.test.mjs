@@ -312,6 +312,12 @@ test("GitHub sync runbook mirrors backlog taxonomy and project-scope blocker", (
 		"for (const parentEpicNumber of parentEpicIssueNumbers)",
 		"missing live parent epic",
 		"to stay open while child blockers remain open",
+		"fetchProjectItems",
+		"projectItemRequiredIssueNumbers",
+		"missing live Project #1 item",
+		'item["agent Size"]',
+		"expected Project #1 item for",
+		"to have populated",
 	]) {
 		expectContains(githubLiveIssueSync, required);
 	}

@@ -26,6 +26,9 @@ const mustRemainOpenIssueNumbers = new Set([
 	73,
 	74,
 ]);
+const projectItemRequiredIssueNumbers = [...mustRemainOpenIssueNumbers].sort(
+	(left, right) => left - right,
+);
 
 function readGitHubSync() {
 	return readFileSync(githubSyncPath, "utf8");
@@ -86,6 +89,44 @@ function fetchAllIssues() {
 			state: issue.state.toUpperCase(),
 			title: issue.title,
 		}));
+}
+
+function fetchProjectItems() {
+	const output = execFileSync(
+		"gh",
+		[
+			"project",
+			"item-list",
+			"1",
+			"--owner",
+			"HumanKaylee",
+			"--limit",
+			"200",
+			"--format",
+			"json",
+		],
+		{
+			encoding: "utf8",
+			env: { ...process.env, GH_PROMPT_DISABLED: "1" },
+			stdio: ["ignore", "pipe", "pipe"],
+		},
+	);
+
+	const payload = JSON.parse(output);
+	return payload.items.filter((item) => item.content?.type === "Issue");
+}
+
+function expectProjectField(item, field, issueNumber) {
+	const value = item[field];
+	assert.equal(
+		typeof value,
+		"string",
+		`expected Project #1 item for #${issueNumber} to have populated ${field}`,
+	);
+	assert.ok(
+		value.trim().length > 0,
+		`expected Project #1 item for #${issueNumber} to have populated ${field}`,
+	);
 }
 
 function phase8StatusRequirements(backlogId) {
@@ -267,6 +308,37 @@ test(
 					issue.body.includes(`Parent epic: ${expected.parent}`),
 					`expected #${expected.number} body to preserve parent epic`,
 				);
+			}
+		}
+
+		const projectItemsByIssueNumber = new Map(
+			fetchProjectItems().map((item) => [item.content.number, item]),
+		);
+
+		for (const issueNumber of projectItemRequiredIssueNumbers) {
+			const item = projectItemsByIssueNumber.get(issueNumber);
+			assert.ok(item, `missing live Project #1 item for #${issueNumber}`);
+
+			const agentSize = item["agent Size"];
+			assert.equal(
+				typeof agentSize,
+				"string",
+				`expected Project #1 item for #${issueNumber} to have populated agent Size`,
+			);
+			assert.ok(
+				agentSize.trim().length > 0,
+				`expected Project #1 item for #${issueNumber} to have populated agent Size`,
+			);
+
+			for (const field of [
+				"phase",
+				"priority",
+				"type",
+				"area",
+				"status",
+				"blocker",
+			]) {
+				expectProjectField(item, field, issueNumber);
 			}
 		}
 	},
