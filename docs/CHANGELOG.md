@@ -8,6 +8,12 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added generated 1200x630 PNG social preview assets for all current
+  `/social/...` metadata references, plus a contract test and Playwright
+  coverage that keep item-specific project, case-study, note, and resume routes
+  from falling back to the default preview image. This is static SEO/social
+  metadata readiness only, not production metadata smoke evidence or launch
+  readiness.
 - Added published project-detail URLs to the sitemap and Playwright crawler
   coverage so static SEO includes the existing public project pages without
   changing production launch evidence, GitHub issue state, or redaction status.

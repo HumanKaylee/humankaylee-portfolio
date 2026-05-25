@@ -9,9 +9,10 @@ type WorkflowStep = (typeof data.workflowSteps)[number];
 ---
 
 <BaseLayout
-	title="Resume | HumanKaylee"
-	description="HTML resume entry point and approved local-source PDF workflow for HumanKaylee."
-	canonicalPath="/resume/"
+	title={`${data.seo.title} | HumanKaylee`}
+	description={data.seo.description}
+	canonicalPath={data.seo.canonicalPath}
+	ogImage={data.seo.ogImage}
 	bodyClass="resume-print-route"
 >
 	<section class="page-shell" aria-labelledby="resume-title">

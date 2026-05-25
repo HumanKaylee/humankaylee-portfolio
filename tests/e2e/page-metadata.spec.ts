@@ -39,6 +39,63 @@ test.describe("page metadata @metadata", () => {
 		expect(response.headers()["content-type"]).toContain("image/svg+xml");
 	});
 
+	test("serves representative item-specific social preview assets", async ({
+		request,
+	}) => {
+		for (const socialPath of [
+			"/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
+			"/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
+			"/social/notes/api-offline-resilience.png",
+			"/social/resume.png",
+		]) {
+			const response = await request.get(socialPath);
+
+			expect(response.status(), socialPath).toBe(200);
+			expect(response.headers()["content-type"], socialPath).toContain(
+				"image/png",
+			);
+		}
+	});
+
+	test("renders item-specific social images on detail and resume routes", async ({
+		page,
+	}) => {
+		const cases = [
+			{
+				path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
+				image:
+					"https://humankaylee.example/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
+			},
+			{
+				path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+				image:
+					"https://humankaylee.example/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
+			},
+			{
+				path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+				image:
+					"https://humankaylee.example/social/notes/api-offline-resilience.png",
+			},
+			{
+				path: "/resume/",
+				image: "https://humankaylee.example/social/resume.png",
+			},
+		];
+
+		for (const testCase of cases) {
+			await page.goto(testCase.path);
+
+			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+				"content",
+				testCase.image,
+			);
+			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+				"content",
+				testCase.image,
+			);
+		}
+	});
+
 	test("renders item-specific JSON-LD on project and case-study detail pages", async ({
 		page,
 	}) => {
