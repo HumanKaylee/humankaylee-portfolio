@@ -8,6 +8,14 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T12:17:20-04:00 Project permission recheck: the local token can
+  list/view Project #1, inspect fields and items, update Project #1, the
+  private repo permission is `ADMIN`, PR #6 is clean at
+  `a1abdfe4514d6c2e0213ed110dc237c3f084ae61`, and Phase 0 CI run
+  `26409403768` passed Frontend and Rust verification. The plan now states that
+  fresh verifier output is authoritative for live GitHub/PR/CI/Project state
+  before using the resume overlay as execution guidance.
 - Tightened the operations deployment summary so provider-specific commands,
   migration procedures, and rollback steps remain reference-only until
   provider/domain decisions and required external evidence exist.

@@ -35,8 +35,9 @@ If this plan conflicts with `docs/PRD.md` or `docs/RESEARCH.md`, pause and ask f
 
 Current goal continuations must treat completed or local-evidence items as guard-check targets, not duplicate implementation tasks.
 
-This section is a resume overlay, not a live-state source: re-run the listed
-verifiers before acting on issue, PR, CI, or launch status.
+This section is a resume overlay for execution guidance, not standalone live
+evidence: re-run the listed verifiers before acting on issue, PR, CI, Project,
+or launch status.
 
 - Phase 0 through Phase 6 have substantial local and PR evidence in the current PR branch; use the guard commands and live issue verifier before reopening or reimplementing those slices.
 - Phase 7 and Phase 8 contain planning, runbook, local-readiness, and issue-sync evidence only; production deploy, provider, DNS/TLS, API health, contact handling, rollback, production Lighthouse, and redaction approval gates remain unresolved.
@@ -47,31 +48,33 @@ verifiers before acting on issue, PR, CI, or launch status.
 - Treat embedded evidence snapshots as historical unless a live verifier or fresh command output proves they match the current checkout.
 - This point-in-time overlay may trail the checked-out head after guardrail-only docs commits. Live verifiers are authoritative for current PR, CI, issue, and Project state.
 - Do not rewrite this overlay only to chase the checked-out commit after a docs-only guardrail update. Update it only when the guidance or blocker state materially changes future execution.
-- Active phase/status source order: The Current Repo State / Issue Overlay, `docs/BACKLOG.md`, `docs/GITHUB_SYNC.md`, and launch runbooks are authoritative for active status. The detailed Phase 7, Phase 8, and Phase 9 sections below are retained as historical implementation contracts. Do not infer active remaining work from old unchecked boxes when the overlay, backlog, GitHub sync, or launch evidence records a newer local/PR guard result or blocker. External launch blockers remain the only current blockers to production launch.
+- Active status source precedence: fresh verifier output is authoritative for live GitHub, PR, CI, and Project state. The Current Repo State / Issue Overlay, `docs/BACKLOG.md`, `docs/GITHUB_SYNC.md`, and launch runbooks provide execution guidance after live verification. The detailed Phase 7, Phase 8, and Phase 9 sections below are retained as historical implementation contracts. Do not infer active remaining work from old unchecked boxes when the overlay, backlog, GitHub sync, or launch evidence records a newer local/PR guard result or blocker. External launch blockers remain the only current blockers to production launch.
 - Before resuming new feature work, run `git status --short --branch`,
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T11:50:12-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T12:17:20-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `af91564dc9a69a6a8327cb11bacafd3c1baf1fe2`, and Phase 0 CI run
-  `26408347438` successful for Frontend verification job `77736960650` and
-  Rust verification job `77736960667`.
+  `a1abdfe4514d6c2e0213ed110dc237c3f084ae61`, and Phase 0 CI run
+  `26409403768` successful for Frontend verification job `77740295220` and
+  Rust verification job `77740295189`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
-- Latest non-blocked local slice snapshot before this overlay refresh: GitHub
-  Project recovery snapshot authority hardening in `docs/GITHUB_SYNC.md`,
-  `scripts/github-sync-contract.test.mjs`, and `docs/CHANGELOG.md`, committed as
-  `af91564dc9a69a6a8327cb11bacafd3c1baf1fe2`. Treat the B-051 bundle-budget,
+- Latest non-blocked local slice snapshot before this overlay refresh:
+  operations deployment command boundary hardening in `docs/OPERATIONS.md`,
+  `scripts/operations-production-standard-contract.test.mjs`, and
+  `docs/CHANGELOG.md`, committed as
+  `a1abdfe4514d6c2e0213ed110dc237c3f084ae61`. Treat the B-051 bundle-budget,
   case-study approval-evidence, Project-sync recovery, visual-CI-triage,
   preflight evidence, B-068 deployment sync guardrails, Phase 7
-  evidence-authority checks, and GitHub Project item verification hardening,
+  evidence-authority checks, GitHub Project item verification hardening, and
+  the deployment-summary rule that provider-specific commands, migration procedures, and rollback steps remain reference-only,
   including Project #1 item/field checks in
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T11:50:12-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
+  2026-05-25T12:17:20-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`

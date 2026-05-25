@@ -69,7 +69,7 @@ creation and issue sync are complete.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Live Project permission recheck as of 2026-05-25T11:50:12-04:00
+### Live Project permission recheck as of 2026-05-25T12:17:20-04:00
 
 Project #1 permission recheck passed after HumanKaylee's permission update. The
 current local token can list the private repository, list/view Project #1,
@@ -85,6 +85,7 @@ GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
 GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
 GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json
 GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json
+GH_PROMPT_DISABLED=1 gh api graphql -f owner='HumanKaylee' -f repo='humankaylee-portfolio' -F pr=6 -F project=1 -f query='query($owner:String!, $repo:String!, $pr:Int!, $project:Int!) { repository(owner:$owner, name:$repo) { nameWithOwner visibility viewerPermission pullRequest(number:$pr) { number state isDraft headRefName headRefOid baseRefName mergeStateStatus viewerCanUpdate viewerCanClose } } user(login:$owner) { projectV2(number:$project) { number title url public closed viewerCanUpdate } } }'
 GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
 ```
 
@@ -98,6 +99,9 @@ Observed current-state evidence:
 - Field list reports the default fields plus `Phase`, `Priority`, `Type`,
   `Area`, `Agent Size`, and `Blocker`.
 - Item list reports 15 issue-backed items for the open live bridge.
+- GraphQL reports repo `viewerPermission:"ADMIN"`, PR #6
+  `viewerCanUpdate:true`, PR #6 `viewerCanClose:true`, and Project #1
+  `viewerCanUpdate:true`.
 - `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
   passes with `1` test, `1` pass, `0` failures.
 
