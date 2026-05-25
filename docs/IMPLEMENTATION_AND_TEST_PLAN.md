@@ -47,16 +47,17 @@ verifiers before acting on issue, PR, CI, or launch status.
 - Treat embedded evidence snapshots as historical unless a live verifier or fresh command output proves they match the current checkout.
 - This point-in-time overlay may trail the checked-out head after guardrail-only docs commits. Live verifiers are authoritative for current PR, CI, issue, and Project state.
 - Do not rewrite this overlay only to chase the checked-out commit after a docs-only guardrail update. Update it only when the guidance or blocker state materially changes future execution.
+- Active phase/status source order: The Current Repo State / Issue Overlay, `docs/BACKLOG.md`, `docs/GITHUB_SYNC.md`, and launch runbooks are authoritative for active status. The detailed Phase 7, Phase 8, and Phase 9 sections below are retained as historical implementation contracts. Do not infer active remaining work from old unchecked boxes when the overlay, backlog, GitHub sync, or launch evidence records a newer local/PR guard result or blocker. External launch blockers remain the only current blockers to production launch.
 - Before resuming new feature work, run `git status --short --branch`,
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T11:03:06-04:00 found a
+- Current live recheck snapshot captured at 2026-05-25T11:23:35-04:00 found a
   clean worktree at the start of this plan refresh on
   `goal/portfolio-implementation`, PR #6 open/non-draft at
-  `fe90a4a4134be14f5a2c5988f398bfa050f5a258`, and Phase 0 CI run
-  `26406392201` successful for Frontend verification job `77731898752` and
-  Rust verification job `77731899139` after rerunning the transient visual gate.
+  `c8022aa482d2409adc962df0a31625d4cb57e919`, and Phase 0 CI run
+  `26407270035` successful for Frontend verification job `77733492703` and
+  Rust verification job `77733492744`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked local slice snapshot before this overlay refresh: B-063
@@ -71,15 +72,15 @@ verifiers before acting on issue, PR, CI, or launch status.
   including Project #1 item/field checks in
   `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
   reimplement them when PR CI and the focused contracts are green.
-- GitHub Project access and open-issue bridge sync were rechecked on
-  2026-05-25T11:03:06-04:00. The local `gh` token has `repo` and full-control
-  `project` scopes, private repo access is `ADMIN`, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+- Latest GitHub permission recheck snapshot captured at
+  2026-05-25T11:23:35-04:00: the local `gh` token has `repo`, `project`, and `workflow` scopes, private repo access reports `ADMIN`,
+  `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 100 --format json`
-  succeeds, Project #1 is private with 19 fields and 15 issue items, Project #1
-  permissions and item sync are healthy, item listing confirms populated status,
-  phase, priority, type, area, agent size, and blocker fields, and
+  succeeds, Project #1 lists/views with 19 fields and 15 issue items, Project
+  #1 permissions and item sync are healthy, item listing confirms populated
+  status, phase, priority, type, area, agent size, and blocker fields, and
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`
   passes. Treat future Project work as maintenance for newly opened or
   relabeled issues, not as a current launch blocker.

@@ -136,6 +136,30 @@ function expectCurrentEvidenceMatrixPrivacyRules(evidence) {
 	]);
 }
 
+function expectCurrentEvidenceAuthorityBoundary(evidence) {
+	expectContains(evidence, "## Current Evidence Authority Boundary");
+	expectContains(
+		evidence,
+		"The Current Evidence Matrix is historical and readiness-tracking evidence unless a row is later replaced by the Provider-Neutral Evidence Schema.",
+		"current evidence matrix is historical/readiness evidence",
+	);
+	expectContains(
+		evidence,
+		"Rows whose result, status, artifact, or blocker text says local, local/PR, PR CI, docs/contract, or triage have Evidence Authority: local/PR.",
+		"current local rows have local PR authority",
+	);
+	expectContains(
+		evidence,
+		"Rows whose Result / Status says Blocked / not run have Evidence Authority: blocked / not run.",
+		"blocked current rows have blocked authority",
+	);
+	expectContains(
+		evidence,
+		"No Current Evidence Matrix row can support launch approval unless it is replaced by a future evidence row with Evidence Authority: production or Evidence Authority: owner-approved production-equivalent provider preview.",
+		"current rows cannot support launch approval without replacement evidence authority",
+	);
+}
+
 test("Phase 7 launch evidence schema stays provider-neutral and public-safe", () => {
 	const changelog = readRequiredFile(files.changelog);
 	const evidence = readRequiredFile(files.evidence);
@@ -143,6 +167,7 @@ test("Phase 7 launch evidence schema stays provider-neutral and public-safe", ()
 	const packet = readRequiredFile(files.packet);
 
 	expectCurrentEvidenceMatrixPrivacyRules(evidence);
+	expectCurrentEvidenceAuthorityBoundary(evidence);
 
 	expectContains(evidence, "## Future Evidence Capture Contract");
 	expectContains(evidence, "Exact command.");

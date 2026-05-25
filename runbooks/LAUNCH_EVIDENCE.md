@@ -35,6 +35,21 @@ so unrelated optional status contexts do not make the launch-evidence freshness
 check brittle.
 This block must not be used as production launch evidence.
 
+## Current Evidence Authority Boundary
+
+The Current Evidence Matrix is historical and readiness-tracking evidence unless
+a row is later replaced by the Provider-Neutral Evidence Schema. Rows whose
+result, status, artifact, or blocker text says local, local/PR, PR CI,
+docs/contract, or triage have Evidence Authority: local/PR. Rows whose Result /
+Status says Blocked / not run have Evidence Authority: blocked / not run.
+
+No Current Evidence Matrix row can support launch approval unless it is replaced
+by a future evidence row with Evidence Authority: production or Evidence
+Authority: owner-approved production-equivalent provider preview. Replacement
+rows must still include the exact command, real target, timestamp, HTTP or exit
+status, public-safe artifact or deployment/rollback pointer, blocker or next
+action, and privacy redaction rule.
+
 ## Embedded Verified PR Evidence Snapshot
 
 - Embedded verified PR head: `dadb641f19d7a37b5f79c3f34904818b80c7f707`

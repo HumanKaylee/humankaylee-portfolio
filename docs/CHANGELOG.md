@@ -8,6 +8,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened launch evidence authority boundaries so Current Evidence Matrix rows
+  remain historical/readiness evidence until replaced by production or
+  owner-approved production-equivalent provider preview evidence using the
+  provider-neutral schema.
 - Refreshed the continuation plan and GitHub sync runbook after the latest
   Project permission recheck: `repo` and full-control `project` scope are
   available, private repo access reports `ADMIN`, Project #1 list/view,
