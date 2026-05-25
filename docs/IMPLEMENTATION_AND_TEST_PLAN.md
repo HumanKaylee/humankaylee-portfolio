@@ -65,8 +65,15 @@ verifiers before acting on issue, PR, CI, or launch status.
   API/contact/rollback, tightening the shared `reviewed` versus `approved`
   redaction invariant, and mirroring B-068 compare-only hosting evidence without
   choosing a provider.
+- GitHub Project access was rechecked on 2026-05-25T10:47:16Z and remains
+  blocked: `gh auth status -h github.com` did not list `read:project` or
+  `project`, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+  failed with missing `read:project`, and a ProjectsV2 GraphQL query failed
+  with `INSUFFICIENT_SCOPES`. HumanKaylee must run
+  `gh auth refresh --hostname github.com -s project,read:project`
+  interactively before board creation or sync can resume.
 - External blockers that still require owner or production action are: GitHub
-  Project `read:project` / `project` scopes, at least four approved case
+  Project scope recovery plus board creation/sync, at least four approved case
   studies, final frontend domain and production frontend deployment, approved
   API host and production `/api/health`, approved contact handling, rollback
   evidence, and production Lighthouse evidence.

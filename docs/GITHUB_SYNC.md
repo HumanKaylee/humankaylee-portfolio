@@ -48,9 +48,10 @@ synchronization surface for status, ownership, labels, and acceptance criteria.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Auth snapshot as of 2026-05-24
+### Auth snapshot as of 2026-05-25
 
-Captured 2026-05-24 from the local GitHub CLI without running auth refresh:
+Captured 2026-05-25T10:47:16Z from the local GitHub CLI without running auth
+refresh:
 
 ```bash
 gh auth status -h github.com
@@ -74,6 +75,9 @@ error: your authentication token is missing required scopes [read:project]
 To request it, run:  gh auth refresh -s read:project
 ```
 
+A direct ProjectsV2 GraphQL query also fails with `INSUFFICIENT_SCOPES` for
+project fields because the token lacks `read:project`.
+
 Do not run `gh auth refresh` from unattended automation. It requires
 interactive account approval and should be performed by HumanKaylee before any
 GitHub Project board creation or sync.
@@ -85,6 +89,11 @@ instead of opening an interactive prompt.
 
 After interactive auth refresh succeeds:
 
+0. Run
+   `gh auth refresh --hostname github.com -s project,read:project` from an
+   interactive shell and approve the device/browser prompt for the HumanKaylee
+   account. Use both scopes for create/update work; `read:project` alone is
+   only enough to list projects.
 1. Run `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
    and confirm whether `HumanKaylee Portfolio` already exists.
    Canonical verification command:
