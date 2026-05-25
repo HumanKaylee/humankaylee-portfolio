@@ -11,14 +11,14 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added visual CI triage guidance to the quality runbook so screenshot failures
   require job-log inspection, focused reproduction, full E2E reproduction, and a
   clean worktree before any failed-job rerun or snapshot/threshold change.
-- Refreshed the implementation plan and GitHub sync runbook after the latest
-  live recheck showed Project #1 permissions and item sync healthy, PR #6 green
-  at `3bd6eca81d5189108e011cf32d089e2e0b23f3cc`, and the remaining work limited
-  to external redaction, deployment, domain, contact, rollback, Lighthouse, and
-  Phase 8 approval gates.
 - Hardened the live GitHub verifier so Project #1 item presence and populated
   phase, priority, type, area, agent size, status, and blocker fields are checked
   alongside issue bridge state when `HK_VERIFY_GITHUB_LIVE=1` is set.
+- Refreshed the implementation plan and GitHub sync runbook after the latest
+  live recheck showed Project #1 permissions and item sync healthy, PR #6 green
+  at `8ecad622aae38ae66af8af8f7d414fd4ab675126`, Phase 0 CI run
+  `26401586093` passing, and the remaining work limited to external redaction,
+  deployment, domain, contact, rollback, Lighthouse, and Phase 8 approval gates.
 - Refreshed the sanitized local preflight record at PR head
   `a1a98cb811f2e9708635b14e7087c9a455f4ea3d` and hardened its contract so stale
   dirty-worktree entries cannot remain in the current preflight evidence row.

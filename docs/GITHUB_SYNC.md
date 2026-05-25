@@ -10,7 +10,7 @@
 ## GitHub Project Board
 
 GitHub Project recovery is complete for the current open issue bridge as of
-2026-05-25T08:41:29-04:00.
+2026-05-25T09:04:18-04:00.
 
 - Project: `HumanKaylee Portfolio`
 - Number: `1`
@@ -71,8 +71,8 @@ Auth refresh only proves the token has scopes; it does not prove the Project boa
 
 ### Latest Project recovery snapshot as of 2026-05-25
 
-Captured 2026-05-25T08:41:29-04:00 from the local GitHub CLI after Project
-creation, open-issue sync, and permission recheck:
+Captured 2026-05-25T09:04:18-04:00 from the local GitHub CLI after Project
+creation, open-issue sync, permission recheck, and live verifier re-run:
 
 ```bash
 gh auth status -h github.com

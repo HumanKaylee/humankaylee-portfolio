@@ -210,6 +210,22 @@ test("implementation plan has a current-state overlay for blocked goal continuat
 		"goal prompt blocker handling",
 	);
 
+	containsAll(
+		plan,
+		[
+			"Current live recheck at 2026-05-25T09:04:18-04:00",
+			"8ecad622aae38ae66af8af8f7d414fd4ab675126",
+			"CI run `26401586093` successful",
+			"Frontend verification job `77714918884`",
+			"Rust verification job `77714918901`",
+			"GitHub Project item",
+			"verification hardening",
+			"Project #1 item/field checks",
+			"`scripts/github-live-issue-sync.test.mjs` as guard evidence only",
+		],
+		"current live snapshot and latest local slice",
+	);
+
 	assert.equal(
 		plan.match(/^pnpm preview$/gm)?.length ?? 0,
 		1,
