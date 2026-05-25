@@ -53,12 +53,12 @@ or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- Current live recheck snapshot captured at 2026-05-25T14:42:32-04:00 found
-  PR #6 open/non-draft at `5acb8d657caef849309955e9b538c7f45a6b36b4`,
+- Current live recheck snapshot captured at 2026-05-25T15:00:35-04:00 found
+  PR #6 open/non-draft at `f318798e2d090892fb53ebb1eb0b1817cbb7bc85`,
   `mergeStateStatus: CLEAN`, PR #6 tracked on Project #1 with status
-  `In Progress`, and Phase 0 CI run `26414235173` successful for
-  Frontend verification job `77755108595` and Rust verification job
-  `77755108581`.
+  `In Progress`, and Phase 0 CI run `26415093835` successful for
+  Frontend verification job `77757735460` and Rust verification job
+  `77757735457`.
   Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
   as the authoritative current-head PR/CI check for future continuations.
 - Latest non-blocked guardrail slice before the proof-surface refresh:
@@ -86,7 +86,7 @@ or launch status.
   copy/quality polish only, not as production launch evidence or case-study
   approval.
 - Latest GitHub permission recheck snapshot captured at
-  2026-05-25T14:42:32-04:00: the local `gh` token has `repo`,
+  2026-05-25T15:00:35-04:00: the local `gh` token has `repo`,
   full-control `project`, and `workflow` scopes, private repo access reports `ADMIN`,
   `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
   succeeds, `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
@@ -144,7 +144,7 @@ or launch status.
 ## Ready-To-Use Codex Goal Objective
 
 ```text
-/goal Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Work phase-by-phase in order, respect the path ownership boundaries, keep static content usable without JavaScript/WebGL/API availability, stop deployment or launch work at the documented pause conditions when provider/domain/auth/contact/redaction blockers are unresolved, continue only non-blocked local-readiness/docs-sync/guardrail/verification-hardening work in that state, do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence, and stop only when every phase acceptance criterion and final launch verification command in the plan passes or a listed pause condition is reached.
+/goal Continue the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md using the current repo state. First read AGENTS.md and the Source of Truth docs listed in the plan, then run the current-state preflight/live verifiers named in the Current Repo State / Issue Overlay. Do not reboot or restart any machine, service, process manager, or remote host as part of this goal. Do not revert or overwrite other agents' work. Treat local, PR, CI, docs, Project, and issue-sync evidence as non-launch-readiness evidence only. Do not claim launch readiness unless runbooks/LAUNCH_EVIDENCE.md blocked production rows are replaced with real production or owner-approved production-equivalent provider-preview evidence and runbooks/FINAL_LAUNCH_CHECKLIST.md requirements are satisfied. Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external gates truly prove closure: redaction/human signoff for #20/#21/#24/#25, provider deploy evidence for #63/#64, final domain DNS/TLS/canonical metadata for #65, production smoke/Lighthouse/contact/rollback/redaction evidence for #69, and B-063 plus HumanKaylee approval dependencies for #70-#74. If provider/domain/auth/contact/redaction blockers remain unresolved, stop deployment/launch/post-launch implementation work at the documented pause conditions and continue only a small non-blocked local-readiness, docs-sync, guardrail, or verification-hardening slice with exact contract evidence. Preserve static-first behavior without JavaScript/WebGL/API availability, preserve "reviewed is not approved", and stop when the selected non-blocked slice is verified or a documented pause condition is reached.
 ```
 
 ## Optional Claude Code Execution Prompt

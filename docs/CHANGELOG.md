@@ -8,6 +8,14 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Refreshed the continuation plan and GitHub sync runbook after the
+  2026-05-25T15:00:35-04:00 permission recheck: Project #1 read/write access
+  is healthy, PR #6 is tracked as `In Progress` at
+  `f318798e2d090892fb53ebb1eb0b1817cbb7bc85`, Phase 0 CI run
+  `26415093835` passed, the live issue/Project verifier and current-head PR/CI
+  verifier pass, and the ready-to-use `/goal` prompt now resumes from the
+  verified blocker state without treating Project permissions as launch
+  readiness.
 - Added a Phase 7 provider preflight script and runbook evidence row that checks
   provider CLI presence and approved environment variable names without
   recording values, authenticating, deploying, changing DNS, or clearing #63,
