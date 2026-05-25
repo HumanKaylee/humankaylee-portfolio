@@ -10,7 +10,7 @@
 ## GitHub Project Board
 
 GitHub Project recovery is complete for the current open issue bridge as of
-2026-05-25T09:04:18-04:00.
+2026-05-25T09:21:51-04:00.
 
 - Project: `HumanKaylee Portfolio`
 - Number: `1`
@@ -71,7 +71,7 @@ Auth refresh only proves the token has scopes; it does not prove the Project boa
 
 ### Latest Project recovery snapshot as of 2026-05-25
 
-Captured 2026-05-25T09:04:18-04:00 from the local GitHub CLI after Project
+Captured 2026-05-25T09:21:51-04:00 from the local GitHub CLI after Project
 creation, open-issue sync, permission recheck, and live verifier re-run:
 
 ```bash
@@ -86,7 +86,9 @@ Current token scopes:
 `write:packages`
 
 The read-only Project check now succeeds and returns Project #1 with 15 synced
-items; the project list also reports it as private with 19 fields:
+items; the project list also reports it as private with 19 fields. Current
+`gh` permissions are sufficient for listing the private repo and private
+Project #1; no auth refresh is currently required:
 
 ```bash
 GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json

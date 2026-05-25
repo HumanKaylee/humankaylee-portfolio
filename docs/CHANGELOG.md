@@ -8,17 +8,25 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Made the current goal-resume overlay snapshot-aware so guardrail-only docs
+  commits do not force self-rewriting commit churn; live verifiers are now the
+  authoritative current PR, CI, issue, and Project source before each resumed
+  goal slice.
+- Rechecked GitHub Project permissions and sync after the latest auth update:
+  the local token has `repo` and `project` scopes, Project #1 is private with 19
+  fields and 15 synced issue items, PR #6 is green at
+  `2aebedafff1d7c9b208ba0fac6ef809bcd84e5f8`, and Phase 0 CI run
+  `26402120167` passed.
 - Added visual CI triage guidance to the quality runbook so screenshot failures
   require job-log inspection, focused reproduction, full E2E reproduction, and a
   clean worktree before any failed-job rerun or snapshot/threshold change.
 - Hardened the live GitHub verifier so Project #1 item presence and populated
   phase, priority, type, area, agent size, status, and blocker fields are checked
   alongside issue bridge state when `HK_VERIFY_GITHUB_LIVE=1` is set.
-- Refreshed the implementation plan and GitHub sync runbook after the latest
-  live recheck showed Project #1 permissions and item sync healthy, PR #6 green
-  at `8ecad622aae38ae66af8af8f7d414fd4ab675126`, Phase 0 CI run
-  `26401586093` passing, and the remaining work limited to external redaction,
-  deployment, domain, contact, rollback, Lighthouse, and Phase 8 approval gates.
+- Refreshed the implementation plan and GitHub sync runbook after a live
+  recheck showed Project #1 permissions and item sync healthy, with the
+  remaining work limited to external redaction, deployment, domain, contact,
+  rollback, Lighthouse, and Phase 8 approval gates.
 - Refreshed the sanitized local preflight record at PR head
   `a1a98cb811f2e9708635b14e7087c9a455f4ea3d` and hardened its contract so stale
   dirty-worktree entries cannot remain in the current preflight evidence row.

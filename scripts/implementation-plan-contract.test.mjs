@@ -213,17 +213,30 @@ test("implementation plan has a current-state overlay for blocked goal continuat
 	containsAll(
 		plan,
 		[
-			"Current live recheck at 2026-05-25T09:04:18-04:00",
-			"8ecad622aae38ae66af8af8f7d414fd4ab675126",
-			"CI run `26401586093` successful",
-			"Frontend verification job `77714918884`",
-			"Rust verification job `77714918901`",
+			"Current live recheck snapshot captured at",
+			"This point-in-time overlay may trail the checked-out head after guardrail-only docs commits.",
+			"Live verifiers are authoritative for current PR, CI, issue, and Project state.",
+			"Do not rewrite this overlay only to chase the checked-out commit after a docs-only guardrail update.",
+			"permissions and item sync are healthy",
+			"Phase 0 CI run",
+			"Frontend verification job",
+			"Rust verification job",
+			"Latest non-blocked local slice snapshot",
 			"GitHub Project item",
 			"verification hardening",
 			"Project #1 item/field checks",
 			"`scripts/github-live-issue-sync.test.mjs` as guard evidence only",
 		],
-		"current live snapshot and latest local slice",
+		"snapshot-aware current-state overlay and latest local slice",
+	);
+
+	assert.ok(
+		!plan.includes("The latest committed non-blocked local slice is"),
+		"plan must not force a self-rewriting current-head loop",
+	);
+	assert.ok(
+		!plan.includes("- Current live recheck at "),
+		"plan must label embedded evidence as a snapshot, not live-current truth",
 	);
 
 	assert.equal(
