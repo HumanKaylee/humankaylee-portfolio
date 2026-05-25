@@ -30,6 +30,10 @@ test.describe("crawler artifacts @metadata", () => {
 		for (const path of [
 			"/",
 			"/projects/",
+			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
+			"/projects/creative-web-systems-atlas-demo/",
+			"/projects/humankaylee-portfolio-build/",
+			"/projects/remote-workstation-recovery-and-operational-debugging/",
 			"/resume/",
 			"/contact/",
 			"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",

@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added published project-detail URLs to the sitemap and Playwright crawler
+  coverage so static SEO includes the existing public project pages without
+  changing production launch evidence, GitHub issue state, or redaction status.
 - Clarified contact fallback status copy so the default and API-outage states
   direct visitors to the visible email link while preserving typed form content,
   static fallback behavior, and the unresolved production contact handling

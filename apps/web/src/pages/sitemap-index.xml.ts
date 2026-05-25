@@ -4,6 +4,7 @@ import type { APIRoute } from "astro";
 
 type CaseStudyEntry = CollectionEntry<"caseStudies">;
 type NoteEntry = CollectionEntry<"notes">;
+type ProjectEntry = CollectionEntry<"projects">;
 
 const corePaths = [
 	"/",
@@ -31,7 +32,11 @@ export const GET: APIRoute = async () => {
 	const [site] = await getCollection("site");
 	const caseStudies = (await getCollection("caseStudies")) as CaseStudyEntry[];
 	const notes = (await getCollection("notes")) as NoteEntry[];
+	const projects = (await getCollection("projects")) as ProjectEntry[];
 	const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+	const projectPaths = projects
+		.filter((entry: ProjectEntry) => entry.data.publicationStatus === "publish")
+		.map((entry: ProjectEntry) => `/projects/${entry.data.slug}/`);
 	const caseStudyPaths = caseStudies
 		.filter(
 			(entry: CaseStudyEntry) => entry.data.publicationStatus === "publish",
@@ -40,7 +45,12 @@ export const GET: APIRoute = async () => {
 	const notePaths = notes
 		.filter((entry: NoteEntry) => entry.data.publicationStatus === "publish")
 		.map((entry: NoteEntry) => `/notes/${entry.data.slug}/`);
-	const paths = [...corePaths, ...caseStudyPaths, ...notePaths];
+	const paths = [
+		...corePaths,
+		...projectPaths,
+		...caseStudyPaths,
+		...notePaths,
+	];
 	const urls = paths
 		.map(
 			(path) =>
