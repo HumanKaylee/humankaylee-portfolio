@@ -1505,6 +1505,9 @@ Verification evidence:
 - `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the API provider,
   origin, secret storage, contact handling, CORS, health, and rollback inputs
   still required before #64 can close.
+- `pnpm phase7:contact-decision -- --mode defer --dry-run` records only a
+  local/decision-template shape for the contact handling decision; it cannot
+  approve contact handling or close #64/#69.
 
 ### B-059: Configure production domain and canonical URLs
 

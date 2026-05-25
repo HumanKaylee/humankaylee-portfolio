@@ -110,6 +110,12 @@ and deletion story before turning it on.
 
 Production contact storage must also define backup handling before launch.
 
+Use `pnpm phase7:contact-decision -- --mode defer --dry-run` as the local
+decision template when choosing between a mailto-only launch exception,
+JSONL-backed store mode, an external provider, or deferring contact API
+submissions. The template is local/decision-template evidence only; it does not
+approve contact handling or replace production smoke evidence.
+
 ## Privacy Contact
 
 Use the public contact route at `/contact/` for privacy questions or update

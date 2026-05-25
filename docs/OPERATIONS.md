@@ -153,6 +153,12 @@ only when `HK_API_CONTACT_STORE_PATH` points at an approved JSONL path. Store
 mode is JSONL-only in this repository. Production contact storage must also
 define backup handling before launch.
 
+Use `pnpm phase7:contact-decision -- --mode defer --dry-run` for the local
+decision template before choosing a mailto-only launch exception, JSONL store,
+external provider, or deferral. This is local/decision-template evidence only;
+it does not approve contact handling, capture production smoke, or close #64 or
+#69.
+
 ### 4.3 Secret Storage Locations
 
 Use the host-native secret store:

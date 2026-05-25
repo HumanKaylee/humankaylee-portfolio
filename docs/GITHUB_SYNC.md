@@ -376,6 +376,56 @@ Observed current-state evidence:
   `PVT_kwHOB69SNc4BYuyc`, Status field id
   `PVTSSF_lAHOB69SNc4BYuyczhTyc5M`, and the relevant single-select option id.
 
+### Latest GitHub Project permission recheck as of 2026-05-25T16:39:07-04:00
+
+Project #1 still lists/views successfully for the current local `gh` token. PR
+#6 remains tracked on Project #1 with status `In Progress` at head
+`26c619ebb9ce76e9db490b0417a504b276327c75`. This is active-PR and Project
+triage evidence only; it is not launch-readiness evidence and does not close any
+issue.
+
+Commands run:
+
+```bash
+GH_PROMPT_DISABLED=1 gh auth status -h github.com
+GH_PROMPT_DISABLED=1 gh repo view HumanKaylee/humankaylee-portfolio --json nameWithOwner,viewerPermission,isPrivate,url
+GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json --limit 50
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --format json --limit 100
+GH_PROMPT_DISABLED=1 gh api graphql -f query='query($owner:String!, $number:Int!, $repo:String!, $pr:Int!) { user(login:$owner) { projectV2(number:$number) { id title viewerCanUpdate fields(first:30) { totalCount } items(first:100) { totalCount } } repository(name:$repo) { pullRequest(number:$pr) { viewerCanUpdate viewerCanClose projectItems(first:10) { nodes { id project { id title } fieldValues(first:20) { nodes { ... on ProjectV2ItemFieldSingleSelectValue { name field { ... on ProjectV2SingleSelectField { name } } } } } } } } } } }'
+GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json
+GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefName,headRefOid,mergeStateStatus,statusCheckRollup,projectItems,url
+GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
+```
+
+Observed current-state evidence:
+
+- `gh auth status` reports the active `HumanKaylee` account with full-control
+  `project`, `repo`, and `workflow` scopes.
+- `gh repo view` reports `isPrivate:true` and `viewerPermission:"ADMIN"`.
+- Project #1 lists and views successfully with id `PVT_kwHOB69SNc4BYuyc`,
+  `19` fields, and `16` items.
+- Field list includes `Status`, `Phase`, `Priority`, `Type`, `Area`,
+  `Agent Size`, and `Blocker`; the `Status` options include `Todo`,
+  `In Progress`, and `Done`.
+- Item list reports the 15 open issue bridge items plus PR #6.
+- GraphQL reports Project #1 `viewerCanUpdate:true`, PR #6
+  `viewerCanUpdate:true`, PR #6 `viewerCanClose:true`, and PR #6 Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` with status `In Progress`.
+- The safe no-op Project write re-applied PR #6 status `In Progress` and
+  returned Project item `PVTI_lAHOB69SNc4BYuyczgtwPwg` with no permission
+  error.
+- `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`,
+  tracked on Project #1 with status `In Progress`, and at head
+  `26c619ebb9ce76e9db490b0417a504b276327c75`.
+- Phase 0 CI run `26418268897` passed for the same head: Frontend verification
+  job `77767324040` and Rust verification job `77767323996`.
+- The live issue/Project verifier passes with `1` test, `1` pass, and `0`
+  failures.
+- Missing scopes: none observed. Do not run `gh auth refresh` unless a live
+  verifier regresses or a future Project write command returns a scope error.
+
 ### Embedded Project recovery snapshot as of 2026-05-25
 
 Project recovery snapshots are point-in-time evidence; do not rewrite this section only to chase the current PR head. Use the live verifier below for current issue and Project state before changing issue status or Project fields.
@@ -762,6 +812,13 @@ presence and environment variable names only so resumed agents can distinguish
 missing provider auth/targets from deployable state without running provider
 commands. #63, #64, #65, and #69 remain open until real production evidence and
 four approved case studies exist.
+
+Phase 7 contact decision template status: local/decision-template evidence
+only; production remains blocked. `scripts/phase-7-contact-decision-template.mjs`
+records the required owner approval, selected mode, retention, backup, rotation,
+deletion, store/provider, production smoke, rollback/disable, blocked issue,
+and privacy fields for #64 and #69 without approving contact handling or
+replacing production evidence.
 
 Phase 7 metadata readiness verifies RSS uses shared site metadata with the
 sitemap, robots, canonical URL, and Open Graph path; this is local readiness
