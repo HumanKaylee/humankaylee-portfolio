@@ -16,6 +16,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   at `a963b86d460f24cb02bec950ec2e207a46b554fa`, and the remaining work limited
   to external redaction, deployment, domain, contact, rollback, Lighthouse, and
   Phase 8 approval gates.
+- Refreshed the sanitized local preflight record at PR head
+  `a1a98cb811f2e9708635b14e7087c9a455f4ea3d` and hardened its contract so stale
+  dirty-worktree entries cannot remain in the current preflight evidence row.
 - Added schema-level `approvalEvidence` guardrails so future case studies cannot
   move to `redactionStatus: "approved"` from checklist completion alone; the
   content strategy and redaction runbook now require human signoff,

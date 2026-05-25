@@ -1,8 +1,8 @@
 # Preflight
 
-Date: 2026-05-25T07:19:58-04:00
+Date: 2026-05-25T08:31:42-04:00
 Branch: `goal/portfolio-implementation`
-Checkout head at refresh: `24700f7c4430b641e8e05363a1521133f1e44332`
+Checkout head at refresh: `a1a98cb811f2e9708635b14e7087c9a455f4ea3d`
 Scope: local read-only readiness refresh. This file avoids storing secrets,
 private hostnames, private access paths, and full local home-directory paths.
 
@@ -25,11 +25,11 @@ unattended automation.
 ```text
 path: humankaylee-portfolio checkout
 branch: goal/portfolio-implementation
-checkout head at refresh: 24700f7c4430b641e8e05363a1521133f1e44332
+checkout head at refresh: a1a98cb811f2e9708635b14e7087c9a455f4ea3d
 remote fetch: https://github.com/HumanKaylee/humankaylee-portfolio.git
 remote push: https://github.com/HumanKaylee/humankaylee-portfolio.git
 base branch: main
-status at evidence collection: working tree contained GitHub Project recovery docs, launch-evidence refresh, preflight refresh, and contract updates before commit
+status at evidence collection: working tree clean at evidence collection
 ```
 
 ## GitHub Authentication
@@ -84,9 +84,9 @@ Linux Mint 22.3 / Ubuntu 24.04 noble base per local operator instructions
 
 | Check                     | Command                                                                                                                                                                                                                                                        | Sanitized Output                                                                                                                                                                                       | Status                              |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------- |
-| Timestamp                 | `date -Is`                                                                                                                                                                                                                                                     | `2026-05-25T07:19:58-04:00`                                                                                                                                                                            | recorded                            |
-| Git branch                | `git status --short --branch`                                                                                                                                                                                                                                  | `## goal/portfolio-implementation...origin/goal/portfolio-implementation`; `M docs/CHANGELOG.md`; `M docs/GITHUB_SYNC.md`; `M docs/IMPLEMENTATION_AND_TEST_PLAN.md`; `M runbooks/LAUNCH_EVIDENCE.md`; `M scripts/agent-instructions-contract.test.mjs`; `M scripts/github-sync-contract.test.mjs` | ready                               |
-| Git head                  | `git rev-parse HEAD`                                                                                                                                                                                                                                           | `24700f7c4430b641e8e05363a1521133f1e44332`                                                                                                                                                             | recorded                            |
+| Timestamp                 | `date -Is`                                                                                                                                                                                                                                                     | `2026-05-25T08:31:42-04:00`                                                                                                                                                                            | recorded                            |
+| Git branch                | `git status --short --branch`                                                                                                                                                                                                                                  | `## goal/portfolio-implementation...origin/goal/portfolio-implementation`; working tree clean at evidence collection                                                                                     | ready                               |
+| Git head                  | `git rev-parse HEAD`                                                                                                                                                                                                                                           | `a1a98cb811f2e9708635b14e7087c9a455f4ea3d`                                                                                                                                                             | recorded                            |
 | Git remotes               | `git remote -v`                                                                                                                                                                                                                                                | `origin https://github.com/HumanKaylee/humankaylee-portfolio.git (fetch)`; `origin https://github.com/HumanKaylee/humankaylee-portfolio.git (push)`                                                    | ready                               |
 | Node                      | `node --version`                                                                                                                                                                                                                                               | `v22.22.2`                                                                                                                                                                                             | ready                               |
 | Corepack                  | `corepack --version`                                                                                                                                                                                                                                           | `0.34.6`                                                                                                                                                                                               | ready                               |

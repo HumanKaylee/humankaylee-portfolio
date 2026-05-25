@@ -242,15 +242,24 @@ test("preflight refresh records sanitized local readiness evidence only", () => 
 		1: ["git status --short --branch"],
 		2: [
 			"## goal/portfolio-implementation...origin/goal/portfolio-implementation",
-			"M docs/CHANGELOG.md",
-			"M docs/GITHUB_SYNC.md",
-			"M docs/IMPLEMENTATION_AND_TEST_PLAN.md",
-			"M runbooks/LAUNCH_EVIDENCE.md",
-			"M scripts/agent-instructions-contract.test.mjs",
-			"M scripts/github-sync-contract.test.mjs",
+			"working tree clean at evidence collection",
 		],
 		3: ["ready"],
 	});
+	for (const staleDirtyEntry of [
+		"M docs/CHANGELOG.md",
+		"M docs/GITHUB_SYNC.md",
+		"M docs/IMPLEMENTATION_AND_TEST_PLAN.md",
+		"M runbooks/LAUNCH_EVIDENCE.md",
+		"M scripts/agent-instructions-contract.test.mjs",
+		"M scripts/github-sync-contract.test.mjs",
+	]) {
+		expectNotContains(
+			preflight,
+			staleDirtyEntry,
+			`stale dirty preflight entry ${staleDirtyEntry}`,
+		);
+	}
 	expectTableRowCells(preflight, "GitHub Project discovery", {
 		1: [
 			"GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json",
