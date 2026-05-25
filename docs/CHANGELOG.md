@@ -9,10 +9,10 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 ### Added
 
 - Refreshed the continuation plan and GitHub sync runbook after the
-  2026-05-25T16:00:58-04:00 permission recheck: Project #1 read/write access
+  2026-05-25T16:18:05-04:00 permission recheck: Project #1 read/write access
   remains healthy, all 15 open live-bridge issues are on Project #1, PR #6 is
-  tracked as `In Progress` at `3c984bc675bad4303e792a9c30a1b7bf8415c6ce`, Phase
-  0 CI run `26417384814` passed, and the ready-to-use `/goal` prompt now
+  tracked as `In Progress` at `efb85e86f8a2c92a7524e22fc0f141e2965802b3`, Phase
+  0 CI run `26417762736` passed, and the ready-to-use `/goal` prompt now
   explicitly skips Project-auth recovery unless a live verifier regresses.
 - Added a Phase 7 evidence template helper and package script so future
   production or owner-authorized provider-preview evidence for

@@ -320,11 +320,11 @@ Observed current-state evidence:
 - Missing scopes: none observed. Do not run `gh auth refresh` unless a live
   verifier regresses or a future Project write command returns a scope error.
 
-### Latest GitHub Project permission recheck as of 2026-05-25T16:00:58-04:00
+### Latest GitHub Project permission recheck as of 2026-05-25T16:18:05-04:00
 
 Project #1 still lists/views successfully for the current local `gh` token. PR
 #6 remains tracked on Project #1 with status `In Progress` at head
-`3c984bc675bad4303e792a9c30a1b7bf8415c6ce`. This is active-PR and Project
+`efb85e86f8a2c92a7524e22fc0f141e2965802b3`. This is active-PR and Project
 triage evidence only; it is not launch-readiness evidence and does not close any
 issue.
 
@@ -339,7 +339,7 @@ GH_PROMPT_DISABLED=1 gh issue list --repo HumanKaylee/humankaylee-portfolio --st
 GH_PROMPT_DISABLED=1 gh api graphql -f query='query($login:String!,$projectNumber:Int!,$owner:String!,$repo:String!,$prNumber:Int!){ user(login:$login){ projectV2(number:$projectNumber){ id title viewerCanUpdate fields(first:50){ nodes{ __typename ... on ProjectV2FieldCommon { id name dataType } ... on ProjectV2SingleSelectField { id name dataType options { id name } } } } } } repository(owner:$owner,name:$repo){ pullRequest(number:$prNumber){ id number projectItems(first:20){ nodes{ id project { title } fieldValues(first:20){ nodes{ __typename ... on ProjectV2ItemFieldSingleSelectValue { name optionId field { ... on ProjectV2FieldCommon { name } } } ... on ProjectV2ItemFieldTextValue { text field { ... on ProjectV2FieldCommon { name } } } } } } } } } }' -F login=HumanKaylee -F projectNumber=1 -F owner=HumanKaylee -F repo=humankaylee-portfolio -F prNumber=6
 GH_PROMPT_DISABLED=1 gh project item-edit --project-id PVT_kwHOB69SNc4BYuyc --id PVTI_lAHOB69SNc4BYuyczgtwPwg --field-id PVTSSF_lAHOB69SNc4BYuyczhTyc5M --single-select-option-id 47fc9ee4 --format json
 GH_PROMPT_DISABLED=1 gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json number,state,isDraft,headRefName,headRefOid,mergeStateStatus,statusCheckRollup,projectItems,url
-GH_PROMPT_DISABLED=1 gh run view 26417384814 --repo HumanKaylee/humankaylee-portfolio --json databaseId,headSha,status,conclusion,workflowName,jobs,url
+GH_PROMPT_DISABLED=1 gh run view 26417762736 --repo HumanKaylee/humankaylee-portfolio --json databaseId,headSha,status,conclusion,workflowName,jobs,url
 GH_PROMPT_DISABLED=1 HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs
 HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs
 ```
@@ -364,9 +364,9 @@ Observed current-state evidence:
   error.
 - `gh pr view` reports PR #6 open, not draft, `mergeStateStatus:"CLEAN"`,
   tracked on Project #1 with status `In Progress`, and at head
-  `3c984bc675bad4303e792a9c30a1b7bf8415c6ce`.
-- Phase 0 CI run `26417384814` passed for the same head: Frontend verification
-  job `77764685900` and Rust verification job `77764685901`.
+  `efb85e86f8a2c92a7524e22fc0f141e2965802b3`.
+- Phase 0 CI run `26417762736` passed for the same head: Frontend verification
+  job `77765808099` and Rust verification job `77765808132`.
 - The live issue/Project verifier and the current-head PR/CI verifier both
   pass with `1` test, `1` pass, and `0` failures.
 - Missing scopes: none observed. If this regresses, use the manual recovery
