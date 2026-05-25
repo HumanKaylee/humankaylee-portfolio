@@ -10,7 +10,7 @@
 ## GitHub Project Board
 
 GitHub Project recovery is complete for the current open issue bridge as of
-2026-05-25T11:14:53Z.
+2026-05-25T08:18:42-04:00.
 
 - Project: `HumanKaylee Portfolio`
 - Number: `1`
@@ -53,7 +53,10 @@ error: your authentication token is missing required scopes [read:project]
 
 If Project listing regresses to a missing-scope error,
 `gh auth refresh --hostname github.com -s project,read:project` requires
-interactive device-code approval. Repo issues remain the synchronization
+interactive device-code approval for the Project board. If private repository
+issue listing also regresses, refresh the broader private-repo plus Project
+scopes with `gh auth refresh --hostname github.com -s repo -s project`. Repo
+issues remain the synchronization
 surface for status, ownership, labels, and acceptance criteria until Project
 creation and issue sync are complete.
 
@@ -61,13 +64,15 @@ creation and issue sync are complete.
 
 - Listing only: `gh auth refresh --hostname github.com -s read:project`.
 - Create or update: `gh auth refresh --hostname github.com -s project,read:project`.
+- Private repo issue list plus Project create/update, if repo issue reads also
+  fail: `gh auth refresh --hostname github.com -s repo -s project`.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
 ### Latest Project recovery snapshot as of 2026-05-25
 
-Captured 2026-05-25T11:14:53Z from the local GitHub CLI after Project creation
-and open-issue sync:
+Captured 2026-05-25T08:18:42-04:00 from the local GitHub CLI after Project
+creation, open-issue sync, and permission recheck:
 
 ```bash
 gh auth status -h github.com
@@ -93,6 +98,19 @@ Result:
 {"projects":[{"closed":false,"fields":{"totalCount":19},"items":{"totalCount":15},"number":1,"owner":{"login":"HumanKaylee","type":"User"},"public":false,"title":"HumanKaylee Portfolio","url":"https://github.com/users/HumanKaylee/projects/1"}],"totalCount":1}
 ```
 
+Current field and item checks also succeed:
+
+```bash
+GH_PROMPT_DISABLED=1 gh project field-list 1 --owner HumanKaylee --format json
+GH_PROMPT_DISABLED=1 gh project item-list 1 --owner HumanKaylee --limit 200 --format json
+```
+
+The latest item-list result contains 15 issue-backed items for `#3`, `#5`,
+`#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and `#70` through
+`#74`, with `Status`, `Phase`, `Priority`, `Type`, `Area`, `Agent Size`, and
+`Blocker` fields populated. The latest open-issue diff returned no missing
+Project items.
+
 Use user-owner Project commands for this account; `organization(login:
 "HumanKaylee")` is not a valid lookup because HumanKaylee is a user account, not
 an organization.
@@ -112,8 +130,9 @@ Current Project board maintenance steps:
    fails with missing Project scopes, run
    `gh auth refresh --hostname github.com -s project,read:project` from an
    interactive shell and approve the device/browser prompt for the HumanKaylee
-   account. Use both scopes for create/update work; `read:project` alone is
-   only enough to list projects.
+   account. If private issue-list reads also fail, run
+   `gh auth refresh --hostname github.com -s repo -s project` to refresh both
+   private repository and Project scopes.
 1. Run `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
    and confirm whether `HumanKaylee Portfolio` already exists.
    Canonical verification command:

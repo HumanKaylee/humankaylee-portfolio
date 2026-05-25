@@ -25,7 +25,7 @@ Read these before executing any phase:
 - `docs/CONTENT_REDACTION_GUIDE.md`: publication safety checklist for case studies, projects, artifacts, logs, screenshots, and links.
 - `docs/PRIVACY.md`: implemented privacy posture for contact handling, optional events, logging, and visitor data boundaries.
 - `docs/OPERATIONS.md`: local, preview, production, deployment, incident, rollback, and maintenance runbooks.
-- `docs/GITHUB_SYNC.md`: GitHub issue bridge, Project auth blocker, live issue status, and sync commands.
+- `docs/GITHUB_SYNC.md`: GitHub issue bridge, Project board state, live issue status, and sync commands.
 - `runbooks/LAUNCH_EVIDENCE.md`: current local/PR evidence, production blockers, and evidence boundaries.
 - `README.md`: repository status and working decision.
 
@@ -49,34 +49,38 @@ verifiers before acting on issue, PR, CI, or launch status.
   `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
   `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
   and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
-- The latest read-only swarm audit found the active local slice to be B-051
-  bundle-budget dry-run support. If `git status` still shows
-  `scripts/bundle-budget.mjs`, `scripts/bundle-budget.test.mjs`,
-  `scripts/quality-runbook-contract.test.mjs`, `runbooks/QUALITY.md`, or
-  `docs/CHANGELOG.md` modified, finish that slice first with
-  `node --test scripts/bundle-budget.test.mjs scripts/quality-runbook-contract.test.mjs`,
-  `node scripts/bundle-budget.mjs --dry-run`, `pnpm lint`, `pnpm typecheck`,
-  `pnpm test`, `pnpm build && pnpm bundle:budget`, and `git diff --check`.
-- If the B-051 dry-run slice is already committed and PR CI is green, treat it
-  as guard evidence only; do not reimplement it.
-- The next non-blocked local work while production blockers remain unresolved is
-  limited to docs-sync, guardrail, and verification-hardening slices such as:
-  splitting Phase 7 blocker-traceability evidence by frontend/domain versus
-  API/contact/rollback, tightening the shared `reviewed` versus `approved`
-  redaction invariant, and mirroring B-068 compare-only hosting evidence without
-  choosing a provider.
+- Current live recheck at 2026-05-25T08:18:42-04:00 found a clean worktree on
+  `goal/portfolio-implementation`, PR #6 open/non-draft/mergeable at
+  `a963b86d460f24cb02bec950ec2e207a46b554fa`, and Phase 0 CI run
+  `26399651670` successful for Frontend verification job `77708582883` and
+  Rust verification job `77708582867`.
+- The latest committed non-blocked local slice is visual CI triage protocol
+  hardening in `runbooks/QUALITY.md`, guarded by
+  `scripts/quality-runbook-contract.test.mjs` and committed as
+  `a963b86d460f24cb02bec950ec2e207a46b554fa`. Treat the B-051 bundle-budget,
+  case-study approval-evidence, Project-sync recovery, and visual-CI-triage
+  slices as guard evidence only; do not reimplement them when PR CI and the
+  focused contracts are green.
 - GitHub Project access and open-issue bridge sync were rechecked on
-  2026-05-25T11:14:53Z. The `HumanKaylee Portfolio` Project now exists at
-  `https://github.com/users/HumanKaylee/projects/1`, is private, has 19 fields,
-  and contains 15 items for every currently open live-bridge issue: `#3`, `#5`,
-  `#20`, `#21`, `#24`, `#25`, `#63`, `#64`, `#65`, `#69`, and `#70` through
-  `#74`. Project fields are populated for phase, priority, type, area, agent
-  size, status, and blocker. Treat future Project work as maintenance for newly
-  opened or relabeled issues, not as a current launch blocker.
-- External blockers that still require owner or production action are: at least
-  four approved case studies, final frontend domain and production frontend
-  deployment, approved API host and production `/api/health`, approved contact
-  handling, rollback evidence, and production Lighthouse evidence.
+  2026-05-25T08:18:42-04:00. The local `gh` token has `repo` and `project`
+  scopes, `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+  succeeds, Project #1 field and item listing succeeds, and every currently
+  open live-bridge issue has a Project item. Treat future Project work as
+  maintenance for newly opened or relabeled issues, not as a current launch
+  blocker.
+- What remains is external launch and approval work: complete redaction
+  approvals for at least four launch case studies; record HumanKaylee
+  publication-safety decisions for #24 and #25; deploy the frontend for #63;
+  deploy the Rust API for #64; configure DNS/TLS/canonical production metadata
+  for #65; approve contact handling or a mailto-only launch exception; capture
+  rollback evidence, production Lighthouse, production route/API/contact smoke,
+  and the full B-063 final launch checklist for #69; keep #70 through #74
+  planning-only until B-063 launch evidence exists.
+- If a next goal run resumes before those external blockers are resolved, it
+  should first re-run the live checks above, then choose only a small
+  non-blocked docs-sync, guardrail, or verification-hardening slice with
+  explicit contract evidence. Do not invent deployment, redaction, contact, or
+  production evidence.
 - Local laptop and `rog-strix-joe` operational checks are outside this
   portfolio repo. Do not reboot either machine from this goal. Current local
   laptop power policy evidence shows suspend/hibernate/DPMS disabled, but a

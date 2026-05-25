@@ -11,6 +11,11 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 - Added visual CI triage guidance to the quality runbook so screenshot failures
   require job-log inspection, focused reproduction, full E2E reproduction, and a
   clean worktree before any failed-job rerun or snapshot/threshold change.
+- Refreshed the implementation plan and GitHub sync runbook after the latest
+  live recheck showed Project #1 permissions and item sync healthy, PR #6 green
+  at `a963b86d460f24cb02bec950ec2e207a46b554fa`, and the remaining work limited
+  to external redaction, deployment, domain, contact, rollback, Lighthouse, and
+  Phase 8 approval gates.
 - Added schema-level `approvalEvidence` guardrails so future case studies cannot
   move to `redactionStatus: "approved"` from checklist completion alone; the
   content strategy and redaction runbook now require human signoff,
@@ -20,12 +25,13 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   types, budget limit, and summary path can be verified before build artifacts
   exist.
 - Added a current goal-resume overlay to the implementation plan so future
-  `/goal` runs finish the active B-051 slice first, reverify live issue/PR/CI
-  state, and keep production, Project, redaction, local-laptop, and
-  `rog-strix-joe` blockers separate from local portfolio guard work.
-- Refreshed the GitHub Project permission snapshot after a 2026-05-25 recheck;
-  `project` scope is now available and read-only listing works for the
-  HumanKaylee user account.
+  `/goal` runs reverify live issue/PR/CI/Project state first, avoid
+  reimplementing completed guardrail slices, and keep production, redaction,
+  local-laptop, and `rog-strix-joe` blockers separate from local portfolio guard
+  work.
+- Refreshed the GitHub Project permission snapshot after 2026-05-25 rechecks;
+  `repo` and `project` scopes are available and read-only listing, field
+  listing, and item listing work for the HumanKaylee user account.
 - Created the private `HumanKaylee Portfolio` GitHub Project, synced every
   currently open live-bridge issue, and populated phase, priority, type, area,
   agent size, status, and blocker fields while keeping production launch
