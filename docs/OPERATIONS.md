@@ -181,6 +181,8 @@ Use public-safe evidence summaries in runbooks and changelog entries.
 
 - Preserve the exact command, target, timestamp, result/status, artifact link,
   deployment ID, rollback target, blocker, and next action.
+- Label each evidence row as local/PR, production, or owner-approved
+  production-equivalent provider preview before using it for launch decisions.
 - Redact provider account IDs, private paths, logs, secrets, tokens, and other
   sensitive identifiers before copying evidence into runbooks, public docs, or
   changelog entries.

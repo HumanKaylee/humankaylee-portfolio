@@ -13,6 +13,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   `2c201d541b068fda29f123350e846aa078544a06`, and the remaining work limited
   to external redaction, deployment, domain, contact, rollback, Lighthouse, and
   Phase 8 approval gates.
+- Hardened Phase 7 evidence capture so future launch rows must record evidence
+  authority as local/PR, production, or owner-approved production-equivalent
+  provider preview before replacing blocked production evidence.
 - Hardened GitHub deployment sync notes so B-068 remains compare-only: provider
   commands, migration procedures, env/secrets configuration, DNS cutover, and
   rollback steps stay deferred until selected-host, launch, and approval

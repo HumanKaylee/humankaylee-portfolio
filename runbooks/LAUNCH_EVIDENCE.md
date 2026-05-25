@@ -180,6 +180,8 @@ For each future launch check, append a row with:
 - Exact command.
 - Target, including the real production URL, origin, or local preview target
   when applicable.
+- Evidence authority: local/PR evidence, production evidence, or
+  owner-approved production-equivalent provider preview evidence.
 - ISO-8601 date/time.
 - Result / Status with exit status or HTTP status.
 - Artifact path, PR check URL, deployment ID, report path, rollback target, or
@@ -196,6 +198,7 @@ domain, or rollback provider:
 | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Command                                           | Exact command used to produce the evidence.                                           |
 | Target                                            | Real production URL, origin, deployment target, or local preview target.              |
+| Evidence Authority                                | One of local/PR, production, or owner-approved production-equivalent provider preview. |
 | Timestamp                                         | ISO-8601 date/time.                                                                   |
 | Result / Status                                   | Exit status for local commands or HTTP status for request-based checks.               |
 | Artifact / Link / Deployment ID / Rollback Target | Public-safe pointer to the artifact, link, deployment identifier, or rollback target. |
@@ -203,4 +206,6 @@ domain, or rollback provider:
 | Privacy Redaction Rule                            | The redaction rule applied before the row was copied here.                            |
 
 Do not use example domains, provider placeholders, blank result cells, or
-generic "passed locally" claims as final launch evidence.
+generic "passed locally" claims as final launch evidence. Local/PR evidence
+must stay labeled as local/PR and cannot satisfy production-live launch
+requirements.

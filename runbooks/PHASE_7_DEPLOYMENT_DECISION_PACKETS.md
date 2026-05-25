@@ -48,14 +48,15 @@ Authoritative blockers:
 
 Use this mapping when future Phase 7 evidence is ready to record. It does not
 select providers, replace placeholders, run provider commands, or clear blocked
-rows.
+rows. Evidence authority must be explicit before any row can replace a blocked
+production evidence row.
 
 | Evidence area     | Fields to capture                                                                                                                                                                                                        | Still blocked by                                                                               |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| Frontend evidence | Exact command, target URL or local target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.              | Provider project, production deploy URL, production smoke, and frontend rollback evidence.     |
-| API evidence      | Exact command, public API origin or local target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.       | API host selection, contact handling decision, API health evidence, and API rollback evidence. |
-| Domain evidence   | Exact command, final domain or local validation target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule. | Final domain selection, DNS, TLS, and canonical URL evidence.                                  |
-| Rollback evidence | Exact command, deployment ID or rollback target, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.        | Real deployment IDs, rollback targets, and rollback verification output.                       |
+| Frontend evidence | Exact command, target URL or local target, evidence authority, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.              | Provider project, production deploy URL, production smoke, and frontend rollback evidence.     |
+| API evidence      | Exact command, public API origin or local target, evidence authority, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.       | API host selection, contact handling decision, API health evidence, and API rollback evidence. |
+| Domain evidence   | Exact command, final domain or local validation target, evidence authority, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule. | Final domain selection, DNS, TLS, and canonical URL evidence.                                  |
+| Rollback evidence | Exact command, deployment ID or rollback target, evidence authority, ISO-8601 timestamp, result/status with exit status or HTTP status, artifact/link/deployment ID/rollback target, blocker/next action, and privacy redaction rule.        | Real deployment IDs, rollback targets, and rollback verification output.                       |
 
 ## Pre-Provider Local Readiness Contract
 

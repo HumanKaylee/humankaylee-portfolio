@@ -150,6 +150,11 @@ test("Phase 7 launch evidence schema stays provider-neutral and public-safe", ()
 		evidence,
 		"Target, including the real production URL, origin, or local preview target when applicable.",
 	);
+	expectContains(
+		evidence,
+		"Evidence authority: local/PR evidence, production evidence, or owner-approved production-equivalent provider preview evidence.",
+		"future evidence authority capture requirement",
+	);
 	expectContains(evidence, "ISO-8601 date/time.");
 	expectContains(
 		evidence,
@@ -168,10 +173,20 @@ test("Phase 7 launch evidence schema stays provider-neutral and public-safe", ()
 	expectTableRow(evidence, "Result / Status", [
 		"Exit status for local commands or HTTP status for request-based checks.",
 	]);
+	expectTableRow(evidence, "Evidence Authority", [
+		"local/PR",
+		"production",
+		"owner-approved production-equivalent provider preview",
+	]);
 	expectTableRow(
 		evidence,
 		"Artifact / Link / Deployment ID / Rollback Target",
 		["Public-safe pointer", "deployment identifier", "rollback target"],
+	);
+	expectContains(
+		evidence,
+		"Local/PR evidence must stay labeled as local/PR and cannot satisfy production-live launch requirements.",
+		"local PR evidence cannot satisfy production launch requirements",
 	);
 	expectTableRow(evidence, "Privacy Redaction Rule", [
 		"The redaction rule applied before the row was copied here.",
@@ -188,22 +203,30 @@ test("Phase 7 launch evidence schema stays provider-neutral and public-safe", ()
 	);
 	expectTableRow(packet, "Frontend evidence", [
 		"target URL or local target",
+		"evidence authority",
 		"deployment ID/rollback target",
 		"Provider project",
 		"production deploy URL",
 	]);
 	expectTableRow(packet, "API evidence", [
 		"public API origin or local target",
+		"evidence authority",
 		"result/status with exit status or HTTP status",
 		"API host selection",
 		"contact handling decision",
 	]);
 	expectTableRow(packet, "Rollback evidence", [
 		"deployment ID or rollback target",
+		"evidence authority",
 		"privacy redaction rule",
 		"Real deployment IDs",
 		"rollback verification output",
 	]);
+	expectContains(
+		packet,
+		"Evidence authority must be explicit before any row can replace a blocked production evidence row.",
+		"packet evidence authority launch boundary",
+	);
 
 	expectContains(operations, "### 4.4 Public-Safe Evidence Handling");
 	expectContains(operations, "public-safe evidence");
@@ -214,6 +237,11 @@ test("Phase 7 launch evidence schema stays provider-neutral and public-safe", ()
 	expectContains(
 		operations,
 		"Redact provider account IDs, private paths, logs, secrets, tokens, and other sensitive identifiers before copying evidence into runbooks, public docs, or changelog entries.",
+	);
+	expectContains(
+		operations,
+		"Label each evidence row as local/PR, production, or owner-approved production-equivalent provider preview before using it for launch decisions.",
+		"operations evidence authority label requirement",
 	);
 	expectContains(
 		changelog,
