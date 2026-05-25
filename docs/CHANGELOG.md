@@ -16,8 +16,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   state, and keep production, Project, redaction, local-laptop, and
   `rog-strix-joe` blockers separate from local portfolio guard work.
 - Refreshed the GitHub Project permission snapshot after a 2026-05-25 recheck;
-  `read:project` and `project` are still missing, so Project board
-  creation/sync remains blocked until interactive auth refresh succeeds.
+  `project` scope is now available and read-only listing succeeds with zero
+  Projects, so the remaining work is Project board creation and issue sync.
 - Added a Lighthouse dry-run audit-plan summary so B-050 route, warm-up, scored
   artifact, and summary paths can be verified cheaply before launching Chrome.
 - Added a contract guard for the operations runbook's minimum viable production

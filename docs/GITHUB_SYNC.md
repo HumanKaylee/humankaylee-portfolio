@@ -9,11 +9,12 @@
 
 ## GitHub Project Board
 
-GitHub Project board creation is blocked for the current non-interactive CLI
-token; repo issues are the synchronization surface until the account has the
-required Project scopes.
+GitHub Project auth is available for the active HumanKaylee CLI token, but the
+`HumanKaylee Portfolio` Project board does not exist yet. Repo issues remain
+the synchronization surface until the board is created and every open issue in
+the live bridge has a Project item or a documented skip reason.
 
-Attempted:
+Earlier blocked create attempt before auth refresh:
 
 ```bash
 gh project create --owner HumanKaylee --title "HumanKaylee Portfolio" --format json
@@ -25,7 +26,7 @@ Result:
 error: your authentication token is missing required scopes [project read:project]
 ```
 
-Read-only project listing is also blocked:
+Earlier blocked read-only listing before auth refresh:
 
 ```bash
 GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
@@ -37,9 +38,11 @@ Result:
 error: your authentication token is missing required scopes [read:project]
 ```
 
+If Project listing regresses to a missing-scope error,
 `gh auth refresh --hostname github.com -s project,read:project` requires
-interactive device-code approval. Until that is completed, repo issues are the
-synchronization surface for status, ownership, labels, and acceptance criteria.
+interactive device-code approval. Repo issues remain the synchronization
+surface for status, ownership, labels, and acceptance criteria until Project
+creation and issue sync are complete.
 
 ### Manual Project auth recovery cases
 
@@ -48,10 +51,10 @@ synchronization surface for status, ownership, labels, and acceptance criteria.
 
 Auth refresh only proves the token has scopes; it does not prove the Project board exists or is current.
 
-### Auth snapshot as of 2026-05-25
+### Latest Project auth snapshot as of 2026-05-25
 
-Captured 2026-05-25T10:47:16Z from the local GitHub CLI without running auth
-refresh:
+Captured 2026-05-25T10:57:47Z from the local GitHub CLI after the owner updated
+Project permissions:
 
 ```bash
 gh auth status -h github.com
@@ -59,10 +62,12 @@ gh auth status -h github.com
 
 Current token scopes:
 
-`admin:org`, `admin:public_key`, `admin:repo_hook`, `delete:packages`,
-`notifications`, `repo`, `workflow`, `write:discussion`, `write:packages`
+`admin:org`, `admin:org_hook`, `admin:public_key`, `admin:repo_hook`,
+`codespace`, `delete:packages`, `notifications`, `project`, `repo`,
+`workflow`, `write:discussion`, `write:network_configurations`,
+`write:packages`
 
-The read-only Project check still fails:
+The read-only Project check now succeeds:
 
 ```bash
 GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
@@ -70,26 +75,28 @@ GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json
 
 Result:
 
-```text
-error: your authentication token is missing required scopes [read:project]
-To request it, run:  gh auth refresh -s read:project
+```json
+{"projects":[],"totalCount":0}
 ```
 
-A direct ProjectsV2 GraphQL query also fails with `INSUFFICIENT_SCOPES` for
-project fields because the token lacks `read:project`.
+The empty result means the token can list Projects for the HumanKaylee user, but
+no `HumanKaylee Portfolio` board exists yet. Use user-owner Project commands for
+this account; `organization(login: "HumanKaylee")` is not a valid lookup because
+HumanKaylee is a user account, not an organization.
 
 Do not run `gh auth refresh` from unattended automation. It requires
-interactive account approval and should be performed by HumanKaylee before any
-GitHub Project board creation or sync.
+interactive account approval and should be performed by HumanKaylee only if
+Project scope checks regress.
 
 Use `GH_PROMPT_DISABLED=1` for Project discovery checks so automation fails fast
 instead of opening an interactive prompt.
 
 ### Project board recovery steps
 
-After interactive auth refresh succeeds:
+Current Project board recovery steps:
 
-0. Run
+0. If `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json`
+   fails with missing Project scopes, run
    `gh auth refresh --hostname github.com -s project,read:project` from an
    interactive shell and approve the device/browser prompt for the HumanKaylee
    account. Use both scopes for create/update work; `read:project` alone is
