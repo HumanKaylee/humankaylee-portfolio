@@ -325,3 +325,6 @@ Each launch case study must include:
 ## Launch Eligibility
 
 Launch eligibility requires all four conditions: `publicationStatus: "publish"`, `redactionStatus: "approved"`, an understandable public story, and an artifact checklist pass.
+
+`reviewed` is never launch-eligible; the launch-eligible case-study count stays
+`0` until real human approval evidence exists.

@@ -19,6 +19,9 @@ Use these statuses in content frontmatter or data as `redactionStatus`:
 | `approved` | The item has completed review, open-items clearance, artifact inspection, human signoff, and any required production or owner-approved production-equivalent provider preview evidence. | Yes |
 | `blocked` | The item cannot be published without missing approval, unsafe details, or loss of credibility after redaction. | No |
 
+`reviewed` is never launch-eligible; the launch-eligible case-study count stays
+`0` until real human approval evidence exists.
+
 Use these publication statuses for case-study launch selection as `publicationStatus`:
 
 | Status | Meaning |

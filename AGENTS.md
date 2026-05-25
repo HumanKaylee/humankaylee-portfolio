@@ -42,6 +42,8 @@ of truth for implementation state, launch blockers, and production evidence.
 - Content, case-study, notes, resume, contact, or analytics work must also read
   the content strategy, redaction guide, and privacy summary before changing
   public-facing evidence.
+- `reviewed` is never launch-eligible; the launch-eligible case-study count
+  stays `0` until real human approval evidence exists.
 - Prefer non-colliding agents by ownership area: content, shell/layout, visual/WebGL, Rust API, CI/deployment, accessibility/performance.
 - Smaller/cheaper models may own mechanical tasks with exact file paths and acceptance criteria.
 - Use stronger models for design, architecture, visual-system, security, and final review.

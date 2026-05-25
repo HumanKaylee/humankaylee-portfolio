@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added an explicit content/redaction boundary that `reviewed` case studies are
+  never launch-eligible and the launch-eligible case-study count remains `0`
+  until real human approval evidence exists.
 - Clarified the implementation plan so swarm execution is opt-in for multi-lane
   or reviewed parallel-safe work, while single-lane docs/contract fixes stay in
   single-session execution unless there is a concrete parallelization benefit.

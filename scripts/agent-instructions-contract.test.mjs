@@ -7,6 +7,8 @@ const LOCAL_PORTFOLIO_SKILL_PATHS = [
 	"/home/joe/.codex/skills/humankaylee-portfolio/SKILL.md",
 	"/home/joe/.agents/skills/humankaylee-portfolio/SKILL.md",
 ];
+const REVIEWED_LAUNCH_BOUNDARY =
+	"`reviewed` is never launch-eligible; the launch-eligible case-study count stays `0` until real human approval evidence exists.";
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -106,6 +108,7 @@ test("repository agent instructions use current hosting and launch-blocker guida
 	expectContains(agents, "not launch-ready");
 	expectContains(agents, "production frontend/API targets");
 	expectContains(agents, "redaction approvals");
+	expectContains(agents, REVIEWED_LAUNCH_BOUNDARY);
 	expectContains(
 		agents,
 		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
@@ -201,6 +204,7 @@ test("installed portfolio skill mirrors preserve local launch guardrails", (t) =
 		"Swarm execution is opt-in for tasks that span multiple ownership lanes or need reviewed parallel-safe split work",
 		"single-lane docs/contract fixes should stay with one owner in single-session execution unless the Coordinator records a concrete parallelization benefit",
 		"B-067/#73 publication requires B-063 launch evidence and approved public-safe content before any note or postmortem is published, added to RSS, or used for issue closure.",
+		REVIEWED_LAUNCH_BOUNDARY,
 	];
 
 	for (const mirror of mirrorContents) {

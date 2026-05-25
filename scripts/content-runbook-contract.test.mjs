@@ -4,6 +4,9 @@ import { test } from "node:test";
 
 const runbookPath = "runbooks/CONTENT_UPDATE_AND_REDACTION.md";
 const contentStrategyPath = "docs/CONTENT_STRATEGY.md";
+const contentRedactionGuidePath = "docs/CONTENT_REDACTION_GUIDE.md";
+const reviewedLaunchBoundary =
+	"`reviewed` is never launch-eligible; the launch-eligible case-study count stays `0` until real human approval evidence exists.";
 
 function readRunbook() {
 	assert.ok(existsSync(runbookPath), `missing runbook: ${runbookPath}`);
@@ -27,13 +30,35 @@ function readContentStrategy() {
 	return content;
 }
 
+function readContentRedactionGuide() {
+	assert.ok(
+		existsSync(contentRedactionGuidePath),
+		`missing content redaction guide: ${contentRedactionGuidePath}`,
+	);
+
+	const content = readFileSync(contentRedactionGuidePath, "utf8");
+	assert.ok(
+		content.trim().length > 0,
+		`empty content redaction guide: ${contentRedactionGuidePath}`,
+	);
+	return content;
+}
+
 function expectContains(content, needle, label = needle) {
 	assert.ok(content.includes(needle), `expected runbook to include ${label}`);
 }
 
+function normalizeContent(content) {
+	return content.replace(/\s+/g, " ").trim();
+}
+
+function contentIncludesNormalized(content, needle) {
+	return normalizeContent(content).includes(normalizeContent(needle));
+}
+
 function expectStrategyContains(content, needle, label = needle) {
 	assert.ok(
-		content.includes(needle),
+		contentIncludesNormalized(content, needle),
 		`expected content strategy to include ${label}`,
 	);
 }
@@ -313,4 +338,28 @@ test("content strategy doc uses the live schema and launch eligibility wording",
 		"artifact checklist pass",
 		"artifact checklist pass requirement",
 	);
+});
+
+test("content strategy and redaction guide reject reviewed launch eligibility", () => {
+	const contentStrategy = readContentStrategy();
+	const contentRedactionGuide = readContentRedactionGuide();
+
+	expectStrategyContains(
+		contentStrategy,
+		reviewedLaunchBoundary,
+		"reviewed launch-eligibility boundary",
+	);
+	assert.ok(
+		contentIncludesNormalized(contentRedactionGuide, reviewedLaunchBoundary),
+		"expected content redaction guide to include reviewed launch-eligibility boundary",
+	);
+});
+
+test("reviewed launch boundary matcher tolerates markdown line wrapping", () => {
+	const wrappedBoundary = [
+		"`reviewed` is never launch-eligible; the launch-eligible case-study count",
+		"stays `0` until real human approval evidence exists.",
+	].join("\n");
+
+	assert.ok(contentIncludesNormalized(wrappedBoundary, reviewedLaunchBoundary));
 });
