@@ -76,4 +76,27 @@ test.describe("page metadata @metadata", () => {
 		expect(jsonLdText).not.toContain("openItems");
 		expect(jsonLdText).not.toContain("/home/joe");
 	});
+
+	test("renders note-specific BlogPosting JSON-LD on note detail pages", async ({
+		page,
+	}) => {
+		await page.goto(
+			"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		);
+
+		const structuredData = await page
+			.locator('script[type="application/ld+json"]')
+			.allTextContents();
+		const jsonLdText = structuredData.join("\n");
+
+		expect(jsonLdText).toContain('"@type":"BlogPosting"');
+		expect(jsonLdText).toContain(
+			'"headline":"How the portfolio stays useful when the API is offline"',
+		);
+		expect(jsonLdText).toContain(
+			'"url":"https://humankaylee.example/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"',
+		);
+		expect(jsonLdText).toContain('"datePublished":"2026-05-24"');
+		expect(jsonLdText).not.toContain("/home/joe");
+	});
 });

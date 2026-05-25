@@ -23,6 +23,9 @@ type Props = {
 
 const { note } = Astro.props;
 const { Content } = await render(note);
+const [site] = await getCollection("site");
+const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+const canonicalUrl = `${siteUrl}${note.data.seo.canonicalPath}`;
 const publishedAt = new Date(`${note.data.publishedAt}T00:00:00Z`);
 const formattedDate = new Intl.DateTimeFormat("en-US", {
 	month: "long",
@@ -30,12 +33,22 @@ const formattedDate = new Intl.DateTimeFormat("en-US", {
 	year: "numeric",
 	timeZone: "UTC",
 }).format(publishedAt);
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: note.data.title,
+	description: note.data.summary,
+	url: canonicalUrl,
+	datePublished: note.data.publishedAt,
+	keywords: note.data.tags,
+};
 ---
 
 <BaseLayout
 	title={`${note.data.seo.title} | HumanKaylee`}
 	description={note.data.seo.description}
 	canonicalPath={note.data.seo.canonicalPath}
+	structuredData={structuredData}
 >
 	<section class="page-shell" aria-labelledby="note-title">
 		<article class="paper-panel note-article">
