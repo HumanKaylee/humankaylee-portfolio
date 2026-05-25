@@ -10,7 +10,7 @@ not been implemented yet.
 ## Scope
 
 - The public site is a static Astro build.
-- The resume is published as a static PDF asset.
+- The resume is available as a static PDF asset from the approved local source.
 - The contact route uses a visible mailto fallback and an API enhancement when
   JavaScript is available.
 - Events exist behind an opt-in API flag and are disabled by default.

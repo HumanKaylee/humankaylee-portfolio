@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened architecture, operations, and privacy wording so optional analytics
+  cannot be mistaken for a shipped provider, event sink, or retention policy,
+  and the resume PDF remains scoped to approved local-source evidence.
 - Hardened blocked-candidate wording so Kalshi/analytics and YouTube pipeline
   source records avoid approval-adjacent safe-enough phrasing and carry
   checklist-shaped redaction metadata while preserving `blocked`/`defer` status

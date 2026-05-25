@@ -63,7 +63,8 @@ External systems:
 - Shuttle is not a viable new launch target as of the 2026-05-24 official-source
   snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 - Email or message delivery provider for contact submissions.
-- Optional privacy-safe analytics sink.
+- Optional privacy-safe events route. The current repository does not ship an
+  analytics provider, event sink, or retention policy for enabled events.
 - Browser clients across desktop, mobile, low-power devices, reduced-motion
   environments, and no-WebGL environments.
 
@@ -90,7 +91,7 @@ Rust Axum API
   | Optional integrations
   +--> GitHub metadata cache
   +--> Contact delivery/storage
-  +--> Privacy-safe events store
+  +--> Privacy-safe event validation and abuse control
   +--> Logs/traces/metrics backend
 ```
 
@@ -579,6 +580,8 @@ Frontend observability:
 
 - Build metadata embedded in HTML or a small static endpoint.
 - Privacy-safe analytics only if enabled and documented.
+- The current repository does not ship an analytics provider, event sink, or
+  retention policy for enabled events.
 - Client-side error collection is optional and must be privacy reviewed.
 - Lighthouse reports for release quality.
 - Cloudflare Pages deployment history for frontend rollout status.
@@ -679,7 +682,8 @@ Content security:
    a resume CTA.
 2. Frontend checks whether analytics are enabled.
 3. Frontend sends a minimal event to `POST /api/events`.
-4. API validates schema and stores or forwards only approved fields.
+4. API validates schema and applies hashed in-memory abuse control without
+   retaining raw event payloads.
 5. Failures are ignored by the UI.
 
 ## 15. API Contract Principles

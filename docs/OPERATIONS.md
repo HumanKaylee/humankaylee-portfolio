@@ -835,6 +835,8 @@ If SQLite or Postgres is used:
 Privacy-safe analytics:
 
 - Collect only allowlisted events.
+- The current repository does not ship an analytics provider, event sink, or
+  retention policy for enabled events.
 - Avoid persistent user identifiers unless explicitly justified.
 - Keep event rate limiting disabled by default with the API flag; if enabled,
   use the hashed in-memory buckets only for abuse control, not analytics

@@ -4,6 +4,8 @@ import { test } from "node:test";
 
 const privacyPath = "docs/PRIVACY.md";
 const readmePath = "README.md";
+const architecturePath = "docs/ARCHITECTURE.md";
+const operationsPath = "docs/OPERATIONS.md";
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -19,6 +21,10 @@ function expectContains(content, needle, label = needle) {
 		normalizedContent.includes(normalizedNeedle),
 		`expected privacy doc to include ${label}`,
 	);
+}
+
+function expectMatches(content, pattern, label) {
+	assert.match(content, pattern, `expected privacy doc to include ${label}`);
 }
 
 function expectAll(content, needles) {
@@ -122,4 +128,63 @@ test("privacy notes cover B-054 contact, analytics, retention, and review contra
 			`privacy doc should not expose private detail: ${label}`,
 		);
 	}
+});
+
+test("events docs do not imply a shipped analytics provider, sink, or retention policy", () => {
+	const privacy = readRequiredFile(privacyPath);
+	const architecture = readRequiredFile(architecturePath);
+	const operations = readRequiredFile(operationsPath);
+
+	for (const [label, content] of [
+		["privacy notes", privacy],
+		["architecture", architecture],
+		["operations", operations],
+	]) {
+		expectMatches(
+			content,
+			/does not ship an analytics provider/i,
+			`${label} no analytics provider boundary`,
+		);
+		expectMatches(content, /event sink/i, `${label} event sink boundary`);
+		expectMatches(
+			content,
+			/retention policy for enabled events/i,
+			`${label} event retention boundary`,
+		);
+	}
+
+	for (const staleWording of [
+		"Optional privacy-safe analytics sink.",
+		"Optional privacy-safe analytics service.",
+		"Privacy-safe events store",
+		"Privacy-safe event store",
+		"stores or forwards only approved fields",
+	]) {
+		for (const [label, content] of [
+			["architecture", architecture],
+			["operations", operations],
+			["privacy notes", privacy],
+		]) {
+			assert.ok(
+				!content.includes(staleWording),
+				`${label} should not imply shipped analytics storage with: ${staleWording}`,
+			);
+		}
+	}
+});
+
+test("privacy scope keeps resume PDF wording local-source scoped", () => {
+	const content = readRequiredFile(privacyPath);
+
+	expectMatches(content, /static PDF asset/i, "static PDF asset wording");
+	expectMatches(
+		content,
+		/approved local source/i,
+		"approved local resume source wording",
+	);
+	assert.doesNotMatch(
+		content,
+		/\bresume is published\b|published resume|production-ready resume|live resume|production resume/i,
+		"privacy doc should not imply production resume publication",
+	);
 });
