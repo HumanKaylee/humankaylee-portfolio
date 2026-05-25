@@ -8,6 +8,9 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a contract guard for the operations runbook's minimum viable production
+  standard so it stays framed as operator readiness, not launch approval, and
+  remains bounded by the launch blocker register plus launch evidence matrix.
 - Wired committed route-specific social preview PNG assets into the home,
   projects, case-studies, notes, and contact index pages, with Playwright
   coverage that keeps those core routes from falling back to the default SVG.

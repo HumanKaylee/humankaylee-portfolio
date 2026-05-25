@@ -962,6 +962,11 @@ After major content or architecture changes:
 
 ## 19. Minimum Viable Production Standard
 
+This is a minimum operator-readiness standard, not launch approval. The
+production closure sources remain `runbooks/LAUNCH_BLOCKERS_REGISTER.md` and
+`runbooks/LAUNCH_EVIDENCE.md`. Unresolved blocker-register rows and blocked
+evidence rows stay blocked until direct production evidence replaces them.
+
 The site is production-ready only when a clean operator can:
 
 - Build the frontend from source.
