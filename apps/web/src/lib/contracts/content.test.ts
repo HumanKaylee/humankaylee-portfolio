@@ -172,6 +172,36 @@ describe("content contracts", () => {
 		).toBe(true);
 	});
 
+	it("allows incomplete evidence checklist answers only before approval", () => {
+		const checklistWithIncompleteEvidence = {
+			...completeRedactionReview.checklist,
+			claimsHaveSafeEvidence: "not-applicable",
+		};
+
+		expect(
+			caseStudySchema.safeParse({
+				...publishableCaseStudy,
+				publicationStatus: "defer",
+				redactionStatus: "blocked",
+				redactionReview: {
+					...partialRedactionReview,
+					checklist: checklistWithIncompleteEvidence,
+				},
+			}).success,
+		).toBe(true);
+
+		expect(
+			caseStudySchema.safeParse({
+				...publishableCaseStudy,
+				redactionStatus: "approved",
+				redactionReview: {
+					...completeRedactionReview,
+					checklist: checklistWithIncompleteEvidence,
+				},
+			}).success,
+		).toBe(false);
+	});
+
 	it("rejects invalid project metadata and notes metadata", () => {
 		expect(
 			projectMetadataSchema.safeParse({

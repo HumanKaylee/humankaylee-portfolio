@@ -31,6 +31,11 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 		"Manual privacy review is a separate launch blocker check and cannot be fully enforced by CI.",
 		"manual privacy review CI boundary",
 	);
+	expectContains(
+		quality,
+		'`pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and contact evaluator journeys across the existing static launch paths.',
+		"journey smoke local gate",
+	);
 	expectContains(quality, "test-results/lighthouse-summary.json");
 	expectContains(quality, "test-results/bundle-budget-summary.json");
 

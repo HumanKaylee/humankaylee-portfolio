@@ -386,6 +386,33 @@ fn config_requires_contact_store_path_when_store_mode_is_enabled() {
 }
 
 #[test]
+fn config_rejects_blank_empty_or_invalid_allowed_origins_when_env_var_is_present() {
+    for pairs in [
+        vec![("HK_API_ALLOWED_ORIGINS", "   ")],
+        vec![(
+            "HK_API_ALLOWED_ORIGINS",
+            "https://example.com, ,http://localhost:4321",
+        )],
+        vec![("HK_API_ALLOWED_ORIGINS", "invalid")],
+        vec![(
+            "HK_API_ALLOWED_ORIGINS",
+            "https://example.com/not-an-origin",
+        )],
+        vec![("HK_API_ALLOWED_ORIGINS", "https://example.com:abc")],
+        vec![("HK_API_ALLOWED_ORIGINS", "https://:443")],
+        vec![("HK_API_ALLOWED_ORIGINS", "https://user@example.com")],
+        vec![("HK_API_ALLOWED_ORIGINS", "https://[::1]:abc")],
+        vec![("HK_API_ALLOWED_ORIGINS", "https://[::1]extra")],
+    ] {
+        let error = AppConfig::from_env_pairs(pairs).expect_err("invalid origins should fail fast");
+        assert!(
+            error.to_string().contains("HK_API_ALLOWED_ORIGINS"),
+            "error should name invalid allowed origins config: {error}"
+        );
+    }
+}
+
+#[test]
 fn telemetry_defaults_to_structured_json_with_api_and_http_filters() {
     assert_eq!(humankaylee_api::telemetry::log_encoding(), "json");
     let default_filter = humankaylee_api::telemetry::default_filter_directive();

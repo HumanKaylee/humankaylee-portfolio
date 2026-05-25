@@ -134,19 +134,19 @@ Public frontend variables are safe to expose in generated client assets.
 
 Backend variables may contain secrets and must be configured in the backend host.
 
-| Variable                                | Secret | Required    | Purpose                                                |
-| --------------------------------------- | ------ | ----------- | ------------------------------------------------------ |
-| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                    |
-| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                         |
-| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | Comma-separated frontend origins allowed by CORS.      |
-| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | `disabled` by default; set `store` only with storage.  |
-| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.           |
-| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Enables gated privacy-safe events when set true.       |
-| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed request-limit setting for API hardening.        |
-| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.       |
-| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                         |
-| `RUST_LOG`                              | No     | Recommended | Structured logging verbosity.                          |
-| Future provider/database variables      | Yes    | Future only | Add only if JSONL storage is replaced or supplemented. |
+| Variable                                | Secret | Required    | Purpose                                                                                                                   |
+| --------------------------------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `HK_API_HOST`                           | No     | No          | Bind host; defaults to `127.0.0.1`.                                                                                       |
+| `HK_API_PORT`                           | No     | No          | Bind port; defaults to `8787`.                                                                                            |
+| `HK_API_ALLOWED_ORIGINS`                | No     | Yes         | One or more comma-separated valid `http`/`https` frontend origins allowed by CORS; blank or invalid entries fail startup. |
+| `HK_API_CONTACT_DELIVERY_MODE`          | No     | No          | `disabled` by default; set `store` only with storage.                                                                     |
+| `HK_API_CONTACT_STORE_PATH`             | No     | If `store`  | JSONL path for accepted contact submissions.                                                                              |
+| `HK_API_EVENT_LOGGING_ENABLED`          | No     | No          | Enables gated privacy-safe events when set true.                                                                          |
+| `HK_API_RATE_LIMIT_REQUESTS_PER_MINUTE` | No     | No          | Parsed request-limit setting for API hardening.                                                                           |
+| `HK_API_CONTACT_RATE_LIMIT_PER_HOUR`    | No     | No          | Contact submission limit used by abuse controls.                                                                          |
+| `HK_API_VERSION`                        | No     | Recommended | Health response version label.                                                                                            |
+| `RUST_LOG`                              | No     | Recommended | Structured logging verbosity.                                                                                             |
+| Future provider/database variables      | Yes    | Future only | Add only if JSONL storage is replaced or supplemented.                                                                    |
 
 ### 4.3 Secret Storage Locations
 
@@ -596,7 +596,8 @@ Checks:
 - Inspect API logs for validation, rate-limit, or provider errors.
 - Confirm mailto fallback is visible.
 - Confirm `HK_API_ALLOWED_ORIGINS` includes the production frontend origin once
-  CORS middleware is enabled.
+  CORS middleware is enabled. The value must contain one or more
+  comma-separated valid `http`/`https` origins with no blank entries.
 
 Likely causes:
 

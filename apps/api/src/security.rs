@@ -10,7 +10,10 @@ pub fn cors_layer(config: &AppConfig) -> Option<CorsLayer> {
     let allowed_origins: Vec<HeaderValue> = config
         .allowed_origins
         .iter()
-        .filter_map(|origin| HeaderValue::from_str(origin.trim()).ok())
+        .map(|origin| {
+            HeaderValue::from_str(origin.trim())
+                .expect("AppConfig allowed_origins must be validated before CORS setup")
+        })
         .collect();
 
     if allowed_origins.is_empty() {

@@ -1,3 +1,4 @@
+use axum::http::HeaderValue;
 use std::{collections::HashMap, env, error::Error, fmt, path::PathBuf};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -85,12 +86,7 @@ impl AppConfig {
             config.port = parse_u16("HK_API_PORT", value)?;
         }
         if let Some(value) = values.get("HK_API_ALLOWED_ORIGINS") {
-            config.allowed_origins = value
-                .split(',')
-                .map(str::trim)
-                .filter(|origin| !origin.is_empty())
-                .map(ToOwned::to_owned)
-                .collect();
+            config.allowed_origins = parse_allowed_origins(value)?;
         }
         if let Some(value) = values.get("HK_API_CONTACT_DELIVERY_MODE") {
             config.contact_delivery_mode = parse_contact_delivery_mode(value)?;
@@ -130,6 +126,104 @@ impl AppConfig {
         }
 
         Ok(config)
+    }
+}
+
+fn parse_allowed_origins(value: &str) -> Result<Vec<String>, ConfigError> {
+    if value.trim().is_empty() {
+        return Err(ConfigError {
+            key: "HK_API_ALLOWED_ORIGINS",
+            value: value.to_owned(),
+            reason: "expected one or more comma-separated origins",
+        });
+    }
+
+    let mut origins = Vec::new();
+    for origin in value.split(',').map(str::trim) {
+        if origin.is_empty() {
+            return Err(ConfigError {
+                key: "HK_API_ALLOWED_ORIGINS",
+                value: value.to_owned(),
+                reason: "origins cannot be blank",
+            });
+        }
+        validate_allowed_origin(origin, value)?;
+        origins.push(origin.to_owned());
+    }
+
+    Ok(origins)
+}
+
+fn validate_allowed_origin(origin: &str, raw_value: &str) -> Result<(), ConfigError> {
+    if HeaderValue::from_str(origin).is_err() {
+        return Err(invalid_allowed_origin(raw_value));
+    }
+
+    let Some((scheme, authority)) = origin.split_once("://") else {
+        return Err(invalid_allowed_origin(raw_value));
+    };
+    if !matches!(scheme.to_ascii_lowercase().as_str(), "http" | "https")
+        || authority.is_empty()
+        || authority
+            .chars()
+            .any(|character| character.is_ascii_whitespace() || "/?#".contains(character))
+    {
+        return Err(invalid_allowed_origin(raw_value));
+    }
+    validate_origin_authority(authority, raw_value)?;
+
+    Ok(())
+}
+
+fn validate_origin_authority(authority: &str, raw_value: &str) -> Result<(), ConfigError> {
+    if authority.contains('@') {
+        return Err(invalid_allowed_origin(raw_value));
+    }
+
+    if let Some(remainder) = authority.strip_prefix('[') {
+        let Some(end) = remainder.find(']') else {
+            return Err(invalid_allowed_origin(raw_value));
+        };
+
+        let host = &remainder[..end];
+        let suffix = &remainder[end + 1..];
+        if host.is_empty()
+            || (!suffix.is_empty()
+                && !suffix
+                    .strip_prefix(':')
+                    .is_some_and(|port| is_valid_port(Some(port))))
+        {
+            return Err(invalid_allowed_origin(raw_value));
+        }
+        return Ok(());
+    }
+
+    if authority.matches(':').count() > 1 {
+        return Err(invalid_allowed_origin(raw_value));
+    }
+
+    let (host, port) = authority
+        .rsplit_once(':')
+        .map_or((authority, None), |(host, port)| (host, Some(port)));
+    if host.is_empty() || !is_valid_port(port) {
+        return Err(invalid_allowed_origin(raw_value));
+    }
+
+    Ok(())
+}
+
+fn is_valid_port(port: Option<&str>) -> bool {
+    match port {
+        Some(port) => !port.is_empty() && port.parse::<u16>().is_ok(),
+        None => true,
+    }
+}
+
+fn invalid_allowed_origin(value: &str) -> ConfigError {
+    ConfigError {
+        key: "HK_API_ALLOWED_ORIGINS",
+        value: value.to_owned(),
+        reason: "expected http or https origins without paths, queries, or fragments",
     }
 }
 

@@ -18,6 +18,8 @@ duplicate push and PR Lighthouse jobs for the same head.
   security header policy used by local Astro middleware and static hosting.
 - `pnpm test:e2e -- --grep "@api-down"` verifies representative static routes
   and contact fallback behavior when API requests fail.
+- `pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and
+  contact evaluator journeys across the existing static launch paths.
 - `pnpm test:e2e -- --grep "@quality"` runs no-JS, reduced-motion, privacy,
   and route-quality checks on the core route set.
 - `runbooks/ACCESSIBILITY_AUDIT.md` records the B-048 page-by-page

@@ -31,8 +31,9 @@ cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
 
 Set `HK_API_HOST=127.0.0.1`, `HK_API_PORT=8787`, and
 `HK_API_ALLOWED_ORIGINS=http://127.0.0.1:4321` for the local loop. Keep
-`HK_API_CONTACT_DELIVERY_MODE=disabled` unless an approved store path exists,
-and keep local env files ignored.
+`HK_API_ALLOWED_ORIGINS` as one or more comma-separated valid `http`/`https`
+origins with no blank entries. Keep `HK_API_CONTACT_DELIVERY_MODE=disabled`
+unless an approved store path exists, and keep local env files ignored.
 
 ## Environment Variables
 

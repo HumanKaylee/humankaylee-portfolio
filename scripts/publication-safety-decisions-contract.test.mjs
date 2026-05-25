@@ -7,7 +7,10 @@ const files = {
 	changelog: "docs/CHANGELOG.md",
 	contentStrategy: "docs/CONTENT_STRATEGY.md",
 	decision: "runbooks/PUBLICATION_SAFETY_DECISIONS.md",
+	kalshi:
+		"apps/web/src/content/case-studies/kalshi-migration-or-analytics-tooling.md",
 	status: "runbooks/CONTENT_REDACTION_STATUS.md",
+	youtube: "apps/web/src/content/case-studies/youtube-ai-video-pipeline.md",
 };
 
 function readRequiredFile(path) {
@@ -73,7 +76,9 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 	const changelog = readRequiredFile(files.changelog);
 	const contentStrategy = readRequiredFile(files.contentStrategy);
 	const decision = readRequiredFile(files.decision);
+	const kalshi = readRequiredFile(files.kalshi);
 	const status = readRequiredFile(files.status);
+	const youtube = readRequiredFile(files.youtube);
 
 	expectAll(backlog, [
 		"### B-018: Evaluate Kalshi or analytics tooling publication safety",
@@ -130,6 +135,35 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 		"runbooks/PUBLICATION_SAFETY_DECISIONS.md",
 		"synthetic proof pack is not approval evidence",
 		"does not replace the Content Redaction Guide launch gate",
+	]);
+
+	expectAll(kalshi, [
+		'publicationStatus: "defer"',
+		'redactionStatus: "blocked"',
+		'checklistStatus: "partial"',
+		"checklist:",
+		'secretsRemoved: "yes"',
+		'hostnamesAndAccessPathsGeneralized: "yes"',
+		'userAndAccountNamesGeneralized: "yes"',
+		'screenshotsInspected: "not-applicable"',
+		'logsSummarizedOrSanitized: "not-applicable"',
+		'publicLinksVerified: "not-applicable"',
+		'claimsHaveSafeEvidence: "not-applicable"',
+		'securitySensitiveProceduresRemoved: "yes"',
+	]);
+	expectAll(youtube, [
+		'publicationStatus: "needs-redaction"',
+		'redactionStatus: "blocked"',
+		'checklistStatus: "partial"',
+		"checklist:",
+		'secretsRemoved: "yes"',
+		'hostnamesAndAccessPathsGeneralized: "yes"',
+		'userAndAccountNamesGeneralized: "yes"',
+		'screenshotsInspected: "not-applicable"',
+		'logsSummarizedOrSanitized: "not-applicable"',
+		'publicLinksVerified: "not-applicable"',
+		'claimsHaveSafeEvidence: "not-applicable"',
+		'securitySensitiveProceduresRemoved: "yes"',
 	]);
 
 	expectAll(contentStrategy, [

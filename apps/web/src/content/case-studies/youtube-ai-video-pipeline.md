@@ -21,7 +21,7 @@ verification:
   - "Verification material should be summarized rather than reproduced verbatim."
 operations:
   - "Operational notes belong in a redacted artifact pack once the safe boundary is clear."
-outcome: "The work is credible enough to keep in the launch pipeline, but not yet safe enough to publish directly."
+outcome: "The work is credible to keep in the launch pipeline, but not yet public-safe to publish directly."
 lessons:
   - "AI workflow case studies are only useful if they can be described without leaking the sensitive parts."
 featuredEvidence:
@@ -43,6 +43,15 @@ redactionReview:
   reviewer: "phase-1-content-review"
   reviewedOn: "2026-05-23"
   checklistStatus: "partial"
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "not-applicable"
+    logsSummarizedOrSanitized: "not-applicable"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "not-applicable"
+    securitySensitiveProceduresRemoved: "yes"
   openItems:
     - "Remove private channel details, account identifiers, and workflow edges tied to private assets."
   notes: "Candidate is blocked until a public-safe proof narrative is approved."

@@ -8,6 +8,15 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Hardened blocked-candidate wording so Kalshi/analytics and YouTube pipeline
+  source records avoid approval-adjacent safe-enough phrasing and carry
+  checklist-shaped redaction metadata while preserving `blocked`/`defer` status
+  and open issue gates.
+- Hardened API startup configuration so a present `HK_API_ALLOWED_ORIGINS`
+  value must contain one or more comma-separated valid `http`/`https` origins
+  with no blank entries.
+- Added a Playwright `@journey` smoke gate for the recruiter resume path,
+  engineer project-detail path, and contact mailto fallback.
 - Hardened GitHub deployment sync notes and blocked-candidate body contracts so
   deployment smoke evidence stays in `runbooks/LAUNCH_EVIDENCE.md`, blocked
   Kalshi/analytics and YouTube pipeline candidates no longer carry generic

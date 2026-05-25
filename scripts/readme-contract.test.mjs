@@ -72,6 +72,7 @@ test("README covers local development, deployment, and recovery contracts", () =
 		"PUBLIC_RELEASE_VERSION",
 		"PUBLIC_GIT_COMMIT_SHA",
 		"HK_API_ALLOWED_ORIGINS",
+		"one or more comma-separated valid `http`/`https` origins with no blank entries",
 		"HK_API_CONTACT_DELIVERY_MODE",
 		"HK_API_CONTACT_STORE_PATH",
 		"HK_API_EVENT_LOGGING_ENABLED",

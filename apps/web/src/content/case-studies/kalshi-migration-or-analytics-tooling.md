@@ -5,7 +5,7 @@ category: "backend"
 summary: "A deferred backend and analytics candidate that may be useful later if a safe abstraction can be approved."
 audienceFit:
   - "senior-engineer"
-problem: "The underlying work may be strong, but the current publication boundary is not safe enough for a trustworthy portfolio narrative."
+problem: "The underlying work may be strong, but the current publication boundary is not public-safe for a trustworthy portfolio narrative."
 stakes: "Financial or account-linked work needs a stricter publication standard than a generic engineering example."
 constraints:
   - "Cannot reveal private financial data or customer information."
@@ -42,9 +42,18 @@ redactionReview:
   reviewer: "phase-1-content-review"
   reviewedOn: "2026-05-23"
   checklistStatus: "partial"
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "not-applicable"
+    logsSummarizedOrSanitized: "not-applicable"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "not-applicable"
+    securitySensitiveProceduresRemoved: "yes"
   openItems:
     - "Prove a safe abstraction without private financial, account, repository, or path details."
-  notes: "Candidate is deferred because the current public boundary is not safe enough."
+  notes: "Candidate is deferred because the current public boundary is not public-safe."
 seo:
   title: "Kalshi Migration or Analytics Tooling"
   description: "A deferred backend case-study candidate that requires stricter publication review."

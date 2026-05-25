@@ -85,7 +85,7 @@ export const redactionChecklistSchema = z.object({
 	screenshotsInspected: redactionChecklistAnswerSchema,
 	logsSummarizedOrSanitized: redactionChecklistAnswerSchema,
 	publicLinksVerified: redactionChecklistAnswerSchema,
-	claimsHaveSafeEvidence: z.literal("yes"),
+	claimsHaveSafeEvidence: redactionChecklistAnswerSchema,
 	securitySensitiveProceduresRemoved: z.literal("yes"),
 });
 
@@ -160,6 +160,15 @@ export const caseStudySchema = z
 				code: z.ZodIssueCode.custom,
 				message: "approved case studies require checklist answers",
 				path: ["redactionReview", "checklist"],
+			});
+		}
+
+		if (entry.redactionReview.checklist?.claimsHaveSafeEvidence !== "yes") {
+			context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message:
+					"approved case studies require safe supporting evidence for claims",
+				path: ["redactionReview", "checklist", "claimsHaveSafeEvidence"],
 			});
 		}
 

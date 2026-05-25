@@ -277,6 +277,7 @@ test("content issue traceability ties open content issues to approval blockers w
 		"private financial, account, repository, and path details",
 		"Kalshi explicit redaction boundary",
 	);
+	expectNoUnsafeApprovalParaphrases(kalshi, "Kalshi blocked candidate source");
 	expectIssueTrace(
 		youtube,
 		{
@@ -302,6 +303,10 @@ test("content issue traceability ties open content issues to approval blockers w
 		youtube,
 		"private channel details, account identifiers, and workflow edges tied to private assets",
 		"YouTube explicit redaction boundary",
+	);
+	expectNoUnsafeApprovalParaphrases(
+		youtube,
+		"YouTube blocked candidate source",
 	);
 
 	expectContains(status, "## GitHub Issue Traceability");
@@ -377,6 +382,11 @@ test("content issue traceability ties open content issues to approval blockers w
 	expectContains(
 		changelog,
 		"Added content issue traceability coverage for #20, #21, #22, #23, #24, and #25",
+	);
+	expectContains(
+		changelog,
+		"Hardened blocked-candidate wording so Kalshi/analytics and YouTube pipeline source records avoid approval-adjacent safe-enough phrasing",
+		"blocked candidate safe-enough wording changelog entry",
 	);
 
 	for (const content of [
