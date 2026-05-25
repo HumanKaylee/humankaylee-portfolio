@@ -8,6 +8,8 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- Added a Lighthouse dry-run audit-plan summary so B-050 route, warm-up, scored
+  artifact, and summary paths can be verified cheaply before launching Chrome.
 - Added a contract guard for the operations runbook's minimum viable production
   standard so it stays framed as operator readiness, not launch approval, and
   remains bounded by the launch blocker register plus launch evidence matrix.

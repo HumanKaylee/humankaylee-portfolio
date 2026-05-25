@@ -42,6 +42,7 @@ export const LIGHTHOUSE_AUDIT_PLAN = [
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = 4322;
 const RESULTS_DIR = "test-results";
+const LIGHTHOUSE_SUMMARY_PATH = join(RESULTS_DIR, "lighthouse-summary.json");
 const WAIT_TIMEOUT_MS = 30_000;
 
 function runCommand(command, args, options = {}) {
@@ -115,8 +116,27 @@ function routeUrl(baseUrl, route) {
 	return new URL(route.path, baseUrl).toString();
 }
 
+function outputPathForRoute(route) {
+	return join(RESULTS_DIR, `lighthouse-${route.label}.json`);
+}
+
+export function lighthouseDryRunPlan(baseUrl) {
+	return {
+		baseUrl,
+		routes: LIGHTHOUSE_ROUTES,
+		scoredRoutes: LIGHTHOUSE_ROUTES,
+		auditPlan: LIGHTHOUSE_AUDIT_PLAN.map((route) => ({
+			...route,
+			outputPath: outputPathForRoute(route),
+		})),
+		categories: LIGHTHOUSE_CATEGORIES,
+		thresholds: LIGHTHOUSE_THRESHOLDS,
+		summaryPath: LIGHTHOUSE_SUMMARY_PATH,
+	};
+}
+
 async function runLighthouseForRoute(baseUrl, route) {
-	const outputPath = join(RESULTS_DIR, `lighthouse-${route.label}.json`);
+	const outputPath = outputPathForRoute(route);
 
 	await runCommand("pnpm", [
 		"exec",
@@ -175,9 +195,8 @@ export async function runAuditPlan(baseUrl, runRoute = runLighthouseForRoute) {
 }
 
 async function writeSummary(results) {
-	const summaryPath = join(RESULTS_DIR, "lighthouse-summary.json");
 	await writeFile(
-		summaryPath,
+		LIGHTHOUSE_SUMMARY_PATH,
 		`${JSON.stringify(
 			{
 				thresholds: LIGHTHOUSE_THRESHOLDS,
@@ -187,7 +206,7 @@ async function writeSummary(results) {
 			2,
 		)}\n`,
 	);
-	return summaryPath;
+	return LIGHTHOUSE_SUMMARY_PATH;
 }
 
 export async function runLighthouseGate({
@@ -199,18 +218,7 @@ export async function runLighthouseGate({
 	const resolvedBaseUrl = baseUrl ?? `http://${host}:${port}`;
 
 	if (dryRun) {
-		console.log(
-			JSON.stringify(
-				{
-					baseUrl: resolvedBaseUrl,
-					routes: LIGHTHOUSE_ROUTES,
-					categories: LIGHTHOUSE_CATEGORIES,
-					thresholds: LIGHTHOUSE_THRESHOLDS,
-				},
-				null,
-				2,
-			),
-		);
+		console.log(JSON.stringify(lighthouseDryRunPlan(resolvedBaseUrl), null, 2));
 		return;
 	}
 

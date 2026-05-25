@@ -77,6 +77,11 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 		'`pnpm test:e2e -- --grep "@quality"` runs the static quality matrix: no-JS, reduced-motion, privacy, route-coverage, and accessibility checks on the core route set.',
 		"static quality matrix local gate",
 	);
+	expectContains(
+		quality,
+		"`node scripts/lighthouse-local.mjs --dry-run` prints the B-050 audit plan with warm-up/scored route boundaries and artifact paths without launching Chrome.",
+		"Lighthouse dry-run audit plan",
+	);
 	expectContains(quality, "test-results/lighthouse-summary.json");
 	expectContains(quality, "test-results/bundle-budget-summary.json");
 

@@ -42,6 +42,9 @@ diagnosable.
 - `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs`
   verifies those dedicated QA artifacts stay connected to backlog and launch
   evidence.
+- `node scripts/lighthouse-local.mjs --dry-run` prints the B-050 audit plan
+  with warm-up/scored route boundaries and artifact paths without launching
+  Chrome.
 - `pnpm lighthouse:local` builds the Astro site, serves a production-equivalent
   local preview on `127.0.0.1:4322`, runs a non-scored warm-up audit, and then
   audits home, projects, one case study, resume, and contact.

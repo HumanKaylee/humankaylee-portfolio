@@ -7,6 +7,7 @@ import {
 	LIGHTHOUSE_ROUTES,
 	LIGHTHOUSE_THRESHOLDS,
 	LIGHTHOUSE_WARMUP_ROUTE,
+	lighthouseDryRunPlan,
 	runAuditPlan,
 } from "./lighthouse-local.mjs";
 
@@ -96,5 +97,28 @@ describe("lighthouse local gate contract", () => {
 			results.map((result) => result.label),
 			LIGHTHOUSE_ROUTES.map((route) => route.label),
 		);
+	});
+
+	it("exposes dry-run audit artifacts for cheap B-050 verification", () => {
+		const plan = lighthouseDryRunPlan("http://127.0.0.1:4322");
+
+		assert.deepEqual(plan.auditPlan, [
+			{
+				label: "warmup",
+				path: "/",
+				scored: false,
+				outputPath: "test-results/lighthouse-warmup.json",
+			},
+			...LIGHTHOUSE_ROUTES.map((route) => ({
+				...route,
+				scored: true,
+				outputPath: `test-results/lighthouse-${route.label}.json`,
+			})),
+		]);
+		assert.deepEqual(plan.routes, LIGHTHOUSE_ROUTES);
+		assert.deepEqual(plan.scoredRoutes, LIGHTHOUSE_ROUTES);
+		assert.equal(plan.summaryPath, "test-results/lighthouse-summary.json");
+		assert.deepEqual(plan.categories, LIGHTHOUSE_CATEGORIES);
+		assert.deepEqual(plan.thresholds, LIGHTHOUSE_THRESHOLDS);
 	});
 });
