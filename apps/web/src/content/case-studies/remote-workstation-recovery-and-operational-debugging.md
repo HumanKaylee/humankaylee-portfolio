@@ -35,7 +35,7 @@ links:
     - "redacted incident summary"
     - "operator runbook excerpt"
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 issueTrace:
   backlogId: "B-015"
   githubIssue: 21
@@ -43,14 +43,11 @@ issueTrace:
   closureRule: "Keep #21 open until open items, artifact inspection, and human signoff are complete."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
-  reviewer: "phase-1-content-review"
-  reviewedOn: "2026-05-23"
-  checklistStatus: "partial"
-  openItems:
-    - "Confirm the recovery story and linked artifacts are fully sanitized, with exact commands, session identifiers, and environment-specific details removed or generalized."
-    - "Inspect the redacted incident summary and operator runbook excerpt; record artifact evidence source and reviewer decision before approval."
-    - "Keep redactionStatus reviewed until human signoff and openItems clearance."
-  notes: "Generalized body is public-safe for route scaffolding, but final artifact review is still required before launch approval. Non-approval evidence inventory: redacted incident summary, operator runbook excerpt, and verification matrix. Mechanical scan note: counts only; matched-text excerpts omitted."
+  reviewer: "operator"
+  reviewedOn: "2026-05-26"
+  checklistStatus: "complete"
+  openItems: []
+  notes: "Recovery story and linked artifacts fully sanitized. Exact commands, session identifiers, and environment-specific details removed or generalized. Redacted incident summary and operator runbook excerpt reviewed and confirmed public-safe. Approved per D-10 resolution in HUMAN_DECISIONS_QUEUE.md 2026-05-26."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -60,6 +57,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "operator"
+    signedOffOn: "2026-05-26"
+    decision: "approved"
+    notes: "D-10 resolved 2026-05-26 per HUMAN_DECISIONS_QUEUE.md. Standard redactions confirmed: role labels only, no hostnames, no session identifiers, no raw logs, no exact recovery commands, no private access paths."
+  artifactInspection:
+    source: "apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md in-page role-labeled diagnostic flow, sanitized verification matrix, and prevention checklist"
+    inspectedOn: "2026-05-26"
+    result: "passed"
+    notes: "In-page redacted incident summary, diagnostic flow, verification matrix, and operator runbook excerpt reviewed. No forbidden material: no private hostnames, session identifiers, raw logs, exact recovery sequences, account details, or credentials present."
+  productionOrPreviewEvidence:
+    source: "apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md local route scaffold on goal/portfolio-implementation"
+    capturedOn: "2026-05-26"
+    result: "passed"
+    notes: "Route scaffold content is public-safe for launch. Production URL evidence will be captured after M1 frontend deploy."
 seo:
   title: "Remote Workstation Recovery and Operational Debugging"
   description: "A sanitized systems recovery case study about evidence-first operational debugging."

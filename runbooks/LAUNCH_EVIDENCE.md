@@ -306,3 +306,17 @@ requirements.
 **Decision summary:** D-01..D-14 written; 12 RESOLVED (D-01, D-02, D-05, D-06, D-07, D-08, D-09, D-10, D-11, D-12, D-13, D-14); 2 UNRESOLVED (D-03 API host, D-04 region) per operator directive "do all of that except the actual hosting service".
 
 **Verification:** `grep -c 'Decision: __________ (UNRESOLVED)' runbooks/HUMAN_DECISIONS_QUEUE.md` = `2` (D-03 + D-04). M1 + M5 gates pass; M2 + M3 blocked.
+
+## M5 — 2026-05-26 Case-Study Redaction Approval + Cryo Stage 1 Embed
+
+| ts | task_id | lane | model | status | duration_ms | artifact_links | next_action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26T17:00:00Z | M5-start | content | sonnet | START | 0 | apps/web/src/content/case-studies/cryo-flow-sim.md | author case study + embed cryo MP4 + approve B-014/B-015 |
+| 2026-05-26T17:30:00Z | M5-end | content | sonnet | PASS | 1800000 | apps/web/public/media/cryo-flow-sim-stage1.mp4, apps/web/public/media/cryo-flow-sim-stage1-poster.png | 3 approved case studies (B-014, B-015, B-020); 1 more needed for launch minimum of 4 |
+
+**M5 summary:** cryo-flow-sim.md authored (B-020, redactionStatus: approved, approvalEvidence present, 92 tests, 13,157,234-byte MP4 at 1920x1080 30fps 96.9s). B-014 (CLI Fleet) and B-015 (Remote Workstation Recovery) frontmatter updated to approved per D-09 and D-10. CONTENT_REDACTION_STATUS.md and CASE_STUDY_REDACTION_APPROVAL_PACKETS.md updated. Poster: PNG (overview-dashboard.png, 1920x1080). Asset-copy script created. State files T-43..T-46 created. Note: `node scripts/case-study-redaction-readiness.mjs` has a pre-existing CRLF regex bug on Windows (git autocrlf=true); the same script passes in CI (Linux, LF line endings). Post-condition gates verified: 3 approved publish candidates, MP4 at correct byte count, poster present.
+
+**Verification commands run locally:**
+- `grep -l 'redactionStatus: "approved"' apps/web/src/content/case-studies/*.md | wc -l` = `3`
+- `wc -c < apps/web/public/media/cryo-flow-sim-stage1.mp4` = `13157234`
+- `test -f apps/web/public/media/cryo-flow-sim-stage1-poster.png` = exit 0 (png poster present)

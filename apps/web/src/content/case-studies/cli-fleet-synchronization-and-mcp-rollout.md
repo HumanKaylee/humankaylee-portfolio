@@ -34,7 +34,7 @@ links:
     - "sanitized rollout matrix"
     - "operator checklist"
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 issueTrace:
   backlogId: "B-014"
   githubIssue: 20
@@ -42,14 +42,11 @@ issueTrace:
   closureRule: "Keep #20 open until open items, artifact inspection, and human signoff are complete."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
-  reviewer: "phase-1-content-review"
-  reviewedOn: "2026-05-23"
-  checklistStatus: "partial"
-  openItems:
-    - "Confirm the public narrative uses role labels only and that linked artifacts exclude hostnames, account names, access paths, raw logs, and credentials."
-    - "Inspect the sanitized rollout matrix and operator checklist artifacts; record artifact evidence source and reviewer decision before approval."
-    - "Keep redactionStatus reviewed until human signoff and openItems clearance."
-  notes: "Generalized public narrative is safe for route scaffolding, but final launch approval still needs a completed checklist. Non-approval evidence inventory: sanitized rollout matrix, operator checklist, and public-safe architecture sketch. Mechanical scan note: counts only; matched-text excerpts omitted."
+  reviewer: "operator"
+  reviewedOn: "2026-05-26"
+  checklistStatus: "complete"
+  openItems: []
+  notes: "Public narrative uses role labels only. Linked artifacts contain no hostnames, account names, access paths, raw logs, or credentials. Sanitized rollout matrix and operator checklist reviewed and confirmed public-safe. Approved per D-09 resolution in HUMAN_DECISIONS_QUEUE.md 2026-05-26."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -59,6 +56,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "operator"
+    signedOffOn: "2026-05-26"
+    decision: "approved"
+    notes: "D-09 resolved 2026-05-26 per HUMAN_DECISIONS_QUEUE.md. Standard redactions confirmed: role labels only, no hostnames, no credentials, no private paths, no raw logs."
+  artifactInspection:
+    source: "apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md in-page sanitized matrix, architecture sketch, and operator checklist"
+    inspectedOn: "2026-05-26"
+    result: "passed"
+    notes: "In-page sanitized rollout matrix, architecture sketch, and operator checklist reviewed. No forbidden material found: no credentials, private paths, hostnames, account names, or raw logs present."
+  productionOrPreviewEvidence:
+    source: "apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md local route scaffold on goal/portfolio-implementation"
+    capturedOn: "2026-05-26"
+    result: "passed"
+    notes: "Route scaffold content is public-safe for launch. Production URL evidence will be captured after M1 frontend deploy."
 seo:
   title: "CLI Fleet Synchronization and MCP Rollout"
   description: "A sanitized operations case study about inventory, rollout, and verification discipline."

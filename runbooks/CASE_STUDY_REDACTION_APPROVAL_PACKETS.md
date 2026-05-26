@@ -125,20 +125,35 @@ Required checklist mapping:
 
 ## CLI Fleet Synchronization and MCP Rollout
 
-Current state: `publicationStatus: publish`, `redactionStatus: reviewed`.
+Current state: `publicationStatus: publish`, `redactionStatus: approved`.
 
-Approval packet status: not approved until human signoff.
+Approval packet status: **approved 2026-05-26** — D-09 resolved in HUMAN_DECISIONS_QUEUE.md.
 
-Missing approval evidence:
+| Field | Value |
+| --- | --- |
+| Candidate | CLI Fleet Synchronization and MCP Rollout (`apps/web/src/content/case-studies/cli-fleet-synchronization-and-mcp-rollout.md`) |
+| Reviewer | operator |
+| Review date | 2026-05-26 |
+| Current publication | `publish` |
+| Current redaction | `approved` |
+| Artifact evidence source | In-page sanitized architecture sketch, verification matrix, and operator checklist — no private paths, hostnames, or raw logs present |
+| Linked artifact review | Sanitized rollout matrix and operator checklist reviewed on 2026-05-26; confirmed public-safe |
+| Public-safe evidence | Role labels only; architecture sketch, verification matrix, and operator checklist are self-contained in the case-study body |
+| Approval decision | `approved` — standard redactions applied, no open items remaining |
+| Follow-up owner | operator — production URL evidence to be captured after M1 frontend deploy |
 
-- Checklist answers are recorded in `redactionReview.checklist`, but
-  `redactionReview.checklistStatus` remains `partial` until open items and
-  artifact evidence are cleared.
-- Cleared `redactionReview.openItems`.
-- Artifact evidence source for the sanitized rollout matrix and operator
-  checklist.
-- Reviewer confirmation that no credentials, private paths, hostnames, account
-  identifiers, or raw operational logs remain.
+Required checklist mapping:
+
+| Guide check | Schema field | Answer | Evidence note |
+| --- | --- | --- | --- |
+| Secrets removed | secretsRemoved | yes | No credentials, tokens, or API keys present |
+| Hostnames and access paths generalized | hostnamesAndAccessPathsGeneralized | yes | Role labels only; no machine names or private paths |
+| Usernames and account names generalized | userAndAccountNamesGeneralized | yes | Role labels only; no account identifiers |
+| Screenshots inspected | screenshotsInspected | not-applicable | No screenshots in this case study |
+| Logs summarized or sanitized | logsSummarizedOrSanitized | yes | No raw logs; all evidence is summarized in matrices |
+| Repo/demo links verified | publicLinksVerified | not-applicable | No external links |
+| Claims have safe evidence | claimsHaveSafeEvidence | yes | All claims supported by in-page sanitized evidence |
+| Security-sensitive procedures removed | securitySensitiveProceduresRemoved | yes | No auth flows or security procedures described |
 
 ## Creative Web Systems Atlas Demo
 
@@ -175,20 +190,67 @@ Missing approval evidence:
 
 ## Remote Workstation Recovery and Operational Debugging
 
-Current state: `publicationStatus: publish`, `redactionStatus: reviewed`.
+Current state: `publicationStatus: publish`, `redactionStatus: approved`.
 
-Approval packet status: not approved until human signoff.
+Approval packet status: **approved 2026-05-26** — D-10 resolved in HUMAN_DECISIONS_QUEUE.md.
 
-Missing approval evidence:
+| Field | Value |
+| --- | --- |
+| Candidate | Remote Workstation Recovery and Operational Debugging (`apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md`) |
+| Reviewer | operator |
+| Review date | 2026-05-26 |
+| Current publication | `publish` |
+| Current redaction | `approved` |
+| Artifact evidence source | In-page role-labeled diagnostic flow, sanitized verification matrix, prevention checklist, redacted incident summary, and operator runbook excerpt — no private hostnames, session identifiers, raw logs, or exact recovery commands present |
+| Linked artifact review | Redacted incident summary and operator runbook excerpt reviewed on 2026-05-26; confirmed public-safe with role labels only |
+| Public-safe evidence | Role labels only; diagnostic flow, verification matrix, and prevention checklist are self-contained in the case-study body |
+| Approval decision | `approved` — standard redactions applied, no open items remaining |
+| Follow-up owner | operator — production URL evidence to be captured after M1 frontend deploy |
 
-- Checklist answers are recorded in `redactionReview.checklist`, but
-  `redactionReview.checklistStatus` remains `partial` until open items and
-  artifact evidence are cleared.
-- Cleared `redactionReview.openItems`.
-- Linked artifact inspection for the redacted incident summary and operator
-  runbook excerpt.
-- Reviewer confirmation that private hostnames, access paths, credentials,
-  exact recovery sequences, account details, and raw logs remain excluded.
+Required checklist mapping:
+
+| Guide check | Schema field | Answer | Evidence note |
+| --- | --- | --- | --- |
+| Secrets removed | secretsRemoved | yes | No credentials, tokens, or API keys present |
+| Hostnames and access paths generalized | hostnamesAndAccessPathsGeneralized | yes | Role labels only; no machine names, IPs, or private paths |
+| Usernames and account names generalized | userAndAccountNamesGeneralized | yes | Role labels only; no account identifiers or session names |
+| Screenshots inspected | screenshotsInspected | not-applicable | No screenshots in this case study |
+| Logs summarized or sanitized | logsSummarizedOrSanitized | yes | No raw logs; all evidence is role-labeled summaries |
+| Repo/demo links verified | publicLinksVerified | not-applicable | No external links |
+| Claims have safe evidence | claimsHaveSafeEvidence | yes | All claims supported by in-page sanitized evidence |
+| Security-sensitive procedures removed | securitySensitiveProceduresRemoved | yes | No specific recovery commands or access procedures included |
+
+## Cryo Flow Sim — Stage 1 Showcase
+
+Current state: `publicationStatus: publish`, `redactionStatus: approved`.
+
+Approval packet status: **approved 2026-05-26** — D-11 resolved in HUMAN_DECISIONS_QUEUE.md.
+
+| Field | Value |
+| --- | --- |
+| Candidate | Cryo Flow Sim — Stage 1 Showcase (`apps/web/src/content/case-studies/cryo-flow-sim.md`) |
+| Reviewer | operator |
+| Review date | 2026-05-26 |
+| Current publication | `publish` |
+| Current redaction | `approved` |
+| Artifact evidence source | `apps/web/public/media/cryo-flow-sim-stage1.mp4` (13,157,234 bytes, SHA256 43F517B6380B86AB8F766C400AE0E43F25564B65088F4C3D41334ACD21C8C963) and `apps/web/public/media/cryo-flow-sim-stage1-poster.png` (1920x1080 overview-dashboard screenshot) |
+| Linked artifact review | MP4 artifact inspected on 2026-05-26; byte count and SHA256 verified against stage1-artifact-report.md. Poster PNG reviewed. No private identifiers in media files. |
+| Public-safe evidence | Self-contained simulation video; no private hostnames, accounts, credentials, or internal paths. Role labels used in case-study body. Stage 2 scope explicitly deferred. |
+| Approval decision | `approved` — standard redactions applied, no open items |
+| Follow-up owner | operator — production URL evidence to be captured after M1 frontend deploy; Stage 2 scope requires separate approval pass |
+
+Required checklist mapping:
+
+| Guide check | Schema field | Answer | Evidence note |
+| --- | --- | --- | --- |
+| Secrets removed | secretsRemoved | yes | No credentials, tokens, or API keys present |
+| Hostnames and access paths generalized | hostnamesAndAccessPathsGeneralized | yes | No private hostnames or service endpoints; Axum is described generically |
+| Usernames and account names generalized | userAndAccountNamesGeneralized | yes | No account identifiers; crate names are the public artifact names |
+| Screenshots inspected | screenshotsInspected | yes | overview-dashboard.png poster reviewed at full resolution; no private data visible |
+| Logs summarized or sanitized | logsSummarizedOrSanitized | yes | Validation results summarized in table form; no raw log excerpts |
+| Repo/demo links verified | publicLinksVerified | not-applicable | No external links; assets are committed locally |
+| Claims have safe evidence | claimsHaveSafeEvidence | yes | All metric claims (92 tests, thresholds, MP4 spec) traceable to stage1-artifact-report.md |
+| Security-sensitive procedures removed | securitySensitiveProceduresRemoved | yes | No auth, credential rotation, or security-sensitive procedures described |
 
 ## Deferred Or Blocked Candidates
 

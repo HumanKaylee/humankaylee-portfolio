@@ -1,0 +1,11 @@
+# Media assets in this directory are committed directly to the repo.
+# The MP4 is 12.55 MB (under the 100 MB git limit).
+# If this directory grows beyond 100 MB per file, migrate to Git LFS:
+#   git lfs track "*.mp4"
+#   git lfs track "*.gif"
+# Until then, direct commit is simpler and avoids LFS configuration overhead.
+*.mp4 binary
+*.gif binary
+*.png binary
+*.avif binary
+*.webp binary
