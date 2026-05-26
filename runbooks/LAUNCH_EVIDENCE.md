@@ -295,3 +295,14 @@ Do not use example domains, provider placeholders, blank result cells, or
 generic "passed locally" claims as final launch evidence. Local/PR evidence
 must stay labeled as local/PR and cannot satisfy production-live launch
 requirements.
+
+## M0 — 2026-05-26 Operator-Resolved Decisions Queue
+
+| ts | task_id | lane | model | status | duration_ms | artifact_links | next_action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26T16:48Z | M0-start | meta | claude-opus-4-7 | START | 0 | runbooks/HUMAN_DECISIONS_QUEUE.md | bootstrap |
+| 2026-05-26T16:50Z | M0-end | meta | claude-opus-4-7 | PARTIAL_PASS | 120000 | runbooks/HUMAN_DECISIONS_QUEUE.md | M1+M5 dispatch; M2 awaits D-03+D-04 |
+
+**Decision summary:** D-01..D-14 written; 12 RESOLVED (D-01, D-02, D-05, D-06, D-07, D-08, D-09, D-10, D-11, D-12, D-13, D-14); 2 UNRESOLVED (D-03 API host, D-04 region) per operator directive "do all of that except the actual hosting service".
+
+**Verification:** `grep -c 'Decision: __________ (UNRESOLVED)' runbooks/HUMAN_DECISIONS_QUEUE.md` = `2` (D-03 + D-04). M1 + M5 gates pass; M2 + M3 blocked.
