@@ -299,6 +299,64 @@ export const siteMetadataSchema = z.object({
 	seo: seoSchema,
 });
 
+// ---------------------------------------------------------------------------
+// Now / Uses / Reading schemas (M9-partial: Sivers-style content pages)
+// ---------------------------------------------------------------------------
+
+export const nowEntrySchema = z.object({
+	title: z.string().min(1),
+	date: dateStringSchema,
+	status: z.enum(["current", "archived"]).default("current"),
+	summary: z.string().min(1),
+	items: z
+		.array(
+			z.object({
+				label: z.string().min(1),
+				note: z.string().min(1),
+			}),
+		)
+		.min(1),
+});
+
+export const usesEntrySchema = z.object({
+	title: z.string().min(1),
+	lastReviewed: dateStringSchema,
+	sections: z
+		.array(
+			z.object({
+				label: z.string().min(1),
+				items: z.array(
+					z.object({
+						name: z.string().min(1),
+						why: z.string().min(1),
+					}),
+				),
+			}),
+		)
+		.min(1),
+});
+
+export const readingEntrySchema = z.object({
+	title: z.string().min(1),
+	quarter: z.string().regex(/^\d{4}-q[1-4]$/),
+	items: z
+		.array(
+			z.object({
+				title: z.string().min(1),
+				author: z.string().min(1),
+				kind: z.enum(["book", "paper", "post", "talk"]),
+				status: z.enum(["read", "reading", "queued"]).default("queued"),
+				takeaway: z.string().optional(),
+				link: z.string().url().optional(),
+			}),
+		)
+		.min(1),
+});
+
+export type NowEntry = z.infer<typeof nowEntrySchema>;
+export type UsesEntry = z.infer<typeof usesEntrySchema>;
+export type ReadingEntry = z.infer<typeof readingEntrySchema>;
+
 export type PortfolioCategory = z.infer<typeof portfolioCategorySchema>;
 export type PublicationStatus = z.infer<typeof publicationStatusSchema>;
 export type CaseStudyRedactionStatus = z.infer<

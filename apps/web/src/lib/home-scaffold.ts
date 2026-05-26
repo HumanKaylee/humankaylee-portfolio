@@ -51,6 +51,9 @@ export function homeScaffold(): HomeScaffold {
 		primaryNav: [
 			{ label: "Home", href: "/" },
 			{ label: "Projects", href: "/projects/" },
+			{ label: "Now", href: "/now/" },
+			{ label: "Uses", href: "/uses/" },
+			{ label: "Reading", href: "/reading/" },
 			{ label: "Resume", href: "/resume/" },
 			{ label: "Contact", href: "/contact/" },
 		],

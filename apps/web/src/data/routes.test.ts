@@ -16,6 +16,9 @@ describe("routeInventory", () => {
 			"sitemap",
 			"robots",
 			"fallback-error",
+			"now",
+			"uses",
+			"reading",
 		]);
 	});
 

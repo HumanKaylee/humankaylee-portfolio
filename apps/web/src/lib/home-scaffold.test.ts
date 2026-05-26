@@ -18,6 +18,9 @@ describe("homeScaffold", () => {
 		expect(scaffold.primaryNav.map((item) => item.href)).toEqual([
 			"/",
 			"/projects/",
+			"/now/",
+			"/uses/",
+			"/reading/",
 			"/resume/",
 			"/contact/",
 		]);

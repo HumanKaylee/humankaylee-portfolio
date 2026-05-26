@@ -183,6 +183,51 @@ export const routeInventory = [
 			robots: "noindex,nofollow",
 		},
 	},
+	{
+		id: "now",
+		label: "Now",
+		path: "/now/",
+		owner: "content",
+		status: "draft",
+		seo: {
+			title: "Now | HumanKaylee portfolio",
+			description:
+				"What HumanKaylee is focused on right now — current projects, working context, and active learning.",
+			canonicalPath: "/now/",
+			ogImage: "/social/now.png",
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "uses",
+		label: "Uses",
+		path: "/uses/",
+		owner: "content",
+		status: "draft",
+		seo: {
+			title: "Uses | HumanKaylee portfolio",
+			description:
+				"Hardware, software, and tooling that HumanKaylee uses day-to-day as a Principal Engineer and systems builder.",
+			canonicalPath: "/uses/",
+			ogImage: "/social/uses.png",
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "reading",
+		label: "Reading",
+		path: "/reading/",
+		owner: "content",
+		status: "draft",
+		seo: {
+			title: "Reading | HumanKaylee portfolio",
+			description:
+				"Books, papers, posts, and talks that HumanKaylee is reading or has read, with one-sentence takeaways.",
+			canonicalPath: "/reading/",
+			ogImage: "/social/reading.png",
+			robots: "index,follow",
+		},
+	},
 ] as const satisfies readonly RouteInventoryEntry[];
 
 export const routeInventoryById = Object.fromEntries(

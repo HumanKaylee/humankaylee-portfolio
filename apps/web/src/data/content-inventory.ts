@@ -29,7 +29,10 @@ export type RouteInventoryEntry = Readonly<{
 		| "contact"
 		| "sitemap"
 		| "robots"
-		| "error";
+		| "error"
+		| "now"
+		| "uses"
+		| "reading";
 	contentSources: readonly string[];
 	requiredSeoFields: readonly string[];
 }>;
@@ -46,6 +49,9 @@ const routeKindById = {
 	sitemap: "sitemap",
 	robots: "robots",
 	"fallback-error": "error",
+	now: "now",
+	uses: "uses",
+	reading: "reading",
 } satisfies Readonly<Record<RouteId, RouteInventoryEntry["kind"]>>;
 
 const contentSourcesById = {
@@ -93,6 +99,9 @@ const contentSourcesById = {
 	sitemap: ["route inventory", "published content slugs"],
 	robots: ["route inventory", "crawl policy"],
 	"fallback-error": ["fallback navigation", "contact path", "home link"],
+	now: ["current focus items", "now entry date", "entry summary"],
+	uses: ["hardware list", "software list", "tooling philosophy"],
+	reading: ["reading items by kind", "status badges", "takeaways"],
 } satisfies Readonly<Record<RouteId, readonly string[]>>;
 
 export const ROUTE_INVENTORY: readonly RouteInventoryEntry[] =
@@ -113,7 +122,10 @@ export type ContentTypeKey =
 	| "notesBuildLog"
 	| "projectCatalog"
 	| "resume"
-	| "siteMetadata";
+	| "siteMetadata"
+	| "now"
+	| "uses"
+	| "reading";
 
 export type ContentValidationExample = Readonly<{
 	requiredFields: readonly string[];
@@ -403,6 +415,83 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 					siteUrl: "humankaylee.example",
 					defaultOgImage: "/social/default.png",
 					seo: seoExample,
+				},
+			},
+		],
+	},
+	now: {
+		requiredFields: ["title", "date", "status", "summary", "items"],
+		validExample: {
+			title: "What I'm focused on, May 2026",
+			date: "2026-05-26",
+			status: "current",
+			summary: "A current-focus snapshot.",
+			items: [
+				{ label: "Active project", note: "Working on the portfolio launch." },
+			],
+		},
+		invalidExamples: [
+			{
+				reason: "missing required items array",
+				entry: {
+					title: "Now entry without items",
+					date: "2026-05-26",
+					status: "current",
+					summary: "A summary.",
+				},
+			},
+		],
+	},
+	uses: {
+		requiredFields: ["title", "lastReviewed", "sections"],
+		validExample: {
+			title: "Uses",
+			lastReviewed: "2026-05-26",
+			sections: [
+				{
+					label: "Hardware",
+					items: [{ name: "Example device", why: "It works well." }],
+				},
+			],
+		},
+		invalidExamples: [
+			{
+				reason: "missing required sections array",
+				entry: {
+					title: "Uses without sections",
+					lastReviewed: "2026-05-26",
+				},
+			},
+		],
+	},
+	reading: {
+		requiredFields: ["title", "quarter", "items"],
+		validExample: {
+			title: "Reading list — Q2 2026",
+			quarter: "2026-q2",
+			items: [
+				{
+					title: "Example Book",
+					author: "Example Author",
+					kind: "book",
+					status: "read",
+				},
+			],
+		},
+		invalidExamples: [
+			{
+				reason: "quarter does not match required format",
+				entry: {
+					title: "Reading list",
+					quarter: "Q2-2026",
+					items: [
+						{
+							title: "Example Book",
+							author: "Example Author",
+							kind: "book",
+							status: "read",
+						},
+					],
 				},
 			},
 		],

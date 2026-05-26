@@ -8,6 +8,15 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- **v1.3-partial (M9): /now, /uses, /reading Sivers-style content pages.**
+  Added three new Astro 5 content collections (`now`, `uses`, `reading`) with Zod
+  schemas (`nowEntrySchema`, `usesEntrySchema`, `readingEntrySchema`), authored
+  sample content entries for May 2026, and page templates at `/now/`, `/uses/`,
+  `/reading/`. Nav updated to 7 items. Route inventory and test suites updated to
+  cover the 3 new routes. Build: 19 → 22 pages. All 27 vitest tests pass.
+  Deferred to post-launch v1.3 full: OKLCH palette repaint, Inter Variable +
+  JetBrains Mono self-host, 3-variant hero A/B/C.
+
 - Added a Phase 7 launch readiness audit CLI and package script so resumed goal
   runs can write a public-safe `local/readiness-audit` summary of unresolved
   external launch gates before any launch-readiness or issue-closure claim,

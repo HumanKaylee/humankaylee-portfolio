@@ -1,0 +1,119 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type ReadingEntry = CollectionEntry<"reading">;
+type ReadingItem = ReadingEntry["data"]["items"][number];
+type ItemKind = ReadingItem["kind"];
+
+const allEntries = (await getCollection("reading")) as ReadingEntry[];
+const sorted = allEntries.sort((a: ReadingEntry, b: ReadingEntry) =>
+	b.data.quarter.localeCompare(a.data.quarter),
+);
+const entry = sorted[0] as ReadingEntry | undefined;
+
+const kindOrder: ItemKind[] = ["book", "paper", "post", "talk"];
+const kindLabels: Record<ItemKind, string> = {
+	book: "Books",
+	paper: "Papers",
+	post: "Posts",
+	talk: "Talks",
+};
+
+const itemsByKind = kindOrder.reduce<Record<ItemKind, ReadingItem[]>>(
+	(acc, kind) => {
+		acc[kind] = entry
+			? entry.data.items.filter((item: ReadingItem) => item.kind === kind)
+			: [];
+		return acc;
+	},
+	{ book: [], paper: [], post: [], talk: [] },
+);
+
+const statusLabel: Record<ReadingItem["status"], string> = {
+	read: "Read",
+	reading: "Reading",
+	queued: "Queued",
+};
+
+const { Content } = entry ? await render(entry) : { Content: null };
+---
+
+<BaseLayout
+	title="Reading | HumanKaylee"
+	description="Books, papers, posts, and talks that HumanKaylee is reading or has read — with one-sentence takeaways."
+	canonicalPath="/reading/"
+	ogImage="/social/reading.png"
+>
+	{
+		entry ? (
+			<section class="page-shell" aria-labelledby="reading-title">
+				<header class="page-header">
+					<p class="section-kicker">Reading</p>
+					<h1 id="reading-title">{entry.data.title}</h1>
+				</header>
+
+				{kindOrder.map((kind) =>
+					itemsByKind[kind].length > 0 ? (
+						<section
+							class="reading-kind-group"
+							aria-labelledby={`reading-kind-${kind}`}
+						>
+							<h2 id={`reading-kind-${kind}`} class="section-heading">
+								{kindLabels[kind]}
+							</h2>
+							<ul class="reading-list">
+								{itemsByKind[kind].map((item: ReadingItem) => (
+									<li class="reading-item project-card">
+										<div class="reading-item-header">
+											<strong class="reading-item-title">
+												{item.link ? (
+													<a
+														href={item.link}
+														rel="noopener noreferrer"
+														class="reading-item-link"
+													>
+														{item.title}
+													</a>
+												) : (
+													item.title
+												)}
+											</strong>
+											<span class="project-category reading-author">
+												{item.author}
+											</span>
+										</div>
+										<p class="reading-item-status section-kicker">
+											{statusLabel[item.status]}
+										</p>
+										{item.takeaway && (
+											<p class="body-copy reading-item-takeaway">
+												{item.takeaway}
+											</p>
+										)}
+									</li>
+								))}
+							</ul>
+						</section>
+					) : null,
+				)}
+
+				{Content && (
+					<div class="reading-body">
+						<Content />
+					</div>
+				)}
+			</section>
+		) : (
+			<section class="page-shell" aria-labelledby="reading-title">
+				<header class="page-header">
+					<p class="section-kicker">Reading</p>
+					<h1 id="reading-title">Nothing here yet.</h1>
+					<p class="page-intro">Check back soon.</p>
+				</header>
+			</section>
+		)
+	}
+</BaseLayout>

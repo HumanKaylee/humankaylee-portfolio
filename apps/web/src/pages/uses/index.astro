@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type UsesEntry = CollectionEntry<"uses">;
+type UsesSection = UsesEntry["data"]["sections"][number];
+type UsesItem = UsesSection["items"][number];
+
+const allEntries = (await getCollection("uses")) as UsesEntry[];
+const sorted = allEntries.sort((a: UsesEntry, b: UsesEntry) =>
+	b.data.lastReviewed.localeCompare(a.data.lastReviewed),
+);
+const entry = sorted[0] as UsesEntry | undefined;
+const sections = entry?.data.sections ?? ([] as UsesSection[]);
+const { Content } = entry ? await render(entry) : { Content: null };
+---
+
+<BaseLayout
+	title="Uses | HumanKaylee"
+	description="Hardware, software, and tooling that HumanKaylee uses day-to-day as a Principal Engineer and systems builder."
+	canonicalPath="/uses/"
+	ogImage="/social/uses.png"
+>
+	{
+		entry ? (
+			<section class="page-shell" aria-labelledby="uses-title">
+				<header class="page-header">
+					<p class="section-kicker">Uses</p>
+					<h1 id="uses-title">{entry.data.title}</h1>
+					<p class="page-intro">
+						Last reviewed:{" "}
+						<time datetime={entry.data.lastReviewed}>
+							{entry.data.lastReviewed}
+						</time>
+					</p>
+				</header>
+
+				{sections.map((section: UsesSection) => (
+					<section
+						class="uses-section"
+						aria-labelledby={`uses-section-${section.label.toLowerCase().replace(/\s+/g, "-")}`}
+					>
+						<h2
+							id={`uses-section-${section.label.toLowerCase().replace(/\s+/g, "-")}`}
+							class="section-heading"
+						>
+							{section.label}
+						</h2>
+						<dl class="uses-list">
+							{section.items.map((item: UsesItem) => (
+								<>
+									<dt class="uses-item-name">{item.name}</dt>
+									<dd class="uses-item-why body-copy">{item.why}</dd>
+								</>
+							))}
+						</dl>
+					</section>
+				))}
+
+				{Content && (
+					<div class="uses-body">
+						<Content />
+					</div>
+				)}
+			</section>
+		) : (
+			<section class="page-shell" aria-labelledby="uses-title">
+				<header class="page-header">
+					<p class="section-kicker">Uses</p>
+					<h1 id="uses-title">Nothing here yet.</h1>
+					<p class="page-intro">Check back soon.</p>
+				</header>
+			</section>
+		)
+	}
+</BaseLayout>

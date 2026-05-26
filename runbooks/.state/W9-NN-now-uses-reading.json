@@ -1,0 +1,36 @@
+{
+  "task": "W9-NN-now-uses-reading",
+  "description": "M9-partial: /now /uses /reading Sivers-style content collections + pages",
+  "completedAt": "2026-05-26T00:00:00Z",
+  "status": "complete",
+  "scope": "frontend-only",
+  "filesCreated": [
+    "apps/web/src/content/now/2026-05-26.md",
+    "apps/web/src/content/uses/index.md",
+    "apps/web/src/content/reading/2026-q2.md",
+    "apps/web/src/pages/now/index.astro",
+    "apps/web/src/pages/uses/index.astro",
+    "apps/web/src/pages/reading/index.astro"
+  ],
+  "filesModified": [
+    "apps/web/src/content.config.ts",
+    "apps/web/src/lib/contracts/content.ts",
+    "apps/web/src/lib/home-scaffold.ts",
+    "apps/web/src/lib/home-scaffold.test.ts",
+    "apps/web/src/data/routes.ts",
+    "apps/web/src/data/routes.test.ts",
+    "apps/web/src/data/content-inventory.ts",
+    "apps/web/src/data/content-inventory.test.ts",
+    "apps/web/src/data/content-collections.test.ts"
+  ],
+  "verification": {
+    "pnpmBuild": "exit 0, 22 pages",
+    "pnpmTypecheck": "0 errors",
+    "pnpmTest": "27/27 pass"
+  },
+  "deferred": [
+    "OKLCH palette repaint",
+    "Inter Variable + JetBrains Mono self-host",
+    "3-variant hero A/B/C"
+  ]
+}

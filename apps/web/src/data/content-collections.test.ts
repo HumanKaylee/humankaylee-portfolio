@@ -9,9 +9,12 @@ describe("Astro content collection fixtures", () => {
 		for (const collection of [
 			"case-studies",
 			"notes",
+			"now",
 			"projects",
+			"reading",
 			"resume",
 			"site",
+			"uses",
 		]) {
 			expect(existsSync(join(contentRoot, collection))).toBe(true);
 		}

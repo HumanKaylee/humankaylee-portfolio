@@ -49,6 +49,9 @@ describe("phase 1 content inventory", () => {
 			"/sitemap-index.xml",
 			"/robots.txt",
 			"/404",
+			"/now/",
+			"/uses/",
+			"/reading/",
 		]);
 	});
 

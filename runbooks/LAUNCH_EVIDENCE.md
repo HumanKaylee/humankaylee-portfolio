@@ -382,3 +382,25 @@ requirements.
 | 2026-05-26T17:47:20Z | M8-end | backend+frontend | sonnet | PASS | 200000 | apps/web/public/wasm/blackscholes/blackscholes_wasm_bg.wasm (62988 bytes raw, 28598 bytes gzipped), apps/web/src/components/BlackScholesDemo.astro, apps/web/src/content/notes/wasm-black-scholes-options-pricer.md | localhost smoke passes: WASM 200 WebAssembly binary confirmed, note page 200 with blackscholes reference; production verify pending M1 deploy |
 
 **M8 summary:** WASM Black-Scholes options pricer island complete. Rust crate (~200 lines) compiles to 62 KB raw / 27 KB gzipped WASM via wasm-pack. 6/6 unit tests pass (ATM call textbook values, put-call parity, deep-OTM/ITM edge cases, CND sanity, gamma non-negative). Astro island `BlackScholesDemo.astro` with 5-slider UI, aria-live readout, client:visible lazy-load. New note at /notes/wasm-black-scholes-options-pricer/ with ~400-word explainer. Case study "Live demos" subsection added. `pnpm wasm:build` script + CI wasm-build job. Pre-existing `approvalEvidence` schema mismatch in humankaylee-portfolio-build.md fixed as side effect. `astro.config.mjs` vite.build.rollupOptions.external added for the runtime-only dynamic import path.
+
+## M7-partial — 2026-05-26 Runtime OG Endpoint + Sentry + Static OG Cleanup
+
+| timestamp | milestone | lane | model | result | ms | files | notes |
+|-----------|-----------|------|-------|--------|-----|-------|-------|
+| 2026-05-26T20:45:00Z | M7-partial-start | backend | sonnet-4-6 | START | 0 | apps/api/src/og.rs, apps/api/templates/og-template.svg | begin runtime OG endpoint |
+| 2026-05-26T21:00:00Z | M7-partial-end | backend | sonnet-4-6 | PASS | 900000 | apps/api/src/og.rs, apps/api/templates/og-template.svg, apps/api/src/telemetry.rs, apps/api/src/lib.rs, apps/api/Cargo.toml, apps/api/tests/api_contract.rs, apps/web/public/social/ (23 PNGs removed), apps/web/src/layouts/BaseLayout.astro, runbooks/.state/W2-og-runtime.json, runbooks/.state/W2-sentry.json | Runtime OG endpoint live; 23 static PNGs removed (default.png + default.svg kept); Sentry conditional on SENTRY_DSN env; Litestream deferred until D-03 resolved; Cloudflare Web Analytics deferred (operator-account-gated); contract-test cull deferred (risky pre-launch) |
+
+**M7-partial summary:** Runtime OG image endpoint `/api/og?title=...&subtitle=...` added to Axum API. Returns 1200×630 PNG rendered via resvg + tiny-skia from SVG template with dark background, phosphor green accent stripe, and title/subtitle text injection. Smoke test: HTTP 200, `image/png`, 113,177 bytes, valid PNG magic header `89 50 4E 47 0D 0A 1A 0A`. 4 new contract tests in `api_contract.rs`, all pass. 5 unit tests in `og.rs`, all pass. 28/28 total tests pass. Sentry init compiles and gracefully handles missing DSN (logs `sentry_disabled | reason: no SENTRY_DSN env var`). BaseLayout.astro updated to use runtime OG when `PUBLIC_API_BASE_URL` env is set at build time; falls back to `default.svg` when absent (SSG-safe). 23 static PNGs deleted from `apps/web/public/social/` (kept `default.png` + `default.svg`). Pre-existing `/now` page pnpm build failure confirmed pre-existing (same error with original BaseLayout). TypeScript check: 0 errors.
+
+## M9-partial evidence rows (2026-05-26)
+
+| Area | Check | Result | Evidence Authority | Notes |
+|------|-------|--------|--------------------|-------|
+| /now page | pnpm build exit 0 | pass | local/PR | 22 pages built, /now/index.html present |
+| /uses page | pnpm build exit 0 | pass | local/PR | /uses/index.html present |
+| /reading page | pnpm build exit 0 | pass | local/PR | /reading/index.html present |
+| Content schemas | pnpm typecheck 0 errors | pass | local/PR | nowEntrySchema, usesEntrySchema, readingEntrySchema validated |
+| Tests | 27/27 vitest pass | pass | local/PR | routes, content-inventory, home-scaffold, content-collections all green |
+| Nav links | /now /uses /reading added | pass | local/PR | 7 nav items (below 8-item limit) |
+
+Deferred to post-launch v1.3 full: OKLCH palette repaint, Inter Variable + JetBrains Mono self-host, 3-variant hero A/B/C.
