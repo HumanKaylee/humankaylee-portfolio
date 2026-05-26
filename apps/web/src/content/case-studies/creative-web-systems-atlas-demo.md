@@ -60,7 +60,7 @@ seo:
   title: "Creative Web Systems Atlas Demo"
   description: "A draft case study for a progressive project atlas with accessible fallbacks."
   canonicalPath: "/case-studies/creative-web-systems-atlas-demo/"
-  ogImage: "/social/case-studies/creative-web-systems-atlas-demo.png"
+  ogImage: "/social/default.svg"
 ---
 
 The Systems Atelier direction for this demo is to make the portfolio feel like a curated studio wall: readable first, visually distinctive second, and never dependent on a flashy layer to make sense. The current public-safe proof is a semantic project atlas fallback and a static systems-map hero/poster, so the story already works as plain HTML before any future enhancement is considered. The demo is optional, and portfolio comprehension does not depend on it.

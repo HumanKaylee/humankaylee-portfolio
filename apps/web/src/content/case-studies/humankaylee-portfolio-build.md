@@ -78,7 +78,7 @@ seo:
   title: "HumanKaylee Portfolio Build"
   description: "A case study about building this portfolio as a static-first, Systems Atelier site with an optional Rust-backed enhancement layer."
   canonicalPath: "/case-studies/humankaylee-portfolio-build/"
-  ogImage: "/social/case-studies/humankaylee-portfolio-build.png"
+  ogImage: "/social/default.svg"
 ---
 
 ## Product goal

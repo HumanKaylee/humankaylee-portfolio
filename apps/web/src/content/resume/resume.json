@@ -30,6 +30,6 @@
 		"title": "HumanKaylee Resume",
 		"description": "HTML resume entry point with a downloadable PDF for recruiter review.",
 		"canonicalPath": "/resume/",
-		"ogImage": "/social/resume.png"
+		"ogImage": "/social/default.svg"
 	}
 }

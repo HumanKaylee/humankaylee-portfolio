@@ -13,7 +13,7 @@ seo:
   title: "Black-Scholes options pricer in Rust → WASM"
   description: "How a Rust crate compiled to WebAssembly powers a live, in-browser European options pricer with real-time Greeks."
   canonicalPath: "/notes/wasm-black-scholes-options-pricer/"
-  ogImage: "/social/notes/wasm-black-scholes-options-pricer.png"
+  ogImage: "/social/default.svg"
 ---
 
 ## What Black-Scholes computes

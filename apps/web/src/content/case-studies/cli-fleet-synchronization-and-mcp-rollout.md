@@ -76,7 +76,7 @@ seo:
   title: "CLI Fleet Synchronization and MCP Rollout"
   description: "A sanitized operations case study about inventory, rollout, and verification discipline."
   canonicalPath: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/"
-  ogImage: "/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png"
+  ogImage: "/social/default.svg"
 ---
 
 ## Public-safe narrative

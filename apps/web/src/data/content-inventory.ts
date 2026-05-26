@@ -140,7 +140,7 @@ const seoExample = {
 	title: "Example page",
 	description: "A safe public summary.",
 	canonicalPath: "/examples/example-page/",
-	ogImage: "/social/examples/example-page.png",
+	ogImage: "/social/default.svg",
 };
 
 export const CONTENT_VALIDATION_EXAMPLES: Readonly<
@@ -361,7 +361,7 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 				description:
 					"HTML resume entry point with a downloadable PDF for recruiter review.",
 				canonicalPath: "/resume/",
-				ogImage: "/social/resume.png",
+				ogImage: "/social/default.svg",
 			},
 		},
 		invalidExamples: [

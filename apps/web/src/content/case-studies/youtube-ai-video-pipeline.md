@@ -59,7 +59,7 @@ seo:
   title: "YouTube AI Video Pipeline"
   description: "A deferred AI workflow case-study candidate awaiting redaction review."
   canonicalPath: "/case-studies/youtube-ai-video-pipeline/"
-  ogImage: "/social/case-study-detail.png"
+  ogImage: "/social/default.svg"
 ---
 
 # YouTube AI Video Pipeline

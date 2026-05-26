@@ -12,7 +12,7 @@ seo:
   title: "How the portfolio stays useful when the API is offline"
   description: "A build-log note about static-first resilience, API fallback design, and verification."
   canonicalPath: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"
-  ogImage: "/social/notes/api-offline-resilience.png"
+  ogImage: "/social/default.svg"
 ---
 
 The static shell carries the recruiting story: positioning, projects, case

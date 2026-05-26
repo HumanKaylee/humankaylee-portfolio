@@ -12,7 +12,7 @@ seo:
   title: "Redaction rules for portfolio case studies"
   description: "A build-log note about keeping case-study artifacts safe for public review."
   canonicalPath: "/notes/redaction-rules-for-portfolio-case-studies/"
-  ogImage: "/social/notes/redaction-rules.png"
+  ogImage: "/social/default.svg"
 ---
 
 Public proof should preserve the engineering story while removing credentials,

@@ -58,7 +58,7 @@ seo:
   title: "Kalshi Migration or Analytics Tooling"
   description: "A deferred backend case-study candidate that requires stricter publication review."
   canonicalPath: "/case-studies/kalshi-migration-or-analytics-tooling/"
-  ogImage: "/social/case-study-detail.png"
+  ogImage: "/social/default.svg"
 ---
 
 # Kalshi Migration Or Analytics Tooling

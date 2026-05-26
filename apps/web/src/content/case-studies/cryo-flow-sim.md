@@ -87,7 +87,7 @@ seo:
   title: "Cryo Flow Sim — Stage 1 Showcase"
   description: "A deterministic cryogenic simulation captured as a verified 1080p video artifact, built with a three-crate Rust workspace and validated by 92 passing tests."
   canonicalPath: "/case-studies/cryo-flow-sim/"
-  ogImage: "/social/case-study-detail.png"
+  ogImage: "/social/default.svg"
 ---
 
 ## Stage 1 showcase video

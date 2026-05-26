@@ -31,7 +31,7 @@ export const routeInventory = [
 			description:
 				"A systems-focused portfolio home page that introduces HumanKaylee's work, proof, and contact paths.",
 			canonicalPath: "/",
-			ogImage: "/social/home.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -46,7 +46,7 @@ export const routeInventory = [
 			description:
 				"A curated project index with accessible summaries for recruiter and engineer review.",
 			canonicalPath: "/projects/",
-			ogImage: "/social/projects.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -61,7 +61,7 @@ export const routeInventory = [
 			description:
 				"A project detail route for deep-dive evidence, implementation notes, and artifacts.",
 			canonicalPath: "/projects/[slug]/",
-			ogImage: "/social/project-detail.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -76,7 +76,7 @@ export const routeInventory = [
 			description:
 				"Flagship case studies with problem, constraints, verification, operations, and lessons.",
 			canonicalPath: "/case-studies/",
-			ogImage: "/social/case-studies.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -91,7 +91,7 @@ export const routeInventory = [
 			description:
 				"A case-study detail route with redacted evidence, implementation notes, and lessons.",
 			canonicalPath: "/case-studies/[slug]/",
-			ogImage: "/social/case-study-detail.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -106,7 +106,7 @@ export const routeInventory = [
 			description:
 				"Short engineering notes, build logs, and process write-ups that support the launch story.",
 			canonicalPath: "/notes/",
-			ogImage: "/social/notes.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -121,7 +121,7 @@ export const routeInventory = [
 			description:
 				"HTML resume and downloadable PDF entry point for recruiter fast-path review.",
 			canonicalPath: "/resume/",
-			ogImage: "/social/resume.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -136,7 +136,7 @@ export const routeInventory = [
 			description:
 				"A direct contact route with fallback paths for email and form delivery.",
 			canonicalPath: "/contact/",
-			ogImage: "/social/contact.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -151,7 +151,7 @@ export const routeInventory = [
 			description:
 				"Machine-readable route index for the public portfolio site.",
 			canonicalPath: "/sitemap-index.xml",
-			ogImage: "/social/sitemap.png",
+			ogImage: "/social/default.svg",
 			robots: "noindex,nofollow",
 		},
 	},
@@ -165,7 +165,7 @@ export const routeInventory = [
 			title: "Robots | HumanKaylee portfolio",
 			description: "Search crawler directives for the public portfolio site.",
 			canonicalPath: "/robots.txt",
-			ogImage: "/social/robots.png",
+			ogImage: "/social/default.svg",
 			robots: "noindex,nofollow",
 		},
 	},
@@ -179,7 +179,7 @@ export const routeInventory = [
 			title: "Page not found | HumanKaylee portfolio",
 			description: "Fallback error page for missing routes and stale links.",
 			canonicalPath: "/404",
-			ogImage: "/social/404.png",
+			ogImage: "/social/default.svg",
 			robots: "noindex,nofollow",
 		},
 	},
@@ -194,7 +194,7 @@ export const routeInventory = [
 			description:
 				"What HumanKaylee is focused on right now — current projects, working context, and active learning.",
 			canonicalPath: "/now/",
-			ogImage: "/social/now.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -209,7 +209,7 @@ export const routeInventory = [
 			description:
 				"Hardware, software, and tooling that HumanKaylee uses day-to-day as a Principal Engineer and systems builder.",
 			canonicalPath: "/uses/",
-			ogImage: "/social/uses.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},
@@ -224,7 +224,7 @@ export const routeInventory = [
 			description:
 				"Books, papers, posts, and talks that HumanKaylee is reading or has read, with one-sentence takeaways.",
 			canonicalPath: "/reading/",
-			ogImage: "/social/reading.png",
+			ogImage: "/social/default.svg",
 			robots: "index,follow",
 		},
 	},

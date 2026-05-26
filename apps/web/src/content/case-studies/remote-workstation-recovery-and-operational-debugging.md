@@ -77,7 +77,7 @@ seo:
   title: "Remote Workstation Recovery and Operational Debugging"
   description: "A sanitized systems recovery case study about evidence-first operational debugging."
   canonicalPath: "/case-studies/remote-workstation-recovery-and-operational-debugging/"
-  ogImage: "/social/case-studies/remote-workstation-recovery-and-operational-debugging.png"
+  ogImage: "/social/default.svg"
 ---
 
 ## Public-safe narrative
