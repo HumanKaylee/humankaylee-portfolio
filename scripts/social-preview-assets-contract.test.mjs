@@ -118,6 +118,15 @@ test("referenced PNG social preview assets are valid 1200x630 images", () => {
 });
 
 test("unpublished case-study candidates use the generic social preview", () => {
+	// Updated 2026-05-26 (post-0a1f924 M7-partial): static per-page OG PNGs
+	// (incl. /social/case-study-detail.png) were retired in favor of the
+	// runtime /api/og?title=... endpoint. Canonical fallback for unpublished
+	// candidates is now /social/default.svg; legacy paths accepted in transition.
+	const acceptableFallbacks = new Set([
+		"/social/default.svg",
+		"/social/default.png",
+		"/social/case-study-detail.png",
+	]);
 	const caseStudyFiles = listFiles("apps/web/src/content/case-studies").filter(
 		(filePath) => filePath.endsWith(".md"),
 	);
@@ -135,9 +144,9 @@ test("unpublished case-study candidates use the generic social preview", () => {
 			continue;
 		}
 
-		if (ogImage !== "/social/case-study-detail.png") {
+		if (!acceptableFallbacks.has(ogImage)) {
 			violations.push(
-				`${path.relative(repoRoot, filePath)} uses ${ogImage || "<missing>"}`,
+				`${path.relative(repoRoot, filePath)} uses ${ogImage || "<missing>"} (expected one of: ${[...acceptableFallbacks].join(", ")})`,
 			);
 		}
 	}
