@@ -1,0 +1,2 @@
+# Empty fixtures directory referenced by the biome `lint` script in package.json.
+# Future test fixtures will live here.

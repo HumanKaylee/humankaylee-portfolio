@@ -164,8 +164,12 @@ jobs:
       - name: Run Rust clippy
         run: cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 
-      - name: Check Shuttle API binary
-        run: cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
+      # M2-pre-prep (commit 8ee258d) removed the legacy `shuttle` Cargo feature.
+      # Shuttle is no longer an active deploy target; the binary previously
+      # built behind --features shuttle has been deleted. Re-introducing this
+      # check would require restoring shuttle-axum + shuttle-runtime deps,
+      # which is contrary to the "Shuttle is legacy compatibility only" plan
+      # in runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md.
 
       - name: Run Rust tests
         run: cargo test --manifest-path apps/api/Cargo.toml
