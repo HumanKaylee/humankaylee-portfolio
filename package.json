@@ -23,7 +23,9 @@
 		"redaction:readiness": "node scripts/case-study-redaction-readiness.mjs",
 		"audit:frontend": "pnpm audit --audit-level moderate",
 		"audit:backend": "cargo audit --file apps/api/Cargo.lock",
-		"audit": "pnpm audit:frontend && pnpm audit:backend"
+		"audit": "pnpm audit:frontend && pnpm audit:backend",
+		"wasm:build": "node scripts/build-wasm-blackscholes.mjs",
+		"wasm:check": "node scripts/build-wasm-blackscholes.mjs && ls -lh apps/web/public/wasm/blackscholes/"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.6",

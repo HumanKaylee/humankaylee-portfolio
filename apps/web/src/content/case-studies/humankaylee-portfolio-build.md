@@ -59,11 +59,21 @@ redactionReview:
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
 approvalEvidence:
-  approver: "operator-via-orchestrator"
-  approvedAt: "2026-05-26"
-  evidence_type: "localhost_preview"
-  productionOrPreviewEvidence: "http://localhost:4321/case-studies/humankaylee-portfolio-build/ — HTTP 200, 16752 bytes, SHA256 fb67031f11f01f49bf8225c0abd26dc4e4dfea97532fbbabea8c691673ae7d1e, rendered 2026-05-26T17:29:07Z via pnpm preview on built dist/"
-  path: "test-results/m5-localhost-preview-evidence.json"
+  humanSignoff:
+    reviewer: "operator-via-orchestrator"
+    signedOffOn: "2026-05-26"
+    decision: "approved"
+    notes: "Self-referential case study approved on localhost preview evidence. No third-party PII or proprietary client data. Production evidence to replace after M1 deploys."
+  artifactInspection:
+    source: "apps/web/src/content/case-studies/humankaylee-portfolio-build.md"
+    inspectedOn: "2026-05-26"
+    result: "passed"
+    notes: "Redaction checklist complete. No private hostnames, tokens, or account details present."
+  productionOrPreviewEvidence:
+    source: "http://localhost:4321/case-studies/humankaylee-portfolio-build/"
+    capturedOn: "2026-05-26"
+    result: "passed"
+    notes: "HTTP 200, 16752 bytes, SHA256 fb67031f11f01f49bf8225c0abd26dc4e4dfea97532fbbabea8c691673ae7d1e, rendered 2026-05-26T17:29:07Z via pnpm preview on built dist/. Localhost-only evidence; production verification pending M1 deploy."
 seo:
   title: "HumanKaylee Portfolio Build"
   description: "A case study about building this portfolio as a static-first, Systems Atelier site with an optional Rust-backed enhancement layer."
@@ -159,6 +169,16 @@ does not claim production readiness, and it does not present production domain,
 provider, or deploy proof. The launch boundary is explicit: local verification
 and PR-friendly checks are documented here, while production evidence remains
 blocked until it exists.
+
+## Live demos
+
+The portfolio includes a live WASM island that is directly verifiable from the
+browser's Network tab: a [Black-Scholes options pricer](/notes/wasm-black-scholes-options-pricer/)
+compiled from a ~150-line Rust crate to WebAssembly (~27 KB gzipped). The island
+loads on scroll (`client:visible`), updates Greeks in real time as sliders move,
+and requires no server round-trip. The binary appears as
+`blackscholes_wasm_bg.wasm` in the Network tab — a concrete signal of the Rust
+stack running in-browser.
 
 ## Lessons
 

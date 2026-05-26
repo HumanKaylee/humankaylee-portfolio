@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlackScholesDemo from "../../components/BlackScholesDemo.astro";
 
 type NoteEntry = CollectionEntry<"notes">;
 
@@ -67,6 +68,9 @@ const structuredData = {
 
 			<div class="note-body">
 				<Content />
+				{note.data.demoComponent === "BlackScholesDemo" && (
+					<BlackScholesDemo />
+				)}
 			</div>
 		</article>
 	</section>

@@ -1,3 +1,9 @@
+[workspace]
+members = [
+    ".",
+    "crates/blackscholes-wasm",
+]
+
 [package]
 name = "humankaylee-api"
 version = "0.1.0"

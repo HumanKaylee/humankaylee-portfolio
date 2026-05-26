@@ -1,0 +1,34 @@
+{
+  "milestone": "M8",
+  "wave": "W4",
+  "task": "W4-02",
+  "label": "WASM Black-Scholes options pricer demo island",
+  "status": "complete",
+  "completedAt": "2026-05-26T17:47:00Z",
+  "agent": "sonnet",
+  "lane": "backend+frontend",
+  "artifacts": {
+    "rustCrate": "apps/api/crates/blackscholes-wasm/",
+    "wasmBundle": "apps/web/public/wasm/blackscholes/blackscholes_wasm_bg.wasm",
+    "wasmBundleSizeBytes": 62988,
+    "wasmBundleGzipBytes": 28598,
+    "astroIsland": "apps/web/src/components/BlackScholesDemo.astro",
+    "note": "apps/web/src/content/notes/wasm-black-scholes-options-pricer.md",
+    "buildScript": "scripts/build-wasm-blackscholes.mjs",
+    "ciJob": ".github/workflows/phase-0-ci.yml (wasm-build job)"
+  },
+  "tests": {
+    "rustUnitTests": 6,
+    "allPassed": true,
+    "coverage": ["ATM call textbook values", "put-call parity", "deep-OTM price near zero", "deep-ITM put delta near -1", "CND sanity", "gamma non-negative"]
+  },
+  "smokeTest": {
+    "wasmBinaryHttp": 200,
+    "notePageHttp": 200,
+    "wasmFileType": "WebAssembly binary module version 0x1 (MVP)",
+    "noteReferencesBs": true,
+    "testedAt": "2026-05-26T17:47:00Z"
+  },
+  "haltsStateIntact": "not-applicable (no halt files in this repo)",
+  "notes": "Astro build passes with wasm-pack output in /public/wasm/. Rollup external config added to astro.config.mjs for runtime-only dynamic import. Pre-existing approvalEvidence schema mismatch in humankaylee-portfolio-build.md fixed as a side effect."
+}

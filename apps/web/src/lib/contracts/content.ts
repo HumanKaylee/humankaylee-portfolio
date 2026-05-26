@@ -225,6 +225,8 @@ export const projectMetadataSchema = z.object({
 	seo: seoSchema,
 });
 
+export const knownDemoComponents = ["BlackScholesDemo"] as const;
+
 export const notesEntrySchema = z.object({
 	title: z.string().min(1),
 	slug: slugSchema,
@@ -232,6 +234,8 @@ export const notesEntrySchema = z.object({
 	tags: z.array(z.string().min(1)).min(1).max(6),
 	publishedAt: dateStringSchema,
 	publicationStatus: publicationStatusSchema,
+	/** Optional demo component to inject below the note body. */
+	demoComponent: z.enum(knownDemoComponents).optional(),
 	seo: seoSchema,
 });
 
@@ -306,6 +310,7 @@ export type RedactionReview = z.infer<typeof redactionReviewSchema>;
 export type IssueTrace = z.infer<typeof issueTraceSchema>;
 export type CaseStudyEntry = z.infer<typeof caseStudySchema>;
 export type ProjectMetadataEntry = z.infer<typeof projectMetadataSchema>;
+export type KnownDemoComponent = (typeof knownDemoComponents)[number];
 export type NotesEntry = z.infer<typeof notesEntrySchema>;
 export type ResumeDataEntry = z.infer<typeof resumeDataSchema>;
 export type SiteMetadataEntry = z.infer<typeof siteMetadataSchema>;

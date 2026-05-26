@@ -98,6 +98,52 @@ jobs:
       - name: Run local Lighthouse check
         run: pnpm lighthouse:local
 
+  wasm-build:
+    name: WASM build (blackscholes)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --locked
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.2
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build WASM bundle
+        run: pnpm wasm:build
+
+      - name: Assert WASM binary exists
+        run: test -f apps/web/public/wasm/blackscholes/blackscholes_wasm_bg.wasm
+
+      - name: Assert WASM JS glue exists
+        run: test -f apps/web/public/wasm/blackscholes/blackscholes_wasm.js
+
+      - name: Assert WASM binary is below size ceiling (100 KB)
+        run: |
+          SIZE=$(stat -c %s apps/web/public/wasm/blackscholes/blackscholes_wasm_bg.wasm)
+          echo "WASM binary size: ${SIZE} bytes"
+          test "$SIZE" -lt 102400
+
   backend:
     name: Rust verification
     runs-on: ubuntu-latest
