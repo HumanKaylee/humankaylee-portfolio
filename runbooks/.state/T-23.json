@@ -1,0 +1,1 @@
+{"task":"T-23","name":"M2 Shuttle cleanup","status":"completed","timestamp":"2026-05-26T17:32:11Z","notes":"git rm Shuttle.toml src/bin/shuttle.rs; Cargo.toml stripped of shuttle-axum, shuttle-runtime, [features] shuttle; cargo build --release confirmed still passes (3.41s incremental)"}

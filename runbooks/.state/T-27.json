@@ -1,0 +1,1 @@
+{"task":"T-27","name":"M2 create infra/railway/railway.toml","status":"completed","timestamp":"2026-05-26T17:32:11Z","notes":"Railway service definition; builder DOCKERFILE; dockerfilePath apps/api/Dockerfile; healthcheckPath /api/health; ON_FAILURE restart policy"}

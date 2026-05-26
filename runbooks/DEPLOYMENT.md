@@ -835,3 +835,88 @@ pnpm exec wrangler pages deployment rollback \
 ```
 
 Verify rollback by re-running the smoke checks above.
+
+---
+
+## M2 — Backend Deploy: Operator Handoff (2026-05-26)
+
+This section records the infrastructure prepared by the M2 agent step and the
+operator actions required to complete the backend deploy. All 3 host options
+are pre-prepped and ready. The operator resolves D-03 (host pick) and D-04
+(region), then runs the matching one-liner.
+
+### Infrastructure prepared (agent-completed steps)
+
+| File | Status | Notes |
+|---|---|---|
+| `apps/api/fly.toml` | Created | Fly.io option; primary_region=iad (operator changes to fra/lax/etc) |
+| `infra/hetzner/humankaylee-api.service` | Created | systemd unit for Hetzner VPS |
+| `infra/hetzner/Caddyfile.snippet` | Created | Caddy reverse-proxy config for api.humankaylee.dev |
+| `infra/hetzner/deploy.sh` | Created | Idempotent bootstrap script; run as root on VPS |
+| `infra/railway/railway.toml` | Created | Railway service definition |
+| `infra/README.md` | Created | 3-host matrix with one-liner deploy commands |
+| `apps/api/Dockerfile` | Improved | Multi-stage, cargo fetch cache, non-root user, healthcheck, port 8080 |
+| `apps/api/Shuttle.toml` | Removed | Shuttle shutdown confirmed; legacy file deleted |
+| `apps/api/src/bin/shuttle.rs` | Removed | Shuttle legacy binary deleted |
+| `apps/api/Cargo.toml` | Cleaned | shuttle-axum, shuttle-runtime, [features] shuttle block removed |
+| `runbooks/.state/T-21.json..T-30.json` | Created | M2 sub-task state files |
+| `test-results/m2-localhost-smoke.json` | Created | Localhost smoke evidence (gitignored) |
+
+Localhost smoke PASS (2026-05-26T17:32:11Z):
+- `cargo build --release` → 41.91s, binary 4.2MB
+- `GET /api/health` → `{"status":"ok",...}` HTTP 200
+- `GET /api/projects/live` → array with 2 projects, HTTP 200
+- `POST /api/contact {}` → HTTP 400 validation rejection (correct behavior)
+
+### 3 Operator Paths — One-Liner Each
+
+**Path A — Hetzner CX22 ($4.59/mo flat, recommended):**
+```bash
+# After provisioning VPS and copying binary + infra files:
+ssh root@<VPS-IP> bash /tmp/deploy.sh
+# Full instructions: infra/README.md §"Option A — Hetzner CX22"
+```
+
+**Path B — Fly.io ($0–5/mo, managed TLS):**
+```bash
+fly deploy --config apps/api/fly.toml
+# Full instructions: infra/README.md §"Option B — Fly.io"
+```
+
+**Path C — Railway ($5–15/mo, no CLI needed):**
+```bash
+# Connect repo at railway.app — Railway reads infra/railway/railway.toml automatically
+# Full instructions: infra/README.md §"Option C — Railway"
+```
+
+### Required Operator Decision (D-03 + D-04)
+
+| Decision | Default | Current Status |
+|---|---|---|
+| D-03: API host | Hetzner CX22 | AWAITING OPERATOR |
+| D-04: API data-center region | Falkenstein EU | AWAITING OPERATOR |
+
+Once D-03 and D-04 are resolved, M2 actual deploy takes approximately:
+- Hetzner: 20–30 min (provision + bootstrap + DNS)
+- Fly.io: 10–15 min (deploy + custom domain)
+- Railway: 5–10 min (connect + configure + custom domain)
+
+After deploy completes, record evidence in `runbooks/LAUNCH_EVIDENCE.md` and
+move to M3 (DNS + TLS cutover).
+
+### Environment Variable Checklist (set before deploy)
+
+```bash
+# Required on all 3 hosts:
+HK_API_HOST=0.0.0.0
+HK_API_PORT=8080
+HK_API_ALLOWED_ORIGINS=https://humankaylee.dev,https://*.humankaylee-portfolio.pages.dev
+HK_API_CONTACT_DELIVERY_MODE=store
+HK_API_CONTACT_STORE_PATH=<persistent-path>/contacts.jsonl
+
+# Optional (improve observability):
+HK_API_VERSION=1.0.0
+RUST_LOG=info,humankaylee_api=debug
+```
+
+Secrets go in the provider-native secret store. Never commit values to this repo.

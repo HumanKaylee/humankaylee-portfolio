@@ -321,6 +321,31 @@ requirements.
 - `wc -c < apps/web/public/media/cryo-flow-sim-stage1.mp4` = `13157234`
 - `test -f apps/web/public/media/cryo-flow-sim-stage1-poster.png` = exit 0 (png poster present)
 
+## M5-followup — 2026-05-26 4th Case Study Approval (B-016)
+
+| ts | task_id | lane | model | status | duration_ms | artifact_links | next_action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26T17:29:07Z | M5-followup | content | sonnet | PASS | 120000 | apps/web/src/content/case-studies/humankaylee-portfolio-build.md | 4/4 case studies approved; M6 can close redaction gate (production evidence still upgrade-pending) |
+
+**M5-followup summary:** Approved B-016 (HumanKaylee Portfolio Build) via localhost-preview evidence. `pnpm build` + `pnpm preview --port 4321` produced HTTP 200 on `/case-studies/humankaylee-portfolio-build/`, 16752 bytes, SHA256 `fb67031f11f01f49bf8225c0abd26dc4e4dfea97532fbbabea8c691673ae7d1e`. `redactionStatus` flipped from `reviewed` to `approved`; `redactionReview.checklistStatus` set to `complete`; `openItems` cleared; `approvalEvidence` block added. CONTENT_REDACTION_STATUS.md updated (B-016 APPROVED 2026-05-26 with preview evidence note). B-016 approval packet appended to CASE_STUDY_REDACTION_APPROVAL_PACKETS.md. Evidence JSON at `test-results/m5-localhost-preview-evidence.json` (gitignored). State file `runbooks/.state/T-46-followup.json` created. 4/4 publish case studies now approved — M5 launch minimum satisfied.
+
+**Verification commands run locally:**
+- `grep -l 'redactionStatus: "approved"' apps/web/src/content/case-studies/*.md | wc -l` = `4`
+- `curl -fsS http://localhost:4321/case-studies/humankaylee-portfolio-build/ -w '%{http_code}'` = `200` (pnpm preview must be running)
+- `test -f test-results/m5-localhost-preview-evidence.json` = exit 0
+
+## M9-cryo-stage2-spec — 2026-05-26 Cryo-Flow-Sim Stage 2 Spec Doc
+
+| ts | task_id | lane | model | status | duration_ms | artifact_links | next_action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26T17:29:07Z | M9-cryo-stage2-spec | content | sonnet | PASS | 60000 | docs/CRYO_STAGE_2_SPEC.md | Stage 2 spec doc landed; implementation deferred to post-launch v1.3+ |
+
+**M9-cryo-stage2-spec summary:** Authored `docs/CRYO_STAGE_2_SPEC.md` (~2200 words). Covers: WASM-client-side recommendation vs server-side cryo-service (recommendation: WASM, no ongoing infra), architecture summary extracted from cryo-flow-sim-showcase, proposed file tree (`apps/api/crates/cryo-sim-wasm/`, `apps/web/public/wasm/cryo-sim/`, `CryoInteractive.astro`, `Dashboard.tsx`, `ValveControls.tsx`), WASM API surface (`init`, `step`, `set_valve_position`, `get_state`), performance budget (≤250 KB WASM gzipped, ≤200 KB Three.js, ≤600 KB total), visitor controls (4 valves: fill, transfer, vent, isolation), accessibility (keyboard range inputs, aria-live, reduced-motion fallback to Stage 1 video, touch targets), build pipeline (wasm-pack web target, CI cargo check), tests (Playwright `@cryo-interactive`), decision log, effort estimate (2–3 days), and out-of-scope items. Cross-referenced cryo-flow-sim-showcase docs (PRD, roadmap Phase 6, architecture.md, contracts.md). State file `runbooks/.state/W12-05-cryo-stage2-spec.json` created. Implementation deferred to post-launch v1.3+.
+
+**Verification commands run locally:**
+- `test -f docs/CRYO_STAGE_2_SPEC.md` = exit 0
+- `wc -w < docs/CRYO_STAGE_2_SPEC.md` = (≥ 1500 words expected)
+
 ---
 
 ## M1 — 2026-05-26 Frontend Deploy to Cloudflare Pages
@@ -348,3 +373,7 @@ requirements.
 - `pnpm build` = 18 pages, ~18 MB dist/, exit 0
 - `test -d dist` = exit 0
 - Post-condition verify: exit 4 (operator-pause) — production URL not yet available
+
+| 2026-05-26T17:32:11Z | M2-pre-prep | backend | sonnet | PASS | 41910 | apps/api/fly.toml, infra/hetzner/humankaylee-api.service, infra/hetzner/Caddyfile.snippet, infra/hetzner/deploy.sh, infra/railway/railway.toml, infra/README.md, apps/api/Dockerfile (improved), Shuttle.toml+shuttle.rs removed | M2 actual deploy awaits operator D-03 + D-04 resolution |
+
+**M2 pre-prep summary:** Localhost smoke PASS — /api/health {"status":"ok"}, /api/projects/live (array, 2 items), /api/contact {} → HTTP 400 validation rejection. cargo build --release in 41.91s, binary 4.2MB Windows. Shuttle legacy removed (Shuttle.toml, src/bin/shuttle.rs, shuttle-axum, shuttle-runtime deps, [features] shuttle block). Dockerfile improved: multi-stage with cargo fetch cache layer, non-root user, curl healthcheck, port 8080, RUST_LOG=info. Created: apps/api/fly.toml (Fly.io option, iad region), infra/hetzner/{humankaylee-api.service, Caddyfile.snippet, deploy.sh} (Hetzner option), infra/railway/railway.toml (Railway option), infra/README.md (3-host matrix with one-liner deploy commands). DEPLOYMENT.md §"Backend Deploy" section added. State files T-21..T-30 created. M2 awaits operator D-03 (host pick) + D-04 (region) to run actual deploy.

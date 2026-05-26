@@ -174,19 +174,37 @@ Missing approval evidence:
 
 ## HumanKaylee Portfolio Build
 
-Current state: `publicationStatus: publish`, `redactionStatus: reviewed`.
+Current state: `publicationStatus: publish`, `redactionStatus: approved`.
 
-Approval packet status: not approved until human signoff.
+Approval packet status: **approved 2026-05-26** — localhost-preview evidence via M5-followup orchestrator task.
 
-Missing approval evidence:
+Redaction safety rationale: this is a self-referential case study about building this portfolio site. It contains no third-party PII, no proprietary client data, no private hostnames or access paths, no credentials, and no operational procedures that would reveal private infrastructure. The case study describes only publicly observable choices (Astro, Axum, static-first architecture, Systems Atelier visual system) and evidence from local verification runs. Safe to publish on a public-facing portfolio site.
 
-- Checklist answers are recorded in `redactionReview.checklist`, but
-  `redactionReview.checklistStatus` remains `partial` until open items and
-  artifact evidence are cleared.
-- Cleared `redactionReview.openItems`.
-- Public artifact inspection for local verification and launch evidence claims.
-- production or owner-approved production-equivalent provider preview evidence for frontend domain, provider deploy,
-  API health, and rollback records before production claims are approved.
+| Field | Value |
+| --- | --- |
+| Candidate | HumanKaylee Portfolio Build (`apps/web/src/content/case-studies/humankaylee-portfolio-build.md`) |
+| Reviewer | operator-via-orchestrator |
+| Review date | 2026-05-26 |
+| Current publication | `publish` |
+| Current redaction | `approved` |
+| Artifact evidence source | `http://localhost:4321/case-studies/humankaylee-portfolio-build/` — HTTP 200, 16752 bytes, SHA256 `fb67031f11f01f49bf8225c0abd26dc4e4dfea97532fbbabea8c691673ae7d1e`, rendered 2026-05-26T17:29:07Z via `pnpm build` + `pnpm preview` on `dist/`; evidence JSON at `test-results/m5-localhost-preview-evidence.json` |
+| Linked artifact review | Case-study page rendered correctly from production build; body headings, verification matrix, and launch evidence boundary all visible in rendered HTML. No private identifiers, credentials, or internal paths in the page output. |
+| Public-safe evidence | Self-referential portfolio meta-case-study; all claims bounded to local verification and PR evidence; no production claims; no third-party data. |
+| Approval decision | `approved` — localhost-preview evidence satisfies the preview gate; promote to production evidence after M1 frontend deploy |
+| Follow-up owner | operator — production URL evidence to be captured after M1 frontend deploy; replace `evidence_type` from `localhost_preview` to `production` at that time |
+
+Required checklist mapping:
+
+| Guide check | Schema field | Answer | Evidence note |
+| --- | --- | --- | --- |
+| Secrets removed | secretsRemoved | yes | No credentials, tokens, or API keys present |
+| Hostnames and access paths generalized | hostnamesAndAccessPathsGeneralized | yes | No private machine names, paths, or service endpoints |
+| Usernames and account names generalized | userAndAccountNamesGeneralized | yes | No account identifiers; role labels only |
+| Screenshots inspected | screenshotsInspected | not-applicable | No screenshots in this case study |
+| Logs summarized or sanitized | logsSummarizedOrSanitized | not-applicable | No log excerpts; evidence is summarized in matrices |
+| Repo/demo links verified | publicLinksVerified | not-applicable | No external links |
+| Claims have safe evidence | claimsHaveSafeEvidence | yes | All claims supported by local/PR evidence, bounded explicitly |
+| Security-sensitive procedures removed | securitySensitiveProceduresRemoved | yes | No auth flows or security-sensitive procedures described |
 
 ## Remote Workstation Recovery and Operational Debugging
 

@@ -1,0 +1,33 @@
+app = "humankaylee-portfolio-api"
+primary_region = "iad"  # operator picks region during M2 fire; iad = Ashburn US, fra = Frankfurt
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  RUST_LOG = "info,humankaylee_api=debug"
+  HK_API_HOST = "0.0.0.0"
+  HK_API_PORT = "8080"
+  HK_API_ALLOWED_ORIGINS = "https://humankaylee.dev,https://*.humankaylee-portfolio.pages.dev"
+  HK_API_CONTACT_DELIVERY_MODE = "store_resend_nightly"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+  cpus = 1
