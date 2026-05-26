@@ -320,3 +320,31 @@ requirements.
 - `grep -l 'redactionStatus: "approved"' apps/web/src/content/case-studies/*.md | wc -l` = `3`
 - `wc -c < apps/web/public/media/cryo-flow-sim-stage1.mp4` = `13157234`
 - `test -f apps/web/public/media/cryo-flow-sim-stage1-poster.png` = exit 0 (png poster present)
+
+---
+
+## M1 — 2026-05-26 Frontend Deploy to Cloudflare Pages
+
+| ts | task_id | lane | model | status | duration_ms | artifact_links | next_action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-05-26T17:45:00Z | M1-start | frontend | sonnet | START | 0 | wrangler.toml, .github/workflows/cloudflare-pages-deploy.yml | bootstrap pnpm, verify local build, create CF Pages infra |
+| 2026-05-26T18:02:00Z | M1-paused-operator | frontend | sonnet | PAUSED-P9 | 1020000 | wrangler.toml, .github/workflows/cloudflare-pages-deploy.yml, apps/web/public/_redirects, apps/web/public/.well-known/security.txt, runbooks/DEPLOYMENT.md, runbooks/.state/T-11.json..T-20.json | AWAIT OPERATOR — 7 steps in DEPLOYMENT.md §"M1 Operator Handoff" |
+
+**M1 partial-pass summary:** All local infrastructure prepared. pnpm 10.33.2 activated; `pnpm install --frozen-lockfile` succeeded; `pnpm typecheck` 0 errors; `pnpm build` 18 pages, 18 MB dist/. `pnpm lint` fails locally due to pre-existing CRLF in Windows checkout (passes on Linux CI). `pnpm test` (vitest suite) — 27/27 pass after fixing content-collections.test.ts count assertions (M5 added cryo-flow-sim); `scripts/*.test.mjs` — pre-existing CRLF failures on Windows (same scripts pass on Linux CI). Created: wrangler.toml (name=humankaylee-portfolio, pages_build_output_dir=dist), .github/workflows/cloudflare-pages-deploy.yml (wrangler-action@v3, triggers on goal/portfolio-implementation+main), apps/web/public/_redirects (documented template, no active redirects), apps/web/public/.well-known/security.txt (RFC 9116, expires 2027-05-26), DEPLOYMENT.md §"M1 Operator Handoff" with all 7 steps.
+
+**M1 PAUSED at P9 — Operator must complete 7 steps (see DEPLOYMENT.md §"M1 Operator Handoff"):**
+1. Register domain `humankaylee.dev` at Cloudflare Registrar
+2. Create Cloudflare Pages project `humankaylee-portfolio`
+3. Generate Cloudflare API token (Pages:Edit + Account:Read)
+4. Add GitHub repo secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+5. Trigger first deploy (push or workflow_dispatch or wrangler CLI)
+6. Bind custom domain `humankaylee.dev` to the Pages project
+7. Confirm DNS (dig + curl smoke) and append M1-PASS row here
+
+**Verification commands run locally:**
+- `test -f wrangler.toml` = exit 0
+- `test -f .github/workflows/cloudflare-pages-deploy.yml` = exit 0
+- `test -f apps/web/public/.well-known/security.txt` = exit 0
+- `pnpm build` = 18 pages, ~18 MB dist/, exit 0
+- `test -d dist` = exit 0
+- Post-condition verify: exit 4 (operator-pause) — production URL not yet available

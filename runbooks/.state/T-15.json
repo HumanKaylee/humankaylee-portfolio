@@ -1,0 +1,7 @@
+{
+  "task": "T-15",
+  "description": "Create .github/workflows/cloudflare-pages-deploy.yml",
+  "status": "completed",
+  "completedAt": "2026-05-26T17:56:00Z",
+  "output": "Created GitHub Actions workflow: triggers on push to goal/portfolio-implementation and main. Steps: corepack enable pnpm, pnpm install, typecheck, vitest run, astro build, wrangler pages deploy. Secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID (operator must set)."
+}

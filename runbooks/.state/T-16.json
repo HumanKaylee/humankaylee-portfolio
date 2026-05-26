@@ -1,0 +1,7 @@
+{
+  "task": "T-16",
+  "description": "Create apps/web/public/_redirects",
+  "status": "completed",
+  "completedAt": "2026-05-26T17:57:00Z",
+  "output": "Created _redirects with documentation comments. No SPA fallback needed (Astro static output has per-route HTML files). Template entries for future old-URL redirects."
+}

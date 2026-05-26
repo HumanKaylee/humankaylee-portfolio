@@ -1,0 +1,7 @@
+{
+  "task": "T-12",
+  "description": "Bootstrap pnpm and verify local build",
+  "status": "completed",
+  "completedAt": "2026-05-26T17:50:00Z",
+  "output": "pnpm 10.33.2 activated via corepack; pnpm install --frozen-lockfile succeeded; pnpm typecheck 0 errors; pnpm build 18 pages in 1.62s; dist/ 18MB"
+}

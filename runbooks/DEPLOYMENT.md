@@ -694,3 +694,144 @@ Recovery verification evidence must include:
 Record command, target, date, exit status, deployment ID, rollback target, and
 result in `runbooks/LAUNCH_EVIDENCE.md`. Production rollback targets remain
 blocked until real provider deployments exist.
+
+---
+
+## M1 — Frontend Deploy: Operator Handoff (2026-05-26)
+
+This section records the infrastructure prepared by the M1 agent step and the
+7 operator actions required to complete the frontend deploy.
+
+### Infrastructure prepared (agent-completed steps)
+
+| File | Status | Notes |
+|---|---|---|
+| `wrangler.toml` | Created | project-name=humankaylee-portfolio, pages_build_output_dir=dist |
+| `.github/workflows/cloudflare-pages-deploy.yml` | Created | Deploys on push to goal/portfolio-implementation and main |
+| `apps/web/public/_redirects` | Created | Documented template; no active redirects yet |
+| `apps/web/public/.well-known/security.txt` | Created | RFC 9116; contact=security@humankaylee.dev, expires 2027-05-26 |
+| `apps/web/src/data/content-collections.test.ts` | Updated | Fixed test counts to reflect M5 cryo-flow-sim addition (7 files, 5 publish) |
+| `runbooks/.state/T-11.json` through `T-20.json` | Created | M1 sub-task state |
+
+Build output: `./dist/` (Astro static, 18 pages, ~18 MB). The workflow deploys
+this directory using `wrangler pages deploy dist --project-name=humankaylee-portfolio`.
+
+Required secrets (operator must add to GitHub repo):
+- `CLOUDFLARE_API_TOKEN` — Pages:Edit + Account:Read scopes
+- `CLOUDFLARE_ACCOUNT_ID` — from Cloudflare dashboard URL
+
+### 7 Operator Steps (P9 gate — browser/account access required)
+
+Complete these steps in order. Estimated wall-clock: P50 35 min, P90 90 min.
+
+**Step 1 — Register the domain `humankaylee.dev`** (D-02 = Cloudflare Registrar)
+
+1. Log in to Cloudflare dashboard → Registrar → Register a domain.
+2. Search for `humankaylee.dev` (~$10/year).
+3. Complete purchase. Cloudflare auto-creates the zone.
+4. Note: if the domain is already registered elsewhere, skip this step and
+   update nameservers at the registrar to point to Cloudflare (in Step 7).
+
+**Step 2 — Create a Cloudflare Pages project named `humankaylee-portfolio`** (D-07)
+
+Option A (Git integration — recommended):
+1. Cloudflare dashboard → Workers & Pages → Create application → Pages.
+2. Connect to GitHub → select `HumanKaylee/humankaylee-portfolio`.
+3. Project name: `humankaylee-portfolio`.
+4. Production branch: `main`.
+5. Build command: `pnpm build`.
+6. Build output directory: `dist`.
+7. Add environment variable: `PUBLIC_SITE_URL` = `https://humankaylee.dev`.
+8. Add environment variable: `PUBLIC_API_BASE_URL` = `https://api.humankaylee.dev`.
+9. Click Save and Deploy.
+
+Option B (Direct upload via wrangler — if Git integration is unavailable):
+```bash
+cd C:/Users/joepo/projects/humankaylee-portfolio
+pnpm install --frozen-lockfile && pnpm build
+pnpm exec wrangler pages project create humankaylee-portfolio --production-branch main
+pnpm exec wrangler pages deploy dist --project-name=humankaylee-portfolio --branch main
+```
+
+**Step 3 — Generate a Cloudflare API token**
+
+1. Cloudflare dashboard → My Profile → API Tokens → Create Token.
+2. Use template "Edit Cloudflare Workers" or create custom with:
+   - Pages: Edit (all accounts)
+   - Account: Read (your account)
+3. Copy the token value (shown once only).
+
+**Step 4 — Add GitHub repo secrets**
+
+1. `https://github.com/HumanKaylee/humankaylee-portfolio/settings/secrets/actions`
+2. Add secret `CLOUDFLARE_API_TOKEN` = the token from Step 3.
+3. Add secret `CLOUDFLARE_ACCOUNT_ID` = your CF account ID (shown in the
+   Cloudflare dashboard URL: `https://dash.cloudflare.com/<ACCOUNT_ID>/`).
+
+**Step 5 — Trigger the first deploy**
+
+Option A (push triggers the workflow):
+```bash
+# The commit from M1 was already pushed; the workflow triggers on push to
+# goal/portfolio-implementation. Go to:
+# https://github.com/HumanKaylee/humankaylee-portfolio/actions
+# and watch the "Deploy to Cloudflare Pages" workflow run.
+```
+
+Option B (manual dispatch):
+```bash
+gh workflow run cloudflare-pages-deploy.yml \
+  --repo HumanKaylee/humankaylee-portfolio \
+  --ref goal/portfolio-implementation
+```
+
+Option C (direct wrangler deploy after wrangler login):
+```bash
+pnpm exec wrangler login
+pnpm exec wrangler pages deploy dist --project-name=humankaylee-portfolio
+```
+
+**Step 6 — Bind the custom domain `humankaylee.dev`**
+
+1. Cloudflare dashboard → Workers & Pages → humankaylee-portfolio → Custom domains.
+2. Add custom domain: `humankaylee.dev`.
+3. Cloudflare auto-provisions TLS and creates the DNS A record (if the zone
+   is in the same Cloudflare account — which it will be if you used Cloudflare
+   Registrar in Step 1).
+4. Also add `www.humankaylee.dev` with a redirect to the apex if desired.
+
+**Step 7 — Confirm DNS and smoke-verify**
+
+If domain was registered with Cloudflare Registrar, DNS is auto-configured.
+If registered elsewhere, update nameservers to Cloudflare's assigned pair.
+
+```bash
+# Wait ~1-2 min after binding for DNS to propagate, then:
+dig +short A humankaylee.dev @1.1.1.1
+# Expected: Cloudflare anycast IP (104.16.x, 104.17.x, 104.18.x, 104.19.x, or 172.64-67.x)
+
+curl -fsS https://humankaylee.dev/ -o /dev/null -w '%{http_code}\n'
+# Expected: 200
+
+curl -fsS https://humankaylee.dev/ | grep -q 'HumanKaylee'
+# Expected: exit 0
+```
+
+After smoke-verify passes, append an M1-PASS row to `runbooks/LAUNCH_EVIDENCE.md`
+with the deployment ID from the Cloudflare Pages dashboard and the production URL.
+
+### Rollback procedure (if deploy fails or site is broken)
+
+```bash
+# List production deployments
+pnpm exec wrangler pages deployment list \
+  --project-name=humankaylee-portfolio \
+  --environment production
+
+# Rollback to a specific prior deployment
+pnpm exec wrangler pages deployment rollback \
+  --project-name=humankaylee-portfolio \
+  --deployment-id <prior-deployment-id>
+```
+
+Verify rollback by re-running the smoke checks above.

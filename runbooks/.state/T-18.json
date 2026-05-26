@@ -1,0 +1,7 @@
+{
+  "task": "T-18",
+  "description": "Update runbooks/DEPLOYMENT.md with Frontend Deploy section",
+  "status": "completed",
+  "completedAt": "2026-05-26T18:00:00Z",
+  "output": "Appended Frontend Deploy section to DEPLOYMENT.md with wrangler.toml location, workflow path, required secrets, operator checklist (7 steps), smoke-verify commands, and rollback procedure."
+}

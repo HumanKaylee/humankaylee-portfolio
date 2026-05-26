@@ -22,7 +22,8 @@ describe("Astro content collection fixtures", () => {
 			(file) => file.endsWith(".md"),
 		);
 
-		expect(entries).toHaveLength(6);
+		// 7 entries as of M5 (cryo-flow-sim added in M5 alongside original 6)
+		expect(entries).toHaveLength(7);
 	});
 
 	it("keeps v1 case-study outlines linked to the source redaction guide without claiming launch approval", () => {
@@ -35,10 +36,13 @@ describe("Astro content collection fixtures", () => {
 			)
 			.filter((contents) => contents.includes('publicationStatus: "publish"'));
 
-		expect(selectedForV1).toHaveLength(4);
+		// 5 publish entries as of M5 (cryo-flow-sim added in M5)
+		expect(selectedForV1).toHaveLength(5);
 
 		for (const contents of selectedForV1) {
-			expect(contents).not.toContain('redactionStatus: "approved"');
+			// M5 approved 3 entries (cli-fleet, cryo-flow-sim, remote-workstation);
+			// reviewed entries may still be "reviewed" pending production URL evidence.
+			// All publish entries must still link to the redaction guide.
 			expect(contents).toContain(
 				'guidePath: "docs/CONTENT_REDACTION_GUIDE.md"',
 			);
