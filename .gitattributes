@@ -1,0 +1,18 @@
+# Normalize line endings to LF on checkout on all platforms.
+# This prevents CRLF-related test failures in Node.js test scripts
+# that use split("\n"), indexOf, and regex anchors.
+* text=auto eol=lf
+
+# Binary files — do not touch line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mp4 binary
+*.webm binary
+*.wasm binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.gz binary

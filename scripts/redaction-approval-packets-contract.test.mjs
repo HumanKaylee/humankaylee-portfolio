@@ -70,6 +70,7 @@ const checklistMappings = [
 const expectedPublishCandidateTitles = [
 	"CLI Fleet Synchronization and MCP Rollout",
 	"Creative Web Systems Atlas Demo",
+	"Cryo Flow Sim — Stage 1 Showcase",
 	"HumanKaylee Portfolio Build",
 	"Remote Workstation Recovery and Operational Debugging",
 ];

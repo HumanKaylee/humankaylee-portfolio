@@ -110,8 +110,13 @@ test("Phase 7 metadata readiness uses shared site metadata without clearing doma
 	);
 	expectContains(
 		baseLayout,
-		"const socialImageUrl = absoluteUrl(siteUrl, ogImage)",
+		"absoluteUrl(siteUrl, ogImage)",
 		"BaseLayout Open Graph image from shared siteUrl",
+	);
+	expectContains(
+		baseLayout,
+		"absoluteUrl(siteUrl, site.data.defaultOgImage)",
+		"BaseLayout Open Graph fallback image from shared siteUrl",
 	);
 	expectContains(
 		baseLayout,

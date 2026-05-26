@@ -42,7 +42,7 @@ export const LIGHTHOUSE_AUDIT_PLAN = [
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = 4322;
 const RESULTS_DIR = "test-results";
-const LIGHTHOUSE_SUMMARY_PATH = join(RESULTS_DIR, "lighthouse-summary.json");
+const LIGHTHOUSE_SUMMARY_PATH = join(RESULTS_DIR, "lighthouse-summary.json").replace(/\\/g, "/");
 const WAIT_TIMEOUT_MS = 30_000;
 
 function runCommand(command, args, options = {}) {
@@ -117,7 +117,7 @@ function routeUrl(baseUrl, route) {
 }
 
 function outputPathForRoute(route) {
-	return join(RESULTS_DIR, `lighthouse-${route.label}.json`);
+	return join(RESULTS_DIR, `lighthouse-${route.label}.json`).replace(/\\/g, "/");
 }
 
 export function lighthouseDryRunPlan(baseUrl) {

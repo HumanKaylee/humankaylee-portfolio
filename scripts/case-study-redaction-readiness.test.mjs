@@ -16,6 +16,7 @@ import {
 const expectedPublishCandidateTitles = [
 	"CLI Fleet Synchronization and MCP Rollout",
 	"Creative Web Systems Atlas Demo",
+	"Cryo Flow Sim — Stage 1 Showcase",
 	"HumanKaylee Portfolio Build",
 	"Remote Workstation Recovery and Operational Debugging",
 ];
@@ -33,7 +34,7 @@ describe("case-study redaction readiness report", () => {
 		assert.equal(report.canCloseIssues, false);
 		assert.equal(report.requiredApprovedPublishCount, 4);
 		assert.equal(report.currentApprovedPublishCount, 0);
-		assert.equal(report.currentPublishCandidateCount, 4);
+		assert.equal(report.currentPublishCandidateCount, 5);
 		assert.deepEqual(report.safeSkippedActions, [
 			...CASE_STUDY_REDACTION_READINESS_SAFE_SKIPS,
 		]);
@@ -62,7 +63,7 @@ describe("case-study redaction readiness report", () => {
 			report.publishCandidates
 				.map((candidate) => candidate.githubIssue)
 				.sort((left, right) => left - right),
-			[20, 21, 22, 23],
+			[20, 21, 22, 23, 26],
 		);
 		assert.deepEqual(
 			report.deferredOrBlockedCandidates.map((candidate) => ({

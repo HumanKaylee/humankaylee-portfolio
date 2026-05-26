@@ -40,15 +40,16 @@ issueTrace:
   parentIssue: 3
   closureRule: "Issue #22 is closed as draft-content only; keep reviewed status until production and redaction approval evidence exist."
 publicationStatus: "publish"
-redactionStatus: "approved"
+redactionStatus: "reviewed"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator-via-orchestrator"
   reviewedOn: "2026-05-23"
-  approvedOn: "2026-05-26"
-  checklistStatus: "complete"
-  openItems: []
-  notes: "Approved on localhost preview evidence (pnpm build + pnpm preview, HTTP 200). Self-referential case study with no third-party PII or proprietary client data. Production evidence to replace after M1 deploys."
+  checklistStatus: "partial"
+  openItems:
+    - "Production domain, provider, and deploy evidence are blocked in this repository snapshot."
+    - "Launch approval remains blocked until external evidence is captured and reviewed."
+  notes: "Self-referential case study with no third-party PII or proprietary client data. Localhost preview passed (pnpm build + pnpm preview, HTTP 200). Production evidence to replace after M1 deploys; redaction stays reviewed until then."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -58,22 +59,6 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
-approvalEvidence:
-  humanSignoff:
-    reviewer: "operator-via-orchestrator"
-    signedOffOn: "2026-05-26"
-    decision: "approved"
-    notes: "Self-referential case study approved on localhost preview evidence. No third-party PII or proprietary client data. Production evidence to replace after M1 deploys."
-  artifactInspection:
-    source: "apps/web/src/content/case-studies/humankaylee-portfolio-build.md"
-    inspectedOn: "2026-05-26"
-    result: "passed"
-    notes: "Redaction checklist complete. No private hostnames, tokens, or account details present."
-  productionOrPreviewEvidence:
-    source: "http://localhost:4321/case-studies/humankaylee-portfolio-build/"
-    capturedOn: "2026-05-26"
-    result: "passed"
-    notes: "HTTP 200, 16752 bytes, SHA256 fb67031f11f01f49bf8225c0abd26dc4e4dfea97532fbbabea8c691673ae7d1e, rendered 2026-05-26T17:29:07Z via pnpm preview on built dist/. Localhost-only evidence; production verification pending M1 deploy."
 seo:
   title: "HumanKaylee Portfolio Build"
   description: "A case study about building this portfolio as a static-first, Systems Atelier site with an optional Rust-backed enhancement layer."

@@ -240,9 +240,9 @@ Required checklist mapping:
 
 ## Cryo Flow Sim — Stage 1 Showcase
 
-Current state: `publicationStatus: publish`, `redactionStatus: approved`.
+Current state: `publicationStatus: publish`, `redactionStatus: reviewed`.
 
-Approval packet status: **approved 2026-05-26** — D-11 resolved in HUMAN_DECISIONS_QUEUE.md.
+Approval packet status: not yet approved — production deploy evidence and final human signoff required.
 
 | Field | Value |
 | --- | --- |
@@ -250,11 +250,11 @@ Approval packet status: **approved 2026-05-26** — D-11 resolved in HUMAN_DECIS
 | Reviewer | operator |
 | Review date | 2026-05-26 |
 | Current publication | `publish` |
-| Current redaction | `approved` |
+| Current redaction | `reviewed` |
 | Artifact evidence source | `apps/web/public/media/cryo-flow-sim-stage1.mp4` (13,157,234 bytes, SHA256 43F517B6380B86AB8F766C400AE0E43F25564B65088F4C3D41334ACD21C8C963) and `apps/web/public/media/cryo-flow-sim-stage1-poster.png` (1920x1080 overview-dashboard screenshot) |
 | Linked artifact review | MP4 artifact inspected on 2026-05-26; byte count and SHA256 verified against stage1-artifact-report.md. Poster PNG reviewed. No private identifiers in media files. |
 | Public-safe evidence | Self-contained simulation video; no private hostnames, accounts, credentials, or internal paths. Role labels used in case-study body. Stage 2 scope explicitly deferred. |
-| Approval decision | `approved` — standard redactions applied, no open items |
+| Approval decision | not approved until human signoff with production deploy evidence |
 | Follow-up owner | operator — production URL evidence to be captured after M1 frontend deploy; Stage 2 scope requires separate approval pass |
 
 Required checklist mapping:

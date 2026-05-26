@@ -45,19 +45,21 @@ links:
     - "Playwright stage1-showcase capture spec"
     - "cargo-nextest and cargo-audit verification logs"
 publicationStatus: "publish"
-redactionStatus: "approved"
+redactionStatus: "reviewed"
 issueTrace:
   backlogId: "B-020"
   githubIssue: 26
   parentIssue: 3
-  closureRule: "Issue #26 may be closed once cryo-flow-sim Stage 1 video embed, poster, and approval evidence are committed and CI passes."
+  closureRule: "Issue #26 may be closed once cryo-flow-sim Stage 1 video embed, poster, production deploy evidence, and final human signoff are recorded."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
   reviewedOn: "2026-05-26"
-  checklistStatus: "complete"
-  openItems: []
-  notes: "Public-safe narrative uses role labels only. No private hostnames, private repo paths, account identifiers, raw logs, credentials, or internal access paths are present. The simulation artifact is a self-contained video and metadata record with no connection to live infrastructure. Stage 2 scope is explicitly deferred."
+  checklistStatus: "partial"
+  openItems:
+    - "Production domain, provider, and deploy evidence are blocked in this repository snapshot."
+    - "Final human signoff and approvalEvidence required before launch-eligible status."
+  notes: "Public-safe narrative uses role labels only. No private hostnames, private repo paths, account identifiers, raw logs, credentials, or internal access paths are present. The simulation artifact is a self-contained video and metadata record with no connection to live infrastructure. Stage 2 scope is explicitly deferred. Redaction stays reviewed until production evidence and final signoff exist."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -67,22 +69,6 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
-approvalEvidence:
-  humanSignoff:
-    reviewer: "operator"
-    signedOffOn: "2026-05-26"
-    decision: "approved"
-    notes: "D-11 resolved 2026-05-26 per HUMAN_DECISIONS_QUEUE.md. Cryo Stage 1 artifact is a self-contained simulation video with no private infrastructure exposure. Standard redactions applied: role labels only, no hostnames, no private paths, no credentials."
-  artifactInspection:
-    source: "apps/web/public/media/cryo-flow-sim-stage1.mp4 and apps/web/public/media/cryo-flow-sim-stage1-poster.png"
-    inspectedOn: "2026-05-26"
-    result: "passed"
-    notes: "MP4 verified at 13,157,234 bytes matching SHA256 43F517B6380B86AB8F766C400AE0E43F25564B65088F4C3D41334ACD21C8C963. Poster is the overview-dashboard screenshot at 1920x1080. No private identifiers in media files."
-  productionOrPreviewEvidence:
-    source: "apps/web/public/media/cryo-flow-sim-stage1.mp4 (local asset committed to repo)"
-    capturedOn: "2026-05-26"
-    result: "passed"
-    notes: "Asset committed to repo at apps/web/public/media/. Video embed in case study body. Production URL evidence will be captured after M1 frontend deploy."
 seo:
   title: "Cryo Flow Sim — Stage 1 Showcase"
   description: "A deterministic cryogenic simulation captured as a verified 1080p video artifact, built with a three-crate Rust workspace and validated by 92 passing tests."
