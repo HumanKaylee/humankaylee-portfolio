@@ -21,6 +21,15 @@ tokio = { version = "1", features = ["fs", "io-util", "macros", "rt-multi-thread
 tower-http = { version = "0.6", features = ["compression-full", "cors", "limit", "timeout", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+# OG image rendering
+resvg = "0.45"
+tiny-skia = "0.11"
+usvg = "0.45"
+# Sentry error tracking (conditional on SENTRY_DSN env)
+sentry = { version = "0.36", features = ["tower-http", "tracing"], default-features = false }
+sentry-tracing = "0.36"
+sentry-tower = "0.36"
+once_cell = "1"
 
 [dev-dependencies]
 tower = "0.5"

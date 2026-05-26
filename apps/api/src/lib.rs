@@ -2,6 +2,7 @@ pub mod config;
 pub mod contact;
 pub mod events;
 pub mod health;
+pub mod og;
 pub mod projects;
 pub mod security;
 pub mod state;
@@ -23,6 +24,7 @@ pub fn app(state: AppState) -> Router {
     let config = state.config().clone();
     let mut app = Router::new()
         .route("/api/health", get(health::health_handler))
+        .route("/api/og", get(og::og_handler))
         .route("/api/projects/live", get(projects::projects_live_handler))
         .route("/api/contact", post(contact::contact_handler))
         .route("/api/events", post(events::events_handler))

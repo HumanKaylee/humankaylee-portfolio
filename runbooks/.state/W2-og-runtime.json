@@ -1,0 +1,60 @@
+{
+  "task": "W2-og-runtime",
+  "milestone": "M7-partial",
+  "lane": "backend",
+  "status": "PASS",
+  "completed_at": "2026-05-26T21:00:00Z",
+  "model": "claude-sonnet-4-6",
+  "files_created": [
+    "apps/api/src/og.rs",
+    "apps/api/templates/og-template.svg"
+  ],
+  "files_modified": [
+    "apps/api/src/lib.rs",
+    "apps/api/Cargo.toml",
+    "apps/api/tests/api_contract.rs",
+    "apps/web/src/layouts/BaseLayout.astro"
+  ],
+  "files_deleted": [
+    "apps/web/public/social/404.png",
+    "apps/web/public/social/case-studies.png",
+    "apps/web/public/social/case-study-detail.png",
+    "apps/web/public/social/contact.png",
+    "apps/web/public/social/home.png",
+    "apps/web/public/social/notes.png",
+    "apps/web/public/social/project-detail.png",
+    "apps/web/public/social/projects.png",
+    "apps/web/public/social/resume.png",
+    "apps/web/public/social/robots.png",
+    "apps/web/public/social/sitemap.png",
+    "apps/web/public/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
+    "apps/web/public/social/case-studies/creative-web-systems-atlas-demo.png",
+    "apps/web/public/social/case-studies/humankaylee-portfolio-build.png",
+    "apps/web/public/social/case-studies/remote-workstation-recovery-and-operational-debugging.png",
+    "apps/web/public/social/examples/example-page.png",
+    "apps/web/public/social/notes/api-offline-resilience.png",
+    "apps/web/public/social/notes/content-starts-as-data.png",
+    "apps/web/public/social/notes/redaction-rules.png",
+    "apps/web/public/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
+    "apps/web/public/social/projects/creative-web-systems-atlas-demo.png",
+    "apps/web/public/social/projects/humankaylee-portfolio-build.png",
+    "apps/web/public/social/projects/remote-workstation-recovery-and-operational-debugging.png"
+  ],
+  "evidence": {
+    "smoke_test_status": "200",
+    "smoke_test_content_type": "image/png",
+    "smoke_test_png_size_bytes": 113177,
+    "png_magic_header": "89 50 4E 47 0D 0A 1A 0A",
+    "contract_tests_passed": 4,
+    "unit_tests_passed": 5,
+    "total_tests_passed": 28,
+    "static_pngs_removed": 23,
+    "static_pngs_kept": ["default.png", "default.svg"],
+    "typescript_errors": 0
+  },
+  "deferred": [
+    "Litestream R2 backup (Hetzner-specific, needs D-03 operator decision)",
+    "Cloudflare Web Analytics (operator-account-gated)",
+    "contract-test cull (risky pre-launch)"
+  ]
+}

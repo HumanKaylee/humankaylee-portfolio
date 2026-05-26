@@ -29,14 +29,25 @@ const {
 	title,
 	description,
 	canonicalPath = "/",
-	ogImage = site.data.defaultOgImage,
+	ogImage,
 	structuredData: pageStructuredData = [],
 	bodyClass,
 } = Astro.props;
 const scaffold = homeScaffold();
 const siteUrl = site.data.siteUrl.replace(/\/$/, "");
 const canonicalUrl = absoluteUrl(siteUrl, canonicalPath);
-const socialImageUrl = absoluteUrl(siteUrl, ogImage);
+
+// Runtime OG endpoint: use the API-generated image when PUBLIC_API_BASE_URL is
+// available at build time and no explicit ogImage was provided in frontmatter.
+// Falls back to the static default.svg so SSG never breaks when the env var is
+// absent (e.g. local dev, CI preview builds).
+const PUBLIC_API_BASE_URL = import.meta.env.PUBLIC_API_BASE_URL ?? "";
+const subtitle = description.length > 80 ? description.slice(0, 77) + "…" : description;
+const socialImageUrl = ogImage
+	? absoluteUrl(siteUrl, ogImage)
+	: PUBLIC_API_BASE_URL
+		? `${PUBLIC_API_BASE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(subtitle)}`
+		: absoluteUrl(siteUrl, site.data.defaultOgImage);
 const baseStructuredData = [
 	{
 		"@context": "https://schema.org",

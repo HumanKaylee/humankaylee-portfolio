@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0d12"/>
+
+  <!-- Subtle grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="0.3" opacity="0.06"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Accent stripe (phosphor green) -->
+  <rect x="0" y="0" width="8" height="630" fill="#7eff9a"/>
+
+  <!-- Subtle corner accent -->
+  <rect x="0" y="594" width="1200" height="4" fill="#7eff9a" opacity="0.25"/>
+
+  <!-- Brand corner label -->
+  <text x="48" y="64" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" letter-spacing="0.08em" fill="#7eff9a" text-anchor="start">HUMANKAYLEE</text>
+
+  <!-- Role tagline -->
+  <text x="48" y="92" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" letter-spacing="0.04em" fill="#8899aa" text-anchor="start">Systems Engineer · Rust · Autonomous decisions</text>
+
+  <!-- Title (large, centered vertically, with wrapping via two lines max) -->
+  <text x="600" y="310" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#f0f4f8" text-anchor="middle" dominant-baseline="middle">{{TITLE}}</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="390" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="400" fill="#8899aa" text-anchor="middle" dominant-baseline="middle">{{SUBTITLE}}</text>
+
+  <!-- Bottom URL hint -->
+  <text x="1152" y="596" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" fill="#445566" text-anchor="end">humankaylee.dev</text>
+</svg>

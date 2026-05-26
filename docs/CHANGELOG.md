@@ -8,6 +8,25 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
+- **v1.1-partial (M7): Runtime OG image endpoint + Sentry error tracking.**
+  Added `/api/og?title=...&subtitle=...` endpoint that renders a 1200×630 PNG
+  at request time using resvg + tiny-skia + usvg from an SVG template
+  (`apps/api/templates/og-template.svg`). Template uses the Systems Atelier
+  OKLCH dark palette (`#0a0d12` background, `#7eff9a` phosphor green accent),
+  centered title/subtitle text, and a fixed HumanKaylee branding corner. PNG is
+  served with `Cache-Control: public, max-age=86400, s-maxage=86400` for CDN
+  efficiency. Added `sentry` 0.36 with `sentry-tracing` integration: initialises
+  conditionally on `SENTRY_DSN` env var; gracefully logs `sentry_disabled` when
+  absent; wires `sentry_tracing::layer()` so `tracing::error!` events forward to
+  Sentry in production. `BaseLayout.astro` updated to use runtime OG endpoint
+  when `PUBLIC_API_BASE_URL` is set at build time, falling back to
+  `/social/default.svg` for SSG/local-dev safety. 23 static per-page PNG
+  placeholders removed from `apps/web/public/social/` (kept `default.png` +
+  `default.svg` as fallbacks). 4 new contract tests, 5 unit tests (28 total
+  pass). Deferred to post-launch v1.1 full: Litestream R2 backup (needs
+  Hetzner D-03 decision), Cloudflare Web Analytics (needs CF account),
+  contract-test cull (risky pre-launch).
+
 - **v1.3-partial (M9): /now, /uses, /reading Sivers-style content pages.**
   Added three new Astro 5 content collections (`now`, `uses`, `reading`) with Zod
   schemas (`nowEntrySchema`, `usesEntrySchema`, `readingEntrySchema`), authored

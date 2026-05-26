@@ -3,6 +3,9 @@ use humankaylee_api::{app, config::AppConfig, state::AppState, telemetry};
 #[tokio::main]
 async fn main() {
     telemetry::init();
+    // Keep the guard alive for the entire process lifetime. When SENTRY_DSN is
+    // absent init_sentry() returns None and this is a no-op.
+    let _sentry = telemetry::init_sentry();
     let config = AppConfig::from_env().expect("valid API configuration");
     tracing::info!(
         host = %config.host,

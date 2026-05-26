@@ -1,0 +1,25 @@
+{
+  "task": "W2-sentry",
+  "milestone": "M7-partial",
+  "lane": "backend",
+  "status": "PASS",
+  "completed_at": "2026-05-26T21:00:00Z",
+  "model": "claude-sonnet-4-6",
+  "files_modified": [
+    "apps/api/src/telemetry.rs",
+    "apps/api/src/main.rs",
+    "apps/api/Cargo.toml"
+  ],
+  "evidence": {
+    "sentry_version": "0.36",
+    "sentry_tracing_version": "0.36",
+    "sentry_tower_version": "0.36",
+    "disabled_behavior": "logs sentry_disabled with reason=no SENTRY_DSN env var, returns None, program continues normally",
+    "disabled_log_line": "{\"level\":\"INFO\",\"message\":\"sentry_disabled\",\"reason\":\"no SENTRY_DSN env var\",\"target\":\"humankaylee_api::telemetry\"}",
+    "enabled_behavior": "calls sentry::init with release=CARGO_PKG_VERSION, environment=SENTRY_ENV|production, traces_sample_rate=0.1, attach_stacktrace=true",
+    "tracing_integration": "sentry_tracing::layer() added to tracing subscriber — tracing::error! events forwarded to Sentry when DSN present",
+    "guard_lifetime": "_sentry guard held in main() for full process lifetime",
+    "build_check": "cargo check OK, 0 errors"
+  },
+  "activation": "set SENTRY_DSN=https://<key>@sentry.io/<project> in production environment"
+}

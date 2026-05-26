@@ -820,3 +820,97 @@ async fn events_enabled_rate_limits_repeated_allowlisted_submissions_without_ech
     assert!(!json.to_string().contains("/contact/private-review"));
     assert!(!json.to_string().contains("session-private-123"));
 }
+
+#[tokio::test]
+async fn og_handler_renders_png() {
+    let state = AppState::new();
+    let response = app(state)
+        .oneshot(
+            Request::builder()
+                .uri("/api/og?title=Hello&subtitle=Test")
+                .body(axum::body::Body::empty())
+                .expect("request"),
+        )
+        .await
+        .expect("response");
+    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(
+        response
+            .headers()
+            .get(axum::http::header::CONTENT_TYPE)
+            .map(|v| v.to_str().unwrap()),
+        Some("image/png")
+    );
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("body");
+    // PNG magic header
+    assert_eq!(&body[..8], b"\x89PNG\r\n\x1a\n");
+    assert!(body.len() > 1000, "PNG should be > 1 KB");
+}
+
+#[tokio::test]
+async fn og_handler_returns_png_for_special_characters_in_title() {
+    let state = AppState::new();
+    let response = app(state)
+        .oneshot(
+            Request::builder()
+                .uri("/api/og?title=Hello%20%3CWorld%3E%20%26%20%22Friends%22&subtitle=It%27s+a+test")
+                .body(axum::body::Body::empty())
+                .expect("request"),
+        )
+        .await
+        .expect("response");
+    assert_eq!(response.status(), StatusCode::OK);
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("body");
+    assert_eq!(&body[..8], b"\x89PNG\r\n\x1a\n");
+}
+
+#[tokio::test]
+async fn og_handler_returns_png_with_cache_control_header() {
+    let state = AppState::new();
+    let response = app(state)
+        .oneshot(
+            Request::builder()
+                .uri("/api/og?title=HumanKaylee&subtitle=Systems+Atelier")
+                .body(axum::body::Body::empty())
+                .expect("request"),
+        )
+        .await
+        .expect("response");
+    assert_eq!(response.status(), StatusCode::OK);
+    let cache_control = response
+        .headers()
+        .get(axum::http::header::CACHE_CONTROL)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    assert!(
+        cache_control.contains("public"),
+        "cache-control should be public, got: {cache_control}"
+    );
+    assert!(
+        cache_control.contains("max-age=86400"),
+        "cache-control should have max-age=86400, got: {cache_control}"
+    );
+}
+
+#[tokio::test]
+async fn og_handler_returns_png_with_defaults_when_no_params_given() {
+    let state = AppState::new();
+    let response = app(state)
+        .oneshot(
+            Request::builder()
+                .uri("/api/og")
+                .body(axum::body::Body::empty())
+                .expect("request"),
+        )
+        .await
+        .expect("response");
+    assert_eq!(response.status(), StatusCode::OK);
+    let body = to_bytes(response.into_body(), usize::MAX)
+        .await
+        .expect("body");
+    assert_eq!(&body[..8], b"\x89PNG\r\n\x1a\n");
+}
