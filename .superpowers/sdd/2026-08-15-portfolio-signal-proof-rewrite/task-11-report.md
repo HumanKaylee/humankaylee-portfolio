@@ -14,7 +14,7 @@ Four product defects and one release-runner defect were exposed and fixed test-f
 2. The Black-Scholes demo's public WASM module URL was transformed by Vite in development. A browser test first reproduced the console/import failure and inaccessible controls. The minimal same-origin inline loader now initializes the real controls and reprices a changed input while retaining no-JavaScript fallback, CSP compatibility, no API calls, and the production build.
 3. The newly executable Black-Scholes Axe route exposed three serious contrast failures in the live price, footer, and source link. The exact route failed before the component received a minimal light/dark-safe color correction, then passed with no serious or critical findings.
 4. Cryogenic Flow scored 76 for Lighthouse performance because its detail video requested a 1,086,774-byte PNG as LCP. A browser/network assertion failed first. The live Work record now uses the existing authentic 67,702-byte 1440 WebP; the MP4, fallback link, alt text, caption, source PNG, social-card source, and archival editorial content were preserved. Cryogenic Flow then scored 99.
-5. Windows Chrome wrote complete Lighthouse reports but sometimes failed to remove a locked temporary profile. The runner now removes any old report before each audit and accepts only a newly written, structurally complete report after the exact Windows cleanup-only error. A separate failing contract exposed preview-port drift; the runner now rejects an occupied port, starts Astro directly, and tears down the process it started. Review-round coverage additionally proves that a cleanup line cannot mask any second runtime error.
+5. Windows Chrome wrote complete Lighthouse reports but sometimes failed to remove a locked temporary profile. The runner now removes any old report before each audit and accepts only a newly written, structurally complete report when the entire normalized CLI output is exactly one cleanup diagnostic plus its known `chrome-launcher` cleanup stack. Navigation, fatal, or other output before or after that diagnostic is rejected. A separate failing contract exposed preview-port drift; the runner rejects an occupied port, starts Astro directly, and tears down the process it started.
 
 ## Contract replacement map
 
@@ -46,7 +46,7 @@ The six old E2E files were deleted only after their mapped replacement behavior 
 - Black-Scholes runtime: 0/1 with the Vite public-file import error; 1/1 after the loader fix. Related Work, CSP, security, and contact checks passed 22/22.
 - Black-Scholes accessibility: 0/1 with three serious color-contrast findings; 1/1 after the component color correction. The final ten-route Axe matrix is included in the serial E2E run.
 - Cryogenic poster: 0/1 while the detail requested the PNG; 1/1 after the one-line live Work poster change. The final Home responsive-poster assertion also positively requires the 1440 WebP and negatively forbids the PNG and homepage video playback.
-- Lighthouse runner contract: missing cleanup handling failed before implementation; 9/9 passed after it. Occupied-port/direct-process behavior then failed before implementation; final runner contract passed 10/10.
+- Lighthouse runner contract: missing cleanup handling failed before implementation; 9/9 passed after it. Occupied-port/direct-process behavior then failed before implementation. Review rounds added mixed prefixed and unprefixed output cases plus the observed benign cleanup stack; the final runner contract passed 12/12.
 - Operational docs and launch probes: the focused migration contract began at 1/6 (five failures for missing current Work/B-049/M3/M4/README requirements) and reached 6/6 after the three active runbooks and read-only launch surfaces were migrated. The first full Node sweep then exposed three preserved Quality/Notes/visual-triage omissions; the exact focused set was RED 0/3, the stale `@api-telemetry`/old no-WebGL expectations were replaced with current behavior, and the combined current run finished 9/9. `bash -n scripts/launch/m3-dns-verify.sh scripts/launch/m4-production-smoke.sh` also exited 0.
 
 ## Required full matrix
@@ -57,7 +57,7 @@ All commands below were run from the final working tree:
 | --- | --- |
 | `pnpm lint` | Exit 0; 141 files checked; no fixes required. |
 | `pnpm typecheck` | Exit 0; 70 files; 0 errors, 0 warnings, 13 existing Zod deprecation hints. |
-| `pnpm test` | Exit 0; Vitest 50/50; Node 130 total: 127 passed, 0 failed, 3 skipped. |
+| `pnpm test` | Exit 0; Vitest 50/50; Node 132 total: 129 passed, 0 failed, 3 skipped. |
 | `pnpm test:e2e -- --workers=1` | Exit 0; 187 total: 167 passed, 0 failed, 20 intentional capture-only skips; 1.0 minute. This final run occurred after the Black-Scholes, Cryogenic media-stability, route-matrix, and launch-surface corrections. |
 | `pnpm build` | Exit 0; 15 pages built in 2.17 seconds. |
 | `pnpm bundle:budget` | Exit 0; summary at `test-results/bundle-budget-summary.json`. |
@@ -127,10 +127,10 @@ Final result: exit 0; thresholds passed; summary at `test-results/lighthouse-sum
 | `/` | 99 | 100 | 100 | 100 |
 | `/work/` | 100 | 100 | 100 | 100 |
 | `/work/cryo-flow-sim/` | 99 | 100 | 100 | 100 |
-| `/resume/` | 100 | 100 | 100 | 100 |
+| `/resume/` | 99 | 100 | 100 | 100 |
 | `/contact/` | 100 | 100 | 100 | 100 |
 
-Homepage mobile LCP: **1,810 ms**, below the strict 2,500 ms threshold. The M4 contract also proves that 2,500 ms itself fails the strict production gate.
+Homepage mobile LCP: **1,811 ms**, below the strict 2,500 ms threshold. The M4 contract also proves that 2,500 ms itself fails the strict production gate.
 
 The final run began with ports 4322 and 4323 clear, served the audited URL from its own Astro process on 4322, and ended with both ports clear. The earlier mismatched diagnostic run against an orphaned listener was stopped and excluded from evidence; only the final fresh-process scores above are reported.
 
@@ -206,7 +206,7 @@ This report is stored at `.superpowers/sdd/2026-08-15-portfolio-signal-proof-rew
 - The active M3/M4 scripts passed their named contract and shell syntax check, but their external DNS/TLS/public-origin probes were intentionally not executed. This task verifies local read-only behavior and script shape; it does not provide production-origin evidence or launch approval.
 - Historical planning, launch-evidence, GitHub-sync, and agent-instruction contracts retain prior atlas/telemetry language. These non-visitor records are documented separately from the zero-match result for active runtime and verification surfaces.
 - Typecheck reports 13 deprecation hints in existing Zod contracts; there are no type errors or warnings.
-- Lighthouse's upstream Windows Chrome cleanup remains platform-specific. The local runner accepts it only after deleting any old report and validating a fresh complete report; all other exit failures still fail the gate.
+- Lighthouse's upstream Windows Chrome cleanup remains platform-specific. The local runner accepts it only after deleting any old report, validating a fresh complete report, trimming surrounding whitespace, and recognizing exactly the observed cleanup diagnostic with its known cleanup stack. Extra CLI output is retained and fails the gate.
 - No production deploy, external message, push, issue mutation, or launch approval occurred.
 
 Commit message: `test: verify the Signal Proof portfolio release`.
@@ -217,7 +217,7 @@ Review round 1 closed six release-proof gaps without deploying or changing depen
 
 1. The active visual-regression and cross-browser runbooks now use the same ten-route Signal / Proof matrix as their executable specs, explicitly cover the initialized Black-Scholes detail, and forbid retired Projects, case-study, telemetry, API-form, and old note/fallback expectations.
 2. Launch README, M3, and M4 default to `joepoznanski.io`; stale domains are forbidden. M3 accepts only permanent 301/308 redirects and rejects temporary 302/307 responses.
-3. The Lighthouse cleanup exception now succeeds only when the fresh complete report accompanies exactly one cleanup runtime error. A mixed cleanup/navigation error is a failing contract case.
+3. The Lighthouse cleanup exception succeeds only when the fresh complete report accompanies exactly one cleanup diagnostic after the known `chrome-launcher` cleanup stack is normalized. Prefixed runtime errors and unprefixed navigation/fatal text before or after cleanup are failing contract cases.
 4. The bundle guard requires `/work/black-scholes-wasm/` and has a negative fixture that fails when that route alone is absent.
 5. Black-Scholes is present in the visual, capture, responsive, no-JavaScript, reduced-motion, privacy, Axe, and runtime matrices. Windows and genuine Linux desktop/mobile baselines exist and pass with zero diff.
 6. M4 now enforces homepage mobile LCP strictly below 2,500 ms; contract boundaries at 2,499.9, 2,500, and 2,500.1 ms prove the comparison.
@@ -226,6 +226,24 @@ Focused reviewer contract evidence began at 17/24 passing with seven expected fa
 
 The original full-page Cryogenic desktop capture visibly contained Chromium's native loading ring even though the authentic WebP poster did not. Capture readiness now decodes real images/posters, loads native video metadata, and waits for the painted state. The focused Cryogenic capture rerun passed 2/2; both desktop/mobile outputs were opened, and the ring is absent. The same readiness gate protects visual baselines. Only the verified Cryogenic captures changed; its Linux visual baselines were unchanged.
 
-Review round 1 final local evidence is the full matrix recorded above, Windows visual update 20/20, Windows zero-diff visual run 20/20, genuine Linux zero-diff visual run 20/20, all-browser responsive 12/12, focused Black-Scholes captures 2/2, focused Cryogenic captures 2/2, and the fresh Lighthouse scores recorded above. Lighthouse began with ports 4321 and 4322 clear, served its own audited process on 4322, and left 4322 clear after exit. Cleanup-only profile errors occurred for two complete fresh reports; no mixed error was accepted.
+Review round 1 final local evidence is the full matrix recorded above, Windows visual update 20/20, Windows zero-diff visual run 20/20, genuine Linux zero-diff visual run 20/20, all-browser responsive 12/12, focused Black-Scholes captures 2/2, focused Cryogenic captures 2/2, and the fresh Lighthouse scores recorded above. Lighthouse began with ports 4321 and 4322 clear, served its own audited process on 4322, and left 4322 clear after exit. Its first mixed-error contract rejected a second prefixed runtime line, but re-review later demonstrated that unprefixed error text was still accepted; review round 2 below supersedes that classifier evidence.
 
 Corrective commit message: `test: close Signal Proof release review gaps`.
+
+## Review round 2 cleanup-classifier correction
+
+Re-review directly proved that the round-1 classifier returned `true` when either `Navigation failed: DNS resolution error` appeared before the cleanup line or `Unexpected fatal error` appeared after it. A new table of navigation/fatal text both before and after cleanup failed as intended: 10/11 focused tests passed and the new case failed.
+
+The first anchored implementation accepted only a whitespace-wrapped single diagnostic and made all 11 focused tests pass. A fresh proportional Lighthouse run then truthfully failed on its warm-up audit because Lighthouse appends a duplicate EPERM line and a six-frame `chrome-launcher` cleanup stack for the same locked profile. That observed output became a second positive fixture, which failed at 11/12 before implementation.
+
+The final classifier trims only surrounding whitespace. It recognizes the cleanup path, normalizes only the exact duplicate EPERM line and the six known `rmSync`/`chrome-launcher`/Lighthouse cleanup frames, and then requires the remaining output to match the single cleanup diagnostic. Any extra line or unknown stack shape remains in the output and fails the anchored match.
+
+Final proportional verification:
+
+- `node --test scripts/lighthouse-local.test.mjs`: 12/12 passed.
+- Direct probes: whitespace-wrapped cleanup `true`; unprefixed DNS text before cleanup `false`; unprefixed fatal text after cleanup `false`.
+- `pnpm lint`: 141 files, exit 0.
+- `pnpm test`: Vitest 50/50; Node 129 passed, 3 reviewed skips, 132 total; exit 0.
+- `pnpm lighthouse:local`: exit 0 after a fresh 15-page build. Home scored 99/100/100/100 with 1,811 ms mobile LCP; Work scored 100/100/100/100; Cryogenic Flow 99/100/100/100; Résumé 99/100/100/100; Contact 100/100/100/100. The runner accepted only the observed cleanup stack on warm-up, Work, and Contact, and port 4322 was clear after exit.
+
+Round-2 corrective commit message: `fix: require cleanup-only Lighthouse failures`.

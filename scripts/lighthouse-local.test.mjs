@@ -131,7 +131,7 @@ describe("lighthouse local gate contract", () => {
 			canUseReportAfterWindowsCleanupError({
 				platform: "win32",
 				exitCode: 1,
-				output: cleanupError,
+				output: `\r\n  ${cleanupError}  \r\n`,
 				report,
 			}),
 			true,
@@ -172,6 +172,69 @@ describe("lighthouse local gate contract", () => {
 			}),
 			false,
 			"a fresh complete report must not hide a second fatal Lighthouse error",
+		);
+	});
+
+	it("rejects unprefixed fatal output before or after the Windows cleanup diagnostic", () => {
+		const report = {
+			categories: Object.fromEntries(
+				LIGHTHOUSE_CATEGORIES.map((category) => [category, { score: 1 }]),
+			),
+			audits: {
+				"largest-contentful-paint": { numericValue: 800 },
+			},
+		};
+		const cleanupError = String.raw`Runtime error encountered: EPERM, Permission denied: \\?\C:\Users\joe\AppData\Local\Temp\lighthouse.12345678`;
+		const fatalOutput = [
+			`Navigation failed: DNS resolution error\n${cleanupError}`,
+			`Unexpected fatal error\n${cleanupError}`,
+			`${cleanupError}\nNavigation failed: DNS resolution error`,
+			`${cleanupError}\nUnexpected fatal error`,
+		];
+
+		for (const output of fatalOutput) {
+			assert.equal(
+				canUseReportAfterWindowsCleanupError({
+					platform: "win32",
+					exitCode: 1,
+					output,
+					report,
+				}),
+				false,
+				`must reject additional Lighthouse output: ${output}`,
+			);
+		}
+	});
+
+	it("accepts the known Lighthouse cleanup stack without discarding other output", () => {
+		const report = {
+			categories: Object.fromEntries(
+				LIGHTHOUSE_CATEGORIES.map((category) => [category, { score: 1 }]),
+			),
+			audits: {
+				"largest-contentful-paint": { numericValue: 800 },
+			},
+		};
+		const cleanupPath = String.raw`\\?\C:\Users\joe\AppData\Local\Temp\lighthouse.31133061`;
+		const output = [
+			`Runtime error encountered: EPERM, Permission denied: ${cleanupPath} '${cleanupPath}'`,
+			`Error: EPERM, Permission denied: ${cleanupPath} '${cleanupPath}'`,
+			"    at rmSync (node:fs:1236:18)",
+			"    at Launcher.destroyTmp (file:///C:/repo/node_modules/.pnpm/chrome-launcher@1.2.1/node_modules/chrome-launcher/dist/chrome-launcher.js:367:9)",
+			"    at Launcher.kill (file:///C:/repo/node_modules/.pnpm/chrome-launcher@1.2.1/node_modules/chrome-launcher/dist/chrome-launcher.js:349:14)",
+			"    at Object.kill (file:///C:/repo/node_modules/.pnpm/chrome-launcher@1.2.1/node_modules/chrome-launcher/dist/chrome-launcher.js:39:18)",
+			"    at runLighthouse (file:///C:/repo/node_modules/.pnpm/lighthouse@13.3.0/node_modules/lighthouse/cli/run.js:217:21)",
+			"    at async file:///C:/repo/node_modules/.pnpm/lighthouse@13.3.0/node_modules/lighthouse/cli/index.js:10:1",
+		].join("\n");
+
+		assert.equal(
+			canUseReportAfterWindowsCleanupError({
+				platform: "win32",
+				exitCode: 1,
+				output,
+				report,
+			}),
+			true,
 		);
 	});
 

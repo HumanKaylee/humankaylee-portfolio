@@ -198,6 +198,41 @@ export function lighthouseDryRunPlan(baseUrl) {
 	};
 }
 
+const WINDOWS_CLEANUP_DIAGNOSTIC =
+	/^Runtime error encountered: EPERM, Permission denied: (?<cleanupPath>[^\r\n']*[\\/]Temp[\\/]lighthouse\.\d+)(?: '\k<cleanupPath>')?$/;
+const WINDOWS_CLEANUP_STACK = [
+	/^\s+at rmSync \(node:fs:\d+:\d+\)$/,
+	/^\s+at Launcher\.destroyTmp \(file:\/{3}[^\r\n]*[\\/]chrome-launcher[\\/]dist[\\/]chrome-launcher\.js:\d+:\d+\)$/,
+	/^\s+at Launcher\.kill \(file:\/{3}[^\r\n]*[\\/]chrome-launcher[\\/]dist[\\/]chrome-launcher\.js:\d+:\d+\)$/,
+	/^\s+at Object\.kill \(file:\/{3}[^\r\n]*[\\/]chrome-launcher[\\/]dist[\\/]chrome-launcher\.js:\d+:\d+\)$/,
+	/^\s+at runLighthouse \(file:\/{3}[^\r\n]*[\\/]lighthouse[\\/]cli[\\/]run\.js:\d+:\d+\)$/,
+	/^\s+at async file:\/{3}[^\r\n]*[\\/]lighthouse[\\/]cli[\\/]index\.js:\d+:\d+$/,
+];
+
+function normalizeWindowsCleanupOutput(output) {
+	if (typeof output !== "string") {
+		return "";
+	}
+
+	const normalizedWhitespace = output.trim();
+	const lines = normalizedWhitespace.split(/\r?\n/);
+	const diagnostic = lines[0]?.match(WINDOWS_CLEANUP_DIAGNOSTIC);
+	if (!diagnostic?.groups?.cleanupPath || lines.length === 1) {
+		return normalizedWhitespace;
+	}
+
+	const cleanupPath = diagnostic.groups.cleanupPath;
+	const duplicateError = `Error: EPERM, Permission denied: ${cleanupPath} '${cleanupPath}'`;
+	const hasOnlyKnownCleanupStack =
+		lines.length === WINDOWS_CLEANUP_STACK.length + 2 &&
+		lines[1] === duplicateError &&
+		WINDOWS_CLEANUP_STACK.every((pattern, index) =>
+			pattern.test(lines[index + 2]),
+		);
+
+	return hasOnlyKnownCleanupStack ? lines[0] : normalizedWhitespace;
+}
+
 export function canUseReportAfterWindowsCleanupError({
 	platform = process.platform,
 	exitCode,
@@ -210,21 +245,14 @@ export function canUseReportAfterWindowsCleanupError({
 			Number.isFinite(report?.categories?.[category]?.score),
 		) &&
 		Number.isFinite(report?.audits?.["largest-contentful-paint"]?.numericValue);
+	const normalizedOutput = normalizeWindowsCleanupOutput(output);
 	const isChromeTempCleanupError =
-		typeof output === "string" &&
-		/EPERM, Permission denied:[\s\S]*?[\\/]Temp[\\/]lighthouse\.\d+/.test(
-			output,
-		);
-	const runtimeErrors =
-		typeof output === "string"
-			? (output.match(/^Runtime error encountered:/gm) ?? [])
-			: [];
+		WINDOWS_CLEANUP_DIAGNOSTIC.test(normalizedOutput);
 
 	return (
 		platform === "win32" &&
 		exitCode === 1 &&
 		isChromeTempCleanupError &&
-		runtimeErrors.length === 1 &&
 		hasCompleteReport
 	);
 }
