@@ -36,23 +36,30 @@ describe("phase 1 content inventory", () => {
 		]);
 	});
 
-	it("lists the launch routes that content must be able to drive", () => {
+	it("lists canonical, secondary, and legacy content routes without promoting Projects", () => {
 		expect(ROUTE_INVENTORY.map((entry) => entry.path)).toEqual([
 			"/",
-			"/projects/",
-			"/projects/[slug]/",
-			"/case-studies/",
-			"/case-studies/[slug]/",
-			"/notes/",
+			"/work/",
+			"/work/[slug]/",
+			"/about/",
 			"/resume/",
 			"/contact/",
+			"/notes/",
+			"/notes/[slug]/",
 			"/sitemap-index.xml",
 			"/robots.txt",
 			"/404",
 			"/now/",
 			"/uses/",
 			"/reading/",
+			"/projects/",
+			"/projects/[slug]/",
+			"/case-studies/",
+			"/case-studies/[slug]/",
 		]);
+		expect(
+			ROUTE_INVENTORY.filter((entry) => entry.kind === "projects"),
+		).toHaveLength(1);
 	});
 
 	it("parses valid examples and rejects invalid examples with the real schemas", () => {

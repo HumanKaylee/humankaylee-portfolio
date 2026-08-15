@@ -1,3 +1,5 @@
+import { primaryNavigation } from "../data/site-navigation";
+
 export type ShellLink = Readonly<{
 	label: string;
 	href: string;
@@ -47,15 +49,7 @@ export function homeScaffold(): HomeScaffold {
 			"Rust, C++, Python, TypeScript, distributed services, and real-time systems.",
 			"Interfaces designed for operators who need fast answers when the system is under pressure.",
 		],
-		primaryNav: [
-			{ label: "Home", href: "/" },
-			{ label: "Projects", href: "/projects/" },
-			{ label: "Now", href: "/now/" },
-			{ label: "Uses", href: "/uses/" },
-			{ label: "Reading", href: "/reading/" },
-			{ label: "Resume", href: "/resume/" },
-			{ label: "Contact", href: "/contact/" },
-		],
+		primaryNav: primaryNavigation,
 		ctas: [
 			{
 				label: "Resume & scope",

@@ -3,27 +3,19 @@ import { describe, expect, it } from "vitest";
 import { homeScaffold } from "./home-scaffold";
 
 describe("homeScaffold", () => {
-	it("describes the Phase 2 static shell and Systems Atelier direction", () => {
+	it("temporarily exposes the four-item primary navigation to the existing homepage", () => {
 		const scaffold = homeScaffold();
 
-		expect(scaffold.visualDirection).toBe("The Systems Atelier");
-		expect(scaffold.palette).toEqual([
-			"warm off-black",
-			"paper cream",
-			"tungsten amber",
-			"signal green",
-			"oxidized blue",
-		]);
-		expect(scaffold.heroTitle).toBe("Systems built to hold up.");
 		expect(scaffold.primaryNav.map((item) => item.href)).toEqual([
-			"/",
-			"/projects/",
-			"/now/",
-			"/uses/",
-			"/reading/",
+			"/work/",
+			"/about/",
 			"/resume/",
 			"/contact/",
 		]);
+		expect(scaffold.primaryNav).not.toHaveLength(7);
+		expect(scaffold.primaryNav.map((item) => item.href)).not.toContain(
+			"/projects/",
+		);
 		expect(scaffold.ctas.map((cta) => cta.href)).toEqual([
 			"/resume/",
 			"/projects/",

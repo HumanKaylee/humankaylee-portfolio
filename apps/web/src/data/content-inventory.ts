@@ -20,6 +20,11 @@ export type RouteInventoryEntry = Readonly<{
 	path: string;
 	kind:
 		| "home"
+		| "work"
+		| "work-detail"
+		| "about"
+		| "notes"
+		| "note-detail"
 		| "projects"
 		| "project-detail"
 		| "case-studies"
@@ -39,29 +44,45 @@ export type RouteInventoryEntry = Readonly<{
 
 const routeKindById = {
 	home: "home",
-	projects: "projects",
-	"project-detail": "project-detail",
-	"case-studies": "case-studies",
-	"case-study-detail": "case-study-detail",
-	"notes-build-log": "notes-build-log",
+	work: "work",
+	"work-detail": "work-detail",
+	about: "about",
 	resume: "resume",
 	contact: "contact",
+	notes: "notes",
+	"note-detail": "note-detail",
 	sitemap: "sitemap",
 	robots: "robots",
 	"fallback-error": "error",
 	now: "now",
 	uses: "uses",
 	reading: "reading",
+	projects: "projects",
+	"project-detail": "project-detail",
+	"case-studies": "case-studies",
+	"case-study-detail": "case-study-detail",
 } satisfies Readonly<Record<RouteId, RouteInventoryEntry["kind"]>>;
 
 const contentSourcesById = {
 	home: [
 		"hero positioning",
-		"featured case-study summaries",
-		"project category highlights",
+		"featured work summaries",
 		"resume summary",
 		"contact CTA",
 	],
+	work: ["work summaries", "featured evidence", "publication status"],
+	"work-detail": ["work metadata", "safe artifacts", "verification notes"],
+	about: ["resume summary", "current focus", "uses", "reading"],
+	resume: ["resume summary", "downloadable pdf source status"],
+	contact: ["contact CTA", "mailto fallback", "privacy note"],
+	notes: ["technical notes", "publication status"],
+	"note-detail": ["note body", "publication status"],
+	sitemap: ["route inventory", "published content slugs"],
+	robots: ["route inventory", "crawl policy"],
+	"fallback-error": ["fallback navigation", "contact path", "home link"],
+	now: ["current focus items", "now entry date", "entry summary"],
+	uses: ["hardware list", "software list", "tooling philosophy"],
+	reading: ["reading items by kind", "status badges", "takeaways"],
 	projects: [
 		"project taxonomy",
 		"project cards",
@@ -85,23 +106,6 @@ const contentSourcesById = {
 		"safe artifacts",
 		"verification notes",
 	],
-	"notes-build-log": [
-		"build-log entries",
-		"site update notes",
-		"verification summaries",
-	],
-	resume: [
-		"resume summary",
-		"workflow placeholder",
-		"downloadable pdf source status",
-	],
-	contact: ["contact CTA", "mailto fallback", "privacy note"],
-	sitemap: ["route inventory", "published content slugs"],
-	robots: ["route inventory", "crawl policy"],
-	"fallback-error": ["fallback navigation", "contact path", "home link"],
-	now: ["current focus items", "now entry date", "entry summary"],
-	uses: ["hardware list", "software list", "tooling philosophy"],
-	reading: ["reading items by kind", "status badges", "takeaways"],
 } satisfies Readonly<Record<RouteId, readonly string[]>>;
 
 export const ROUTE_INVENTORY: readonly RouteInventoryEntry[] =

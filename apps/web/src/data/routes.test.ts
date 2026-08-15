@@ -1,24 +1,34 @@
 import { describe, expect, it } from "vitest";
 
-import { routeInventory } from "./routes";
+import { profile } from "./profile";
+import { routeInventory, routeInventoryById } from "./routes";
+import { primaryNavigation, secondaryNavigation } from "./site-navigation";
 
 describe("routeInventory", () => {
-	it("covers the Phase 1 route inventory in the expected order", () => {
-		expect(routeInventory.map((route) => route.id)).toEqual([
-			"home",
-			"projects",
-			"project-detail",
-			"case-studies",
-			"case-study-detail",
-			"notes-build-log",
-			"resume",
-			"contact",
-			"sitemap",
-			"robots",
-			"fallback-error",
-			"now",
-			"uses",
-			"reading",
+	it("centers primary visitor navigation on Work, About, Résumé, and Contact", () => {
+		const primaryPaths = routeInventory
+			.filter((route) => route.primary)
+			.map((route) => route.path);
+
+		expect(primaryPaths).toEqual([
+			"/work/",
+			"/about/",
+			"/resume/",
+			"/contact/",
+		]);
+		expect(primaryPaths).not.toContain("/projects/");
+		expect(primaryNavigation.map((item) => item.label)).toEqual([
+			"Work",
+			"About",
+			"Résumé",
+			"Contact",
+		]);
+		expect(primaryNavigation).not.toHaveLength(7);
+		expect(secondaryNavigation.map((item) => item.href)).toEqual([
+			"/notes/",
+			"/now/",
+			"/uses/",
+			"/reading/",
 		]);
 	});
 
@@ -37,29 +47,32 @@ describe("routeInventory", () => {
 		}
 	});
 
-	it("marks the content-driven routes and utility routes distinctly", () => {
-		const caseStudies = routeInventory.find(
-			(route) => route.id === "case-studies",
+	it("keeps legacy project records non-primary while exposing canonical Work and About routes", () => {
+		expect(routeInventoryById.work.path).toBe("/work/");
+		expect(routeInventoryById.about.path).toBe("/about/");
+		expect(routeInventoryById.projects).toMatchObject({
+			primary: false,
+			legacy: true,
+		});
+		expect(routeInventoryById["case-studies"]).toMatchObject({
+			primary: false,
+			legacy: true,
+		});
+		expect(routeInventoryById.robots.seo.robots).toBe("noindex,nofollow");
+		expect(routeInventoryById["fallback-error"].seo.robots).toBe(
+			"noindex,nofollow",
 		);
-		const caseStudyDetail = routeInventory.find(
-			(route) => route.id === "case-study-detail",
-		);
-		const notesBuildLog = routeInventory.find(
-			(route) => route.id === "notes-build-log",
-		);
-		const resume = routeInventory.find((route) => route.id === "resume");
-		const sitemap = routeInventory.find((route) => route.id === "sitemap");
-		const robots = routeInventory.find((route) => route.id === "robots");
-		const fallbackError = routeInventory.find(
-			(route) => route.id === "fallback-error",
-		);
+	});
 
-		expect(caseStudies?.owner).toBe("content");
-		expect(caseStudyDetail?.path).toBe("/case-studies/[slug]/");
-		expect(notesBuildLog?.status).toBe("draft");
-		expect(resume?.owner).toBe("content");
-		expect(sitemap?.status).toBe("generated");
-		expect(robots?.seo.robots).toBe("noindex,nofollow");
-		expect(fallbackError?.seo.robots).toBe("noindex,nofollow");
+	it("uses Joe Poznanski as the single primary public identity", () => {
+		expect(profile).toMatchObject({
+			name: "Joe Poznanski",
+			role: "Principal Software Engineer",
+			location: "Titusville, Florida, USA",
+			email: "josephpoznanski@gmail.com",
+			linkedin: "https://www.linkedin.com/in/joe-poznanski",
+			github: "https://github.com/HumanKaylee",
+		});
+		expect(Object.values(profile).join(" ")).not.toMatch(/systems atelier/i);
 	});
 });
