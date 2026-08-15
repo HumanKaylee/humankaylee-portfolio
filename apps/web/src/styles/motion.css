@@ -3,8 +3,8 @@
 		scroll-behavior: smooth;
 	}
 
-	nav.primary-nav a,
-	nav.primary-nav a::after,
+	.primary-nav a,
+	.primary-nav a::after,
 	.signal-link::after,
 	.skip-link {
 		transition: transform var(--motion-fast) var(--ease-out), background-color

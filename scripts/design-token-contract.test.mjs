@@ -5,6 +5,10 @@ import { test } from "node:test";
 const tokensPath = "apps/web/src/styles/tokens.css";
 const tokens = existsSync(tokensPath) ? readFileSync(tokensPath, "utf8") : "";
 const globalCss = readFileSync("apps/web/src/styles/global.css", "utf8");
+const componentsCss = readFileSync(
+	"apps/web/src/styles/components.css",
+	"utf8",
+);
 const navigationSource = readFileSync(
 	"apps/web/src/data/site-navigation.ts",
 	"utf8",
@@ -38,4 +42,25 @@ test("primary navigation follows the four-link visitor model", () => {
 		...primaryNavigation.matchAll(/label:\s*"([^"]+)"/g),
 	].map((match) => match[1]);
 	assert.deepEqual(primaryLabels, ["Work", "About", "Résumé", "Contact"]);
+});
+
+test("legacy route CSS cannot redefine the shared shell", () => {
+	assert.doesNotMatch(
+		globalCss,
+		/^\s*(?:\.site-(?:header|footer|main)|\.brand-(?:lockup|mark|title|subtitle)|\.primary-nav|\.footer-(?:summary|links|actions))(?:\s|,|\{|:|>)/m,
+		"global.css must not contain unscoped shared-shell selectors after its module imports",
+	);
+});
+
+test("evidence labels use technical typography", () => {
+	const evidenceLabels = componentsCss.match(
+		/\.section-kicker,\s*\.eyebrow,\s*\.project-category\s*\{([^}]*)\}/,
+	)?.[1];
+	assert.ok(
+		evidenceLabels,
+		"section kicker, eyebrow, and project category must share an evidence-label rule",
+	);
+	assert.match(evidenceLabels, /font-family:\s*var\(--font-evidence\)/);
+	assert.match(evidenceLabels, /letter-spacing:\s*0\.\d+em/);
+	assert.match(evidenceLabels, /text-transform:\s*uppercase/);
 });
