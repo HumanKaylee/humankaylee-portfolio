@@ -58,14 +58,14 @@ All commands below were run from the final working tree:
 | `pnpm lint` | Exit 0; 141 files checked; no fixes required. |
 | `pnpm typecheck` | Exit 0; 70 files; 0 errors, 0 warnings, 13 existing Zod deprecation hints. |
 | `pnpm test` | Exit 0; Vitest 50/50; Node 132 total: 129 passed, 0 failed, 3 skipped. |
-| `pnpm test:e2e -- --workers=1` | Exit 0; 187 total: 167 passed, 0 failed, 20 intentional capture-only skips; 1.0 minute. This final run occurred after the Black-Scholes, Cryogenic media-stability, route-matrix, and launch-surface corrections. |
-| `pnpm build` | Exit 0; 15 pages built in 2.17 seconds. |
+| `pnpm test:e2e -- --workers=1` | Exit 0; 188 total: 168 passed, 0 failed, 20 intentional capture-only skips; 1.0 minute. This final run occurred after the Black-Scholes visibility/accessibility and ProjectStage reading-order corrections. |
+| `pnpm build` | Exit 0; 15 pages built in 2.91 seconds. |
 | `pnpm bundle:budget` | Exit 0; summary at `test-results/bundle-budget-summary.json`. |
 
 Final critical JavaScript sizes:
 
 - `/`: 982 B
-- `/work/black-scholes-wasm/`: 3,733 B
+- `/work/black-scholes-wasm/`: 4,107 B
 - Each flagship detail route: 1,212 B
 - All other audited routes: 0 B
 
@@ -160,6 +160,9 @@ Production files:
 
 - Deleted `apps/web/public/scripts/project-constellation.mjs`.
 - Updated `apps/web/src/components/BlackScholesDemo.astro`.
+- Updated `apps/web/src/components/ProjectStage.astro`.
+- Updated `apps/web/src/content/notes/wasm-black-scholes-options-pricer.md`.
+- Updated `apps/web/src/content/work/black-scholes-wasm.md`.
 - Updated `apps/web/src/content/work/cryo-flow-sim.md` (one live poster path only).
 - Updated `apps/web/src/pages/resume/index.astro` (print selector only).
 - Reduced `apps/web/src/styles/global.css` to five ordered imports.
@@ -247,3 +250,25 @@ Final proportional verification:
 - `pnpm lighthouse:local`: exit 0 after a fresh 15-page build. Home scored 99/100/100/100 with 1,811 ms mobile LCP; Work scored 100/100/100/100; Cryogenic Flow 99/100/100/100; Résumé 99/100/100/100; Contact 100/100/100/100. The runner accepted only the observed cleanup stack on warm-up, Work, and Contact, and port 4322 was clear after exit.
 
 Round-2 corrective commit message: `fix: require cleanup-only Lighthouse failures`.
+
+## Final branch-wide review correction
+
+The final branch-wide review found two visitor-facing behavior gaps that the earlier release proof had not exercised:
+
+1. Black-Scholes loaded its JavaScript glue and WebAssembly binary as soon as the detail route loaded even though the demo began below the viewport. The focused request test failed with both `/wasm/blackscholes/blackscholes_wasm.js` and `/wasm/blackscholes/blackscholes_wasm_bg.wasm` already present before any scroll. `BlackScholesDemo` now observes the real demo boundary and requests neither asset until it intersects the viewport. After intersection, the exact two assets load, the real price initializes, and a changed spot input reprices. A blocked WASM request leaves the fallback visible and the controls unavailable. Public Work and Note copy now says the module loads when the demo enters view; it no longer claims an Astro `client:visible` directive that is not used.
+2. ProjectStage previously rendered all three Work rows followed by all three media panels in source order. The mobile and no-JavaScript adjacency tests failed because no row/panel pairs existed. Each project now owns a same-slug row/panel pair in the DOM, so mobile and static reading order is Cryogenic row → Cryogenic proof, fleet row → fleet proof, and recovery row → recovery proof. Desktop fine-pointer enhancement projects those same pairs into the existing two-column selector and retains pointer, keyboard-focus, normal-link, coarse-pointer, and viewport-transition behavior.
+
+The first complete serial E2E run correctly exposed a serious `aria-hidden-focus` defect after true WASM deferral: six pre-initialization controls were still focusable inside `aria-hidden`. The exact Black-Scholes Axe case was RED before the initial controls became `inert`; successful initialization now removes both `inert` and `aria-hidden`, while failed initialization preserves both. The focused Axe case then passed.
+
+Final correction evidence:
+
+- Initial focused RED: Black-Scholes 0/1 because both assets loaded below the viewport; mobile ProjectStage 0/1 and no-JavaScript ProjectStage 0/1 because the pairs were absent.
+- Focused GREEN: Home and Work behavior 24/24; deferred loader/failure paths 2/2; Black-Scholes Axe 1/1.
+- Full matrix: lint 141 files; typecheck 70 files with 0 errors, 0 warnings, and 13 existing hints; Vitest 50/50; Node 129 passed with 3 reviewed skips; E2E 168 passed with 20 capture-only skips; 15-page build; bundle budget passed with Black-Scholes at 4,107 B critical JavaScript.
+- Home capture audit: desktop/mobile 2/2. Both full-page captures were opened and compared against the prior same-viewport evidence. Desktop preserves the established two-column hierarchy. Mobile now places each authentic proof immediately after its matching project with no crop, overflow, spacing, font, border, or contrast defect.
+- Windows visual regression: the intentional Black-Scholes copy change produced text-only differences in its desktop/mobile baselines (2% and 1% respectively). The actuals and diffs were inspected, only that pair was regenerated, and the final Windows suite passed 20/20 with zero further diff.
+- Genuine Linux visual regression: an isolated `/tmp/signal-proof-task11-round3` copy was verified byte-for-byte against the current Windows `BlackScholesDemo` and `ProjectStage` sources. Linux Playwright 1.60/Chromium generated only the Black-Scholes desktop/mobile Linux pair (2/2); the full Linux suite then passed 20/20 without update mode. Copied snapshot hashes matched the generated Linux files. The verified temporary copy and both manually started Windows/WSL Astro servers were removed; port 4321 was clear in both environments.
+
+No deploy, push, dependency change, secret mutation, or external launch probe occurred.
+
+Final corrective commit message: `fix: align proof loading and reading order`.

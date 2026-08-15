@@ -16,6 +16,42 @@ const flagshipTitles = [
 const internalHomepageCopy =
 	/fallback mode|API health|for recruiters|for engineers|launch readiness|deployment status|PR evidence|production launch/i;
 
+async function expectPairedProjectStage(page: Page) {
+	expect(
+		await page.locator("[data-stage-pair]").evaluateAll((pairs) =>
+			pairs.map((pair) => {
+				const trigger = pair.querySelector<HTMLElement>("[data-stage-trigger]");
+				const panel = pair.querySelector<HTMLElement>("[data-stage-panel]");
+				return {
+					trigger: trigger?.dataset.stageTrigger,
+					panel: panel?.dataset.stagePanel,
+					triggerRowFirst: pair.children[0]?.contains(trigger ?? null) ?? false,
+					panelImmediatelyAfterRow: pair.children[1] === panel,
+				};
+			}),
+		),
+	).toEqual([
+		{
+			trigger: "cryo-flow-sim",
+			panel: "cryo-flow-sim",
+			triggerRowFirst: true,
+			panelImmediatelyAfterRow: true,
+		},
+		{
+			trigger: "cli-fleet-synchronization-and-mcp-rollout",
+			panel: "cli-fleet-synchronization-and-mcp-rollout",
+			triggerRowFirst: true,
+			panelImmediatelyAfterRow: true,
+		},
+		{
+			trigger: "remote-workstation-recovery-and-operational-debugging",
+			panel: "remote-workstation-recovery-and-operational-debugging",
+			triggerRowFirst: true,
+			panelImmediatelyAfterRow: true,
+		},
+	]);
+}
+
 async function expectFirstViewportStory(
 	page: Page,
 	viewport: { width: number; height: number },
@@ -178,6 +214,7 @@ test("keeps project proof inline on mobile without an enhancement-only selection
 	for (const panel of await panels.all()) {
 		await expect(panel).toBeVisible();
 	}
+	await expectPairedProjectStage(page);
 	expect(
 		await triggers.evaluateAll((links) =>
 			links.map((link) => link.hasAttribute("aria-current")),
@@ -350,17 +387,7 @@ test.describe("static homepage without JavaScript", () => {
 		for (const panel of await panels.all()) {
 			await expect(panel).toBeVisible();
 		}
-		expect(
-			await panels.evaluateAll((items) =>
-				items.every((panel) =>
-					Boolean(
-						panel.compareDocumentPosition(
-							document.querySelector("[data-stage-trigger]") as Node,
-						) & Node.DOCUMENT_POSITION_PRECEDING,
-					),
-				),
-			),
-		).toBe(true);
+		await expectPairedProjectStage(page);
 		await expect(page.locator("main video")).toHaveCount(0);
 		await expect(page.locator("main")).not.toContainText(internalHomepageCopy);
 	});

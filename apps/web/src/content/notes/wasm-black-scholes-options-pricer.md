@@ -48,9 +48,9 @@ returns zeroed output rather than throwing. That boundary hardening is easier
 to express and verify in Rust than in hand-written JavaScript.
 
 The compiled binary is 62 KB raw, 27 KB gzipped — smaller than most hero
-images. It loads with `client:visible`, so it only fetches when the island
-scrolls into view. The compute itself is sub-millisecond on any device capable
-of loading the page.
+images. It loads when the demo enters view, so it does not fetch while the demo
+remains below the viewport. The compute itself is sub-millisecond on any device
+capable of loading the page.
 
 ## How to read the Greeks
 

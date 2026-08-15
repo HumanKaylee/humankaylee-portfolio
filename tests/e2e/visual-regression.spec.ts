@@ -111,11 +111,19 @@ async function expectCoreReadiness(page: Page, path: string) {
 	await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 	await waitForStableMedia(page);
 	if (path === "/work/black-scholes-wasm/") {
+		await page.locator(".bs-demo").scrollIntoViewIfNeeded();
 		await expect(page.locator("#bs-controls")).not.toHaveAttribute(
 			"aria-hidden",
 			"true",
 		);
 		await expect(page.locator("#bs-price")).not.toHaveText("—");
+		await page.evaluate(() => window.scrollTo(0, 0));
+		await page.evaluate(
+			() =>
+				new Promise<void>((resolve) =>
+					requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+				),
+		);
 	}
 }
 

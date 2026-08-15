@@ -248,13 +248,18 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator(".bs-demo")).toHaveCount(1);
 	});
 
-	test("initializes the API-free Black-Scholes runtime and reprices one input", async ({
+	test("defers Black-Scholes assets until visible, then initializes and reprices", async ({
 		page,
 	}) => {
 		const apiRequests: string[] = [];
+		const wasmAssetRequests: string[] = [];
 		const runtimeErrors: string[] = [];
 		page.on("request", (request) => {
 			if (request.url().includes("/api/")) apiRequests.push(request.url());
+			const pathname = new URL(request.url()).pathname;
+			if (pathname.startsWith("/wasm/blackscholes/")) {
+				wasmAssetRequests.push(pathname);
+			}
 		});
 		page.on("pageerror", (error) => runtimeErrors.push(error.message));
 		page.on("console", (message) => {
@@ -263,12 +268,29 @@ test.describe("Work routes @work", () => {
 			}
 		});
 
-		await page.goto("/work/black-scholes-wasm/");
+		await page.goto("/work/black-scholes-wasm/", { waitUntil: "networkidle" });
+		const demo = page.locator(".bs-demo");
 		const controls = page.locator("#bs-controls");
 		const price = page.locator("#bs-price");
 
+		expect(
+			await demo.evaluate(
+				(element) => element.getBoundingClientRect().top >= window.innerHeight,
+			),
+			"the demo starts below the viewport",
+		).toBe(true);
+		expect(wasmAssetRequests).toEqual([]);
+		await expect(controls).toHaveAttribute("aria-hidden", "true");
+		await expect(controls).toHaveAttribute("inert", "");
+
+		await demo.scrollIntoViewIfNeeded();
 		await expect(controls).not.toHaveAttribute("aria-hidden", "true");
+		await expect(controls).not.toHaveAttribute("inert", "");
 		await expect(price).toHaveText(/^\$\d+\.\d{4}$/);
+		expect(wasmAssetRequests).toEqual([
+			"/wasm/blackscholes/blackscholes_wasm.js",
+			"/wasm/blackscholes/blackscholes_wasm_bg.wasm",
+		]);
 		const initialPrice = await price.textContent();
 
 		await page.locator("#bs-spot").fill("110");
@@ -276,6 +298,28 @@ test.describe("Work routes @work", () => {
 		await expect(price).toHaveText(/^\$\d+\.\d{4}$/);
 		expect(apiRequests).toEqual([]);
 		expect(runtimeErrors).toEqual([]);
+	});
+
+	test("keeps the static Black-Scholes fallback when visible WASM loading fails", async ({
+		page,
+	}) => {
+		await page.route("**/wasm/blackscholes/*.wasm", (route) =>
+			route.abort("failed"),
+		);
+		await page.goto("/work/black-scholes-wasm/", {
+			waitUntil: "networkidle",
+		});
+
+		await page.locator(".bs-demo").scrollIntoViewIfNeeded();
+		await expect(page.locator("#bs-no-wasm")).toBeVisible();
+		await expect(page.locator("#bs-no-wasm")).toContainText(
+			"Could not load WASM pricer",
+		);
+		await expect(page.locator("#bs-controls")).toHaveAttribute(
+			"aria-hidden",
+			"true",
+		);
+		await expect(page.locator("#bs-controls")).toHaveAttribute("inert", "");
 	});
 
 	test("emits escaped item-specific CreativeWork JSON-LD with canonical Work URLs", async ({

@@ -156,7 +156,26 @@ test.describe("Signal / Proof capture audit @taste-audit", () => {
 				expect(response?.status()).toBe(200);
 				await expect(page.locator("main")).toBeVisible();
 				await waitForStableMedia(page);
+				if (surface.path === "/" && viewport.label === "mobile") {
+					expect(
+						await page.locator("[data-stage-pair]").evaluateAll((pairs) =>
+							pairs.map((pair) => {
+								const trigger = pair.querySelector<HTMLElement>(
+									"[data-stage-trigger]",
+								);
+								const panel =
+									pair.querySelector<HTMLElement>("[data-stage-panel]");
+								return `${trigger?.dataset.stageTrigger}:${panel?.dataset.stagePanel}:${pair.children[1] === panel}`;
+							}),
+						),
+					).toEqual([
+						"cryo-flow-sim:cryo-flow-sim:true",
+						"cli-fleet-synchronization-and-mcp-rollout:cli-fleet-synchronization-and-mcp-rollout:true",
+						"remote-workstation-recovery-and-operational-debugging:remote-workstation-recovery-and-operational-debugging:true",
+					]);
+				}
 				if (surface.path === "/work/black-scholes-wasm/") {
+					await page.locator(".bs-demo").scrollIntoViewIfNeeded();
 					await expect(page.locator("#bs-controls")).not.toHaveAttribute(
 						"aria-hidden",
 						"true",

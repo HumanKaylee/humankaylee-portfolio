@@ -26,56 +26,49 @@ const { projects } = Astro.props;
 		<ol class="project-stage__rows">
 			{
 				projects.map((project, index) => (
-					<li>
+					<li class="project-stage__pair" data-stage-pair={project.data.slug}>
 						<WorkRow project={project} index={index} />
+						<article
+							class="project-stage__panel"
+							data-stage-panel={project.data.slug}
+							aria-labelledby={`stage-trigger-${project.data.slug}`}
+						>
+							{project.data.media.kind === "evidence-flow" ? (
+								<MediaFrame media={project.data.media}>
+									<section
+										class="evidence-flow"
+										aria-label={project.data.media.alt}
+									>
+										<p class="evidence-flow__overview">
+											{project.data.architecture.overview}
+										</p>
+										<dl>
+											{project.data.evidence.values.map((value: WorkEntryData["evidence"]["values"][number]) => (
+												<div>
+													<dt>{value.label}</dt>
+													<dd>
+														<strong>{value.value}</strong>
+														<span>{value.detail}</span>
+													</dd>
+												</div>
+											))}
+										</dl>
+										<div class="evidence-flow__boundary">
+											<p>
+												<strong>Known limit</strong>
+												<span>{project.data.evidence.limits}</span>
+											</p>
+										</div>
+									</section>
+								</MediaFrame>
+							) : (
+								<MediaFrame media={project.data.media} />
+							)}
+						</article>
 					</li>
 				))
 			}
 		</ol>
-
-		<div class="project-stage__panels">
-			{
-				projects.map((project) => (
-					<article
-						class="project-stage__panel"
-						data-stage-panel={project.data.slug}
-						aria-labelledby={`stage-trigger-${project.data.slug}`}
-					>
-						{project.data.media.kind === "evidence-flow" ? (
-							<MediaFrame media={project.data.media}>
-								<section
-									class="evidence-flow"
-									aria-label={project.data.media.alt}
-								>
-									<p class="evidence-flow__overview">
-										{project.data.architecture.overview}
-									</p>
-									<dl>
-										{project.data.evidence.values.map((value: WorkEntryData["evidence"]["values"][number]) => (
-											<div>
-												<dt>{value.label}</dt>
-												<dd>
-													<strong>{value.value}</strong>
-													<span>{value.detail}</span>
-												</dd>
-											</div>
-										))}
-									</dl>
-									<div class="evidence-flow__boundary">
-										<p>
-											<strong>Known limit</strong>
-											<span>{project.data.evidence.limits}</span>
-										</p>
-									</div>
-								</section>
-							</MediaFrame>
-						) : (
-							<MediaFrame media={project.data.media} />
-						)}
-					</article>
-				))
-			}
-		</div>
 	</div>
 </section>
 
@@ -185,34 +178,53 @@ const { projects } = Astro.props;
 	}
 
 	.project-stage__body {
-		display: grid;
-		grid-template-columns: minmax(20rem, 0.8fr) minmax(0, 1.2fr);
-		gap: clamp(2rem, 5vw, 6rem);
-		align-items: start;
+		min-width: 0;
 	}
 
 	.project-stage__rows {
+		display: grid;
+		gap: var(--space-5);
 		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
 
-	.project-stage__rows li {
+	.project-stage__pair {
 		border-top: 1px solid var(--line);
 	}
 
-	.project-stage__rows li:last-child {
+	.project-stage__pair:last-child {
 		border-bottom: 1px solid var(--line);
-	}
-
-	.project-stage__panels {
-		display: grid;
-		min-width: 0;
-		gap: var(--space-4);
 	}
 
 	.project-stage__panel {
 		min-width: 0;
+		margin-bottom: var(--space-5);
+	}
+
+	.project-stage[data-enhanced="true"] .project-stage__rows {
+		grid-template-columns: minmax(20rem, 0.8fr) minmax(0, 1.2fr);
+		column-gap: clamp(2rem, 5vw, 6rem);
+		align-items: start;
+	}
+
+	.project-stage[data-enhanced="true"] .project-stage__pair {
+		display: contents;
+	}
+
+	.project-stage[data-enhanced="true"] .project-stage__pair :global(.work-row) {
+		grid-column: 1;
+		border-top: 1px solid var(--line);
+	}
+
+	.project-stage[data-enhanced="true"] .project-stage__pair:last-child :global(.work-row) {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.project-stage[data-enhanced="true"] .project-stage__panel {
+		grid-column: 2;
+		grid-row: 1 / span 3;
+		margin-bottom: 0;
 	}
 
 	.evidence-flow {
@@ -279,8 +291,7 @@ const { projects } = Astro.props;
 	}
 
 	@media (max-width: 64rem) {
-		.project-stage__heading,
-		.project-stage__body {
+		.project-stage__heading {
 			grid-template-columns: minmax(0, 1fr);
 		}
 

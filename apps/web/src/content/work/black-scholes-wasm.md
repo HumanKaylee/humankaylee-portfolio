@@ -12,7 +12,7 @@ constraints:
   - "Degenerate time-to-expiry and volatility inputs must return intrinsic value rather than NaN or a panic."
   - "Malformed input at the WASM boundary must return zeroed output rather than throw."
 architecture:
-  overview: "Rust is compiled with wasm-pack; a wasm_bindgen entry point deserializes input through serde-wasm-bindgen and the browser loads the module with client:visible."
+  overview: "Rust is compiled with wasm-pack; a wasm_bindgen entry point deserializes input through serde-wasm-bindgen and the browser loads the module when the demo enters view."
   diagramAlt: "Browser inputs pass through generated JavaScript glue to a Rust WebAssembly module that returns option prices and Greeks."
 decisions:
   - title: "Rust compiled to WASM"
@@ -25,7 +25,7 @@ decisions:
     alternatives:
       - "Allow NaN, panic, or a thrown malformed-input error."
     tradeoff: "The boundary avoids browser failures while making degenerate cases explicit."
-outcome: "The compiled module is 62 KB raw and 27 KB gzipped, loads when the island becomes visible, and computes sub-millisecond on a device capable of loading the page."
+outcome: "The compiled module is 62 KB raw and 27 KB gzipped, loads when the demo enters view, and computes sub-millisecond on a device capable of loading the page."
 lessons:
   - "A JavaScript implementation would be concise and sufficient for this precision, but Rust makes degenerate cases and the browser boundary explicit."
 evidence:
@@ -108,9 +108,9 @@ returns zeroed output rather than throwing. That boundary hardening is easier
 to express and verify in Rust than in hand-written JavaScript.
 
 The compiled binary is 62 KB raw, 27 KB gzipped — smaller than most hero
-images. It loads with `client:visible`, so it only fetches when the island
-scrolls into view. The compute itself is sub-millisecond on any device capable
-of loading the page.
+images. It loads when the demo enters view, so it does not fetch while the demo
+remains below the viewport. The compute itself is sub-millisecond on any device
+capable of loading the page.
 
 ## How to read the Greeks
 
