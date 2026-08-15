@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import { profile } from "../../data/profile";
 import { resumeContent } from "../../data/resume";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -12,28 +13,40 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 ---
 
 <BaseLayout
-	title={`${data.seo.title} | Joe Poznanski`}
+	title={`${data.seo.title} | ${profile.name}`}
 	description="Joe Poznanski: Principal Software Engineer for agentic AI and aerospace simulation. Summary, highlights, experience, and a downloadable PDF."
 	canonicalPath={data.seo.canonicalPath}
 	ogImage={data.seo.ogImage}
 	bodyClass="resume-print-route"
 >
-	<section class="page-shell resume-page" aria-labelledby="resume-title">
-		<header class="page-header resume-hero">
-			<p class="section-kicker">Resume</p>
-			<h1 id="resume-title">Joe Poznanski</h1>
-			<p class="resume-subtitle">{contact.title}</p>
-			<ul class="resume-meta-list" aria-label="Contact and credentials">
-				<li>{contact.location}</li>
-				<li>{contact.certs}</li>
-				<li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
-				<li><a href={contact.linkedinUrl} rel="me">{contact.linkedin}</a></li>
-			</ul>
-			<div class="resume-actions">
-				<a class="resume-download" data-touch-target="true" href={data.pdfDownloadPath} download>Download full resume (PDF)</a>
-				<span class="resume-clearance-chip">Secret / Top-Secret eligible</span>
+	<article class="page-shell resume-page" aria-labelledby="resume-title">
+		<header class="resume-hero">
+			<div class="resume-heading">
+				<p class="section-kicker">Résumé / Principal software engineer</p>
+				<h1 id="resume-title">{profile.name}</h1>
+				<p class="resume-subtitle">{contact.title}</p>
 			</div>
-			<nav class="section-jump-nav resume-section-nav" aria-label="Resume sections">
+
+			<div class="resume-contact">
+				<a data-touch-target="true" href={`mailto:${profile.email}`}>{profile.email}</a>
+				<a data-touch-target="true" href={profile.linkedin} rel="me">LinkedIn</a>
+				<span>{profile.location}</span>
+				<span>{contact.certs}</span>
+			</div>
+
+			<div class="resume-actions">
+				<a
+					class="signal-action resume-download"
+					data-touch-target="true"
+					href={data.pdfDownloadPath}
+					download
+				>
+					Download résumé PDF <span aria-hidden="true">↓</span>
+				</a>
+				<p>{clearance}</p>
+			</div>
+
+			<nav class="resume-section-nav" aria-label="Resume sections">
 				<a data-touch-target="true" href="#summary">Summary</a>
 				<a data-touch-target="true" href="#highlights">AI and automation</a>
 				<a data-touch-target="true" href="#experience">Experience</a>
@@ -41,120 +54,369 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 			</nav>
 		</header>
 
-		<article class="paper-panel resume-print-sheet" data-print-resume="true">
-			<section class="resume-section" id="summary">
-				<h2>Summary</h2>
-				<p class="resume-summary">{summary}</p>
-			</section>
-
-			<section class="resume-section" id="highlights">
-				<h2>Agentic AI &amp; automation highlights</h2>
-				<ul class="resume-bullets">
-					{highlights.map((h) => <li>{h}</li>)}
-				</ul>
-			</section>
-
-			<section class="resume-section" id="experience">
-				<h2>Experience</h2>
-				<div class="resume-experience">
-					{experience.map((job) => (
-						<div class="resume-job">
-							<div class="resume-job-head">
-								<div>
-									<p class="resume-job-company">{job.company} <span class="resume-job-place">· {job.place}</span></p>
-									<p class="resume-job-role">{job.role}</p>
-								</div>
-								<p class="resume-job-dates">{job.dates}</p>
-							</div>
-							<ul class="resume-bullets">
-								{job.bullets.map((b) => <li>{b}</li>)}
-							</ul>
-						</div>
-					))}
+		<div class="resume-body" data-print-resume="true">
+			<section class="resume-section" id="summary" aria-labelledby="summary-title">
+				<p class="resume-section-number" aria-hidden="true">01</p>
+				<div class="resume-section-content">
+					<h2 id="summary-title">Summary</h2>
+					<p class="resume-summary">{summary}</p>
 				</div>
 			</section>
 
-			<section class="resume-section" id="skills">
-				<h2>Technical skills</h2>
-				<dl class="resume-skills">
-					{skillGroups.map((g) => (
-						<div class="resume-skill-row">
-							<dt>{g.label}</dt>
-							<dd>{g.items}</dd>
-						</div>
-					))}
-				</dl>
+			<section class="resume-section" id="highlights" aria-labelledby="highlights-title">
+				<p class="resume-section-number" aria-hidden="true">02</p>
+				<div class="resume-section-content">
+					<h2 id="highlights-title">Agentic AI &amp; automation highlights</h2>
+					<ul class="resume-bullets">
+						{highlights.map((highlight) => <li>{highlight}</li>)}
+					</ul>
+				</div>
 			</section>
 
-			<section class="resume-section resume-clearance">
-				<h2>Clearance</h2>
-				<p>{clearance}</p>
+			<section class="resume-section" id="experience" aria-labelledby="experience-title">
+				<p class="resume-section-number" aria-hidden="true">03</p>
+				<div class="resume-section-content">
+					<h2 id="experience-title">Experience</h2>
+					<ol class="resume-experience">
+						{experience.map((job) => (
+							<li class="resume-job">
+								<article>
+									<header class="resume-job-head">
+										<div>
+											<h3 class="resume-job-company">{job.company}</h3>
+											<p class="resume-job-role">{job.role}</p>
+										</div>
+										<div class="resume-job-meta">
+											<p class="resume-job-dates">{job.dates}</p>
+											<p class="resume-job-place">{job.place}</p>
+										</div>
+									</header>
+									<ul class="resume-bullets">
+										{job.bullets.map((bullet) => <li>{bullet}</li>)}
+									</ul>
+								</article>
+							</li>
+						))}
+					</ol>
+				</div>
 			</section>
-		</article>
-	</section>
+
+			<section class="resume-section" id="skills" aria-labelledby="skills-title">
+				<p class="resume-section-number" aria-hidden="true">04</p>
+				<div class="resume-section-content">
+					<h2 id="skills-title">Technical skills</h2>
+					<dl class="resume-skills">
+						{skillGroups.map((group) => (
+							<div class="resume-skill-row">
+								<dt>{group.label}</dt>
+								<dd>{group.items}</dd>
+							</div>
+						))}
+					</dl>
+				</div>
+			</section>
+
+			<section class="resume-section resume-clearance" aria-labelledby="clearance-title">
+				<p class="resume-section-number" aria-hidden="true">05</p>
+				<div class="resume-section-content">
+					<h2 id="clearance-title">Clearance</h2>
+					<p>{clearance}</p>
+				</div>
+			</section>
+		</div>
+	</article>
 </BaseLayout>
 
 <style>
-	.resume-hero { max-width: 1020px; }
-	.resume-hero h1 { margin-bottom: 0.25rem; }
-	.resume-subtitle { font-size: 1.1rem; font-weight: 600; opacity: 0.92; margin: 0.25rem 0 0.5rem; }
-	.resume-meta-list {
+	.resume-page {
+		gap: 0;
+	}
+
+	.resume-page .section-kicker {
+		color: var(--color-muted);
+	}
+
+	.resume-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.65fr);
+		gap: var(--space-5) clamp(2rem, 6vw, 7rem);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.resume-heading {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.resume-heading h1 {
+		max-width: none;
+	}
+
+	.resume-subtitle {
+		max-width: 48rem;
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.resume-contact {
+		display: flex;
+		min-width: 0;
+		flex-wrap: wrap;
+		align-content: start;
+		gap: var(--space-1) var(--space-4);
+		border-top: 1px solid var(--line);
+		padding-top: var(--space-3);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.8rem;
+	}
+
+	.resume-contact > * {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.resume-contact a {
+		color: var(--color-ink);
+	}
+
+	.resume-actions {
+		display: flex;
+		min-width: 0;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-4);
+		grid-column: 1 / -1;
+	}
+
+	.resume-actions p {
+		max-width: 54rem;
+		color: var(--color-muted);
+		font-size: 0.9rem;
+	}
+
+	.resume-section-nav {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.35rem 0.85rem;
-		list-style: none;
+		gap: 0 var(--space-4);
+		grid-column: 1 / -1;
+		border-block: 1px solid var(--line);
+		padding-block: var(--space-1);
+	}
+
+	.resume-section-nav a {
+		font-weight: 700;
+	}
+
+	.resume-body {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.resume-section {
+		display: grid;
+		grid-template-columns: minmax(3rem, 0.25fr) minmax(0, 1.75fr);
+		gap: clamp(1.5rem, 5vw, 5rem);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+		scroll-margin-top: var(--space-4);
+	}
+
+	.resume-section-number,
+	.resume-job-meta {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.78rem;
+	}
+
+	.resume-section-content {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	.resume-section h2 {
+		font-size: clamp(2rem, 4vw, 4rem);
+	}
+
+	.resume-summary {
+		max-width: 68ch;
+		font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+		line-height: 1.7;
+	}
+
+	.resume-bullets {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 76ch;
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	.resume-bullets li {
+		padding-left: var(--space-1);
+		line-height: 1.65;
+	}
+
+	.resume-bullets li::marker {
+		color: var(--color-muted);
+	}
+
+	.resume-experience {
+		display: grid;
+		gap: 0;
 		margin: 0;
 		padding: 0;
-		font-size: 0.95rem;
-		line-height: 1.6;
-		opacity: 0.8;
+		list-style: none;
 	}
-	.resume-meta-list li:not(:last-child)::after {
-		content: "·";
-		margin-left: 0.85rem;
+
+	.resume-job {
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
 	}
-	.resume-meta-list a {
-		align-items: center;
-		color: inherit;
-		display: inline-flex;
-		min-height: 44px;
-		padding-inline: 0.2rem;
-		text-decoration: underline;
-		text-underline-offset: 3px;
+
+	.resume-job:first-child {
+		border-top: 0;
+		padding-top: 0;
 	}
-	.resume-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; margin-top: 1.25rem; }
-	.resume-download {
-		display: inline-block; padding: 0.7rem 1.3rem; border-radius: 999px;
-		background: #f4ecd8; color: #14110c; font-weight: 700; text-decoration: none;
+
+	.resume-job article {
+		display: grid;
+		gap: var(--space-4);
 	}
-	.resume-clearance-chip {
-		font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
-		padding: 0.35rem 0.75rem; border-radius: 999px; border: 1px solid rgba(120,150,120,0.5);
-		color: #9ec49a;
+
+	.resume-job-head {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(11rem, auto);
+		gap: var(--space-3) var(--space-5);
+		align-items: start;
 	}
-	.resume-section { margin-bottom: 2rem; }
-	.resume-section:last-child { margin-bottom: 0; }
-	.resume-section h2 {
-		font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
-		opacity: 0.65; margin-bottom: 0.85rem; border-bottom: 1px solid rgba(0,0,0,0.12); padding-bottom: 0.4rem;
+
+	.resume-job-company {
+		font-size: clamp(1.35rem, 2.5vw, 2rem);
 	}
-	.resume-summary { font-size: 1.05rem; line-height: 1.7; }
-	.resume-bullets { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.5rem; }
-	.resume-bullets li { line-height: 1.55; }
-	.resume-experience { display: grid; gap: 1.6rem; }
-	.resume-job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.55rem; flex-wrap: wrap; }
-	.resume-job-company { font-weight: 700; font-size: 1.05rem; }
-	.resume-job-place { font-weight: 400; opacity: 0.7; }
-	.resume-job-role { font-size: 0.95rem; opacity: 0.85; }
-	.resume-job-dates { font-size: 0.85rem; opacity: 0.65; white-space: nowrap; font-variant-numeric: tabular-nums; }
-	.resume-skills { display: grid; gap: 0.7rem; margin: 0; }
-	.resume-skill-row { display: grid; grid-template-columns: 180px 1fr; gap: 1rem; }
-	.resume-skill-row dt { font-weight: 700; font-size: 0.9rem; }
-	.resume-skill-row dd { margin: 0; opacity: 0.85; line-height: 1.5; }
-	@media (max-width: 640px) {
-		.resume-skill-row { grid-template-columns: 1fr; gap: 0.25rem; }
-		.resume-job-dates { white-space: normal; }
-		.resume-meta-list { display: grid; gap: 0.1rem; }
-		.resume-meta-list li:not(:last-child)::after { content: none; }
+
+	.resume-job-role {
+		margin-top: var(--space-1);
+		color: var(--color-muted);
+	}
+
+	.resume-job-meta {
+		display: grid;
+		gap: 0.25rem;
+		text-align: right;
+	}
+
+	.resume-job-meta p {
+		overflow-wrap: anywhere;
+	}
+
+	.resume-skills {
+		display: grid;
+		gap: 0;
+		margin: 0;
+	}
+
+	.resume-skill-row {
+		display: grid;
+		grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1.65fr);
+		gap: var(--space-4);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-3);
+	}
+
+	.resume-skill-row:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+
+	.resume-skill-row dt {
+		font-weight: 700;
+	}
+
+	.resume-skill-row dd {
+		margin: 0;
+		color: var(--color-muted);
+		overflow-wrap: anywhere;
+	}
+
+	@media (max-width: 48rem) {
+		.resume-hero,
+		.resume-section,
+		.resume-job-head,
+		.resume-skill-row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.resume-job-meta {
+			text-align: left;
+		}
+
+		.resume-section-number {
+			margin-bottom: calc(-1 * var(--space-4));
+		}
+	}
+
+	@media print {
+		@page {
+			margin: 0.55in;
+		}
+
+		:global(.resume-print-route) {
+			background: #fff;
+			color: #111;
+			font-size: 9.5pt;
+		}
+
+		:global(.resume-print-route .site-header),
+		:global(.resume-print-route .site-footer),
+		:global(.resume-print-route .skip-link),
+		.resume-download,
+		.resume-section-nav,
+		.resume-actions p,
+		.resume-section-number {
+			display: none;
+		}
+
+		:global(.resume-print-route .site-main) {
+			width: 100%;
+			padding: 0;
+		}
+
+		.resume-page,
+		.resume-hero,
+		.resume-section,
+		.resume-section-content,
+		.resume-job article {
+			gap: 0.12in;
+			padding: 0;
+		}
+
+		.resume-hero,
+		.resume-section {
+			grid-template-columns: minmax(0, 1fr);
+			padding-block: 0.14in;
+		}
+
+		.resume-heading h1 {
+			font-size: 25pt;
+		}
+
+		.resume-section h2 {
+			font-size: 14pt;
+		}
+
+		.resume-job-company {
+			font-size: 11.5pt;
+		}
+
+		.resume-summary,
+		.resume-bullets li {
+			line-height: 1.35;
+		}
+
+		.resume-job,
+		.resume-skill-row {
+			break-inside: avoid;
+			padding-block: 0.1in;
+		}
 	}
 </style>

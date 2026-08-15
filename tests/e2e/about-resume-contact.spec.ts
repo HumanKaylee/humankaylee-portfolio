@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+import { profile } from "../../apps/web/src/data/profile";
 import { resumeContent } from "../../apps/web/src/data/resume";
 
 test.describe("About, resume, and contact @primary-routes", () => {
@@ -103,5 +104,69 @@ test.describe("About, resume, and contact @primary-routes", () => {
 				job.bullets,
 			);
 		}
+	});
+
+	test("offers a working resume download and direct contact channels", async ({
+		page,
+		request,
+	}) => {
+		await page.goto("/contact/");
+		await expect(page.locator("form")).toHaveCount(0);
+		for (const [name, href] of [
+			["Email Joe", `mailto:${profile.email}`],
+			["LinkedIn", profile.linkedin],
+			["GitHub", profile.github],
+		] as const) {
+			await expect(
+				page.getByRole("link", { name, exact: true }),
+			).toHaveAttribute("href", href);
+		}
+
+		await page.goto("/resume/");
+		const download = page.getByRole("link", {
+			name: "Download résumé PDF",
+		});
+		await expect(download).toHaveAttribute(
+			"href",
+			"/downloads/joe-poznanski-resume.pdf",
+		);
+		expect(
+			(await request.get("/downloads/joe-poznanski-resume.pdf")).status(),
+		).toBe(200);
+	});
+
+	test("keeps resume and contact usable at narrow widths and in print", async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 320, height: 800 });
+
+		for (const path of ["/resume/", "/contact/"]) {
+			await page.goto(path);
+			expect(
+				await page.evaluate(
+					() => document.documentElement.scrollWidth - window.innerWidth,
+				),
+				`${path} has horizontal overflow`,
+			).toBeLessThanOrEqual(1);
+
+			const targetSizes = await page
+				.locator("main [data-touch-target='true']")
+				.evaluateAll((targets) =>
+					targets.map((target) => {
+						const bounds = target.getBoundingClientRect();
+						return { height: bounds.height, width: bounds.width };
+					}),
+				);
+			expect(targetSizes.length).toBeGreaterThan(0);
+			expect(
+				targetSizes.every(({ height, width }) => height >= 44 && width >= 44),
+			).toBe(true);
+		}
+
+		await page.goto("/resume/");
+		await page.emulateMedia({ media: "print" });
+		await expect(page.locator(".site-header")).toBeHidden();
+		await expect(page.getByLabel("Resume sections")).toBeHidden();
+		await expect(page.locator("[data-print-resume='true']")).toBeVisible();
 	});
 });
