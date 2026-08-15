@@ -3,7 +3,11 @@ import { getCollection } from "astro:content";
 
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
-import { homeScaffold } from "../lib/home-scaffold";
+import { profile } from "../data/profile";
+import {
+	primaryNavigation,
+	secondaryNavigation,
+} from "../data/site-navigation";
 import "../styles/global.css";
 
 type Props = {
@@ -33,7 +37,6 @@ const {
 	structuredData: pageStructuredData = [],
 	bodyClass,
 } = Astro.props;
-const scaffold = homeScaffold();
 const siteUrl = site.data.siteUrl.replace(/\/$/, "");
 const canonicalUrl = absoluteUrl(siteUrl, canonicalPath);
 
@@ -101,22 +104,12 @@ const structuredDataJson = JSON.stringify(structuredData).replace(
 			set:html={structuredDataJson}
 		/>
 	</head>
-	<body
-		class={bodyClass}
-		data-enhancement="static-first"
-		data-route-continuity="native-view-transitions"
-		data-webgl="optional"
-	>
+	<body class={bodyClass} data-enhancement="static-first">
 		<a class="skip-link" href="#main">Skip to content</a>
-		<noscript>
-			<p class="noscript-banner">
-				Core content is available without JavaScript or WebGL.
-			</p>
-		</noscript>
-		<SiteHeader nav={scaffold.primaryNav} />
+		<SiteHeader nav={primaryNavigation} profile={profile} />
 		<main id="main" class="site-main" tabindex="-1">
 			<slot />
 		</main>
-		<SiteFooter nav={scaffold.primaryNav} />
+		<SiteFooter nav={secondaryNavigation} profile={profile} />
 	</body>
 </html>

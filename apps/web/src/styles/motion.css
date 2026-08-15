@@ -1,0 +1,42 @@
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	nav.primary-nav a,
+	nav.primary-nav a::after,
+	.signal-link::after,
+	.skip-link {
+		transition: transform var(--motion-fast) var(--ease-out), background-color
+			var(--motion-fast) var(--ease-out);
+	}
+
+	.signal-link:hover::after,
+	.signal-link:focus-visible::after {
+		transform: translateX(0.25rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-delay: 0ms !important;
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-delay: 0ms !important;
+		transition-duration: 0.001ms !important;
+	}
+
+	[data-reveal],
+	.reveal,
+	.case-study-section,
+	.evidence-drawer {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}

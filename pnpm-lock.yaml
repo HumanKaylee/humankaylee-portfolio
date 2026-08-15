@@ -20,12 +20,9 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4
-      '@fontsource/archivo-narrow':
-        specifier: ^5.2.8
-        version: 5.2.8
-      '@fontsource/fraunces':
-        specifier: ^5.2.9
-        version: 5.2.9
+      '@fontsource-variable/archivo':
+        specifier: 5.3.0
+        version: 5.3.0
       '@fontsource/jetbrains-mono':
         specifier: ^5.2.8
         version: 5.2.8
@@ -571,11 +568,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource/archivo-narrow@5.2.8':
-    resolution: {integrity: sha512-uPyBqAuVP5V0k6tmMLEMf8yx5ytqctJ7nozydFwUtyV6seXw1AFikzvQUkd/WAy++fd+sYag2nKuqmaKS2cIzw==}
-
-  '@fontsource/fraunces@5.2.9':
-    resolution: {integrity: sha512-XDzuddBtoC7BZgZdBn6b7hsFZY2+V1hgN7yca5fBTKuHjb/lOd45a0Ji8dTUgFhPoL7RdGupo+bC2BFSt6UH8Q==}
+  '@fontsource-variable/archivo@5.3.0':
+    resolution: {integrity: sha512-HogK8FJelrD1o7TlZlkIVtHgc20bO5PZRWE7mUeUTdMN055alznQV6/00J00IBeu8FQAH4s3zW9UJNvKExXf+g==}
 
   '@fontsource/jetbrains-mono@5.2.8':
     resolution: {integrity: sha512-6w8/SG4kqvIMu7xd7wt6x3idn1Qux3p9N62s6G3rfldOUYHpWcc2FKrqf+Vo44jRvqWj2oAtTHrZXEP23oSKwQ==}
@@ -3660,9 +3654,7 @@ snapshots:
   '@esbuild/win32-x64@0.27.7':
     optional: true
 
-  '@fontsource/archivo-narrow@5.2.8': {}
-
-  '@fontsource/fraunces@5.2.9': {}
+  '@fontsource-variable/archivo@5.3.0': {}
 
   '@fontsource/jetbrains-mono@5.2.8': {}
 

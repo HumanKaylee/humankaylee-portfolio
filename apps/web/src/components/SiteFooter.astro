@@ -1,24 +1,22 @@
 ---
-import type { ShellLink } from "../lib/home-scaffold";
+import type { profile as profileData } from "../data/profile";
+import type { secondaryNavigation } from "../data/site-navigation";
 
 type Props = {
-	nav: readonly ShellLink[];
+	nav: typeof secondaryNavigation;
+	profile: typeof profileData;
 };
 
-const { nav } = Astro.props;
+const { nav, profile } = Astro.props;
 ---
 
 <footer class="site-footer">
 	<div class="footer-summary">
-		<p class="section-kicker">Build dependable systems</p>
-		<p>Principal engineer working across aerospace, automation, AI tooling, and operator-grade software.</p>
+		<p class="section-kicker">Systems Atelier</p>
+		<p>Principal engineer for systems that cannot drift.</p>
 	</div>
 	<div class="footer-links">
-		<nav class="footer-actions" aria-label="Portfolio actions">
-			<a data-touch-target="true" href="/resume/">Resume</a>
-			<a data-touch-target="true" href="mailto:josephpoznanski@gmail.com">Email Joe</a>
-		</nav>
-		<nav class="footer-nav" aria-label="Footer navigation">
+		<nav class="footer-nav" aria-label="Secondary navigation">
 			{
 				nav.map((item) => (
 					<a data-touch-target="true" href={item.href}>
@@ -26,7 +24,11 @@ const { nav } = Astro.props;
 					</a>
 				))
 			}
-			<a data-touch-target="true" href="/changelog/">Site changelog</a>
+		</nav>
+		<nav class="footer-actions" aria-label="Joe Poznanski elsewhere">
+			<a data-touch-target="true" href={profile.github}>GitHub</a>
+			<a data-touch-target="true" href={profile.linkedin}>LinkedIn</a>
+			<a data-touch-target="true" href={`mailto:${profile.email}`}>Email</a>
 		</nav>
 	</div>
 </footer>
