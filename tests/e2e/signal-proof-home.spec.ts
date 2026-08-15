@@ -157,6 +157,63 @@ test("progressively enhances exactly one approved flagship while retaining norma
 	).toHaveCount(0);
 });
 
+test("keeps project proof inline on mobile without an enhancement-only selection", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 390, height: 844 });
+	await page.goto("/");
+
+	const stage = page.locator("[data-project-stage]");
+	const triggers = page.locator("[data-stage-trigger]");
+	const panels = page.locator("[data-stage-panel]");
+
+	await expect(stage).not.toHaveAttribute("data-enhanced");
+	await expect(triggers).toHaveCount(3);
+	expect(
+		await triggers.evaluateAll((links) =>
+			links.map((link) => link.getAttribute("href")),
+		),
+	).toEqual(flagshipHrefs);
+	await expect(panels).toHaveCount(3);
+	for (const panel of await panels.all()) {
+		await expect(panel).toBeVisible();
+	}
+	expect(
+		await triggers.evaluateAll((links) =>
+			links.map((link) => link.hasAttribute("aria-current")),
+		),
+	).toEqual([false, false, false]);
+});
+
+test("restores inline project proof when the viewport leaves the enhancement mode", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1440, height: 1000 });
+	await page.goto("/");
+
+	const stage = page.locator("[data-project-stage]");
+	const panels = page.locator("[data-stage-panel]");
+
+	await expect(stage).toHaveAttribute("data-enhanced", "true");
+	await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(1);
+
+	await page.setViewportSize({ width: 390, height: 844 });
+	await expect(stage).not.toHaveAttribute("data-enhanced");
+	for (const panel of await panels.all()) {
+		await expect(panel).toBeVisible();
+	}
+	await expect(page.locator("[data-stage-trigger][aria-current]")).toHaveCount(
+		0,
+	);
+
+	await page.setViewportSize({ width: 1440, height: 1000 });
+	await expect(stage).toHaveAttribute("data-enhanced", "true");
+	await expect(
+		page.locator('[data-stage-trigger][aria-current="true"]'),
+	).toHaveCount(1);
+	await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(1);
+});
+
 test("selects a panel on pointer and keyboard focus while preserving normal link navigation", async ({
 	page,
 }) => {
@@ -184,6 +241,9 @@ test("selects a panel on pointer and keyboard focus while preserving normal link
 	).toBeVisible();
 
 	await recovery.focus();
+	expect(
+		await recovery.evaluate((trigger) => document.activeElement === trigger),
+	).toBe(true);
 	await expect(selectedTriggers).toHaveCount(1);
 	await expect(recovery).toHaveAttribute("aria-current", "true");
 	await expect(visiblePanels).toHaveCount(1);
@@ -199,6 +259,25 @@ test("selects a panel on pointer and keyboard focus while preserving normal link
 		),
 		recovery.click(),
 	]);
+});
+
+test.describe("inline project proof for coarse pointers", () => {
+	test.use({ hasTouch: true });
+
+	test("leaves all panels visible even at desktop width", async ({ page }) => {
+		await page.setViewportSize({ width: 1440, height: 1000 });
+		await page.goto("/");
+
+		await expect(page.locator("[data-project-stage]")).not.toHaveAttribute(
+			"data-enhanced",
+		);
+		await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(
+			3,
+		);
+		await expect(
+			page.locator("[data-stage-trigger][aria-current]"),
+		).toHaveCount(0);
+	});
 });
 
 test("uses the responsive Cryogenic Flow poster without loading homepage video playback", async ({

@@ -97,18 +97,47 @@ const { projects } = Astro.props;
 		}
 	}
 
+	function restoreInlineStage(stage: HTMLElement) {
+		delete stage.dataset.enhanced;
+
+		for (const trigger of stage.querySelectorAll<HTMLElement>(
+			"[data-stage-trigger]",
+		)) {
+			trigger.removeAttribute("aria-current");
+		}
+
+		for (const panel of stage.querySelectorAll<HTMLElement>(
+			"[data-stage-panel]",
+		)) {
+			panel.hidden = false;
+		}
+	}
+
 	for (const stage of document.querySelectorAll<HTMLElement>(
 		"[data-project-stage]",
 	)) {
 		const triggers = stage.querySelectorAll<HTMLElement>("[data-stage-trigger]");
 		const initialSlug = triggers[0]?.dataset.stageTrigger;
+		const desktopInteraction = window.matchMedia(
+			"(min-width: 64.0625rem) and (hover: hover) and (pointer: fine)",
+		);
 
 		if (!initialSlug) {
 			continue;
 		}
 
-		stage.dataset.enhanced = "true";
-		activate(stage, initialSlug);
+		const updateStage = () => {
+			if (!desktopInteraction.matches) {
+				restoreInlineStage(stage);
+				return;
+			}
+
+			stage.dataset.enhanced = "true";
+			activate(stage, initialSlug);
+		};
+
+		updateStage();
+		desktopInteraction.addEventListener("change", updateStage);
 
 		for (const trigger of triggers) {
 			const slug = trigger.dataset.stageTrigger;
@@ -116,7 +145,11 @@ const { projects } = Astro.props;
 				continue;
 			}
 
-			const select = () => activate(stage, slug);
+			const select = () => {
+				if (desktopInteraction.matches) {
+					activate(stage, slug);
+				}
+			};
 			trigger.addEventListener("pointerenter", select);
 			trigger.addEventListener("focusin", select);
 			trigger.addEventListener("click", select);
