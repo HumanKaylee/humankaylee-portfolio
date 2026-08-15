@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { selectLatestCurrentEntry } from "../../data/current-entry";
 import { resumeContent } from "../../data/resume";
 import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -14,9 +15,9 @@ type UsesSection = UsesEntry["data"]["sections"][number];
 type UsesItem = UsesSection["items"][number];
 type ReadingItem = ReadingEntry["data"]["items"][number];
 
-const latestNow = ((await getCollection("now")) as NowEntry[])
-	.filter((entry: NowEntry) => entry.data.status === "current")
-	.sort((left, right) => right.data.date.localeCompare(left.data.date))[0];
+const latestNow = selectLatestCurrentEntry(
+	(await getCollection("now")) as NowEntry[],
+);
 const latestUses = ((await getCollection("uses")) as UsesEntry[]).sort(
 	(left, right) =>
 		right.data.lastReviewed.localeCompare(left.data.lastReviewed),

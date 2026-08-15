@@ -4,7 +4,7 @@
 
 Implemented `/about/` as a static, evidence-led career narrative. The page reads the latest `now`, `uses`, and `reading` entries at build time, selects current focus, tools, and active reading, and combines them with the approved résumé summary and experience context. It also presents operating principles, complete semantic section structure, responsive layouts, and marked 44px links without requiring JavaScript.
 
-Notes now has a quiet technical index centered on the Black–Scholes article. The three portfolio-operation notes are intentionally absent from the index, while their source files, direct static routes, and RSS entries remain intact. Note chrome no longer calls the writing a build log. The Black–Scholes note links to the canonical Work route that owns the live WASM demo, avoiding duplicate interactive-demo ownership.
+Notes now has a quiet technical index centered on the Black–Scholes article. The three portfolio-operation note source files remain intact, while their index entries, direct static routes, and RSS items are intentionally absent. Note chrome no longer calls the writing a build log. The Black–Scholes note links to the canonical Work route that owns the live WASM demo, avoiding duplicate interactive-demo ownership.
 
 Primary navigation remains exactly Work, About, Résumé, Contact. The footer presents Notes, Now, Uses, and Reading under the labeled secondary navigation, separate from GitHub, LinkedIn, and Email.
 
@@ -32,7 +32,7 @@ No content source, global style, navigation data, Work route, sitemap, redirect,
 - Task 8 E2E: PASS, 3/3 About, Notes, and RSS tests.
 - Biome on all six owned code/test files: PASS.
 - `pnpm typecheck`: PASS, 0 errors and 0 warnings; 13 pre-existing deprecation hints.
-- `pnpm build`: PASS, 18 pages built, including `/about/`, the Notes index, all source-note detail routes, and all Work routes.
+- Initial pre-review `pnpm build`: PASS, 18 pages built. This result was superseded by the corrective build below, which excludes the three operational note routes and builds 15 pages.
 - Generated-output probes: PASS; About contains the selected current focus, Rust, Blue Origin, Crafting Interpreters, and secondary footer navigation, while About and the Notes index contain none of the guarded internal/build-log phrases.
 
 The brief's combined E2E command produced 9 passes and 16 failures, all in the out-of-scope, pre-rewrite `tests/e2e/static-shell.spec.ts`. Those stale assertions require removed Systems Atelier hero, Projects routes, atlas/WebGL presentation, old Notes copy, and the deleted noscript banner. The approved plan assigns replacement of that file's stale shell assertions to Task 11; no assertion was weakened or edited here.
@@ -41,7 +41,7 @@ The successful build still emits the known missing `caseStudies` and `projects` 
 
 ## Risks and tradeoffs
 
-- The index suppression uses an explicit three-slug set. This preserves source and discovery continuity while preventing accidental removal based on broad title/tag heuristics; a future portfolio-operation note must be classified deliberately.
+- The index suppression uses an explicit three-slug set. This preserves the source files while preventing accidental publication or removal based on broad title/tag heuristics; a future portfolio-operation note must be classified deliberately.
 - The standalone note is now prose plus a clear link to `/work/black-scholes-wasm/`; the Work record remains the only owner of the live demo, matching the unified Work model.
 - Build-time selections intentionally omit the `Refining this portfolio` Now item so the About page stays visitor-focused. They retain the latest source-entry sort and will update when newer collection entries are added.
 - No push, deploy, publish, or other outward-facing action was performed.
@@ -105,5 +105,27 @@ Addressed every accepted review finding without changing the visible résumé fa
 ## Corrective commit
 
 - Message: `fix: keep About and Notes visitor focused`
+
+DONE
+
+---
+
+## Review round 2 test-quality pass
+
+Replaced implementation-syntax assertions with behavior that fails when the visitor output or selection rule diverges from shared data.
+
+- RED: `pnpm exec vitest run apps/web/src/data/current-entry.test.ts --configLoader runner` failed because `./current-entry` did not exist. The fixture deliberately placed a newer archived record ahead of an older current record.
+- GREEN unit: the same focused Vitest command passed 1/1 after adding `selectLatestCurrentEntry`; the contract also proves the selector does not mutate the input order.
+- GREEN E2E: `pnpm exec playwright test tests/e2e/about-resume-contact.spec.ts tests/e2e/notes-rss.spec.ts --workers=1` passed 6/6. About and Résumé assertions import expected summary and experience values from `resumeContent` and compare them to rendered output.
+- Biome passed on the two selector files, About page, and About/Resume E2E file.
+- `pnpm typecheck` passed with 0 errors and 0 warnings; the same 13 deprecation hints remain outside Task 8 scope.
+- About now calls the pure selector. Its rendered output is unchanged.
+- Removed the source-file import regexes and inline-filter regex from `tests/e2e/about-resume-contact.spec.ts`.
+- Created `apps/web/src/data/current-entry.ts` and `apps/web/src/data/current-entry.test.ts`; modified About, the About/Resume E2E contract, and this report.
+- No push, deploy, publish, dependency change, or unrelated edit was performed.
+
+## Review round 2 commit
+
+- Message: `test: verify About from shared data`
 
 DONE
