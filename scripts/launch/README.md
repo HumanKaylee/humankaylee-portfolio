@@ -1,56 +1,65 @@
-# Launch harness — M3 + M4 scripts
+# Launch harness — M3 + M4 read-only probes
 
-Pre-prepared scripts that run the deterministic parts of M3 (DNS+TLS+routes) and M4 (production Lighthouse + Playwright + contact-form smoke) once the operator finishes the 8 manual steps in `runbooks/DEPLOYMENT.md § "M1 — Frontend Deploy: Operator Handoff"` and the D-03 hosting decision in `runbooks/HUMAN_DECISIONS_QUEUE.md`.
+These scripts cover the deterministic, read-only parts of public-origin
+verification after an operator has completed the authorized deployment steps.
+They do not deploy, modify remote state, submit visitor data, close issues, or
+grant launch approval.
 
 ## Files
 
 | Script | Purpose | Runtime | Idempotency |
-|---|---|---|---|
-| `m3-dns-verify.sh` | DNS A → CF anycast, TLS valid, 12 critical routes 200, API /api/health, WASM `application/wasm` content-type | < 5 min if DNS already propagated; up to 15 min with retry ladder | Safe — read-only |
-| `m4-production-smoke.sh` | Lighthouse on 5 pages, Playwright @production, contact-form e2e | ~5–10 min | One contact-form POST per run, tagged `M4-smoke-<ts>` for cleanup |
+| --- | --- | --- | --- |
+| `m3-dns-verify.sh` | Verify DNS, TLS, final Signal / Proof routes, canonical URLs, résumé PDF, static artifacts, WASM, and legacy redirect inputs | Under 5 minutes after DNS propagation; up to about 8 minutes with the retry ladder | Safe and read-only against the public origin |
+| `m4-production-smoke.sh` | Run Lighthouse on five current pages, optional read-only Playwright checks, static Contact direct channels, and the local bundle gate | About 5–10 minutes | Safe and read-only against the public origin |
+
+The old public paths are legacy redirect inputs only. They must redirect to
+canonical Work destinations and must never be counted as successful final-page
+targets.
 
 ## Usage
 
-After the operator completes the 8 manual steps (Cloudflare account + Pages project + domain + API token + GitHub secrets + custom-domain binding + first deploy + backend deploy per D-03 pick):
+Run only after the operator has approved the target public origin:
 
 ```bash
 cd /c/Users/joepo/projects/humankaylee-portfolio
 chmod +x scripts/launch/*.sh
 
-# M3 — DNS + TLS + routes + API + WASM
+# M3 — DNS + TLS + final routes + canonical/redirect/static assets
 ./scripts/launch/m3-dns-verify.sh
 
-# M4 — production Lighthouse + Playwright + contact form
+# M4 — production Lighthouse + optional Playwright + static Contact proof
 ./scripts/launch/m4-production-smoke.sh
 ```
 
 Both scripts:
-- Read `DOMAIN` (default `humankaylee.dev`) and `API_DOMAIN` (default `api.humankaylee.dev`) from env.
-- Append a structured row to `runbooks/LAUNCH_EVIDENCE.md` on PASS.
-- Exit with codes from the goal-plan Section 11B halt-on-failure table (0=PASS, 1=permanent, 2=transient exhausted, 3=preflight fail, 4=operator-pause).
 
-## Override examples
+- Read `DOMAIN` (default `humankaylee.dev`) from the environment.
+- Perform GET, HEAD, DNS, TLS, or browser-audit probes only.
+- Write local artifacts under `test-results/` and may append a local evidence
+  row after every probe passes.
+- Exit using the established halt-on-failure values: 0 pass, 1 permanent
+  failure, 2 exhausted transient failure, 3 preflight failure, 4 operator
+  pause.
+
+## Override example
 
 ```bash
-DOMAIN=joepo.engineering API_DOMAIN=api.joepo.engineering ./scripts/launch/m3-dns-verify.sh
+DOMAIN=joepo.engineering ./scripts/launch/m3-dns-verify.sh
+DOMAIN=joepo.engineering ./scripts/launch/m4-production-smoke.sh
 ```
 
 ## Retry behavior
 
-`m3-dns-verify.sh` has a retry ladder of `[60, 120, 300]` seconds for DNS propagation, matching the canonical plan's transient-retry policy. Max wait per check ≈ 7.7 min.
+`m3-dns-verify.sh` uses the `[60, 120, 300]`-second DNS retry ladder. It does
+not retry permanent route, canonical, asset, or redirect-contract failures.
 
-`m4-production-smoke.sh` does NOT auto-retry — Lighthouse score variance is real and a failed run is usually a real signal, not a transient blip.
+`m4-production-smoke.sh` does not auto-retry. Lighthouse variance and a failed
+public-origin probe are evidence to inspect, not conditions to hide with a
+loop.
 
-## After M4 passes
+## Evidence boundary
 
-M5 redaction is already approved (4/4 case studies green). M6 launch checklist closure runs:
-
-```bash
-# M6 closure (manual or scripted)
-node scripts/final-launch-checklist-contract.test.mjs    # all rows green
-gh pr view 6 --json mergeStateStatus -q .mergeStateStatus  # expect CLEAN
-gh pr merge 6 --merge --delete-branch=false                # operator click
-git tag v1.0.0 && git push origin v1.0.0
-```
-
-Then the 4 P0 issues (#63, #64, #65, #69) auto-close on merge if the PR description has `Closes #63, #64, #65, #69`; otherwise close them manually with a reference to the v1.0.0 tag.
+A passing M3 or M4 run proves only the named public-origin checks at that time.
+It does not authorize a merge, tag, deploy, issue closure, or launch. Record
+the exact origin, commit, artifacts, and operator review separately before any
+outward-facing action.

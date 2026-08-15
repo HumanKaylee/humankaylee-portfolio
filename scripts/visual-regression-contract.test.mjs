@@ -53,20 +53,25 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	expectContains(ci, "pnpm test:visual");
 	expectContains(runbook, "Run visual regression gate");
 	expectContains(runbook, "notes");
-	expectContains(runbook, "note-detail");
 	expectContains(runbook, "/notes/");
-	expectContains(
-		runbook,
-		"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-	);
 	const visualSpec = readRequiredFile(files.visualSpec);
-	expectContains(visualSpec, 'label: "notes"');
-	expectContains(visualSpec, 'label: "note-detail"');
-	expectContains(visualSpec, 'path: "/notes/"');
-	expectContains(
-		visualSpec,
-		'path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"',
-	);
+	for (const [label, path] of [
+		["home", "/"],
+		["work", "/work/"],
+		["work-cryo", "/work/cryo-flow-sim/"],
+		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
+		[
+			"work-remote-recovery",
+			"/work/remote-workstation-recovery-and-operational-debugging/",
+		],
+		["about", "/about/"],
+		["resume", "/resume/"],
+		["contact", "/contact/"],
+		["notes", "/notes/"],
+	]) {
+		expectContains(visualSpec, `label: "${label}"`);
+		expectContains(visualSpec, `path: "${path}"`);
+	}
 	expectContains(playwrightConfig, "testIgnore");
 	expectContains(playwrightConfig, "visual-regression.spec.ts");
 	assert.ok(

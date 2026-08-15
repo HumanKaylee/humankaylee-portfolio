@@ -15,16 +15,20 @@ function requireCaptureDir() {
 
 const surfaces = [
 	{ label: "home", path: "/" },
-	{ label: "projects", path: "/projects/" },
+	{ label: "work", path: "/work/" },
+	{ label: "work-cryo", path: "/work/cryo-flow-sim/" },
+	{
+		label: "work-cli-fleet",
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
+	},
+	{
+		label: "work-remote-recovery",
+		path: "/work/remote-workstation-recovery-and-operational-debugging/",
+	},
+	{ label: "about", path: "/about/" },
 	{ label: "resume", path: "/resume/" },
 	{ label: "contact", path: "/contact/" },
-	{ label: "now", path: "/now/" },
-	{ label: "uses", path: "/uses/" },
-	{ label: "reading", path: "/reading/" },
-	{
-		label: "project-detail",
-		path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
-	},
+	{ label: "notes", path: "/notes/" },
 ] as const;
 
 const viewports = [
@@ -48,11 +52,12 @@ test("keeps the homepage hierarchy compact at desktop and mobile @taste-audit", 
 			};
 		});
 	expect(desktopMetrics.height / desktopMetrics.lineHeight).toBeLessThanOrEqual(
-		3.1,
+		4.1,
 	);
 	await expect(
-		page.getByRole("navigation", { name: "Primary calls to action" }),
+		page.getByRole("link", { name: /View selected work/i }),
 	).toBeVisible();
+	await expect(page.locator(".project-stage")).toBeVisible();
 
 	await page.setViewportSize({ width: 390, height: 844 });
 	await page.reload({ waitUntil: "networkidle" });
@@ -66,9 +71,10 @@ test("keeps the homepage hierarchy compact at desktop and mobile @taste-audit", 
 				).size,
 		);
 	expect(navRows).toBeLessThanOrEqual(2);
+	await expect(page.locator("#hero-title")).toBeVisible();
 });
 
-test.describe("taste-audit @taste-audit", () => {
+test.describe("Signal / Proof capture audit @taste-audit", () => {
 	test.skip(
 		!captureDir,
 		"Set TASTE_AUDIT_CAPTURE_DIR to capture local evidence.",
@@ -86,7 +92,7 @@ test.describe("taste-audit @taste-audit", () => {
 					waitUntil: "networkidle",
 				});
 
-				expect(response?.status()).toBeLessThan(400);
+				expect(response?.status()).toBe(200);
 				await expect(page.locator("main")).toBeVisible();
 				await page.screenshot({
 					fullPage: true,

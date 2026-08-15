@@ -305,9 +305,12 @@ test("uses the responsive Cryogenic Flow poster without loading homepage video p
 		await expect(poster).toHaveAttribute("height", "1080");
 		await expect(poster).toHaveAttribute(
 			"src",
-			"/media/cryo-flow-sim-stage1-poster.png",
+			"/media/cryo-flow-sim-stage1-1440.webp",
 		);
 	}
+	await expect(
+		page.locator('main img[src="/media/cryo-flow-sim-stage1-poster.png"]'),
+	).toHaveCount(0);
 	await expect(page.locator("main video")).toHaveCount(0);
 });
 

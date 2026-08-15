@@ -41,8 +41,9 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 		"@accessibility",
 		"@security",
 		"@api-down",
-		"@api-telemetry",
 		"@journey",
+		"@static-shell",
+		"@visual-surfaces",
 		"@quality",
 	]) {
 		expectContains(quality, `\`${gate}\``, `dedicated ${gate} gate tag`);
@@ -64,17 +65,17 @@ test("quality runbook keeps launch-gate wording phase-neutral and artifact-backe
 	);
 	expectContains(
 		quality,
-		'`pnpm test:e2e -- --grep "@api-telemetry"` verifies the frontend telemetry enhancement path with stubbed API responses while preserving the static fallback boundary.',
-		"API telemetry local gate",
+		'`pnpm test:e2e -- --grep "@static-shell|@visual-surfaces"` verifies core static shell and art-directed surface coverage, including notes/build-log index and detail routes, as local QA evidence only.',
+		"static shell and visual surface local gate",
 	);
 	expectContains(
 		quality,
-		'`pnpm test:e2e -- --grep "@journey"` verifies recruiter, engineer, and contact evaluator journeys across the existing static launch paths.',
+		'`pnpm test:e2e -- --grep "@journey"` verifies the Home-to-Work proof journey, resume PDF journey, and direct-email journey.',
 		"journey smoke local gate",
 	);
 	expectContains(
 		quality,
-		'`pnpm test:e2e -- --grep "@quality"` runs the static quality matrix: no-JS, reduced-motion, privacy, route-coverage, and accessibility checks on the core route set.',
+		'`pnpm test:e2e -- --grep "@quality"` runs the static quality matrix: no-JavaScript, reduced-motion, privacy, route, and accessibility checks on the launch routes.',
 		"static quality matrix local gate",
 	);
 	expectContains(
@@ -118,8 +119,13 @@ test("quality runbook documents visual CI triage before reruns or snapshot chang
 	);
 	expectContains(
 		quality,
-		'`pnpm exec playwright test tests/e2e/no-webgl.spec.ts --grep "captures no-webgl-projects-fallback"`',
+		"`pnpm exec playwright test tests/e2e/no-webgl.spec.ts`",
 		"focused no-WebGL reproduction command",
+	);
+	expectContains(
+		quality,
+		"`no-webgl-signal-proof-home.png`",
+		"current no-WebGL visual baseline",
 	);
 	expectContains(quality, "`pnpm test:e2e`", "full E2E reproduction command");
 	expectContains(
@@ -136,5 +142,11 @@ test("quality runbook documents visual CI triage before reruns or snapshot chang
 		quality,
 		"If the same visual check fails again in CI, treat it as repeatable CI-only drift and investigate before changing snapshots.",
 		"repeat failure boundary",
+	);
+
+	assert.doesNotMatch(
+		quality,
+		/@api-telemetry|no-webgl-projects-fallback|project atlas|constellation/i,
+		"quality runbook must not retain retired API telemetry or atlas visual surfaces",
 	);
 });

@@ -10,8 +10,8 @@ const files = {
 	evidence: "runbooks/LAUNCH_EVIDENCE.md",
 	fallbackRunbook: "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md",
 	noWebglSpec: "tests/e2e/no-webgl.spec.ts",
-	projectAtlas: "apps/web/src/components/ProjectAtlas.astro",
-	projectAtlasSpec: "tests/e2e/project-atlas.spec.ts",
+	projectStage: "apps/web/src/components/ProjectStage.astro",
+	retiredAtlasLoader: "apps/web/public/scripts/project-constellation.mjs",
 	quality: "runbooks/QUALITY.md",
 };
 
@@ -63,14 +63,18 @@ test("B-048 accessibility audit has a dedicated artifact and checklist contract"
 	expectContains(accessibility, "# Accessibility Audit Runbook");
 	expectContains(accessibility, "Status: local and CI evidence only");
 	expectContains(accessibility, "not production launch evidence");
-	expectContains(accessibility, "Page-by-page checklist");
-	expectContains(accessibility, "Headings");
-	expectContains(accessibility, "Landmarks");
-	expectContains(accessibility, "Keyboard");
-	expectContains(accessibility, "Contrast");
-	expectContains(accessibility, "Touch targets");
-	expectContains(accessibility, "Alt text");
-	expectContains(accessibility, "Animation summary");
+	for (const requirement of [
+		"Page-by-page checklist",
+		"Headings",
+		"Landmarks",
+		"Keyboard",
+		"Contrast",
+		"Touch targets",
+		"Alt text",
+		"Animation summary",
+	]) {
+		expectContains(accessibility, requirement);
+	}
 	expectContains(accessibility, 'pnpm test:e2e -- --grep "@accessibility"');
 	expectContains(accessibility, 'pnpm test:e2e -- --grep "@keyboard"');
 	expectContains(
@@ -79,75 +83,128 @@ test("B-048 accessibility audit has a dedicated artifact and checklist contract"
 	);
 
 	expectContains(quality, "runbooks/ACCESSIBILITY_AUDIT.md");
+	for (const currentSurface of [
+		"/work/",
+		"/work/cryo-flow-sim/",
+		"/work/cli-fleet-synchronization-and-mcp-rollout/",
+		"/work/remote-workstation-recovery-and-operational-debugging/",
+		"ProjectStage",
+		"EvidenceStrip",
+		"Static direct contact channels",
+	]) {
+		expectContains(accessibility, currentSurface);
+	}
+	for (const retiredSurface of [
+		"/projects/",
+		"/case-studies/",
+		"project atlas",
+		"constellation",
+		"evidence drawer",
+		"contact form",
+		"API outage state",
+	]) {
+		expectNotContains(accessibility, retiredSurface);
+	}
 	expectContains(evidence, "Accessibility audit checklist");
 	expectContains(evidence, "runbooks/ACCESSIBILITY_AUDIT.md");
 });
 
-test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", () => {
+test("B-049 preserves rigorous static and no-WebGL evidence for Signal / Proof", () => {
 	const backlog = readRequiredFile(files.backlog);
 	const evidence = readRequiredFile(files.evidence);
 	const fallback = readRequiredFile(files.fallbackRunbook);
 	const noWebglSpec = readRequiredFile(files.noWebglSpec);
-	const projectAtlas = readRequiredFile(files.projectAtlas);
-	const projectAtlasSpec = readRequiredFile(files.projectAtlasSpec);
+	const projectStage = readRequiredFile(files.projectStage);
 	const quality = readRequiredFile(files.quality);
 
 	expectContains(backlog, "### B-049: Add reduced-motion and no-WebGL QA pass");
 	expectContains(backlog, "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md");
 	expectContains(
 		backlog,
-		'pnpm test:e2e -- --grep "@reduced-motion|@motion|@constellation"',
-		"B-049 focused Playwright command",
-	);
-	expectContains(
-		backlog,
 		"scripts/accessibility-and-fallback-qa-contract.test.mjs",
 		"B-049 contract command",
 	);
-
 	expectContains(fallback, "# Motion And WebGL Fallback QA Runbook");
 	expectContains(fallback, "Status: local and CI evidence only");
 	expectContains(fallback, "not production launch evidence");
 	expectContains(fallback, "Reduced-motion evidence");
 	expectContains(fallback, "No-WebGL fallback evidence");
-	expectContains(fallback, "tests/e2e/visual-regression.spec.ts-snapshots");
-	expectContains(fallback, "tests/e2e/no-webgl.spec.ts");
-	expectContains(fallback, "no-webgl-projects-fallback");
-	expectContains(fallback, "projects-desktop-linux.png");
-	expectContains(fallback, "projects-mobile-linux.png");
 	expectContains(
 		fallback,
 		"pnpm exec playwright test tests/e2e/no-webgl.spec.ts",
 	);
 	expectContains(
 		fallback,
-		"pnpm exec playwright test tests/e2e/no-webgl.spec.ts --update-snapshots",
-	);
-	expectContains(fallback, 'pnpm test:e2e -- --grep "@reduced-motion"');
-	expectContains(fallback, 'pnpm test:e2e -- --grep "@motion"');
-	expectContains(fallback, 'pnpm test:e2e -- --grep "@constellation"');
-	expectContains(fallback, "HTML/SVG first");
-	expectContains(fallback, "direct project-detail links");
-	expectContains(projectAtlasSpec, "direct-link visual index");
-	expectContains(projectAtlasSpec, "script[data-constellation-loader]");
-	expectContains(projectAtlasSpec, "toHaveCount( 0");
-	expectNotContains(projectAtlas, "project-constellation.mjs");
-	expectNotContains(projectAtlas, "constellationReady");
-	expectContains(
-		fallback,
 		"node --test scripts/accessibility-and-fallback-qa-contract.test.mjs",
 	);
-
 	expectContains(quality, "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md");
+	for (const currentSurface of [
+		"ProjectStage",
+		"EvidenceStrip",
+		".project-stage",
+		".work-row",
+		"[data-stage-panel]",
+		"no-webgl-signal-proof-home-linux.png",
+		"work-desktop-linux.png",
+		"work-cryo-desktop-linux.png",
+		"Static direct contact channels",
+	]) {
+		expectContains(fallback, currentSurface);
+	}
+	for (const retiredSurface of [
+		"project atlas",
+		"constellation",
+		"systems map",
+		"projects-desktop-linux.png",
+		"case-study-desktop-linux.png",
+		"no-webgl-projects-fallback",
+		"@constellation",
+		"Contact fallback",
+	]) {
+		expectNotContains(fallback, retiredSurface);
+	}
+	for (const retiredQualitySurface of [
+		"@api-telemetry",
+		"project atlas",
+		"no-WebGL project-atlas fallback",
+		"no-webgl-projects-fallback",
+		"audits home, projects, one case study",
+	]) {
+		expectNotContains(quality, retiredQualitySurface);
+	}
+	expectContains(quality, "ProjectStage");
+	expectContains(quality, "static direct channels");
+	expectContains(
+		quality,
+		"audits home, Work, Cryogenic Flow, resume, and contact",
+	);
 	expectContains(evidence, "Reduced-motion and no-WebGL QA");
-	expectContains(evidence, "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md");
 	expectContains(evidence, "tests/e2e/no-webgl.spec.ts");
 
-	expectContains(noWebglSpec, "@no-webgl");
-	expectContains(noWebglSpec, "no-webgl-projects-fallback");
-	expectContains(noWebglSpec, "Accessible project atlas");
-	expectContains(noWebglSpec, "data-project-constellation");
-	expectContains(noWebglSpec, "toHaveScreenshot");
+	for (const requirement of [
+		"@no-webgl",
+		".project-stage",
+		".work-row",
+		"[data-stage-panel]",
+		'page.locator("canvas, svg")',
+		"script[src*='constellation']",
+		"Cryogenic flow simulation dashboard",
+		"/work/cryo-flow-sim/",
+		"no-webgl-signal-proof-home",
+		"toHaveScreenshot",
+	]) {
+		expectContains(noWebglSpec, requirement);
+	}
+	expectContains(projectStage, "<MediaFrame");
+	expectContains(projectStage, "<WorkRow");
+	expectContains(projectStage, "data-stage-panel");
+	expectNotContains(projectStage, "ProjectAtlas");
+	expectNotContains(projectStage, "project-constellation.mjs");
+	assert.equal(
+		existsSync(files.retiredAtlasLoader),
+		false,
+		"retired WebGL/atlas loader must remain absent",
+	);
 });
 
 test("contact remains a static direct path with no simulated delivery state", () => {
@@ -158,7 +215,7 @@ test("contact remains a static direct path with no simulated delivery state", ()
 		"legacy ContactForm component must remain deleted",
 	);
 	expectContains(contact, 'import { profile } from "../../data/profile"');
-	expectContains(contact, "`mailto:${profile.email}`");
+	expectContains(contact, "mailto:" + "$" + "{profile.email}");
 	expectContains(contact, "profile.linkedin");
 	expectContains(contact, "profile.github");
 	expectNotContains(contact, "<form");

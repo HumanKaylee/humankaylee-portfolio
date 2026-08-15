@@ -12,37 +12,24 @@ const viewportMatrix = [
 ] as const;
 
 const visualRoutes = [
+	{ label: "home", path: "/" },
+	{ label: "work", path: "/work/" },
+	{ label: "work-cryo", path: "/work/cryo-flow-sim/" },
 	{
-		label: "home",
-		path: "/",
+		label: "work-cli-fleet",
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 	},
 	{
-		label: "projects",
-		path: "/projects/",
+		label: "work-remote-recovery",
+		path: "/work/remote-workstation-recovery-and-operational-debugging/",
 	},
-	{
-		label: "case-study",
-		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-	},
-	{
-		label: "resume",
-		path: "/resume/",
-	},
-	{
-		label: "notes",
-		path: "/notes/",
-	},
-	{
-		label: "note-detail",
-		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-	},
-	{
-		label: "contact",
-		path: "/contact/",
-	},
+	{ label: "about", path: "/about/" },
+	{ label: "resume", path: "/resume/" },
+	{ label: "contact", path: "/contact/" },
+	{ label: "notes", path: "/notes/" },
 ] as const;
 
-async function stabilizeVisualState(page: import("@playwright/test").Page) {
+async function stabilizeVisualState(page: Page) {
 	await page.emulateMedia({ reducedMotion: "reduce" });
 	await page.addInitScript(() => {
 		const sheet = document.createElement("style");
@@ -51,39 +38,19 @@ async function stabilizeVisualState(page: import("@playwright/test").Page) {
 			"*, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }";
 		document.documentElement.append(sheet);
 	});
-	await page.route("**/api/health", (route) =>
-		route.fulfill({
-			status: 200,
-			contentType: "application/json",
-			body: JSON.stringify({
-				status: "ok",
-				version: "visual-regression-test",
-			}),
-		}),
-	);
-	await page.route("**/api/projects/live", (route) =>
-		route.fulfill({
-			status: 200,
-			contentType: "application/json",
-			body: JSON.stringify({
-				projects: [{ slug: "cli-fleet-synchronization-and-mcp-rollout" }],
-				stale: false,
-			}),
-		}),
-	);
 }
 
 async function expectCoreReadiness(page: Page, path: string) {
 	const response = await page.goto(path, {
 		waitUntil: "domcontentloaded",
 	});
-	expect(response?.status(), `${path} loads`).toBeLessThan(400);
+	expect(response?.status(), `${path} loads`).toBe(200);
 	await page.waitForLoadState("networkidle");
 	await expect(page.locator("main")).toBeVisible();
 	await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 }
 
-test.describe("visual regression @visual-regression", () => {
+test.describe("Signal / Proof visual regression @visual-regression", () => {
 	for (const viewport of viewportMatrix) {
 		for (const route of visualRoutes) {
 			test(`captures ${route.label} at ${viewport.label}`, async ({ page }) => {
@@ -96,10 +63,6 @@ test.describe("visual regression @visual-regression", () => {
 						fullPage: false,
 						animations: "disabled",
 						maxDiffPixels: 300,
-						mask: [
-							page.locator("[data-telemetry-status]"),
-							page.locator(".contact-status"),
-						],
 					},
 				);
 			});

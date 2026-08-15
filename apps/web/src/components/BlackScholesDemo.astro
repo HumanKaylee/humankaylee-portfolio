@@ -201,6 +201,13 @@
   </footer>
 </section>
 
+<script
+  is:inline
+>
+  window.__loadBlackScholesWasm = () =>
+    import("/wasm/blackscholes/blackscholes_wasm.js");
+</script>
+
 <script>
   (async () => {
     // Graceful fallback: surface a message and bail if WASM is unavailable.
@@ -212,15 +219,17 @@
 
     type WasmQuoteResult = { price: number; delta: number; gamma: number; theta_per_day: number; vega: number; rho: number };
     type WasmModule = { default: () => Promise<void>; quote: (input: object) => WasmQuoteResult };
+    type WasmLoaderWindow = Window & { __loadBlackScholesWasm?: () => Promise<WasmModule> };
     let wasmModule: WasmModule | null = null;
 
     try {
       // Dynamic import of the wasm-pack JS glue, then init the WASM binary.
       // Both are served as static assets from /public/wasm/blackscholes/.
-      // The path is a runtime URL that Rollup cannot resolve statically —
-      // it is marked external in astro.config.mjs and suppressed here.
-      // @ts-ignore: runtime-only public asset, not resolvable at build time
-      const mod = await import(/* @vite-ignore */ "/wasm/blackscholes/blackscholes_wasm.js") as WasmModule;
+      // The inline loader above preserves the native public URL rather than
+      // asking Vite to transform a file that must be served as-is.
+      const loadWasm = (window as WasmLoaderWindow).__loadBlackScholesWasm;
+      if (!loadWasm) throw new Error("WASM loader is unavailable.");
+      const mod = await loadWasm();
       await mod.default();
       wasmModule = mod;
     } catch (err) {

@@ -38,8 +38,7 @@
 
 	[data-reveal],
 	.reveal,
-	.case-study-section,
-	.evidence-drawer {
+	.case-study-section {
 		opacity: 1 !important;
 		transform: none !important;
 	}

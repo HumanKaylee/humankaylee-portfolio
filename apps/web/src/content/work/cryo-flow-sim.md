@@ -49,7 +49,7 @@ evidence:
 media:
   kind: "video"
   src: "/media/cryo-flow-sim-stage1.mp4"
-  poster: "/media/cryo-flow-sim-stage1-poster.png"
+  poster: "/media/cryo-flow-sim-stage1-1440.webp"
   width: 1920
   height: 1080
   alt: "Cryogenic flow simulation dashboard during a verified valve-transition scenario."

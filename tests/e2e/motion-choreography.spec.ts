@@ -1,8 +1,4 @@
-import { type Page, expect, test } from "@playwright/test";
-
-const caseStudyRoute =
-	"/case-studies/cli-fleet-synchronization-and-mcp-rollout/";
-const revealSelector = ".case-study-section, .evidence-drawer";
+import { expect, test } from "@playwright/test";
 
 function toMilliseconds(duration: string) {
 	const trimmed = duration.trim();
@@ -16,26 +12,6 @@ function toMilliseconds(duration: string) {
 	}
 
 	return Number.parseFloat(trimmed) || 0;
-}
-
-async function readRevealStates(page: Page) {
-	return page.locator(revealSelector).evaluateAll((elements) =>
-		elements.map((element) => {
-			const computed = getComputedStyle(element);
-			const rect = element.getBoundingClientRect();
-
-			return {
-				animationDuration: computed.animationDuration,
-				animationName: computed.animationName,
-				opacity: Number.parseFloat(computed.opacity),
-				visible:
-					rect.width > 0 &&
-					rect.height > 0 &&
-					computed.display !== "none" &&
-					computed.visibility !== "hidden",
-			};
-		}),
-	);
 }
 
 test.describe("purposeful motion @motion", () => {
@@ -67,48 +43,50 @@ test.describe("purposeful motion @motion", () => {
 		).toBe(true);
 	});
 
-	test("adds restrained evidence reveal motion when motion is allowed", async ({
+	test("adds restrained signal-link motion when motion is allowed", async ({
 		page,
 	}) => {
 		await page.emulateMedia({ reducedMotion: "no-preference" });
-		await page.goto(caseStudyRoute);
+		await page.goto("/");
 
-		const states = await readRevealStates(page);
+		const workLink = page.getByRole("link", { name: /View selected work/i });
+		const before = await workLink.evaluate((link) => {
+			const styles = getComputedStyle(link, "::after");
+			return {
+				transform: styles.transform,
+				transitionDuration: styles.transitionDuration,
+			};
+		});
+		expect(
+			before.transitionDuration
+				.split(",")
+				.some((duration) => toMilliseconds(duration) >= 100),
+		).toBe(true);
 
-		expect(states.length).toBeGreaterThan(6);
-		expect(states.every((state) => state.visible)).toBe(true);
-		expect(states.every((state) => state.opacity >= 0.82)).toBe(true);
-		expect(
-			states.every((state) =>
-				state.animationName.split(",").some((name) => name.includes("atelier")),
-			),
-		).toBe(true);
-		expect(
-			states.every((state) =>
-				state.animationDuration
-					.split(",")
-					.some((duration) => toMilliseconds(duration) >= 240),
-			),
-		).toBe(true);
+		await workLink.hover();
+		await expect
+			.poll(() =>
+				workLink.evaluate(
+					(link) => getComputedStyle(link, "::after").transform,
+				),
+			)
+			.not.toBe(before.transform);
 	});
 
-	test("suppresses reveal animation for reduced-motion users", async ({
+	test("suppresses signal-link animation for reduced-motion users", async ({
 		page,
 	}) => {
 		await page.emulateMedia({ reducedMotion: "reduce" });
-		await page.goto(caseStudyRoute);
+		await page.goto("/");
 
-		const states = await readRevealStates(page);
+		const durations = await page
+			.getByRole("link", { name: /View selected work/i })
+			.evaluate((link) => getComputedStyle(link, "::after").transitionDuration);
 
-		expect(states.length).toBeGreaterThan(6);
-		expect(states.every((state) => state.visible)).toBe(true);
-		expect(states.every((state) => state.opacity >= 0.82)).toBe(true);
 		expect(
-			states.every((state) =>
-				state.animationDuration
-					.split(",")
-					.every((duration) => toMilliseconds(duration) <= 0.001),
-			),
+			durations
+				.split(",")
+				.every((duration) => toMilliseconds(duration) <= 0.001),
 		).toBe(true);
 	});
 });
@@ -116,15 +94,24 @@ test.describe("purposeful motion @motion", () => {
 test.describe("purposeful motion @motion @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 
-	test("keeps reveal-targeted content visible without JavaScript", async ({
+	test("keeps every project proof visible and linked without JavaScript", async ({
 		page,
 	}) => {
-		await page.goto(caseStudyRoute);
+		await page.setViewportSize({ width: 1440, height: 1000 });
+		await page.goto("/");
 
-		const states = await readRevealStates(page);
-
-		expect(states.length).toBeGreaterThan(6);
-		expect(states.every((state) => state.visible)).toBe(true);
-		expect(states.every((state) => state.opacity >= 0.82)).toBe(true);
+		await expect(page.locator("[data-project-stage]")).not.toHaveAttribute(
+			"data-enhanced",
+		);
+		await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
+		await expect(page.locator(".work-row")).toHaveCount(3);
+		await expect(page.locator("canvas, svg")).toHaveCount(0);
+		for (const href of [
+			"/work/cryo-flow-sim/",
+			"/work/cli-fleet-synchronization-and-mcp-rollout/",
+			"/work/remote-workstation-recovery-and-operational-debugging/",
+		]) {
+			await expect(page.locator(`a[href="${href}"]`).first()).toBeVisible();
+		}
 	});
 });

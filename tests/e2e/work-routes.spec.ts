@@ -110,6 +110,12 @@ test.describe("Work routes @work", () => {
 	test("renders authentic Cryogenic media with opt-in playback and durable fallback context", async ({
 		page,
 	}) => {
+		const requestedMedia: string[] = [];
+		page.on("request", (request) => {
+			if (request.url().includes("/media/cryo-flow-sim-stage1-")) {
+				requestedMedia.push(new URL(request.url()).pathname);
+			}
+		});
 		await page.route("**/media/cryo-flow-sim-stage1.mp4", (route) =>
 			route.abort("failed"),
 		);
@@ -121,6 +127,10 @@ test.describe("Work routes @work", () => {
 		await expect(video).toHaveAttribute("preload", "none");
 		await expect(video).toHaveAttribute(
 			"poster",
+			"/media/cryo-flow-sim-stage1-1440.webp",
+		);
+		expect(requestedMedia).toContain("/media/cryo-flow-sim-stage1-1440.webp");
+		expect(requestedMedia).not.toContain(
 			"/media/cryo-flow-sim-stage1-poster.png",
 		);
 		await expect(frame.locator("figcaption")).toHaveText(
@@ -236,6 +246,36 @@ test.describe("Work routes @work", () => {
 			page.getByRole("heading", { name: "Black-Scholes live pricer" }),
 		).toBeVisible();
 		await expect(page.locator(".bs-demo")).toHaveCount(1);
+	});
+
+	test("initializes the API-free Black-Scholes runtime and reprices one input", async ({
+		page,
+	}) => {
+		const apiRequests: string[] = [];
+		const runtimeErrors: string[] = [];
+		page.on("request", (request) => {
+			if (request.url().includes("/api/")) apiRequests.push(request.url());
+		});
+		page.on("pageerror", (error) => runtimeErrors.push(error.message));
+		page.on("console", (message) => {
+			if (message.type() === "error" || message.type() === "warning") {
+				runtimeErrors.push(message.text());
+			}
+		});
+
+		await page.goto("/work/black-scholes-wasm/");
+		const controls = page.locator("#bs-controls");
+		const price = page.locator("#bs-price");
+
+		await expect(controls).not.toHaveAttribute("aria-hidden", "true");
+		await expect(price).toHaveText(/^\$\d+\.\d{4}$/);
+		const initialPrice = await price.textContent();
+
+		await page.locator("#bs-spot").fill("110");
+		await expect(price).not.toHaveText(initialPrice ?? "");
+		await expect(price).toHaveText(/^\$\d+\.\d{4}$/);
+		expect(apiRequests).toEqual([]);
+		expect(runtimeErrors).toEqual([]);
 	});
 
 	test("emits escaped item-specific CreativeWork JSON-LD with canonical Work URLs", async ({

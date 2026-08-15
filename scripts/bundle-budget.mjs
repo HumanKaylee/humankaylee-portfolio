@@ -7,6 +7,18 @@ export const BUNDLE_BUDGET_LIMITS = {
 	maxCriticalJavaScriptBytesPerRoute: 8 * 1024,
 };
 
+export const REQUIRED_RELEASE_ROUTES = [
+	"/",
+	"/about/",
+	"/contact/",
+	"/notes/",
+	"/resume/",
+	"/work/",
+	"/work/cli-fleet-synchronization-and-mcp-rollout/",
+	"/work/cryo-flow-sim/",
+	"/work/remote-workstation-recovery-and-operational-debugging/",
+];
+
 const DEFAULT_DIST_DIR = "dist";
 const DEFAULT_SUMMARY_PATH = "test-results/bundle-budget-summary.json";
 const SCRIPT_TAG_PATTERN =
@@ -87,7 +99,7 @@ export function analyzeHtmlForCriticalJavaScript({
 }
 
 export function evaluateBundleBudget(routes, limits = BUNDLE_BUDGET_LIMITS) {
-	const failures = routes.flatMap((route) => {
+	const routeFailures = routes.flatMap((route) => {
 		if (
 			route.criticalJavaScriptBytes <= limits.maxCriticalJavaScriptBytesPerRoute
 		) {
@@ -98,6 +110,13 @@ export function evaluateBundleBudget(routes, limits = BUNDLE_BUDGET_LIMITS) {
 			`${route.routePath} critical JavaScript ${route.criticalJavaScriptBytes} bytes exceeds ${limits.maxCriticalJavaScriptBytesPerRoute} bytes`,
 		];
 	});
+	const routePaths = new Set(routes.map((route) => route.routePath));
+	const missingRouteFailures = REQUIRED_RELEASE_ROUTES.filter(
+		(routePath) => !routePaths.has(routePath),
+	).map(
+		(routePath) => `required release route missing from build: ${routePath}`,
+	);
+	const failures = [...routeFailures, ...missingRouteFailures];
 
 	return {
 		passed: failures.length === 0,
@@ -113,6 +132,7 @@ export function bundleBudgetDryRunPlan({
 		distDir,
 		summaryPath,
 		limits: BUNDLE_BUDGET_LIMITS,
+		requiredRoutes: REQUIRED_RELEASE_ROUTES,
 		routeSource: `${distDir}/**/*.html`,
 		measuredAssets: "same-origin executable script assets referenced by routes",
 		ignoredScriptTypes: [
@@ -183,6 +203,7 @@ export async function analyzeDistBundle({
 	const result = evaluateBundleBudget(routes);
 	const summary = {
 		limits: BUNDLE_BUDGET_LIMITS,
+		requiredRoutes: REQUIRED_RELEASE_ROUTES,
 		routes,
 		failures: result.failures,
 	};

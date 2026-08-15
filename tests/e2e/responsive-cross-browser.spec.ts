@@ -3,52 +3,57 @@ import { type Page, expect, test } from "@playwright/test";
 const launchRoutes = [
 	{
 		path: "/",
-		heading: /Systems built to hold up/i,
-		marker: /Principal engineer/i,
-		primaryLink: /Download resume PDF/i,
-		primaryText: undefined,
+		heading: /Principal engineer for systems that cannot drift/i,
+		marker: /Three systems\. Three kinds of proof/i,
+		primaryLink: /View selected work/i,
 	},
 	{
-		path: "/projects/",
-		heading: /Selected systems, mapped by capability/i,
-		marker: /CLI Fleet Synchronization/i,
-		primaryLink: /View project detail for CLI Fleet Synchronization/i,
-		primaryText: undefined,
+		path: "/work/",
+		heading: /Systems made legible through proof/i,
+		marker: /Cryogenic Flow Simulation/i,
+		primaryLink: /Read the case study/i,
 	},
 	{
-		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-		heading: /CLI Fleet Synchronization and MCP Rollout/i,
-		marker: /sanitized rollout matrix/i,
-		primaryLink: undefined,
-		primaryText: /operator checklist/i,
+		path: "/work/cryo-flow-sim/",
+		heading: /Cryogenic Flow Simulation/i,
+		marker: /Proof/i,
+		primaryLink: /Open the simulation video/i,
+	},
+	{
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
+		heading: /CLI Fleet Synchronization/i,
+		marker: /Proof/i,
+		primaryLink: /Next project:/i,
+	},
+	{
+		path: "/work/remote-workstation-recovery-and-operational-debugging/",
+		heading: /Remote Workstation Recovery/i,
+		marker: /Proof/i,
+		primaryLink: /Next project:/i,
+	},
+	{
+		path: "/about/",
+		heading: /Engineering judgment for systems that have to hold up/i,
+		marker: /Operating principles/i,
+		primaryLink: /See selected work/i,
 	},
 	{
 		path: "/resume/",
 		heading: /Joe Poznanski/i,
-		marker: /Download full resume \(PDF\)/i,
-		primaryLink: /Download full resume \(PDF\)/i,
-		primaryText: undefined,
+		marker: /Agentic AI & automation highlights/i,
+		primaryLink: /Download résumé PDF/i,
 	},
 	{
 		path: "/notes/",
-		heading: /notes from the systems atelier/i,
-		marker: /How the portfolio stays useful when the API is offline/i,
-		primaryLink: /How the portfolio stays useful when the API is offline/i,
-		primaryText: undefined,
-	},
-	{
-		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-		heading: /How the portfolio stays useful when the API is offline/i,
-		marker: /The static shell carries the recruiting story/i,
-		primaryLink: undefined,
-		primaryText: /Rust API/i,
+		heading: /Technical notes/i,
+		marker: /Black-Scholes/i,
+		primaryLink: /Black-Scholes Options Pricer/i,
 	},
 	{
 		path: "/contact/",
-		heading: /contact joe/i,
-		marker: /fastest route is direct email/i,
-		primaryLink: /josephpoznanski@gmail\.com/i,
-		primaryText: undefined,
+		heading: /Let’s talk about the system behind the problem/i,
+		marker: /Useful context to include/i,
+		primaryLink: /Email Joe/i,
 	},
 ] as const;
 
@@ -98,20 +103,17 @@ async function expectFirstLoadReadable(
 		waitUntil: "domcontentloaded",
 	});
 
-	expect(response?.status(), `${label} response status`).toBeLessThan(400);
+	expect(response?.status(), `${label} response status`).toBe(200);
 	await expect(page.getByRole("heading", { level: 1 })).toContainText(
 		route.heading,
 	);
 	await expect(page.locator("main")).toContainText(route.marker);
-	if (route.primaryLink) {
-		await expect(
-			page.getByRole("link", { name: route.primaryLink }).first(),
-		).toBeVisible();
-	}
-	if (route.primaryText) {
-		await expect(page.locator("main")).toContainText(route.primaryText);
-	}
-	await expect(page.locator(".static-fallback-note")).toHaveCount(0);
+	await expect(
+		page.getByRole("link", { name: route.primaryLink }).first(),
+	).toBeVisible();
+	await expect(
+		page.locator(".static-fallback-note, .noscript-banner"),
+	).toHaveCount(0);
 	await expectNoHorizontalOverflow(page, label);
 
 	const firstHeadingBox = await page
@@ -127,7 +129,7 @@ async function expectFirstLoadReadable(
 	).toBeLessThan(page.viewportSize()?.height ?? 0);
 }
 
-test.describe("B-055 responsive cross-browser QA @responsive", () => {
+test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 	for (const viewport of viewportMatrix) {
 		test(`keeps launch routes readable on ${viewport.name}`, async ({
 			page,
@@ -145,12 +147,13 @@ test.describe("B-055 responsive cross-browser QA @responsive", () => {
 		});
 	}
 
-	test("considers LinkedIn in-app mobile first-load readability", async ({
+	test("keeps the LinkedIn in-app mobile first load static and readable", async ({
 		browser,
 		browserName,
 		baseURL,
 	}) => {
 		const context = await browser.newContext({
+			javaScriptEnabled: false,
 			userAgent:
 				"Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) LinkedInApp/9.1.0 Mobile/15E148 Safari/604.1",
 			viewport: { width: 390, height: 844 },
@@ -162,11 +165,11 @@ test.describe("B-055 responsive cross-browser QA @responsive", () => {
 				waitUntil: "domcontentloaded",
 			});
 			await expect(page.getByRole("heading", { level: 1 })).toContainText(
-				/Systems built to hold up/i,
+				/Principal engineer for systems that cannot drift/i,
 			);
-			await expect(page.locator("main")).toContainText(/Principal engineer/i);
+			await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
 			await expect(
-				page.getByRole("link", { name: /Download resume PDF/i }),
+				page.getByRole("link", { name: /View selected work/i }),
 			).toBeVisible();
 			await expectNoHorizontalOverflow(
 				page,

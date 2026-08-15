@@ -1,54 +1,60 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("portfolio evaluator journeys @journey", () => {
-	test("lets recruiters move from the home CTA to the static resume PDF", async ({
+test.describe("Signal / Proof evaluator journeys @journey", () => {
+	test("moves from the home work signal to the corresponding proof", async ({
 		page,
 	}) => {
 		await page.goto("/");
 
-		await page.getByRole("link", { name: /For recruiters/i }).click();
+		await page.getByRole("link", { name: /View selected work/i }).click();
+		await expect(page).toHaveURL(/\/work\/$/);
+
+		const cryoDetail = page
+			.getByRole("link", { name: /Cryogenic Flow Simulation/i })
+			.first();
+		await expect(cryoDetail).toHaveAttribute("href", "/work/cryo-flow-sim/");
+		await cryoDetail.click();
+
+		await expect(page).toHaveURL(/\/work\/cryo-flow-sim\/$/);
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: /Cryogenic Flow Simulation/i,
+			}),
+		).toBeVisible();
+		await expect(
+			page.getByRole("heading", { level: 2, name: "Proof" }),
+		).toBeVisible();
+	});
+
+	test("moves from the primary navigation to the static resume PDF", async ({
+		page,
+	}) => {
+		await page.goto("/");
+
+		await page
+			.getByLabel("Primary navigation")
+			.getByRole("link", { name: "Résumé" })
+			.click();
 
 		await expect(page).toHaveURL(/\/resume\/$/);
 		await expect(
 			page.getByRole("heading", { level: 1, name: "Joe Poznanski" }),
 		).toBeVisible();
-		await expect(
-			page.getByRole("link", { name: /Download full resume \(PDF\)/i }),
-		).toHaveAttribute("href", "/downloads/joe-poznanski-resume.pdf");
-	});
-
-	test("lets engineers move from the home CTA to a project detail page", async ({
-		page,
-	}) => {
-		await page.goto("/");
-
-		await page.getByRole("link", { name: /For engineers/i }).click();
-
-		await expect(page).toHaveURL(/\/projects\/$/);
-		const projectDetailLink = page
-			.getByRole("link", {
-				name: /View project detail for CLI Fleet Synchronization/i,
-			})
-			.first();
-		await expect(projectDetailLink).toHaveAttribute(
+		const resume = page.getByRole("link", {
+			name: /Download résumé PDF/i,
+		});
+		await expect(resume).toHaveAttribute(
 			"href",
-			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
+			"/downloads/joe-poznanski-resume.pdf",
 		);
-
-		await projectDetailLink.click();
-
-		await expect(page).toHaveURL(
-			/\/projects\/cli-fleet-synchronization-and-mcp-rollout\/$/,
+		const response = await page.request.get(
+			"/downloads/joe-poznanski-resume.pdf",
 		);
-		await expect(
-			page.getByRole("heading", {
-				level: 1,
-				name: /CLI Fleet Synchronization and MCP Rollout/i,
-			}),
-		).toBeVisible();
+		expect(response.status()).toBe(200);
 	});
 
-	test("lets contacts move from the home navigation to the mailto fallback", async ({
+	test("moves from the primary navigation to the direct email fallback", async ({
 		page,
 	}) => {
 		await page.goto("/");
@@ -59,6 +65,7 @@ test.describe("portfolio evaluator journeys @journey", () => {
 			.click();
 
 		await expect(page).toHaveURL(/\/contact\/$/);
+		await expect(page.locator("form")).toHaveCount(0);
 		await expect(
 			page.getByRole("link", {
 				name: /josephpoznanski@gmail\.com/i,

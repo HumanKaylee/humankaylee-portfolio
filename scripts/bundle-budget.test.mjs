@@ -7,6 +7,7 @@ import { describe, it } from "node:test";
 
 import {
 	BUNDLE_BUDGET_LIMITS,
+	REQUIRED_RELEASE_ROUTES,
 	analyzeHtmlForCriticalJavaScript,
 	bundleBudgetDryRunPlan,
 	evaluateBundleBudget,
@@ -64,11 +65,28 @@ describe("bundle budget gate", () => {
 		assert.match(result.failures[0], /critical JavaScript/);
 	});
 
+	it("rejects a stale build that is missing the canonical Signal / Proof routes", () => {
+		const result = evaluateBundleBudget([
+			{
+				routePath: "/",
+				inlineScriptCount: 0,
+				externalScriptCount: 0,
+				externalScripts: [],
+				criticalJavaScriptBytes: 0,
+			},
+		]);
+
+		assert.equal(result.passed, false);
+		assert.ok(result.failures.some((failure) => failure.includes("/work/")));
+		assert.ok(result.failures.some((failure) => failure.includes("missing")));
+	});
+
 	it("exposes a dry-run plan before build artifacts exist", () => {
 		assert.deepEqual(bundleBudgetDryRunPlan(), {
 			distDir: "dist",
 			summaryPath: "test-results/bundle-budget-summary.json",
 			limits: BUNDLE_BUDGET_LIMITS,
+			requiredRoutes: REQUIRED_RELEASE_ROUTES,
 			routeSource: "dist/**/*.html",
 			measuredAssets:
 				"same-origin executable script assets referenced by routes",

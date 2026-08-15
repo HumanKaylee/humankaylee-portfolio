@@ -89,7 +89,7 @@ test("Phase 7 metadata readiness uses shared site metadata without clearing doma
 	);
 	expectContains(
 		notesRssSpec,
-		"<guid>${expectedSiteUrl}${note.path}</guid>",
+		"<guid>${expectedSiteUrl}${blackScholesNote.path}</guid>",
 		"RSS e2e shared site URL guid",
 	);
 
@@ -110,13 +110,8 @@ test("Phase 7 metadata readiness uses shared site metadata without clearing doma
 	);
 	expectContains(
 		baseLayout,
-		"absoluteUrl(siteUrl, ogImage)",
-		"BaseLayout Open Graph image from shared siteUrl",
-	);
-	expectContains(
-		baseLayout,
-		"absoluteUrl(siteUrl, site.data.defaultOgImage)",
-		"BaseLayout Open Graph fallback image from shared siteUrl",
+		"absoluteUrl( siteUrl, ogImage ?? site.data.defaultOgImage, )",
+		"BaseLayout Open Graph image and fallback from shared siteUrl",
 	);
 	expectContains(
 		baseLayout,
