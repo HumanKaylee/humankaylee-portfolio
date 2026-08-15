@@ -13,7 +13,21 @@ const files = {
 	projectStage: "apps/web/src/components/ProjectStage.astro",
 	retiredAtlasLoader: "apps/web/public/scripts/project-constellation.mjs",
 	quality: "runbooks/QUALITY.md",
+	qualitySpec: "tests/e2e/quality-gates.spec.ts",
 };
+
+const expectedAccessibilityRoutes = [
+	"/",
+	"/work/",
+	"/work/cryo-flow-sim/",
+	"/work/cli-fleet-synchronization-and-mcp-rollout/",
+	"/work/remote-workstation-recovery-and-operational-debugging/",
+	"/work/black-scholes-wasm/",
+	"/about/",
+	"/resume/",
+	"/notes/",
+	"/contact/",
+];
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -41,11 +55,30 @@ function expectNotContains(content, needle, label = needle) {
 	);
 }
 
+function qualitySpecRoutes(source) {
+	const matrix = source.match(
+		/const coreRoutes = \[([\s\S]*?)\] as const;/,
+	)?.[1];
+	assert.ok(matrix, "quality spec must expose coreRoutes");
+	return [...matrix.matchAll(/path:\s*"([^"]+)"/g)].map(([, path]) => path);
+}
+
+function accessibilityRunbookRoutes(source) {
+	const section = source.match(
+		/## Page-by-page checklist([\s\S]*?)(?:\n## |$)/,
+	)?.[1];
+	assert.ok(section, "accessibility runbook must expose its route checklist");
+	return [...section.matchAll(/\|\s*`(\/[^`]*)`\s*\|/g)].map(
+		([, path]) => path,
+	);
+}
+
 test("B-048 accessibility audit has a dedicated artifact and checklist contract", () => {
 	const accessibility = readRequiredFile(files.accessibilityRunbook);
 	const backlog = readRequiredFile(files.backlog);
 	const evidence = readRequiredFile(files.evidence);
 	const quality = readRequiredFile(files.quality);
+	const qualitySpec = readRequiredFile(files.qualitySpec);
 
 	expectContains(backlog, "### B-048: Add accessibility audit pass");
 	expectContains(backlog, "runbooks/ACCESSIBILITY_AUDIT.md");
@@ -107,6 +140,24 @@ test("B-048 accessibility audit has a dedicated artifact and checklist contract"
 	}
 	expectContains(evidence, "Accessibility audit checklist");
 	expectContains(evidence, "runbooks/ACCESSIBILITY_AUDIT.md");
+	assert.deepEqual(
+		qualitySpecRoutes(qualitySpec),
+		expectedAccessibilityRoutes,
+		"the Axe/quality matrix must include every current release route",
+	);
+	assert.deepEqual(
+		accessibilityRunbookRoutes(accessibility),
+		expectedAccessibilityRoutes,
+		"the accessibility checklist must match the executable Axe matrix",
+	);
+	const blackScholesRow = accessibility
+		.split("\n")
+		.find((line) => line.includes("`/work/black-scholes-wasm/`"));
+	assert.match(
+		blackScholesRow ?? "",
+		/@accessibility/,
+		"Black-Scholes must cite the executed Axe gate, not runtime coverage alone",
+	);
 });
 
 test("B-049 preserves rigorous static and no-WebGL evidence for Signal / Proof", () => {

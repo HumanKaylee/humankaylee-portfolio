@@ -8,12 +8,13 @@ Status: **DONE — local release matrix, Windows and Linux visual baselines, man
 
 Task 11 replaced retired atlas, case-study, telemetry, form, and dated taste expectations with falsifiable Signal / Proof behavior. The replacement coverage requires ProjectStage, Work routes, EvidenceStrip, authentic media, static/no-JavaScript behavior, no-WebGL behavior, API-free contact and Black-Scholes operation, canonical navigation, accessibility, responsive layout, and the absence of retired loaders and surfaces.
 
-Three product defects and one release-runner defect were exposed and fixed test-first:
+Four product defects and one release-runner defect were exposed and fixed test-first:
 
 1. Résumé printing did not propagate a white print canvas through the body. The print contract failed before the selector was narrowed to `body.resume-print-route`; the exact assertion then passed.
 2. The Black-Scholes demo's public WASM module URL was transformed by Vite in development. A browser test first reproduced the console/import failure and inaccessible controls. The minimal same-origin inline loader now initializes the real controls and reprices a changed input while retaining no-JavaScript fallback, CSP compatibility, no API calls, and the production build.
-3. Cryogenic Flow scored 76 for Lighthouse performance because its detail video requested a 1,086,774-byte PNG as LCP. A browser/network assertion failed first. The live Work record now uses the existing authentic 67,702-byte 1440 WebP; the MP4, fallback link, alt text, caption, source PNG, social-card source, and archival editorial content were preserved. Cryogenic Flow then scored 99.
-4. Windows Chrome wrote complete Lighthouse reports but sometimes failed to remove a locked temporary profile. The runner now removes any old report before each audit and accepts only a newly written, structurally complete report after the exact Windows cleanup-only error. A separate failing contract exposed preview-port drift; the runner now rejects an occupied port, starts Astro directly, and tears down the process it started.
+3. The newly executable Black-Scholes Axe route exposed three serious contrast failures in the live price, footer, and source link. The exact route failed before the component received a minimal light/dark-safe color correction, then passed with no serious or critical findings.
+4. Cryogenic Flow scored 76 for Lighthouse performance because its detail video requested a 1,086,774-byte PNG as LCP. A browser/network assertion failed first. The live Work record now uses the existing authentic 67,702-byte 1440 WebP; the MP4, fallback link, alt text, caption, source PNG, social-card source, and archival editorial content were preserved. Cryogenic Flow then scored 99.
+5. Windows Chrome wrote complete Lighthouse reports but sometimes failed to remove a locked temporary profile. The runner now removes any old report before each audit and accepts only a newly written, structurally complete report after the exact Windows cleanup-only error. A separate failing contract exposed preview-port drift; the runner now rejects an occupied port, starts Astro directly, and tears down the process it started. Review-round coverage additionally proves that a cleanup line cannot mask any second runtime error.
 
 ## Contract replacement map
 
@@ -43,6 +44,7 @@ The six old E2E files were deleted only after their mapped replacement behavior 
 - Metadata readiness: 0/1 before replacement, 1/1 after current published-note/default-social assertions.
 - Bundle contract: failed on the retired route import, then passed 6/6 against canonical Signal / Proof routes.
 - Black-Scholes runtime: 0/1 with the Vite public-file import error; 1/1 after the loader fix. Related Work, CSP, security, and contact checks passed 22/22.
+- Black-Scholes accessibility: 0/1 with three serious color-contrast findings; 1/1 after the component color correction. The final ten-route Axe matrix is included in the serial E2E run.
 - Cryogenic poster: 0/1 while the detail requested the PNG; 1/1 after the one-line live Work poster change. The final Home responsive-poster assertion also positively requires the 1440 WebP and negatively forbids the PNG and homepage video playback.
 - Lighthouse runner contract: missing cleanup handling failed before implementation; 9/9 passed after it. Occupied-port/direct-process behavior then failed before implementation; final runner contract passed 10/10.
 - Operational docs and launch probes: the focused migration contract began at 1/6 (five failures for missing current Work/B-049/M3/M4/README requirements) and reached 6/6 after the three active runbooks and read-only launch surfaces were migrated. The first full Node sweep then exposed three preserved Quality/Notes/visual-triage omissions; the exact focused set was RED 0/3, the stale `@api-telemetry`/old no-WebGL expectations were replaced with current behavior, and the combined current run finished 9/9. `bash -n scripts/launch/m3-dns-verify.sh scripts/launch/m4-production-smoke.sh` also exited 0.
@@ -55,9 +57,9 @@ All commands below were run from the final working tree:
 | --- | --- |
 | `pnpm lint` | Exit 0; 141 files checked; no fixes required. |
 | `pnpm typecheck` | Exit 0; 70 files; 0 errors, 0 warnings, 13 existing Zod deprecation hints. |
-| `pnpm test` | Exit 0; Vitest 50/50; Node 127 total: 124 passed, 0 failed, 3 skipped. |
-| `pnpm test:e2e -- --workers=1` | Exit 0; 181 total: 163 passed, 0 failed, 18 intentional capture-only skips; 1.0 minute. This final run occurred after the WebP poster, Home assertion, and active verification-surface migrations. |
-| `pnpm build` | Exit 0; 15 pages built in 2.06 seconds. |
+| `pnpm test` | Exit 0; Vitest 50/50; Node 130 total: 127 passed, 0 failed, 3 skipped. |
+| `pnpm test:e2e -- --workers=1` | Exit 0; 187 total: 167 passed, 0 failed, 20 intentional capture-only skips; 1.0 minute. This final run occurred after the Black-Scholes, Cryogenic media-stability, route-matrix, and launch-surface corrections. |
+| `pnpm build` | Exit 0; 15 pages built in 2.17 seconds. |
 | `pnpm bundle:budget` | Exit 0; summary at `test-results/bundle-budget-summary.json`. |
 
 Final critical JavaScript sizes:
@@ -73,17 +75,18 @@ Reviewed Node skips:
 2. Live GitHub issue sync is opt-in through `HK_VERIFY_GITHUB_LIVE=1`.
 3. Live PR/CI verification is opt-in through `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1`.
 
-Reviewed E2E skips: all 18 are capture-only cases gated by `TASTE_AUDIT_CAPTURE_DIR`. The same cases were run explicitly during the capture audit and passed.
+Reviewed E2E skips: all 20 are capture-only cases gated by `TASTE_AUDIT_CAPTURE_DIR`. The same cases were run explicitly during the capture audit and passed.
 
 ## Visual capture and comparison
 
-The approved PowerShell capture command ran the hierarchy check plus all route captures: 19/19 passed. Captures are under `artifacts/signal-proof-captures/`:
+The approved PowerShell capture command ran the hierarchy check plus all ten desktop/mobile route captures: 21/21 passed. Captures are under `artifacts/signal-proof-captures/`:
 
 - Home: `home-desktop.png`, `home-mobile.png`
 - Work: `work-desktop.png`, `work-mobile.png`
 - Cryogenic Flow: `work-cryo-desktop.png`, `work-cryo-mobile.png`
 - CLI fleet: `work-cli-fleet-desktop.png`, `work-cli-fleet-mobile.png`
 - Remote recovery: `work-remote-recovery-desktop.png`, `work-remote-recovery-mobile.png`
+- Black-Scholes: `work-black-scholes-desktop.png`, `work-black-scholes-mobile.png`
 - About: `about-desktop.png`, `about-mobile.png`
 - Résumé: `resume-desktop.png`, `resume-mobile.png`
 - Contact: `contact-desktop.png`, `contact-mobile.png`
@@ -97,22 +100,22 @@ Direction A comparison artifacts:
 Every desktop and mobile capture was opened and inspected. The side-by-side Direction A comparison used the same desktop width. Findings:
 
 - The off-white editorial canvas, sparse four-link navigation, oversized type, lime signal, flat borders/rules, authentic Cryogenic proof, and static mobile reading order match the approved written direction.
-- No hierarchy, crop, spacing, overflow, font, border, contrast, or layout defect was found.
+- No residual hierarchy, crop, spacing, overflow, font, border, contrast, or layout defect remained after the Black-Scholes Axe correction and focused capture review.
 - Keyboard/focus, 44 px targets, reduced motion, and overflow were additionally exercised by behavior tests rather than inferred from screenshots.
 - The WebP change produced an intentional 1,082-pixel (0.01%) encoding difference in the Cryogenic desktop poster only. Expected, actual, and diff were inspected; content, crop, hierarchy, and layout were unchanged. Only that approved baseline was refreshed at that point.
 
 Windows visual evidence:
 
-- `pnpm test:visual:update`: 18/18 passed and wrote the approved current-route baselines.
-- Final `pnpm test:visual`: 18/18 passed with zero further diff.
+- `pnpm test:visual:update`: 20/20 passed and wrote the approved current-route baselines, including initialized Black-Scholes desktop/mobile states.
+- Final `pnpm test:visual`: 20/20 passed with zero further diff.
 
 Linux visual evidence was generated by a Linux browser, not copied or renamed from Windows:
 
 1. An isolated `/tmp/signal-proof-task11.*` copy was made from the current uncommitted source while excluding `.git`, `node_modules`, `dist`, test output, reports, and capture artifacts.
 2. `pnpm install --frozen-lockfile` installed 629 locked Linux packages.
-3. Linux Playwright 1.60/Chromium generated all 18 current visual baselines and the current no-WebGL baseline.
-4. Both suites were rerun without update mode: visual regression 18/18 and no-WebGL 1/1, with zero diff.
-5. Only those 19 Linux-generated PNGs were copied back. The verified temporary directory was then removed.
+3. Linux Playwright 1.60/Chromium generated the original 18 visual baselines and the current no-WebGL baseline. Review round 1 repeated the isolated-current-source procedure to generate the two missing Black-Scholes Linux baselines; the two Cryogenic Linux baselines were byte-unchanged.
+4. The final Linux visual regression suite passed 20/20 without update mode. The existing no-WebGL baseline remained covered by its 1/1 executable suite.
+5. Only genuinely Linux-generated PNGs were copied back. The verified temporary directories were then removed.
 
 ## Lighthouse
 
@@ -127,7 +130,7 @@ Final result: exit 0; thresholds passed; summary at `test-results/lighthouse-sum
 | `/resume/` | 100 | 100 | 100 | 100 |
 | `/contact/` | 100 | 100 | 100 | 100 |
 
-Homepage mobile LCP: **1,807 ms**, below the strict 2,500 ms threshold.
+Homepage mobile LCP: **1,810 ms**, below the strict 2,500 ms threshold. The M4 contract also proves that 2,500 ms itself fails the strict production gate.
 
 The final run began with ports 4322 and 4323 clear, served the audited URL from its own Astro process on 4322, and ended with both ports clear. The earlier mismatched diagnostic run against an orphaned listener was stopped and excluded from evidence; only the final fresh-process scores above are reported.
 
@@ -181,8 +184,10 @@ Node contracts/runners:
 Active verification documentation and read-only launch probes:
 
 - `runbooks/ACCESSIBILITY_AUDIT.md`
+- `runbooks/CROSS_BROWSER_RESPONSIVE_QA.md`
 - `runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md`
 - `runbooks/QUALITY.md`
+- `runbooks/VISUAL_REGRESSION.md`
 - `scripts/launch/README.md`
 - `scripts/launch/m3-dns-verify.sh`
 - `scripts/launch/m4-production-smoke.sh`
@@ -192,7 +197,7 @@ E2E behavior:
 - Updated API-outage, journey, motion, no-WebGL, quality, responsive, route, Home, static-shell, taste-audit, visual-regression, visual-surface, and Work-route specs.
 - Deleted the six mapped old iteration specs listed above.
 - Replaced old no-WebGL and visual snapshots with current Windows and Linux baselines.
-- Added 18 route captures and two Direction A comparison artifacts.
+- Added 20 route captures and two Direction A comparison artifacts.
 
 This report is stored at `.superpowers/sdd/2026-08-15-portfolio-signal-proof-rewrite/task-11-report.md`.
 
@@ -205,3 +210,22 @@ This report is stored at `.superpowers/sdd/2026-08-15-portfolio-signal-proof-rew
 - No production deploy, external message, push, issue mutation, or launch approval occurred.
 
 Commit message: `test: verify the Signal Proof portfolio release`.
+
+## Review round 1 corrective verification
+
+Review round 1 closed six release-proof gaps without deploying or changing dependencies:
+
+1. The active visual-regression and cross-browser runbooks now use the same ten-route Signal / Proof matrix as their executable specs, explicitly cover the initialized Black-Scholes detail, and forbid retired Projects, case-study, telemetry, API-form, and old note/fallback expectations.
+2. Launch README, M3, and M4 default to `joepoznanski.io`; stale domains are forbidden. M3 accepts only permanent 301/308 redirects and rejects temporary 302/307 responses.
+3. The Lighthouse cleanup exception now succeeds only when the fresh complete report accompanies exactly one cleanup runtime error. A mixed cleanup/navigation error is a failing contract case.
+4. The bundle guard requires `/work/black-scholes-wasm/` and has a negative fixture that fails when that route alone is absent.
+5. Black-Scholes is present in the visual, capture, responsive, no-JavaScript, reduced-motion, privacy, Axe, and runtime matrices. Windows and genuine Linux desktop/mobile baselines exist and pass with zero diff.
+6. M4 now enforces homepage mobile LCP strictly below 2,500 ms; contract boundaries at 2,499.9, 2,500, and 2,500.1 ms prove the comparison.
+
+Focused reviewer contract evidence began at 17/24 passing with seven expected failures and ended at 24/24 passing. The first all-browser responsive run passed Chromium 4/4 but could not launch missing Playwright Firefox/WebKit binaries; after installing the matching Playwright 1.60 browser binaries without changing repository dependencies, the exact matrix passed 12/12 across Chromium, Firefox, and WebKit.
+
+The original full-page Cryogenic desktop capture visibly contained Chromium's native loading ring even though the authentic WebP poster did not. Capture readiness now decodes real images/posters, loads native video metadata, and waits for the painted state. The focused Cryogenic capture rerun passed 2/2; both desktop/mobile outputs were opened, and the ring is absent. The same readiness gate protects visual baselines. Only the verified Cryogenic captures changed; its Linux visual baselines were unchanged.
+
+Review round 1 final local evidence is the full matrix recorded above, Windows visual update 20/20, Windows zero-diff visual run 20/20, genuine Linux zero-diff visual run 20/20, all-browser responsive 12/12, focused Black-Scholes captures 2/2, focused Cryogenic captures 2/2, and the fresh Lighthouse scores recorded above. Lighthouse began with ports 4321 and 4322 clear, served its own audited process on 4322, and left 4322 clear after exit. Cleanup-only profile errors occurred for two complete fresh reports; no mixed error was accepted.
+
+Corrective commit message: `test: close Signal Proof release review gaps`.

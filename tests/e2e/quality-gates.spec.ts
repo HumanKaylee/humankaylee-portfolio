@@ -13,6 +13,10 @@ const coreRoutes = [
 		path: "/work/remote-workstation-recovery-and-operational-debugging/",
 		marker: /Layered triage matrix/i,
 	},
+	{
+		path: "/work/black-scholes-wasm/",
+		marker: /Live pricer/i,
+	},
 	{ path: "/about/", marker: /Operating principles/i },
 	{ path: "/resume/", marker: /Agentic AI & automation highlights/i },
 	{ path: "/notes/", marker: /Black-Scholes/i },

@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-DOMAIN="${DOMAIN:-humankaylee.dev}"
+DOMAIN="${DOMAIN:-joepoznanski.io}"
 EVIDENCE_FILE="${EVIDENCE_FILE:-runbooks/LAUNCH_EVIDENCE.md}"
 WRITE_EVIDENCE="${WRITE_EVIDENCE:-0}"
 ARTIFACT_DIR="${ARTIFACT_DIR:-test-results/m4}"
@@ -13,6 +13,7 @@ LH_PERF_MIN="0.90"
 LH_A11Y_MIN="0.95"
 LH_BP_MIN="0.95"
 LH_SEO_MIN="0.95"
+LH_HOME_LCP_MAX_MS="2500"
 
 LIGHTHOUSE_PAGES=(
   "/"
@@ -37,6 +38,10 @@ require curl
 require jq
 require pnpm
 require node
+
+below() {
+  awk -v actual="$1" -v expected="$2" 'BEGIN{exit !(actual + 0 < expected + 0)}'
+}
 
 log "Check 1: Lighthouse on ${#LIGHTHOUSE_PAGES[@]} current pages"
 
@@ -74,6 +79,16 @@ for path in "${LIGHTHOUSE_PAGES[@]}"; do
     .categories.seo.score
   ] | @tsv' "$out" 2>/dev/null || printf 'x\tx\tx\tx')
   read -r perf a11y bp seo <<<"$scores"
+
+  if [ "$path" = "/" ]; then
+    home_lcp=$(jq -r '.audits["largest-contentful-paint"].numericValue // empty' "$out" 2>/dev/null || true)
+    if [[ ! "$home_lcp" =~ ^[0-9]+([.][0-9]+)?$ ]] || \
+       ! below "$home_lcp" "$LH_HOME_LCP_MAX_MS"; then
+      failed_lh+=("${path}: mobile LCP ${home_lcp:-missing}ms is not below ${LH_HOME_LCP_MAX_MS}ms")
+    else
+      log "  ${path} mobile LCP=${home_lcp}ms"
+    fi
+  fi
 
   meets() { awk -v actual="$1" -v expected="$2" 'BEGIN{exit !(actual + 0 >= expected + 0)}'; }
   if meets "$perf" "$LH_PERF_MIN" && \

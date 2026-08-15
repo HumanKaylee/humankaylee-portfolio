@@ -477,7 +477,7 @@
 
   .bs-readout-price .bs-readout-value {
     font-size: 1.0625rem;
-    color: var(--color-signal);
+    color: var(--color-ink);
   }
 
   .bs-demo-footer {
@@ -485,11 +485,10 @@
     font-family: var(--font-evidence);
     font-size: 0.6875rem;
     color: var(--color-ink-soft);
-    opacity: 0.75;
   }
 
   .bs-source-link {
-    color: var(--color-tungsten);
+    color: var(--color-ink);
     text-underline-offset: 2px;
   }
 
@@ -506,6 +505,15 @@
 
     .bs-select {
       background: color-mix(in srgb, var(--color-ink) 80%, var(--color-paper));
+      color: var(--color-paper);
+    }
+
+    .bs-readout-price .bs-readout-value,
+    .bs-source-link {
+      color: var(--color-signal-on-dark);
+    }
+
+    .bs-demo-footer {
       color: var(--color-paper);
     }
   }

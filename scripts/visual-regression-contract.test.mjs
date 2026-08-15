@@ -12,6 +12,22 @@ const files = {
 	tsconfig: "tsconfig.json",
 };
 
+const expectedVisualRoutes = [
+	["home", "/"],
+	["work", "/work/"],
+	["work-cryo", "/work/cryo-flow-sim/"],
+	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
+	[
+		"work-remote-recovery",
+		"/work/remote-workstation-recovery-and-operational-debugging/",
+	],
+	["work-black-scholes", "/work/black-scholes-wasm/"],
+	["about", "/about/"],
+	["resume", "/resume/"],
+	["contact", "/contact/"],
+	["notes", "/notes/"],
+];
+
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
 	const content = readFileSync(path, "utf8");
@@ -20,7 +36,30 @@ function readRequiredFile(path) {
 }
 
 function expectContains(content, needle, label = needle) {
-	assert.ok(content.includes(needle), `expected content to include ${label}`);
+	assert.ok(
+		content.replace(/\s+/g, " ").includes(needle.replace(/\s+/g, " ")),
+		`expected content to include ${label}`,
+	);
+}
+
+function visualSpecRoutes(source) {
+	const matrix = source.match(
+		/const visualRoutes = \[([\s\S]*?)\] as const;/,
+	)?.[1];
+	assert.ok(matrix, "visual spec must expose visualRoutes");
+	return [
+		...matrix.matchAll(/label:\s*"([^"]+)"[\s\S]*?path:\s*"([^"]+)"/g),
+	].map(([, label, path]) => [label, path]);
+}
+
+function documentedVisualRoutes(source) {
+	const section = source.match(
+		/## Route And Snapshot Matrix([\s\S]*?)(?:\n## |$)/,
+	)?.[1];
+	assert.ok(section, "visual runbook must expose a route and snapshot matrix");
+	return [...section.matchAll(/\|\s*`([^`]+)`\s*\|\s*`([^`]+)`\s*\|/g)].map(
+		([, label, path]) => [label, path],
+	);
 }
 
 test("B-037 visual regression spec exists and backlog tracks the task", () => {
@@ -77,5 +116,22 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	assert.ok(
 		existsSync(files.runbook),
 		`missing required file: ${files.runbook}`,
+	);
+});
+
+test("B-037 runbook and executable visual matrix cover every current Signal / Proof surface", () => {
+	const runbook = readRequiredFile(files.runbook);
+	const visualSpec = readRequiredFile(files.visualSpec);
+
+	assert.deepEqual(visualSpecRoutes(visualSpec), expectedVisualRoutes);
+	assert.deepEqual(documentedVisualRoutes(runbook), expectedVisualRoutes);
+	assert.match(runbook, /Windows[\s\S]*Linux/i);
+	assert.match(
+		runbook,
+		/Black-Scholes[\s\S]*initialized|initialized[\s\S]*Black-Scholes/i,
+	);
+	assert.doesNotMatch(
+		runbook,
+		/Project index|representative case study|API-offline|telemetry panel|how-the-portfolio-stays-useful/i,
 	);
 });

@@ -33,7 +33,7 @@ chmod +x scripts/launch/*.sh
 
 Both scripts:
 
-- Read `DOMAIN` (default `humankaylee.dev`) from the environment.
+- Read `DOMAIN` (default `joepoznanski.io`) from the environment.
 - Perform GET, HEAD, DNS, TLS, or browser-audit probes only.
 - Write local artifacts under `test-results/` and may append a local evidence
   row after every probe passes.
@@ -44,8 +44,8 @@ Both scripts:
 ## Override example
 
 ```bash
-DOMAIN=joepo.engineering ./scripts/launch/m3-dns-verify.sh
-DOMAIN=joepo.engineering ./scripts/launch/m4-production-smoke.sh
+DOMAIN=preview.joepoznanski.io ./scripts/launch/m3-dns-verify.sh
+DOMAIN=preview.joepoznanski.io ./scripts/launch/m4-production-smoke.sh
 ```
 
 ## Retry behavior

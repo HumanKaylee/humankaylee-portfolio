@@ -10,6 +10,19 @@ const files = {
 	workflow: ".github/workflows/phase-0-ci.yml",
 };
 
+const expectedResponsiveRoutes = [
+	"/",
+	"/work/",
+	"/work/cryo-flow-sim/",
+	"/work/cli-fleet-synchronization-and-mcp-rollout/",
+	"/work/remote-workstation-recovery-and-operational-debugging/",
+	"/work/black-scholes-wasm/",
+	"/about/",
+	"/resume/",
+	"/notes/",
+	"/contact/",
+];
+
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
 
@@ -26,6 +39,22 @@ function expectContains(content, needle, label = needle) {
 	assert.ok(
 		normalize(content).includes(normalize(needle)),
 		`expected content to include ${label}`,
+	);
+}
+
+function responsiveSpecRoutes(source) {
+	const matrix = source.match(
+		/const launchRoutes = \[([\s\S]*?)\] as const;/,
+	)?.[1];
+	assert.ok(matrix, "responsive spec must expose launchRoutes");
+	return [...matrix.matchAll(/path:\s*"([^"]+)"/g)].map(([, path]) => path);
+}
+
+function documentedResponsiveRoutes(source) {
+	const section = source.match(/## Route Matrix([\s\S]*?)(?:\n## |$)/)?.[1];
+	assert.ok(section, "responsive runbook must expose a route matrix");
+	return [...section.matchAll(/\|\s*`(\/[^`]*)`\s*\|/g)].map(
+		([, path]) => path,
 	);
 }
 
@@ -51,7 +80,7 @@ test("B-055 responsive QA artifacts cover browser and viewport launch criteria",
 	expectContains(runbook, "mobile");
 	expectContains(runbook, "tablet");
 	expectContains(runbook, "desktop");
-	expectContains(runbook, "notes/build-log");
+	expectContains(runbook, "Published Technical Notes");
 	expectContains(runbook, "/notes/");
 	expectContains(runbook, "LinkedIn in-app mobile");
 	expectContains(runbook, "launch blocker");
@@ -93,4 +122,21 @@ test("B-055 responsive QA artifacts cover browser and viewport launch criteria",
 	expectContains(evidence, "Cross-browser responsive QA");
 	expectContains(evidence, "runbooks/CROSS_BROWSER_RESPONSIVE_QA.md");
 	expectContains(evidence, "tests/e2e/responsive-cross-browser.spec.ts");
+});
+
+test("B-055 runbook route matrix stays aligned with executable Signal / Proof responsive coverage", () => {
+	const runbook = readRequiredFile(files.runbook);
+	const spec = readRequiredFile(files.spec);
+
+	assert.deepEqual(responsiveSpecRoutes(spec), expectedResponsiveRoutes);
+	assert.deepEqual(
+		documentedResponsiveRoutes(runbook),
+		expectedResponsiveRoutes,
+	);
+	assert.match(runbook, /ProjectStage/);
+	assert.match(runbook, /Black-Scholes/);
+	assert.doesNotMatch(
+		runbook,
+		/projects, representative case study|static fallback note|how-the-portfolio-stays-useful|Rust API boundary/i,
+	);
 });

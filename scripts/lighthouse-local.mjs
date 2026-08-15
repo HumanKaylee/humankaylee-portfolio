@@ -215,11 +215,16 @@ export function canUseReportAfterWindowsCleanupError({
 		/EPERM, Permission denied:[\s\S]*?[\\/]Temp[\\/]lighthouse\.\d+/.test(
 			output,
 		);
+	const runtimeErrors =
+		typeof output === "string"
+			? (output.match(/^Runtime error encountered:/gm) ?? [])
+			: [];
 
 	return (
 		platform === "win32" &&
 		exitCode === 1 &&
 		isChromeTempCleanupError &&
+		runtimeErrors.length === 1 &&
 		hasCompleteReport
 	);
 }

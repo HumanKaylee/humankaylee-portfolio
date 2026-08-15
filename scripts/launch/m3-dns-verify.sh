@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-DOMAIN="${DOMAIN:-humankaylee.dev}"
+DOMAIN="${DOMAIN:-joepoznanski.io}"
 EVIDENCE_FILE="${EVIDENCE_FILE:-runbooks/LAUNCH_EVIDENCE.md}"
 WRITE_EVIDENCE="${WRITE_EVIDENCE:-0}"
 RETRY_DELAYS=(60 120 300)
@@ -142,8 +142,8 @@ check_legacy_redirect() {
     "https://${DOMAIN}${input}" -o /dev/null -w '%{http_code}\t%{redirect_url}' || echo "ERR")
   IFS=$'\t' read -r status redirect_url <<<"$probe"
   case "$status" in
-    301|302|307|308) ;;
-    *) fail "Legacy input ${input} returned ${status}, expected an HTTP redirect" 1 ;;
+    301|308) ;;
+    *) fail "Legacy input ${input} returned ${status}, expected a permanent HTTP redirect" 1 ;;
   esac
   [ "$redirect_url" = "$expected_url" ] || fail "Legacy input ${input} redirects to ${redirect_url:-missing}, expected ${expected_url}" 1
   log "  ${input} → ${status} ${redirect_url}"

@@ -23,6 +23,7 @@ const visualRoutes = [
 		label: "work-remote-recovery",
 		path: "/work/remote-workstation-recovery-and-operational-debugging/",
 	},
+	{ label: "work-black-scholes", path: "/work/black-scholes-wasm/" },
 	{ label: "about", path: "/about/" },
 	{ label: "resume", path: "/resume/" },
 	{ label: "contact", path: "/contact/" },
@@ -40,6 +41,66 @@ async function stabilizeVisualState(page: Page) {
 	});
 }
 
+async function waitForStableMedia(page: Page) {
+	await page.locator(".media-frame img").evaluateAll(async (elements) => {
+		for (const element of elements) {
+			const image = element as HTMLImageElement;
+			if (!image.complete || image.naturalWidth === 0) {
+				await new Promise<void>((resolve, reject) => {
+					image.addEventListener("load", () => resolve(), { once: true });
+					image.addEventListener(
+						"error",
+						() => reject(new Error("media image failed to load")),
+						{ once: true },
+					);
+				});
+			}
+			await image.decode();
+		}
+	});
+	await page
+		.locator(".media-frame video[poster]")
+		.evaluateAll(async (elements) => {
+			for (const element of elements) {
+				const video = element as HTMLVideoElement;
+				const poster = new Image();
+				poster.src = video.poster;
+				if (!poster.complete || poster.naturalWidth === 0) {
+					await new Promise<void>((resolve, reject) => {
+						poster.addEventListener("load", () => resolve(), { once: true });
+						poster.addEventListener(
+							"error",
+							() => reject(new Error("video poster failed to load")),
+							{ once: true },
+						);
+					});
+				}
+				await poster.decode();
+
+				if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
+					await new Promise<void>((resolve, reject) => {
+						video.addEventListener("loadedmetadata", () => resolve(), {
+							once: true,
+						});
+						video.addEventListener(
+							"error",
+							() => reject(new Error("video metadata failed to load")),
+							{ once: true },
+						);
+						video.preload = "metadata";
+						video.load();
+					});
+				}
+			}
+		});
+	await page.evaluate(
+		() =>
+			new Promise<void>((resolve) =>
+				requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+			),
+	);
+}
+
 async function expectCoreReadiness(page: Page, path: string) {
 	const response = await page.goto(path, {
 		waitUntil: "domcontentloaded",
@@ -48,6 +109,14 @@ async function expectCoreReadiness(page: Page, path: string) {
 	await page.waitForLoadState("networkidle");
 	await expect(page.locator("main")).toBeVisible();
 	await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+	await waitForStableMedia(page);
+	if (path === "/work/black-scholes-wasm/") {
+		await expect(page.locator("#bs-controls")).not.toHaveAttribute(
+			"aria-hidden",
+			"true",
+		);
+		await expect(page.locator("#bs-price")).not.toHaveText("—");
+	}
 }
 
 test.describe("Signal / Proof visual regression @visual-regression", () => {

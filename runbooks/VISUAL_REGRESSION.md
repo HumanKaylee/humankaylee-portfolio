@@ -1,82 +1,78 @@
 # Visual Regression Runbook
 
-Date: 2026-05-23
-Scope: B-037 visual regression snapshots
+Date: 2026-08-15
+Scope: B-037 Signal / Proof visual regression snapshots
 Status: implementation evidence only; not production launch evidence
 
 ## Purpose
 
-This runbook defines the focused visual-regression gate for core portfolio surfaces.
-It captures baseline screenshots for:
-
-- Home
-- Project index
-- One representative case study
-- Resume
-- Notes index
-- API-offline note detail
-- Contact
-
-Desktop and mobile snapshots are generated in a deterministic reduced-motion context.
+This runbook defines the focused visual-regression gate for the current public
+portfolio. Chromium captures each named surface at 1440×1200 and 390×844 with
+reduced motion and deterministic animation timing. The Black-Scholes surface is
+not captured until its real WASM controls initialize and the price readout is
+populated.
 
 ## Commands
 
-Install browser dependency before first run:
+Install the browser dependency before the first run:
 
 ```bash
 pnpm exec playwright install --with-deps chromium
 ```
 
-Generate/update baseline screenshots:
+Generate or intentionally update Windows baselines:
 
 ```bash
 pnpm test:visual:update
 ```
 
-Validate visuals against generated baselines:
+Validate the named platform against its existing baselines:
 
 ```bash
 pnpm test:visual
 ```
 
-CI runs the same focused gate as a dedicated frontend job step:
+Linux baselines must be generated and rerun with Linux Playwright Chromium
+against the same source revision. Windows images must never be copied or renamed
+as Linux evidence. CI runs the same focused command in the `Run visual
+regression gate` job step.
 
-```text
-Run visual regression gate
-```
-
-Run the visual gate contract:
+Run the route-matrix contract with:
 
 ```bash
 node --test scripts/visual-regression-contract.test.mjs
 ```
 
-## Evidence
+## Route And Snapshot Matrix
 
-Expected snapshot artifacts are generated under:
+Each label produces `<label>-desktop-<platform>.png` and
+`<label>-mobile-<platform>.png` under
+`tests/e2e/visual-regression.spec.ts-snapshots/`.
 
-- `tests/e2e/visual-regression.spec.ts-snapshots/`
+| Label | Public route | Readiness boundary |
+| --- | --- | --- |
+| `home` | `/` | Home heading and ProjectStage are visible |
+| `work` | `/work/` | Work index heading is visible |
+| `work-cryo` | `/work/cryo-flow-sim/` | Cryogenic proof surface is visible |
+| `work-cli-fleet` | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof surface is visible |
+| `work-remote-recovery` | `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof surface is visible |
+| `work-black-scholes` | `/work/black-scholes-wasm/` | Black-Scholes WASM controls are initialized and the real price readout is populated |
+| `about` | `/about/` | About heading is visible |
+| `resume` | `/resume/` | Résumé heading is visible |
+| `contact` | `/contact/` | Static direct-contact heading is visible |
+| `notes` | `/notes/` | Published Notes index heading is visible |
 
-The artifact set must include desktop and mobile variants for:
+## Inspection And Baseline Policy
 
-- `home`
-- `projects`
-- `case-study`
-- `resume`
-- `notes` (`/notes/`)
-- `note-detail` (`/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/`)
-- `contact`
+- Open every new expected, actual, and diff image before changing a baseline.
+- Compare desktop and mobile captures with the approved Direction A reference at
+  the same viewport and state. Screenshots alone are not QA.
+- Check hierarchy, crop, spacing, overflow, focus, font rendering, borders,
+  contrast, and control/readout layout.
+- Update only an intentional, approved difference. Immediately rerun
+  `pnpm test:visual` and require zero further diff.
+- Keep Windows and genuine Linux baselines paired for every route and viewport.
 
-## Stabilization Notes
-
-- `tests/e2e/visual-regression.spec.ts` forces reduced motion.
-- API paths used by the home telemetry panel are stubbed in the test for deterministic
-  status text.
-- Contact status and telemetry status regions are masked to avoid false positives
-  from non-functional text churn.
-
-## Flake Risk
-
-This command is intended to be a focused gate, not part of every standard local
-`pnpm test:e2e` run, to avoid broad CI coupling. The main risk is non-content
-render jitter from environment font rendering or external CDN timing.
+The focused visual gate is separate from the umbrella E2E suite so rendering
+differences remain diagnosable. Local and CI screenshots are implementation
+evidence; they do not prove the final public origin or grant launch approval.

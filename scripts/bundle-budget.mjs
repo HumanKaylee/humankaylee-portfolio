@@ -14,6 +14,7 @@ export const REQUIRED_RELEASE_ROUTES = [
 	"/notes/",
 	"/resume/",
 	"/work/",
+	"/work/black-scholes-wasm/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/cryo-flow-sim/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",

@@ -81,6 +81,35 @@ describe("bundle budget gate", () => {
 		assert.ok(result.failures.some((failure) => failure.includes("missing")));
 	});
 
+	it("rejects a build that omits the Black-Scholes WASM detail route", () => {
+		const routesWithoutBlackScholes = [
+			"/",
+			"/about/",
+			"/contact/",
+			"/notes/",
+			"/resume/",
+			"/work/",
+			"/work/cli-fleet-synchronization-and-mcp-rollout/",
+			"/work/cryo-flow-sim/",
+			"/work/remote-workstation-recovery-and-operational-debugging/",
+		].map((routePath) => ({
+			routePath,
+			inlineScriptCount: 0,
+			externalScriptCount: 0,
+			externalScripts: [],
+			criticalJavaScriptBytes: 0,
+		}));
+
+		const result = evaluateBundleBudget(routesWithoutBlackScholes);
+
+		assert.equal(result.passed, false);
+		assert.ok(
+			result.failures.includes(
+				"required release route missing from build: /work/black-scholes-wasm/",
+			),
+		);
+	});
+
 	it("exposes a dry-run plan before build artifacts exist", () => {
 		assert.deepEqual(bundleBudgetDryRunPlan(), {
 			distDir: "dist",

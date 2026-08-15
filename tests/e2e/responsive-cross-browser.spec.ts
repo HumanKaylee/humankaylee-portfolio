@@ -32,6 +32,12 @@ const launchRoutes = [
 		primaryLink: /Next project:/i,
 	},
 	{
+		path: "/work/black-scholes-wasm/",
+		heading: /Black-Scholes Options Pricer/i,
+		marker: /Live pricer/i,
+		primaryLink: /Next project:/i,
+	},
+	{
 		path: "/about/",
 		heading: /Engineering judgment for systems that have to hold up/i,
 		marker: /Operating principles/i,

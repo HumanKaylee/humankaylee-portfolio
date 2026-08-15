@@ -163,6 +163,16 @@ describe("lighthouse local gate contract", () => {
 			}),
 			false,
 		);
+		assert.equal(
+			canUseReportAfterWindowsCleanupError({
+				platform: "win32",
+				exitCode: 1,
+				output: `${cleanupError}\nRuntime error encountered: Navigation failed with net::ERR_CONNECTION_REFUSED`,
+				report,
+			}),
+			false,
+			"a fresh complete report must not hide a second fatal Lighthouse error",
+		);
 	});
 
 	it("warms up the preview before scored audits", () => {
