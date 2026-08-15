@@ -1,0 +1,88 @@
+---
+import type { WorkMedia } from "../lib/contracts/work";
+
+type Props = {
+	media: WorkMedia;
+	playback?: boolean;
+};
+
+const { media, playback = false } = Astro.props;
+---
+
+<figure class="media-frame" data-media-kind={media.kind}>
+	{
+		media.kind === "video" && !playback ? (
+			<picture class="media-poster" data-video-poster>
+				<source
+					type="image/webp"
+					srcset="/media/cryo-flow-sim-stage1-640.webp 640w, /media/cryo-flow-sim-stage1-960.webp 960w, /media/cryo-flow-sim-stage1-1440.webp 1440w"
+					sizes="(max-width: 760px) 100vw, 50vw"
+				/>
+				<img
+					src={media.poster}
+					width={media.width}
+					height={media.height}
+					alt={media.alt}
+				/>
+			</picture>
+		) : media.kind === "video" ? (
+			<video
+				controls
+				preload="none"
+				poster={media.poster}
+				width={media.width}
+				height={media.height}
+				aria-label={media.alt}
+			>
+				<source src={media.src} type="video/mp4" />
+				<a href={media.src}>Open the simulation video</a>
+			</video>
+		) : media.kind === "image" ? (
+			<img
+				src={media.src}
+				width={media.width}
+				height={media.height}
+				alt={media.alt}
+				loading="lazy"
+			/>
+		) : (
+			<slot />
+		)
+	}
+	<figcaption>{media.caption}</figcaption>
+</figure>
+
+<style>
+	.media-frame {
+		display: grid;
+		min-width: 0;
+		margin: 0;
+		gap: 0;
+		overflow: hidden;
+		border: 1px solid var(--line);
+		border-radius: var(--radius-media);
+		background: var(--color-media);
+	}
+
+	.media-frame :global(picture),
+	.media-frame :global(img),
+	.media-frame :global(video) {
+		width: 100%;
+		height: auto;
+	}
+
+	.media-frame :global(img),
+	.media-frame :global(video) {
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.media-frame figcaption {
+		border-top: 1px solid var(--line);
+		padding: var(--space-2) var(--space-3);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+		line-height: 1.5;
+	}
+</style>

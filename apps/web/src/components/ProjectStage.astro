@@ -1,0 +1,228 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import type { WorkEntryData } from "../lib/contracts/work";
+import MediaFrame from "./MediaFrame.astro";
+import WorkRow from "./WorkRow.astro";
+
+type Props = {
+	projects: CollectionEntry<"work">[];
+};
+
+const { projects } = Astro.props;
+---
+
+<section class="project-stage" data-project-stage aria-labelledby="selected-work-title">
+	<header class="project-stage__heading">
+		<p class="section-kicker">Selected work</p>
+		<h2 id="selected-work-title">Three systems. Three kinds of proof.</h2>
+		<p>
+			Each story starts with a real constraint and stays bounded by the evidence
+			that survived review.
+		</p>
+	</header>
+
+	<div class="project-stage__body">
+		<ol class="project-stage__rows">
+			{
+				projects.map((project, index) => (
+					<li>
+						<WorkRow project={project} index={index} />
+					</li>
+				))
+			}
+		</ol>
+
+		<div class="project-stage__panels">
+			{
+				projects.map((project) => (
+					<article
+						class="project-stage__panel"
+						data-stage-panel={project.data.slug}
+						aria-labelledby={`stage-trigger-${project.data.slug}`}
+					>
+						{project.data.media.kind === "evidence-flow" ? (
+							<MediaFrame media={project.data.media}>
+								<section
+									class="evidence-flow"
+									aria-label={project.data.media.alt}
+								>
+									<p class="evidence-flow__overview">
+										{project.data.architecture.overview}
+									</p>
+									<dl>
+										{project.data.evidence.values.map((value: WorkEntryData["evidence"]["values"][number]) => (
+											<div>
+												<dt>{value.label}</dt>
+												<dd>
+													<strong>{value.value}</strong>
+													<span>{value.detail}</span>
+												</dd>
+											</div>
+										))}
+									</dl>
+									<div class="evidence-flow__boundary">
+										<p>
+											<strong>Evidence boundary</strong>
+											<span>{project.data.evidence.scope}</span>
+										</p>
+										<p>
+											<strong>Known limit</strong>
+											<span>{project.data.evidence.limits}</span>
+										</p>
+									</div>
+								</section>
+							</MediaFrame>
+						) : (
+							<MediaFrame media={project.data.media} />
+						)}
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.project-stage {
+		display: grid;
+		gap: var(--space-5);
+		padding-block: var(--space-6);
+	}
+
+	.project-stage__heading {
+		display: grid;
+		grid-template-columns: minmax(0, 0.35fr) minmax(0, 1fr) minmax(16rem, 0.55fr);
+		gap: var(--space-4);
+		align-items: end;
+	}
+
+	.project-stage__heading .section-kicker,
+	.project-stage__heading > p:last-child {
+		color: var(--color-muted);
+	}
+
+	.project-stage__heading .section-kicker {
+		font-size: 0.75rem;
+	}
+
+	.project-stage__heading > p:last-child {
+		max-width: 32rem;
+	}
+
+	.project-stage__body {
+		display: grid;
+		grid-template-columns: minmax(20rem, 0.8fr) minmax(0, 1.2fr);
+		gap: clamp(2rem, 5vw, 6rem);
+		align-items: start;
+	}
+
+	.project-stage__rows {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.project-stage__rows li {
+		border-top: 1px solid var(--line);
+	}
+
+	.project-stage__rows li:last-child {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.project-stage__panels {
+		display: grid;
+		min-width: 0;
+		gap: var(--space-4);
+	}
+
+	.project-stage__panel {
+		min-width: 0;
+	}
+
+	.evidence-flow {
+		display: grid;
+		gap: var(--space-4);
+		min-height: 24rem;
+		padding: clamp(1.25rem, 3vw, 2.5rem);
+		background: var(--color-technical);
+		color: var(--color-canvas);
+	}
+
+	.evidence-flow__overview {
+		max-width: 48rem;
+		font-size: clamp(1.15rem, 2vw, 1.55rem);
+		font-weight: 650;
+		line-height: 1.35;
+	}
+
+	.evidence-flow dl {
+		display: grid;
+		margin: 0;
+		border-top: 1px solid color-mix(in srgb, var(--color-canvas) 28%, transparent);
+	}
+
+	.evidence-flow dl > div {
+		display: grid;
+		grid-template-columns: minmax(9rem, 0.45fr) minmax(0, 1fr);
+		gap: var(--space-3);
+		border-bottom: 1px solid color-mix(in srgb, var(--color-canvas) 28%, transparent);
+		padding-block: var(--space-3);
+	}
+
+	.evidence-flow dt,
+	.evidence-flow dd {
+		margin: 0;
+	}
+
+	.evidence-flow dt,
+	.evidence-flow__boundary strong {
+		color: var(--color-signal);
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.evidence-flow dd,
+	.evidence-flow__boundary p {
+		display: grid;
+		gap: 0.25rem;
+	}
+
+	.evidence-flow dd span,
+	.evidence-flow__boundary span {
+		color: var(--color-canvas);
+		font-size: 0.82rem;
+		line-height: 1.45;
+	}
+
+	.evidence-flow__boundary {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-4);
+	}
+
+	@media (max-width: 64rem) {
+		.project-stage__heading,
+		.project-stage__body {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.project-stage__heading {
+			align-items: start;
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.evidence-flow {
+			min-height: 0;
+		}
+
+		.evidence-flow dl > div,
+		.evidence-flow__boundary {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

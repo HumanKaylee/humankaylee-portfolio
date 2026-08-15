@@ -2,149 +2,228 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
-import BuildTelemetryStrip from "../components/BuildTelemetryStrip.astro";
-import CtaCluster from "../components/CtaCluster.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import SystemsMapHero from "../components/SystemsMapHero.astro";
+import EvidenceStrip from "../components/EvidenceStrip.astro";
+import MediaFrame from "../components/MediaFrame.astro";
+import ProjectStage from "../components/ProjectStage.astro";
 import { routeInventoryById } from "../data/routes";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { homeScaffold } from "../lib/home-scaffold";
 
-const scaffold = homeScaffold();
-type ProjectEntry = CollectionEntry<"projects">;
-const allProjects = (await getCollection("projects")) as ProjectEntry[];
-const [resume] = await getCollection("resume");
-const projects = allProjects
+type WorkEntry = CollectionEntry<"work">;
+const allWork = (await getCollection("work")) as WorkEntry[];
+const flagships = allWork
 	.filter(
-		(project: ProjectEntry) => project.data.publicationStatus === "publish",
+		(project) =>
+			project.data.publicationStatus === "publish" &&
+			typeof project.data.featuredOrder === "number",
 	)
-	.slice(0, 3);
+	.sort(
+		(left, right) =>
+			(left.data.featuredOrder ?? Number.POSITIVE_INFINITY) -
+			(right.data.featuredOrder ?? Number.POSITIVE_INFINITY),
+	);
+
+if (flagships.length !== 3) {
+	throw new Error(
+		`Homepage requires exactly three published flagships; found ${flagships.length}.`,
+	);
+}
+
+const cryogenicFlow = flagships[0];
 ---
 
 <BaseLayout
-	title="Joe Poznanski | Systems Atelier"
-	description="A static-first portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and creative web work."
+	title="Joe Poznanski | Principal Engineer"
+	description="Principal engineer for systems that cannot drift, from simulation and infrastructure to automation and recovery."
 	canonicalPath="/"
 	ogImage={routeInventoryById.home.seo.ogImage}
 >
-	<section class="hero-shell" aria-labelledby="hero-title">
-		<div class="hero-copy">
-			<p class="section-kicker">{scaffold.kicker}</p>
-			<h1 id="hero-title">{scaffold.heroTitle}</h1>
-			<p class="lede">{scaffold.intro}</p>
-			<ul class="career-proof" aria-label="Career proof">
-				<li><strong>15+ years</strong><span>shipping complex software</span></li>
-				<li><strong>Principal engineer</strong><span>architecture through operations</span></li>
-				<li><strong>Mission-critical</strong><span>aerospace and simulation delivery</span></li>
-				<li><strong>Rust, C++, Python, AI</strong><span>systems and agent workflows</span></li>
-			</ul>
-			<p class="hero-note">{scaffold.noJsNote}</p>
-			<CtaCluster items={scaffold.ctas} />
-		</div>
-		<SystemsMapHero projects={allProjects} />
-	</section>
-
-	<BuildTelemetryStrip items={scaffold.telemetry} />
-
-	<section class="content-section home-evidence" aria-labelledby="support-title">
-		<h2 id="support-title">Proof, before the details.</h2>
-		<ol class="support-statement-list">
-			{
-				scaffold.supportStatements.map((statement) => (
-					<li>
-						<span>{statement}</span>
-					</li>
-				))
-			}
-		</ol>
-	</section>
-
-	<section class="content-section home-audience" aria-labelledby="paths-title">
-		<h2 id="paths-title">Start with the view you need.</h2>
-		<div class="path-grid">
-			<article class="path-card home-recruiter-path">
-				<p class="eyebrow">Recruiter path</p>
-				<h3>Skills, scope, resume, contact.</h3>
-				<p>
-					A focused view of experience, practical strengths, selected projects,
-					and a direct contact route.
+	<div class="signal-proof-home">
+		<section class="home-hero" aria-labelledby="hero-title">
+			<div class="home-hero__copy">
+				<p class="section-kicker">Joe Poznanski · Principal Software Engineer</p>
+				<h1 id="hero-title">Principal engineer for systems that cannot drift.</h1>
+				<p class="home-hero__lede">
+					I turn ambiguous operational problems into reliable software, from
+					simulation and infrastructure to automation and recovery.
 				</p>
-				<a
-					class="contact-link"
-					data-touch-target="true"
-					href={resume.data.pdfDownloadPath}
-				>
-					Download resume PDF
+				<a class="signal-link" data-touch-target="true" href="/work/">
+					View selected work
 				</a>
-			</article>
-			<article class="path-card home-engineer-path">
-				<p class="eyebrow">Engineer path</p>
-				<h3>Architecture, verification, operations.</h3>
-				<p>
-					Project cards and case-study outlines emphasize constraints, evidence,
-					and operational judgment over unsupported claims.
-				</p>
-			</article>
-		</div>
-	</section>
-
-	<section
-		class="content-section interface-evidence"
-		aria-labelledby="interface-evidence-title"
-		aria-label="Selected interface evidence"
-	>
-		<div class="section-heading-row">
-			<div>
-				<p class="section-kicker">Interface evidence</p>
-				<h2 id="interface-evidence-title">The system is visible.</h2>
 			</div>
-			<p>Two public-safe views from the portfolio itself: capability mapping and project navigation.</p>
-		</div>
-		<div class="interface-evidence-grid">
-			<figure class="interface-proof-window">
-				<div class="proof-window-bar" aria-hidden="true"><span></span><span></span><span></span><small>systems-map</small></div>
-				<svg viewBox="0 0 640 360" role="img" aria-labelledby="systems-proof-title systems-proof-description">
-					<title id="systems-proof-title">Systems map interface</title>
-					<desc id="systems-proof-description">A visual map connecting problem framing, system architecture, and verification evidence.</desc>
-					<rect width="640" height="360" rx="24" class="proof-canvas"></rect>
-					<path d="M120 190 L270 90 L490 140 L420 280 L190 285 Z" class="proof-thread"></path>
-					<circle cx="320" cy="190" r="62" class="proof-core"></circle>
-					<text x="320" y="184" text-anchor="middle" class="proof-core-title">JP</text>
-					<text x="320" y="210" text-anchor="middle" class="proof-core-label">evidence core</text>
-					<g class="proof-nodes"><circle cx="120" cy="190" r="13"></circle><circle cx="270" cy="90" r="13"></circle><circle cx="490" cy="140" r="13"></circle><circle cx="420" cy="280" r="13"></circle><circle cx="190" cy="285" r="13"></circle></g>
-				</svg>
-				<figcaption><strong>Systems map</strong><span>Architecture and evidence stay connected.</span></figcaption>
-			</figure>
-			<figure class="interface-proof-window">
-				<div class="proof-window-bar" aria-hidden="true"><span></span><span></span><span></span><small>project-atlas</small></div>
-				<svg viewBox="0 0 640 360" role="img" aria-labelledby="atlas-proof-title atlas-proof-description">
-					<title id="atlas-proof-title">Project atlas interface</title>
-					<desc id="atlas-proof-description">A project navigation view with capability clusters and direct evidence routes.</desc>
-					<rect width="640" height="360" rx="24" class="proof-canvas proof-canvas-alt"></rect>
-					<path d="M115 250 C210 100 420 90 535 220" class="proof-thread proof-thread-alt"></path>
-					<g class="proof-atlas-cards">
-						<rect x="70" y="195" width="150" height="82" rx="15"></rect>
-						<rect x="245" y="70" width="150" height="82" rx="15"></rect>
-						<rect x="420" y="175" width="150" height="82" rx="15"></rect>
-					</g>
-					<g class="proof-atlas-labels"><text x="145" y="230" text-anchor="middle">operations</text><text x="320" y="105" text-anchor="middle">automation</text><text x="495" y="210" text-anchor="middle">creative web</text></g>
-				</svg>
-				<figcaption><strong>Project atlas</strong><span>Capability clusters open direct project routes.</span></figcaption>
-			</figure>
-		</div>
-	</section>
+			<div class="home-hero__media">
+				<MediaFrame media={cryogenicFlow.data.media} />
+			</div>
+		</section>
 
-	<section class="content-section home-projects" aria-labelledby="featured-projects">
-		<h2 id="featured-projects">Selected work, with public-safe evidence.</h2>
-		<div class="artifact-grid home-project-grid">
-			{
-				projects.map((project: ProjectEntry, index) => (
-					<ProjectCard
-						project={project}
-						className={index === 0 ? "home-featured-project" : undefined}
-					/>
-				))
-			}
-		</div>
-	</section>
+		<EvidenceStrip
+			items={cryogenicFlow.data.evidence.values}
+			label="Verified Cryogenic Flow evidence"
+		/>
+
+		<ProjectStage projects={flagships} />
+
+		<section class="home-capability" aria-labelledby="capability-title">
+			<p class="section-kicker">Capabilities in practice</p>
+			<h2 id="capability-title">
+				Simulation fidelity, fleet consistency, and recovery judgment.
+			</h2>
+			<p>
+				The common thread is operational trust: deterministic artifacts,
+				account-local verification, and the smallest reversible recovery action.
+			</p>
+		</section>
+
+		<section class="home-about" aria-labelledby="about-preview-title">
+			<div>
+				<p class="section-kicker">About</p>
+				<h2 id="about-preview-title">Judgment lives in the handoff.</h2>
+			</div>
+			<div class="home-about__copy">
+				<p>
+					I work from problem framing through implementation, verification, and
+					operator handoff. I value clear system boundaries, evidence that can be
+					repeated, and documentation that preserves the reasoning behind a
+					decision.
+				</p>
+				<a class="signal-link" data-touch-target="true" href="/about/">
+					More about how I work
+				</a>
+			</div>
+		</section>
+
+		<section class="home-contact" aria-labelledby="contact-invitation-title">
+			<p class="section-kicker">Start a conversation</p>
+			<h2 id="contact-invitation-title">
+				Working through a system where reliability matters?
+			</h2>
+			<a class="signal-link" data-touch-target="true" href="/contact/">
+				Contact Joe
+			</a>
+		</section>
+	</div>
 </BaseLayout>
+
+<style>
+	.signal-proof-home {
+		display: grid;
+		gap: 0;
+	}
+
+	.home-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 0.95fr) minmax(24rem, 1.05fr);
+		gap: clamp(2rem, 6vw, 7rem);
+		align-items: center;
+		min-height: min(44rem, calc(100vh - 8.5rem));
+		padding-bottom: var(--space-6);
+	}
+
+	.home-hero__copy {
+		display: grid;
+		gap: var(--space-4);
+		align-content: center;
+	}
+
+	.home-hero__copy .section-kicker,
+	.home-capability .section-kicker,
+	.home-about .section-kicker,
+	.home-contact .section-kicker {
+		color: var(--color-muted);
+		font-size: 0.75rem;
+	}
+
+	.home-hero h1 {
+		font-size: clamp(3.2rem, 6.6vw, 7rem);
+	}
+
+	.home-hero__lede {
+		max-width: 40rem;
+		font-size: clamp(1.05rem, 1.65vw, 1.4rem);
+		line-height: 1.45;
+	}
+
+	.home-hero__media {
+		min-width: 0;
+	}
+
+	.home-capability,
+	.home-about,
+	.home-contact {
+		padding-block: var(--space-6);
+	}
+
+	.home-capability {
+		display: grid;
+		grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr) minmax(16rem, 0.55fr);
+		gap: var(--space-4);
+		align-items: start;
+		border-block: 1px solid var(--line);
+	}
+
+	.home-capability h2 {
+		font-size: clamp(2rem, 4.5vw, 4.5rem);
+	}
+
+	.home-capability > p:last-child {
+		color: var(--color-muted);
+	}
+
+	.home-about {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.7fr);
+		gap: clamp(2rem, 8vw, 10rem);
+	}
+
+	.home-about > div,
+	.home-about__copy {
+		display: grid;
+		align-content: start;
+		gap: var(--space-4);
+	}
+
+	.home-about__copy p {
+		font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+		line-height: 1.55;
+	}
+
+	.home-contact {
+		display: grid;
+		grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 1fr) auto;
+		gap: var(--space-4);
+		align-items: end;
+		border-top: 1px solid var(--line);
+	}
+
+	.home-contact h2 {
+		max-width: 58rem;
+		font-size: clamp(2.25rem, 5vw, 5rem);
+	}
+
+	@media (max-width: 64rem) {
+		.home-hero,
+		.home-capability,
+		.home-about,
+		.home-contact {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.home-hero {
+			min-height: 0;
+		}
+
+		.home-contact {
+			align-items: start;
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.home-hero {
+			gap: var(--space-5);
+			padding-bottom: var(--space-5);
+		}
+
+		.home-hero h1 {
+			font-size: clamp(2.8rem, 13vw, 4.3rem);
+		}
+	}
+</style>

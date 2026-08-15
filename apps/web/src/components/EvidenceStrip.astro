@@ -1,0 +1,105 @@
+---
+import type { WorkEntryData } from "../lib/contracts/work";
+
+type Props = {
+	items: WorkEntryData["evidence"]["values"];
+	label: string;
+};
+
+const { items, label } = Astro.props;
+---
+
+<aside class="evidence-strip" aria-label={label}>
+	<dl>
+		{
+			items.map((item) => (
+				<div class="evidence-strip__item">
+					<dt>{item.label}</dt>
+					<dd>
+						<strong>{item.value}</strong>
+						<span>{item.detail}</span>
+					</dd>
+				</div>
+			))
+		}
+	</dl>
+</aside>
+
+<style>
+	.evidence-strip {
+		border-block: 1px solid var(--line);
+		padding-block: var(--space-4);
+	}
+
+	.evidence-strip dl {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		margin: 0;
+	}
+
+	.evidence-strip__item {
+		display: grid;
+		min-width: 0;
+		gap: var(--space-1);
+		padding-inline: var(--space-4);
+	}
+
+	.evidence-strip__item:first-child {
+		padding-left: 0;
+	}
+
+	.evidence-strip__item + .evidence-strip__item {
+		border-left: 1px solid var(--line);
+	}
+
+	.evidence-strip dt,
+	.evidence-strip dd {
+		margin: 0;
+	}
+
+	.evidence-strip dt,
+	.evidence-strip span {
+		color: var(--color-muted);
+		font-size: 0.75rem;
+		line-height: 1.45;
+	}
+
+	.evidence-strip dt {
+		font-family: var(--font-evidence);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.evidence-strip dd {
+		display: grid;
+		gap: 0.2rem;
+	}
+
+	.evidence-strip strong {
+		font-size: clamp(1.2rem, 2.5vw, 2rem);
+		line-height: 1.05;
+	}
+
+	@media (max-width: 48rem) {
+		.evidence-strip dl {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.evidence-strip__item {
+			padding: var(--space-3) 0;
+		}
+
+		.evidence-strip__item:first-child {
+			padding-top: 0;
+		}
+
+		.evidence-strip__item:last-child {
+			padding-bottom: 0;
+		}
+
+		.evidence-strip__item + .evidence-strip__item {
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+	}
+</style>
