@@ -89,21 +89,52 @@ test.describe("About, resume, and contact @primary-routes", () => {
 		}
 
 		await page.goto("/resume/");
+		await expect(
+			page.getByRole("heading", { level: 1, name: profile.name, exact: true }),
+		).toBeVisible();
+		await expect(page.locator(".resume-subtitle")).toHaveText(
+			resumeContent.contact.title,
+		);
+		await expect(page.locator(".resume-contact")).toContainText(
+			profile.location,
+		);
+		await expect(page.locator(".resume-contact")).toContainText(
+			resumeContent.contact.certs,
+		);
 		await expect(page.locator(".resume-summary")).toHaveText(
 			resumeContent.summary,
+		);
+		await expect(page.locator("#highlights .resume-bullets li")).toHaveText(
+			resumeContent.highlights,
 		);
 		for (const job of resumeContent.experience) {
 			const resumeJob = page.locator(".resume-job").filter({
 				has: page.locator(".resume-job-company", { hasText: job.company }),
 			});
+			await expect(resumeJob.locator(".resume-job-company")).toHaveText(
+				job.company,
+			);
 			await expect(resumeJob.locator(".resume-job-role")).toHaveText(job.role);
 			await expect(resumeJob.locator(".resume-job-dates")).toHaveText(
 				job.dates,
+			);
+			await expect(resumeJob.locator(".resume-job-place")).toHaveText(
+				job.place,
 			);
 			await expect(resumeJob.locator(".resume-bullets li")).toHaveText(
 				job.bullets,
 			);
 		}
+		for (const group of resumeContent.skillGroups) {
+			const skillRow = page.locator(".resume-skill-row").filter({
+				has: page.locator("dt", { hasText: group.label }),
+			});
+			await expect(skillRow.locator("dt")).toHaveText(group.label);
+			await expect(skillRow.locator("dd")).toHaveText(group.items);
+		}
+		await expect(page.locator(".resume-clearance")).toContainText(
+			resumeContent.clearance,
+		);
 	});
 
 	test("offers a working resume download and direct contact channels", async ({
@@ -112,14 +143,16 @@ test.describe("About, resume, and contact @primary-routes", () => {
 	}) => {
 		await page.goto("/contact/");
 		await expect(page.locator("form")).toHaveCount(0);
+		const contactChannels = page.locator(".contact-channels");
 		for (const [name, href] of [
 			["Email Joe", `mailto:${profile.email}`],
 			["LinkedIn", profile.linkedin],
 			["GitHub", profile.github],
 		] as const) {
-			await expect(
-				page.getByRole("link", { name, exact: true }),
-			).toHaveAttribute("href", href);
+			await expect(contactChannels.getByRole("link", { name })).toHaveAttribute(
+				"href",
+				href,
+			);
 		}
 
 		await page.goto("/resume/");
@@ -166,7 +199,56 @@ test.describe("About, resume, and contact @primary-routes", () => {
 		await page.goto("/resume/");
 		await page.emulateMedia({ media: "print" });
 		await expect(page.locator(".site-header")).toBeHidden();
+		await expect(page.locator(".site-footer")).toBeHidden();
 		await expect(page.getByLabel("Resume sections")).toBeHidden();
+		await expect(
+			page.getByRole("link", { name: "Download résumé PDF" }),
+		).toBeHidden();
 		await expect(page.locator("[data-print-resume='true']")).toBeVisible();
+		await expect(page.locator(".resume-summary")).toHaveText(
+			resumeContent.summary,
+		);
+		const representativeJob = resumeContent.experience[0];
+		const printedJob = page.locator(".resume-job").filter({
+			has: page.getByRole("heading", {
+				name: representativeJob.company,
+				exact: true,
+			}),
+		});
+		await expect(printedJob).toBeVisible();
+		await expect(printedJob.locator(".resume-bullets li").first()).toHaveText(
+			representativeJob.bullets[0],
+		);
+		const representativeSkill = resumeContent.skillGroups[0];
+		const printedSkill = page.locator(".resume-skill-row").filter({
+			has: page.locator("dt", { hasText: representativeSkill.label }),
+		});
+		await expect(printedSkill.locator("dt")).toHaveText(
+			representativeSkill.label,
+		);
+		await expect(printedSkill.locator("dd")).toHaveText(
+			representativeSkill.items,
+		);
+		await expect(page.locator(".resume-clearance")).toContainText(
+			resumeContent.clearance,
+		);
+
+		const collapsedPrintSections = await page
+			.locator("[data-print-resume='true'] .resume-section")
+			.evaluateAll((sections) =>
+				sections
+					.filter((section) => {
+						const style = getComputedStyle(section);
+						const bounds = section.getBoundingClientRect();
+						return (
+							style.display === "none" ||
+							style.visibility === "hidden" ||
+							bounds.width === 0 ||
+							bounds.height === 0
+						);
+					})
+					.map((section) => section.id),
+			);
+		expect(collapsedPrintSections).toEqual([]);
 	});
 });

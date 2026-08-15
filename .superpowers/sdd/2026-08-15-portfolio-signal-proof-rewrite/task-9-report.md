@@ -18,7 +18,7 @@ Redesigned `/resume/` and `/contact/` in the shared Signal / Proof system.
 - Focused GREEN: the same command passed 1/1 after the static direct-channel implementation.
 - Task 9 route suite: `about-resume-contact.spec.ts` passed 4/4, covering shared approved résumé values, the live PDF asset, exact profile-backed channels, 320px overflow, 44px targets, and print presentation.
 - Static contact suite: `contact-api.spec.ts` passed 2/2 and observed no `/api/contact` request. It rejects form/script markup, API/delivery/telemetry/fallback/health/readiness copy, simulated-send copy, and response guarantees.
-- Node contract passed 3/3. Its retained fallback negatives require semantic ProjectStage restoration without canvas/WebGL and keep retired ProjectAtlas and ContactForm components absent.
+- The focused Contact Node contract passes. The original B-049 ProjectAtlas/no-WebGL gate is restored unchanged and intentionally remains red until Task 11 replaces its retired surface.
 
 ## Visual and accessibility evidence
 
@@ -32,7 +32,8 @@ Redesigned `/resume/` and `/contact/` in the shared Signal / Proof system.
 
 - Biome on all six existing touched source/test files: PASS, no fixes required.
 - `pnpm typecheck`: PASS, 0 errors and 0 warnings; 13 existing deprecation hints remain.
-- `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs`: PASS, 3/3.
+- Focused Contact Node test: PASS, 1/1.
+- Full `accessibility-and-fallback-qa-contract.test.mjs`: 2 pass, 1 known Task 11 failure because the original B-049 contract still requires the retired `apps/web/src/components/ProjectAtlas.astro`.
 - `pnpm build`: PASS, 15 pages built; generated contact output contains all three exact direct URLs and the 878,493-byte PDF is present in `dist/downloads/`.
 - Final focused Task 9 E2E: PASS, 6/6.
 - Final requested combined E2E command: 25 pass and 21 known Task 11 failures. Both owned route axe checks pass; the failures are ten stale no-script cases, ten stale route/copy reduced-motion cases, and one out-of-scope Notes contrast case.
@@ -59,5 +60,36 @@ No backend/API, dependency, content record, navigation, metadata, redirect, site
 
 - Message: `feat: clarify resume and direct contact paths`
 - Scope: only the Task 9 files listed above.
+
+DONE
+
+---
+
+## Review round 1 — fallback gate preservation and behavioral coverage
+
+### Corrective outcome
+
+- Restored the complete B-049 file map and assertion block from parent commit `83b75ff`, including the no-WebGL E2E, visual-baseline, ProjectAtlas, direct-link, loader-absence, and screenshot requirements.
+- Removed the substituted ProjectStage checks and the new ProjectAtlas-nonexistence assertion. The Contact constants and static-direct-contact test remain appended as an independent Task 9 contract.
+- Strengthened the E2E contract without inspecting source syntax. It now proves every shared résumé category renders: About and résumé summaries; name, title, certifications, and shared-profile location; every highlight; every company, role, date, place, and job bullet; every skill-group label and value; and clearance.
+- Scoped Email, LinkedIn, and GitHub checks to `.contact-channels`, so footer or hero duplicates cannot conceal a deleted channel row.
+- Under print media, the contract proves site chrome, section navigation, and the PDF action are hidden while representative summary, experience, bullet, skill, and clearance content remain visible. A negative geometry/style scan requires every print résumé section to remain expanded and visible.
+- No production page or style changed in this review round.
+
+### Corrective RED/GREEN evidence
+
+- RED: the preservation assertion failed because `files.noWebglSpec` was absent from the modified Node contract.
+- First strengthened E2E run: 5/6 passed; the scoped Contact selector failed because the channel row's accessible name correctly includes its descriptive text. The selector was kept inside `.contact-channels` and changed to match the leading visible label rather than requiring an inaccurate exact accessible name.
+- GREEN: Task 9 E2E passed 6/6 with the complete résumé, scoped-channel, narrow-width, 44px, and print coverage.
+- Focused Contact Node test passed 1/1.
+- Full Node file intentionally reports 2 pass / 1 fail. The only failure is B-049's original missing required file: `apps/web/src/components/ProjectAtlas.astro`. This is the exact Task 11 legacy requirement and was not weakened.
+- Direct block comparison confirms the B-049 test body and all three restored file mappings match parent commit `83b75ff`.
+- Biome passed on both corrective source/test files after formatting.
+- `pnpm typecheck` passed with 0 errors and 0 warnings; the same 13 deprecation hints remain outside Task 9.
+
+### Corrective commit
+
+- Message: `test: preserve fallback gate during contact rewrite`
+- Scope: the résumé/contact E2E contract, the restored-plus-appended Node contract, and this report only.
 
 DONE

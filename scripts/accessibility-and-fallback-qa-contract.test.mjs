@@ -9,7 +9,9 @@ const files = {
 	contactForm: "apps/web/src/components/ContactForm.astro",
 	evidence: "runbooks/LAUNCH_EVIDENCE.md",
 	fallbackRunbook: "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md",
-	projectStage: "apps/web/src/components/ProjectStage.astro",
+	noWebglSpec: "tests/e2e/no-webgl.spec.ts",
+	projectAtlas: "apps/web/src/components/ProjectAtlas.astro",
+	projectAtlasSpec: "tests/e2e/project-atlas.spec.ts",
 	quality: "runbooks/QUALITY.md",
 };
 
@@ -85,7 +87,9 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	const backlog = readRequiredFile(files.backlog);
 	const evidence = readRequiredFile(files.evidence);
 	const fallback = readRequiredFile(files.fallbackRunbook);
-	const projectStage = readRequiredFile(files.projectStage);
+	const noWebglSpec = readRequiredFile(files.noWebglSpec);
+	const projectAtlas = readRequiredFile(files.projectAtlas);
+	const projectAtlasSpec = readRequiredFile(files.projectAtlasSpec);
 	const quality = readRequiredFile(files.quality);
 
 	expectContains(backlog, "### B-049: Add reduced-motion and no-WebGL QA pass");
@@ -106,17 +110,29 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	expectContains(fallback, "not production launch evidence");
 	expectContains(fallback, "Reduced-motion evidence");
 	expectContains(fallback, "No-WebGL fallback evidence");
+	expectContains(fallback, "tests/e2e/visual-regression.spec.ts-snapshots");
+	expectContains(fallback, "tests/e2e/no-webgl.spec.ts");
+	expectContains(fallback, "no-webgl-projects-fallback");
+	expectContains(fallback, "projects-desktop-linux.png");
+	expectContains(fallback, "projects-mobile-linux.png");
+	expectContains(
+		fallback,
+		"pnpm exec playwright test tests/e2e/no-webgl.spec.ts",
+	);
+	expectContains(
+		fallback,
+		"pnpm exec playwright test tests/e2e/no-webgl.spec.ts --update-snapshots",
+	);
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@reduced-motion"');
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@motion"');
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@constellation"');
 	expectContains(fallback, "HTML/SVG first");
 	expectContains(fallback, "direct project-detail links");
-	expectContains(projectStage, "data-project-stage");
-	expectContains(projectStage, "data-stage-trigger");
-	expectContains(projectStage, "restoreInlineStage");
-	expectContains(projectStage, "panel.hidden = false");
-	expectNotContains(projectStage, "<canvas");
-	expectNotContains(projectStage, "WebGLRenderingContext");
+	expectContains(projectAtlasSpec, "direct-link visual index");
+	expectContains(projectAtlasSpec, "script[data-constellation-loader]");
+	expectContains(projectAtlasSpec, "toHaveCount( 0");
+	expectNotContains(projectAtlas, "project-constellation.mjs");
+	expectNotContains(projectAtlas, "constellationReady");
 	expectContains(
 		fallback,
 		"node --test scripts/accessibility-and-fallback-qa-contract.test.mjs",
@@ -127,10 +143,11 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	expectContains(evidence, "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md");
 	expectContains(evidence, "tests/e2e/no-webgl.spec.ts");
 
-	assert.ok(
-		!existsSync("apps/web/src/components/ProjectAtlas.astro"),
-		"retired ProjectAtlas component must remain deleted",
-	);
+	expectContains(noWebglSpec, "@no-webgl");
+	expectContains(noWebglSpec, "no-webgl-projects-fallback");
+	expectContains(noWebglSpec, "Accessible project atlas");
+	expectContains(noWebglSpec, "data-project-constellation");
+	expectContains(noWebglSpec, "toHaveScreenshot");
 });
 
 test("contact remains a static direct path with no simulated delivery state", () => {
