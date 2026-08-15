@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const coreRoutes = [
 	{
 		path: "/",
-		heading: /systems atelier/i,
+		heading: /Systems built to hold up/i,
 		copy: /practical AI-assisted systems/i,
 	},
 	{
@@ -13,8 +13,8 @@ const coreRoutes = [
 	},
 	{
 		path: "/resume/",
-		heading: /resume/i,
-		copy: /approved local source/i,
+		heading: /Joe Poznanski/i,
+		copy: /Principal Software Engineer/i,
 	},
 	{
 		path: "/notes/",
@@ -29,7 +29,7 @@ const coreRoutes = [
 	{
 		path: "/contact/",
 		heading: /contact/i,
-		copy: /mailto fallback/i,
+		copy: /fastest route is direct email/i,
 	},
 ];
 
@@ -147,7 +147,7 @@ test.describe("static shell @static-shell", () => {
 			name: "Static systems map hero",
 		});
 		await expect(mapHero).toBeVisible();
-		await expect(mapHero.getByText(/Signature systems map/i)).toBeVisible();
+		await expect(mapHero.getByText(/Systems signature/i)).toBeVisible();
 		await expect(mapHero.locator("svg")).toHaveAttribute(
 			"aria-label",
 			/Sanitized systems map/i,
@@ -160,10 +160,12 @@ test.describe("static shell @static-shell", () => {
 			"href",
 			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
 		);
-		await expect(mapHero.getByText(/No JavaScript required/i)).toBeVisible();
+		await expect(
+			mapHero.getByText(/problem to verified system/i),
+		).toBeVisible();
 		const legend = mapHero.getByLabel("Hero evidence legend");
 		await expect(legend).toBeVisible();
-		for (const proof of ["Static route", "Optional motion", "Rust proof"]) {
+		for (const proof of ["Problem", "System", "Evidence"]) {
 			await expect(legend.getByText(proof, { exact: true })).toBeVisible();
 		}
 	});
@@ -270,20 +272,26 @@ test.describe("static shell @static-shell", () => {
 		page,
 		request,
 	}) => {
-		for (const route of ["/", "/resume/"]) {
+		for (const [route, linkName, sourceText] of [
+			["/", /Download resume PDF/i, /approved local source/i],
+			[
+				"/resume/",
+				/Download full resume \(PDF\)/i,
+				/Principal Software Engineer/i,
+			],
+		] as const) {
 			await page.goto(route);
-			await expect(page.locator("main")).toContainText(
-				/approved local source/i,
-			);
+			await expect(page.locator("main")).toContainText(sourceText);
 			await expect(page.locator("main")).not.toContainText(
 				resumeLaunchBoundaryText,
 			);
-			await expect(
-				page.getByRole("link", { name: /Download resume PDF/i }),
-			).toHaveAttribute("href", "/downloads/humankaylee-resume.pdf");
+			await expect(page.getByRole("link", { name: linkName })).toHaveAttribute(
+				"href",
+				"/downloads/joe-poznanski-resume.pdf",
+			);
 		}
 
-		const response = await request.get("/downloads/humankaylee-resume.pdf");
+		const response = await request.get("/downloads/joe-poznanski-resume.pdf");
 		expect(response.status()).toBe(200);
 		expect(response.headers()["content-type"]).toContain("application/pdf");
 	});
@@ -292,6 +300,9 @@ test.describe("static shell @static-shell", () => {
 		page,
 	}) => {
 		await page.goto("/resume/");
+		await expect(
+			page.getByRole("link", { name: /Download full resume \(PDF\)/i }),
+		).toHaveAttribute("href", "/downloads/joe-poznanski-resume.pdf");
 		await page.emulateMedia({ media: "print" });
 
 		const printableResume = page.locator('[data-print-resume="true"]');
@@ -303,13 +314,7 @@ test.describe("static shell @static-shell", () => {
 		await expect(printableResume).toHaveCSS("box-shadow", "none");
 		await expect(page.locator(".site-header")).toHaveCSS("display", "none");
 		await expect(page.locator(".site-footer")).toHaveCSS("display", "none");
-		await expect(page.locator(".resume-screen-header")).toHaveCSS(
-			"display",
-			"none",
-		);
-		await expect(
-			page.getByRole("link", { name: /Download resume PDF/i }),
-		).toHaveAttribute("href", "/downloads/humankaylee-resume.pdf");
+		await expect(page.locator(".resume-hero")).toHaveCSS("display", "none");
 	});
 
 	test("does not apply resume print chrome hiding to non-resume routes", async ({
@@ -329,16 +334,18 @@ test.describe("static shell @static-shell", () => {
 		await page.goto("/projects/");
 
 		await expect(
-			page.getByRole("link", {
-				name: "View project detail for CLI Fleet Synchronization and MCP Rollout",
-			}),
+			page
+				.getByRole("link", {
+					name: "View project detail for CLI Fleet Synchronization and MCP Rollout",
+				})
+				.first(),
 		).toHaveAttribute(
 			"href",
 			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
 		);
 
 		const labels = await page
-			.locator(".project-card a")
+			.locator("[data-atlas-node]")
 			.evaluateAll((links) =>
 				links.map(
 					(link) =>
@@ -365,7 +372,7 @@ test.describe("static shell @noscript", () => {
 			const main = page.locator("main");
 			await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 			await expect(main.getByText(route.copy).first()).toBeVisible();
-			await expect(page.locator(".static-fallback-note")).toBeVisible();
+			await expect(page.locator(".noscript-banner")).toBeVisible();
 		});
 	}
 });

@@ -14,7 +14,7 @@ describe("homeScaffold", () => {
 			"signal green",
 			"oxidized blue",
 		]);
-		expect(scaffold.heroTitle).toContain("practical AI-assisted systems");
+		expect(scaffold.heroTitle).toBe("Systems built to hold up.");
 		expect(scaffold.primaryNav.map((item) => item.href)).toEqual([
 			"/",
 			"/projects/",
@@ -33,15 +33,15 @@ describe("homeScaffold", () => {
 			"Build",
 			"Verification",
 			"Accessibility",
-			"API fallback",
+			"Resilience",
 		]);
 		expect(scaffold.telemetry[0]).toMatchObject({
-			value: "Static output",
+			value: "Fast by default",
 		});
 		expect(scaffold.telemetry[3]).toMatchObject({
-			value: "Graceful fallback",
+			value: "Failure aware",
 		});
-		expect(scaffold.noJsNote).toContain("without JavaScript or WebGL");
+		expect(scaffold.noJsNote).toContain("evidence used to verify delivery");
 		expect(scaffold.audienceOrder).toEqual([
 			"recruiter",
 			"senior-engineer",
@@ -49,8 +49,9 @@ describe("homeScaffold", () => {
 		]);
 		expect(scaffold.supportStatements).toHaveLength(4);
 		const supportCopy = scaffold.supportStatements.join(" ").toLowerCase();
-		expect(supportCopy).toContain("automation workflows");
-		expect(supportCopy).toContain("backend services");
+		expect(supportCopy).toContain("automation with explicit evidence");
+		expect(supportCopy).toContain("ai-assisted systems");
+		expect(supportCopy).toContain("distributed services");
 	});
 
 	it("keeps public home copy polished instead of scaffold or future-promise language", () => {

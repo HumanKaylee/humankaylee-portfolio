@@ -12,7 +12,7 @@ seo:
   title: "Why the portfolio content starts as data"
   description: "A build-log note about schema-first portfolio content planning."
   canonicalPath: "/notes/why-the-portfolio-content-starts-as-data-not-pages/"
-  ogImage: "/social/default.svg"
+  ogImage: "/social/default.png"
 ---
 
 Phase 1 starts with contracts and safe inventory so later page work can assemble

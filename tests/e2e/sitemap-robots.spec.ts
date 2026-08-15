@@ -1,4 +1,10 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
+
+const site = JSON.parse(
+	readFileSync("apps/web/src/content/site/site.json", "utf8"),
+) as { siteUrl: string };
+const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
 
 test.describe("crawler artifacts @metadata", () => {
 	test("serves robots.txt with the sitemap location and no broad disallow", async ({
@@ -11,9 +17,7 @@ test.describe("crawler artifacts @metadata", () => {
 
 		const body = await response.text();
 		expect(body).toContain("User-agent: *");
-		expect(body).toContain(
-			"Sitemap: https://humankaylee.example/sitemap-index.xml",
-		);
+		expect(body).toContain(`Sitemap: ${expectedSiteUrl}/sitemap-index.xml`);
 		expect(body).not.toContain("Disallow: /");
 	});
 
@@ -39,7 +43,7 @@ test.describe("crawler artifacts @metadata", () => {
 			"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
 			"/notes/redaction-rules-for-portfolio-case-studies/",
 		]) {
-			expect(body).toContain(`<loc>https://humankaylee.example${path}</loc>`);
+			expect(body).toContain(`<loc>${expectedSiteUrl}${path}</loc>`);
 		}
 
 		expect(body).not.toContain("youtube-ai-video-pipeline");

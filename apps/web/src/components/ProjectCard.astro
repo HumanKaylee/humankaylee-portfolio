@@ -5,13 +5,14 @@ import AudienceChips from "./AudienceChips.astro";
 
 type Props = {
 	project: CollectionEntry<"projects">;
+	className?: string;
 };
 
-const { project } = Astro.props;
+const { project, className } = Astro.props;
 const { data } = project;
 ---
 
-<article class="project-card" id={data.slug}>
+<article class:list={["project-card", className]} id={data.slug}>
 	<p class="project-category">{data.category}</p>
 	<h2>{data.name}</h2>
 	<p>{data.summary}</p>
@@ -25,6 +26,6 @@ const { data } = project;
 		href={`/projects/${data.slug}/`}
 		aria-label={`View project detail for ${data.name}`}
 	>
-		View project detail for {data.name}
+		View project
 	</a>
 </article>

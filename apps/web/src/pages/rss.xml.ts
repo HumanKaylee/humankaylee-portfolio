@@ -46,9 +46,9 @@ ${categories}
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-<title>HumanKaylee Portfolio Notes</title>
+<title>Joe Poznanski Portfolio Notes</title>
 <link>${siteUrl}/notes/</link>
-<description>Published engineering notes and build-log entries from HumanKaylee.</description>
+<description>Published engineering notes and build-log entries from Joe Poznanski.</description>
 ${items}
 </channel>
 </rss>`;

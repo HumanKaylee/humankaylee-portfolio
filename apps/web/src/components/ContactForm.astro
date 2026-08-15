@@ -1,23 +1,19 @@
 ---
-const fallbackEmail = "contact-pending@humankaylee.example";
-const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
+const fallbackEmail = "josephpoznanski@gmail.com";
 ---
 
 <article class="paper-panel contact-panel">
-	<p class="eyebrow">API-enhanced fallback</p>
-	<h2>Start with the public contact path.</h2>
+	<h2>Compose a focused note.</h2>
 	<p>
-		The form attempts the Rust API when JavaScript is available. The mailto
-		fallback stays visible, and typed text remains in the form if the API is
-		down, disabled, or returns validation feedback.
+		This composer opens your email app with the fields below. Nothing is submitted
+		to or stored by this website.
 	</p>
 
 	<form
 		class="contact-form"
-		data-api-base={apiBaseUrl}
+		data-fallback-email={fallbackEmail}
 		action={`mailto:${fallbackEmail}`}
-		method="post"
-		enctype="text/plain"
+		method="get"
 	>
 		<label>
 			<span>Your name</span>
@@ -45,11 +41,9 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 			<span>Company</span>
 			<input name="company" type="text" tabindex="-1" autocomplete="off" />
 		</label>
-		<button type="submit">Send message</button>
+		<button type="submit">Open email draft</button>
 		<p class="contact-status" role="status" aria-live="polite">
-			Use the email link below if the API is unavailable. This mailto fallback
-			remains visible; the form can also try the Rust API enhancement when
-			JavaScript is available.
+			Nothing is sent or stored by this site. Your email app handles delivery.
 		</p>
 	</form>
 
@@ -64,73 +58,21 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 
 <script>
 	const form = document.querySelector<HTMLFormElement>(".contact-form");
-	const apiUnavailableMessage =
-		"API unavailable. Your message is still in the form. Use the email link below if the API is unavailable.";
 
-	function contactEndpoint(apiBase: string) {
-		const trimmed = apiBase.trim().replace(/\/$/, "");
-		return `${trimmed}/api/contact`;
-	}
-
-	async function responseMessage(response: Response) {
-		if (!response.ok && response.status !== 400) {
-			return apiUnavailableMessage;
-		}
-
-		try {
-			const payload = await response.json();
-			return (
-				payload.message ??
-				payload.error?.message ??
-				"The contact API returned an unexpected response."
-			);
-		} catch {
-			return "The contact API returned an unexpected response.";
-		}
-	}
-
-	form?.addEventListener("submit", async (event) => {
-		event.preventDefault();
-
+	form?.addEventListener("submit", () => {
 		const status = form.querySelector<HTMLElement>("[role='status']");
-		const submit = form.querySelector<HTMLButtonElement>("button[type='submit']");
 		const data = new FormData(form);
-		const payload = {
-			name: String(data.get("name") ?? ""),
-			email: String(data.get("email") ?? ""),
-			subject: String(data.get("subject") ?? ""),
-			message: String(data.get("message") ?? ""),
-			company: String(data.get("company") ?? ""),
-		};
+		const name = String(data.get("name") ?? "").trim();
+		const email = String(data.get("email") ?? "").trim();
+		const subject = String(data.get("subject") ?? "Portfolio inquiry").trim();
+		const message = String(data.get("message") ?? "").trim();
+		const body = `${message}\n\nFrom: ${name} (${email})`;
+		const fallbackEmail = form.dataset.fallbackEmail ?? "josephpoznanski@gmail.com";
+		const mailto = `mailto:${fallbackEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-		submit?.setAttribute("disabled", "true");
 		if (status) {
-			status.textContent = "Sending through the Rust API enhancement...";
+			status.textContent = "Opening your email app. Nothing was sent or stored by this site.";
 		}
-
-		try {
-			const response = await fetch(contactEndpoint(form.dataset.apiBase ?? ""), {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(payload),
-			});
-			const message = await responseMessage(response);
-
-			if (status) {
-				status.textContent = response.ok
-					? message
-					: message === apiUnavailableMessage
-						? message
-						: `${message} The mailto fallback remains available below.`;
-			}
-		} catch {
-			if (status) {
-				status.textContent = apiUnavailableMessage;
-			}
-		} finally {
-			submit?.removeAttribute("disabled");
-		}
+		form.action = mailto;
 	});
 </script>

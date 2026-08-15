@@ -1,7 +1,8 @@
 import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
 export const LIGHTHOUSE_ROUTES = [
 	{ label: "home", path: "/" },
@@ -42,8 +43,27 @@ export const LIGHTHOUSE_AUDIT_PLAN = [
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = 4322;
 const RESULTS_DIR = "test-results";
-const LIGHTHOUSE_SUMMARY_PATH = join(RESULTS_DIR, "lighthouse-summary.json").replace(/\\/g, "/");
+const LIGHTHOUSE_SUMMARY_PATH = join(
+	RESULTS_DIR,
+	"lighthouse-summary.json",
+).replace(/\\/g, "/");
 const WAIT_TIMEOUT_MS = 30_000;
+
+export function pnpmInvocation(
+	platform = process.platform,
+	nodePath = process.execPath,
+) {
+	if (platform !== "win32") {
+		return { command: "pnpm", args: [] };
+	}
+
+	return {
+		command: nodePath,
+		args: [
+			join(dirname(nodePath), "node_modules", "corepack", "dist", "pnpm.js"),
+		],
+	};
+}
 
 function runCommand(command, args, options = {}) {
 	return new Promise((resolve, reject) => {
@@ -87,9 +107,19 @@ async function waitForPreview(baseUrl) {
 }
 
 function startPreview(host, port) {
+	const pnpm = pnpmInvocation();
 	const child = spawn(
-		"pnpm",
-		["exec", "astro", "preview", "--host", host, "--port", String(port)],
+		pnpm.command,
+		[
+			...pnpm.args,
+			"exec",
+			"astro",
+			"preview",
+			"--host",
+			host,
+			"--port",
+			String(port),
+		],
 		{ stdio: "inherit", env: process.env },
 	);
 
@@ -117,7 +147,10 @@ function routeUrl(baseUrl, route) {
 }
 
 function outputPathForRoute(route) {
-	return join(RESULTS_DIR, `lighthouse-${route.label}.json`).replace(/\\/g, "/");
+	return join(RESULTS_DIR, `lighthouse-${route.label}.json`).replace(
+		/\\/g,
+		"/",
+	);
 }
 
 export function lighthouseDryRunPlan(baseUrl) {
@@ -137,8 +170,10 @@ export function lighthouseDryRunPlan(baseUrl) {
 
 async function runLighthouseForRoute(baseUrl, route) {
 	const outputPath = outputPathForRoute(route);
+	const pnpm = pnpmInvocation();
 
-	await runCommand("pnpm", [
+	await runCommand(pnpm.command, [
+		...pnpm.args,
 		"exec",
 		"lighthouse",
 		routeUrl(baseUrl, route),
@@ -265,7 +300,7 @@ function cliOptions(args) {
 	};
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
 	runLighthouseGate(cliOptions(process.argv.slice(2))).catch((error) => {
 		console.error(error.message);
 		process.exit(1);

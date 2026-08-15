@@ -11,14 +11,13 @@ one-command deploy listed below.
 
 | Host | Monthly Cost | Setup Command | When to Use |
 |------|-------------|---------------|-------------|
-| **Hetzner CX22** (recommended) | $4.59 flat | `bash infra/hetzner/deploy.sh` on VPS | D-03 = Hetzner CX22 (default; lowest cost, zero cold-start) |
-| **Fly.io** | $0–5 | `fly deploy --config apps/api/fly.toml` | D-03 = Fly.io (PaaS, managed TLS, auto-scale to zero) |
+| **Hetzner CX22** | Legacy planning reference | `bash infra/hetzner/deploy.sh` on VPS | Not selected; revalidate its current catalog/pricing before use. |
+| **Fly.io** (selected) | Usage-based | `fly deploy --config apps/api/fly.toml` | D-03 = Fly.io; managed TLS and `iad` deployment for the stateless API. |
 | **Railway** | $5–15 | Connect repo at railway.app, push to deploy | D-03 = Railway (simplest; no CLI required for first deploy) |
 
-Default recommendation: **Hetzner CX22** — flat $4.59/month with no cold-start
-penalty, operator controls TLS via Caddy, and the binary is a single static
-executable (<10 MB musl). Fly.io is a strong alternative if you want zero-ops
-TLS and don't need the instance always warm.
+Selected configuration: **Fly.io in `iad` (Ashburn, Virginia)**. The v1 API is
+stateless and keeps contact delivery disabled, so it needs neither a PII volume
+nor a Resend credential. Use Fly-managed TLS and the prepared container build.
 
 ---
 
@@ -82,28 +81,20 @@ apps/api/
 
 1. Install flyctl: `curl -L https://fly.io/install.sh | sh`
 2. Authenticate: `fly auth login`
-3. Edit `apps/api/fly.toml` — change `primary_region` to your preferred region
-   (e.g., `fra` for Frankfurt, `lax` for Los Angeles).
-4. Set secrets:
-   ```bash
-   fly secrets set \
-     HK_API_ALLOWED_ORIGINS="https://humankaylee.dev,https://*.humankaylee-portfolio.pages.dev" \
-     HK_API_CONTACT_DELIVERY_MODE="store" \
-     HK_API_CONTACT_STORE_PATH="/data/contacts.jsonl" \
-     --app humankaylee-portfolio-api
-   ```
-5. Deploy:
+3. Confirm `apps/api/fly.toml` retains the `iad` primary region and the
+   `disabled` contact-delivery mode.
+4. Deploy without adding PII-storage or email-delivery secrets:
    ```bash
    fly deploy --config apps/api/fly.toml
    ```
-6. Smoke verify:
+5. Smoke verify:
    ```bash
    fly status --app humankaylee-portfolio-api
    curl -fsS https://humankaylee-portfolio-api.fly.dev/api/health
    ```
-7. Add custom domain:
+6. Add custom domain:
    ```bash
-   fly certs create api.humankaylee.dev --app humankaylee-portfolio-api
+    fly certs add api.humankaylee.dev --app humankaylee-portfolio-api
    # Follow DNS instructions shown
    ```
 

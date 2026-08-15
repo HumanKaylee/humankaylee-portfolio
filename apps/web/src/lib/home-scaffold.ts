@@ -35,18 +35,17 @@ export function homeScaffold(): HomeScaffold {
 			"oxidized blue",
 		],
 		kicker: "The Systems Atelier",
-		heroTitle:
-			"HumanKaylee's systems atelier for practical AI-assisted systems.",
+		heroTitle: "Systems built to hold up.",
 		intro:
-			"A static-first portfolio for automation, infrastructure, backend services, creative web systems, and the evidence that proves they work.",
+			"Principal software engineer building reliable AI workflows, aerospace systems, automation, and operator-grade tools.",
 		noJsNote:
-			"Core content is available without JavaScript or WebGL. Optional systems-map enhancements stay additive and never replace the static story.",
+			"Explore selected systems, the tradeoffs behind them, and the evidence used to verify delivery.",
 		audienceOrder: ["recruiter", "senior-engineer", "collaborator"],
 		supportStatements: [
-			"Practical AI-assisted systems that turn ambiguous operational work into repeatable tools.",
-			"Automation workflows with evidence, rollback paths, and public-safe handoff documentation.",
-			"Infrastructure and backend services shaped by Rust, Axum, CI, security headers, and API-failure fallbacks.",
-			"Polished user-facing tools that stay readable as static HTML before motion, WebGL, or live APIs load.",
+			"AI-assisted systems that turn ambiguous operational work into repeatable tools.",
+			"Automation with explicit evidence, rollback paths, and useful handoff documentation.",
+			"Rust, C++, Python, TypeScript, distributed services, and real-time systems.",
+			"Interfaces designed for operators who need fast answers when the system is under pressure.",
 		],
 		primaryNav: [
 			{ label: "Home", href: "/" },
@@ -59,43 +58,43 @@ export function homeScaffold(): HomeScaffold {
 		],
 		ctas: [
 			{
-				label: "For recruiters",
+				label: "Resume & scope",
 				href: "/resume/",
-				eyebrow: "Resume, scope, proof",
+				eyebrow: "Experience, impact, contact",
 			},
 			{
-				label: "For engineers",
+				label: "Projects",
 				href: "/projects/",
 				eyebrow: "Systems, tradeoffs, verification",
 			},
 			{
-				label: "Contact",
+				label: "Contact Joe",
 				href: "/contact/",
-				eyebrow: "Static mailto fallback",
+				eyebrow: "Direct public-safe route",
 			},
 		],
 		telemetry: [
 			{
 				label: "Build",
-				value: "Static output",
+				value: "Fast by default",
 				detail:
 					"HTML carries the core story before JavaScript, WebGL, or API calls.",
 			},
 			{
 				label: "Verification",
-				value: "Local coverage",
+				value: "Behavior tested",
 				detail:
 					"Vitest and Playwright keep the static shell and fallback paths covered.",
 			},
 			{
 				label: "Accessibility",
-				value: "No-JS readable",
+				value: "Keyboard ready",
 				detail:
 					"Landmarks, skip link, and fallback content stay visible without hydration.",
 			},
 			{
-				label: "API fallback",
-				value: "Graceful fallback",
+				label: "Resilience",
+				value: "Failure aware",
 				detail:
 					"Health and cached-project requests can fail without hiding the home page.",
 			},

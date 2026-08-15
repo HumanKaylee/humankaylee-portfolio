@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const publishedCaseStudies = [
 	"CLI Fleet Synchronization and MCP Rollout",
 	"Creative Web Systems Atlas Demo",
-	"HumanKaylee Portfolio Build",
+	"Joe Poznanski Portfolio Build",
 	"Remote Workstation Recovery and Operational Debugging",
 ];
 
@@ -147,7 +147,7 @@ test.describe("case-study routes @case-studies", () => {
 		).toBeVisible();
 	});
 
-	test("renders the HumanKaylee portfolio build case study with launch-safe body sections", async ({
+	test("renders the Joe Poznanski portfolio build case study with launch-safe body sections", async ({
 		page,
 	}) => {
 		await page.goto("/case-studies/humankaylee-portfolio-build/");
@@ -155,7 +155,7 @@ test.describe("case-study routes @case-studies", () => {
 		await expect(
 			page.getByRole("heading", {
 				level: 1,
-				name: "HumanKaylee Portfolio Build",
+				name: "Joe Poznanski Portfolio Build",
 			}),
 		).toBeVisible();
 
@@ -254,7 +254,7 @@ test.describe("case-study routes @case-studies @noscript", () => {
 		await expect(
 			page.getByRole("heading", {
 				level: 1,
-				name: "HumanKaylee Portfolio Build",
+				name: "Joe Poznanski Portfolio Build",
 			}),
 		).toBeVisible();
 		await expect(
@@ -267,6 +267,6 @@ test.describe("case-study routes @case-studies @noscript", () => {
 				)
 				.getByText(/static-first portfolio architecture/i),
 		).toBeVisible();
-		await expect(page.locator(".static-fallback-note")).toBeVisible();
+		await expect(page.locator(".noscript-banner")).toBeVisible();
 	});
 });

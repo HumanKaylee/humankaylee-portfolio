@@ -10,11 +10,11 @@ test.describe("portfolio evaluator journeys @journey", () => {
 
 		await expect(page).toHaveURL(/\/resume\/$/);
 		await expect(
-			page.getByRole("heading", { level: 1, name: /Resume path/i }),
+			page.getByRole("heading", { level: 1, name: "Joe Poznanski" }),
 		).toBeVisible();
 		await expect(
-			page.getByRole("link", { name: /Download resume PDF/i }),
-		).toHaveAttribute("href", "/downloads/humankaylee-resume.pdf");
+			page.getByRole("link", { name: /Download full resume \(PDF\)/i }),
+		).toHaveAttribute("href", "/downloads/joe-poznanski-resume.pdf");
 	});
 
 	test("lets engineers move from the home CTA to a project detail page", async ({
@@ -61,8 +61,8 @@ test.describe("portfolio evaluator journeys @journey", () => {
 		await expect(page).toHaveURL(/\/contact\/$/);
 		await expect(
 			page.getByRole("link", {
-				name: /contact-pending@humankaylee\.example/i,
+				name: /josephpoznanski@gmail\.com/i,
 			}),
-		).toHaveAttribute("href", "mailto:contact-pending@humankaylee.example");
+		).toHaveAttribute("href", "mailto:josephpoznanski@gmail.com");
 	});
 });

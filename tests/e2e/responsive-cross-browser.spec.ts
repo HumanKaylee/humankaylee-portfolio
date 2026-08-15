@@ -3,14 +3,14 @@ import { type Page, expect, test } from "@playwright/test";
 const launchRoutes = [
 	{
 		path: "/",
-		heading: /systems atelier/i,
-		marker: /practical AI-assisted systems/i,
+		heading: /Systems built to hold up/i,
+		marker: /Principal engineer/i,
 		primaryLink: /Download resume PDF/i,
 		primaryText: undefined,
 	},
 	{
 		path: "/projects/",
-		heading: /project atlas/i,
+		heading: /Selected systems, mapped by capability/i,
 		marker: /CLI Fleet Synchronization/i,
 		primaryLink: /View project detail for CLI Fleet Synchronization/i,
 		primaryText: undefined,
@@ -24,9 +24,9 @@ const launchRoutes = [
 	},
 	{
 		path: "/resume/",
-		heading: /resume/i,
-		marker: /Download resume PDF/i,
-		primaryLink: /Download resume PDF/i,
+		heading: /Joe Poznanski/i,
+		marker: /Download full resume \(PDF\)/i,
+		primaryLink: /Download full resume \(PDF\)/i,
 		primaryText: undefined,
 	},
 	{
@@ -45,9 +45,9 @@ const launchRoutes = [
 	},
 	{
 		path: "/contact/",
-		heading: /contact route/i,
-		marker: /mailto fallback/i,
-		primaryLink: /contact-pending@humankaylee\.example/i,
+		heading: /contact joe/i,
+		marker: /fastest route is direct email/i,
+		primaryLink: /josephpoznanski@gmail\.com/i,
 		primaryText: undefined,
 	},
 ] as const;
@@ -105,13 +105,13 @@ async function expectFirstLoadReadable(
 	await expect(page.locator("main")).toContainText(route.marker);
 	if (route.primaryLink) {
 		await expect(
-			page.getByRole("link", { name: route.primaryLink }),
+			page.getByRole("link", { name: route.primaryLink }).first(),
 		).toBeVisible();
 	}
 	if (route.primaryText) {
 		await expect(page.locator("main")).toContainText(route.primaryText);
 	}
-	await expect(page.locator(".static-fallback-note")).toBeVisible();
+	await expect(page.locator(".static-fallback-note")).toHaveCount(0);
 	await expectNoHorizontalOverflow(page, label);
 
 	const firstHeadingBox = await page
@@ -162,11 +162,9 @@ test.describe("B-055 responsive cross-browser QA @responsive", () => {
 				waitUntil: "domcontentloaded",
 			});
 			await expect(page.getByRole("heading", { level: 1 })).toContainText(
-				/systems atelier/i,
+				/Systems built to hold up/i,
 			);
-			await expect(page.locator("main")).toContainText(
-				/practical AI-assisted systems/i,
-			);
+			await expect(page.locator("main")).toContainText(/Principal engineer/i);
 			await expect(
 				page.getByRole("link", { name: /Download resume PDF/i }),
 			).toBeVisible();

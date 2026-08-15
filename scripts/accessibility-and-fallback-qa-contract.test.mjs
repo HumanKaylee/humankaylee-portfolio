@@ -8,6 +8,7 @@ const files = {
 	evidence: "runbooks/LAUNCH_EVIDENCE.md",
 	fallbackRunbook: "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md",
 	noWebglSpec: "tests/e2e/no-webgl.spec.ts",
+	projectAtlas: "apps/web/src/components/ProjectAtlas.astro",
 	projectAtlasSpec: "tests/e2e/project-atlas.spec.ts",
 	quality: "runbooks/QUALITY.md",
 };
@@ -28,6 +29,13 @@ function expectContains(content, needle, label = needle) {
 	assert.ok(
 		normalize(content).includes(normalize(needle)),
 		`expected content to include ${label}`,
+	);
+}
+
+function expectNotContains(content, needle, label = needle) {
+	assert.ok(
+		!normalize(content).includes(normalize(needle)),
+		`expected content not to include ${label}`,
 	);
 }
 
@@ -78,6 +86,7 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	const evidence = readRequiredFile(files.evidence);
 	const fallback = readRequiredFile(files.fallbackRunbook);
 	const noWebglSpec = readRequiredFile(files.noWebglSpec);
+	const projectAtlas = readRequiredFile(files.projectAtlas);
 	const projectAtlasSpec = readRequiredFile(files.projectAtlasSpec);
 	const quality = readRequiredFile(files.quality);
 
@@ -115,12 +124,13 @@ test("B-049 reduced-motion and no-WebGL QA has a dedicated artifact contract", (
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@reduced-motion"');
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@motion"');
 	expectContains(fallback, 'pnpm test:e2e -- --grep "@constellation"');
-	expectContains(fallback, "mobile-skipped");
-	expectContains(fallback, "reduced-motion");
-	expectContains(fallback, "lazy desktop constellation import fails");
-	expectContains(fallback, "module-error");
-	expectContains(projectAtlasSpec, "project-constellation.mjs");
-	expectContains(projectAtlasSpec, "module-error");
+	expectContains(fallback, "HTML/SVG first");
+	expectContains(fallback, "direct project-detail links");
+	expectContains(projectAtlasSpec, "direct-link visual index");
+	expectContains(projectAtlasSpec, "script[data-constellation-loader]");
+	expectContains(projectAtlasSpec, "toHaveCount( 0");
+	expectNotContains(projectAtlas, "project-constellation.mjs");
+	expectNotContains(projectAtlas, "constellationReady");
 	expectContains(
 		fallback,
 		"node --test scripts/accessibility-and-fallback-qa-contract.test.mjs",

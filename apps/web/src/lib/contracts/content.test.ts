@@ -14,7 +14,7 @@ import {
 } from "./content";
 
 const seo = {
-	title: "HumanKaylee | CLI fleet synchronization",
+	title: "Joe Poznanski | CLI fleet synchronization",
 	description: "A concise summary of the work and why it matters.",
 	canonicalPath: "/case-studies/cli-fleet-synchronization",
 	ogImage: "/og/case-studies/cli-fleet-synchronization.png",
@@ -305,10 +305,10 @@ describe("content contracts", () => {
 	it("requires resume workflow state in the schema-backed resume entry", () => {
 		expect(
 			resumeDataSchema.safeParse({
-				title: "HumanKaylee Resume",
+				title: "Joe Poznanski Resume",
 				slug: "resume",
 				pdfSourcePath: "pending-approved-resume-source",
-				pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+				pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 				sourceStatus: "placeholder",
 				workflowState: "awaiting-redaction-review",
 				pdfStatus: "not-generated",
@@ -321,7 +321,7 @@ describe("content contracts", () => {
 					},
 				],
 				seo: {
-					title: "HumanKaylee Resume",
+					title: "Joe Poznanski Resume",
 					description: "Downloadable resume and HTML summary.",
 					canonicalPath: "/resume",
 					ogImage: "/og/resume.png",
@@ -331,20 +331,20 @@ describe("content contracts", () => {
 
 		expect(
 			resumeDataSchema.safeParse({
-				title: "HumanKaylee Resume",
+				title: "Joe Poznanski Resume",
 				slug: "resume",
 				pdfSourcePath: "pending-approved-resume-source",
-				pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+				pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 				seo,
 			}).success,
 		).toBe(false);
 
 		expect(
 			resumeDataSchema.safeParse({
-				title: "HumanKaylee Resume",
+				title: "Joe Poznanski Resume",
 				slug: "resume",
 				pdfSourcePath: "pending-approved-resume-source",
-				pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+				pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 				sourceStatus: "placeholder",
 				workflowState: "complete",
 				pdfStatus: "published",
@@ -359,13 +359,13 @@ describe("content contracts", () => {
 	it("accepts site metadata and rejects invalid site metadata", () => {
 		expect(
 			siteMetadataSchema.safeParse({
-				siteName: "HumanKaylee Portfolio",
+				siteName: "Joe Poznanski Portfolio",
 				siteDescription: "A systems atelier portfolio.",
-				siteUrl: "https://humankaylee.example",
+				siteUrl: "https://joepoznanski.io",
 				defaultOgImage: "/og/site-default.png",
 				twitterHandle: "@humankaylee",
 				seo: {
-					title: "HumanKaylee Portfolio",
+					title: "Joe Poznanski Portfolio",
 					description: "A systems atelier portfolio.",
 					canonicalPath: "/",
 					ogImage: "/og/site-default.png",
@@ -375,9 +375,9 @@ describe("content contracts", () => {
 
 		expect(
 			siteMetadataSchema.safeParse({
-				siteName: "HumanKaylee Portfolio",
+				siteName: "Joe Poznanski Portfolio",
 				siteDescription: "A systems atelier portfolio.",
-				siteUrl: "humankaylee.example",
+				siteUrl: "joepoznanski.io",
 				defaultOgImage: "/og/site-default.png",
 				seo,
 			}).success,

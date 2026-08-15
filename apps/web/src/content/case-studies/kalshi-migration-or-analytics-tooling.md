@@ -36,7 +36,7 @@ issueTrace:
   backlogId: "B-018"
   githubIssue: 24
   parentIssue: 3
-  closureRule: "Keep #24 open until HumanKaylee records a publication decision and any synthetic proof pack passes review."
+  closureRule: "Keep #24 open until Joe Poznanski records a publication decision and any synthetic proof pack passes review."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "phase-1-content-review"
@@ -58,11 +58,11 @@ seo:
   title: "Kalshi Migration or Analytics Tooling"
   description: "A deferred backend case-study candidate that requires stricter publication review."
   canonicalPath: "/case-studies/kalshi-migration-or-analytics-tooling/"
-  ogImage: "/social/default.svg"
+  ogImage: "/social/default.png"
 ---
 
 # Kalshi Migration Or Analytics Tooling
 
-This deferred candidate is intentionally not published as a public case-study route. It remains blocked until HumanKaylee records a publication decision and a synthetic abstraction removes private financial, account, repository, and path details.
+This deferred candidate is intentionally not published as a public case-study route. It remains blocked until Joe Poznanski records a publication decision and a synthetic abstraction removes private financial, account, repository, and path details.
 
 The current source record is decision support only. Do not promote screenshots, diagrams, proof packs, or implementation claims from this candidate until the publication-safety review in `runbooks/PUBLICATION_SAFETY_DECISIONS.md` is complete.

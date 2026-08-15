@@ -79,7 +79,7 @@ Automated checks verify:
 
 - `prefers-reduced-motion: reduce` suppresses reveal animation.
 - Route-continuity CSS removes named transitions for reduced-motion users.
-- The project atlas reports `document.body.dataset.constellationReady === "reduced-motion"` when reduced motion is requested.
+- The HTML/SVG-first project atlas remains readable with transition duration reduced to zero.
 - Content remains visible without relying on animation timing.
 
 ## No-WebGL fallback evidence
@@ -93,12 +93,10 @@ Fallback artifact evidence:
 - `projects-desktop-linux.png` captures the desktop atlas/constellation surface
   in the reduced-motion visual baseline.
 - `projects-mobile-linux.png` captures the mobile static atlas path where the
-  desktop constellation is skipped.
-- `tests/e2e/project-atlas.spec.ts` verifies the mobile fallback state with
-  `mobile-skipped`.
-- `tests/e2e/project-atlas.spec.ts` also verifies the static atlas remains
-  visible when the lazy desktop constellation import fails and records
-  `module-error` instead of throwing an uncaught page error.
+  desktop constellation is hidden.
+- `tests/e2e/project-atlas.spec.ts` verifies the constellation is a
+  direct-link visual index with no JavaScript loader and that the complete
+  static index remains available without JavaScript.
 - `tests/e2e/no-webgl.spec.ts` disables WebGL contexts, keeps the semantic
   project atlas visible, verifies no `canvas` is required, and captures
   `no-webgl-projects-fallback`.
@@ -110,7 +108,7 @@ Fallback artifact evidence:
 | Surface              | Reduced motion                         | No-WebGL / low capability                                   | Native scrolling                             | Evidence                                    | Result       |
 | -------------------- | -------------------------------------- | ----------------------------------------------------------- | -------------------------------------------- | ------------------------------------------- | ------------ |
 | Home systems map     | Static poster remains visible          | Core links and proof copy are semantic HTML                 | Page scrolls normally                        | `static systems map hero`, visual snapshots | Pass locally |
-| Project atlas        | Motion helper is skipped or simplified | Static atlas and mobile `mobile-skipped` path remain usable | Filter and artifact anchors use native links | `@constellation`, `@reduced-motion`         | Pass locally |
+| Project atlas        | Static HTML/SVG remains readable        | Compact index and direct project-detail links remain usable | Filter and project links use native anchors  | `@constellation`, `@reduced-motion`         | Pass locally |
 | Case-study narrative | Reveal effects are non-essential       | Markdown body renders as static HTML                        | Long-form reading uses normal document flow  | `@quality`, visual snapshots                | Pass locally |
 | Route continuity     | Named transitions disabled             | Navigation still uses standard links                        | Browser handles scroll and navigation        | `@route-continuity`                         | Pass locally |
 | Contact fallback     | Status changes are text-based          | Mailto fallback remains available                           | Form remains native and keyboard reachable   | `@api-down`, `@accessibility`               | Pass locally |

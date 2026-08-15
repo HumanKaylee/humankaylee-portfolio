@@ -2,8 +2,8 @@
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
-import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlackScholesDemo from "../../components/BlackScholesDemo.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 type NoteEntry = CollectionEntry<"notes">;
 
@@ -46,7 +46,7 @@ const structuredData = {
 ---
 
 <BaseLayout
-	title={`${note.data.seo.title} | HumanKaylee`}
+	title={`${note.data.seo.title} | Joe Poznanski`}
 	description={note.data.seo.description}
 	canonicalPath={note.data.seo.canonicalPath}
 	ogImage={note.data.seo.ogImage}

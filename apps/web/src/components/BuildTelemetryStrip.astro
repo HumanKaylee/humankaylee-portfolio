@@ -15,12 +15,10 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 	data-api-base={apiBaseUrl}
 	data-telemetry-strip
 >
-	<p class="section-kicker">Static evidence with optional API telemetry</p>
-	<h2 id="telemetry-title">
-		Local build, test, accessibility, and API fallback posture.
-	</h2>
+	<p class="section-kicker">Engineering proof</p>
+	<h2 id="telemetry-title">Evidence built into the delivery path.</h2>
 	<p class="telemetry-status" role="status" aria-live="polite" data-telemetry-status>
-		Static evidence only. Production launch is not claimed in this panel.
+		Core routes, accessibility, and verification evidence are available now.
 	</p>
 	<div class="telemetry-grid">
 		{
@@ -33,7 +31,7 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 							: `${item.label}: ${item.value}`
 					}
 					data-telemetry-label={item.label}
-					style={item.label === "API fallback" ? "grid-column: 1 / -1;" : undefined}
+					style={item.label === "Resilience" ? "grid-column: 1 / -1;" : undefined}
 				>
 					<p>{item.label}</p>
 					<strong>{item.value}</strong>
@@ -80,7 +78,7 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 
 	function updateApiFallbackPanel(summary: string, detail: string) {
 		const panel = telemetryStrip?.querySelector<HTMLElement>(
-			"[data-telemetry-label='API fallback']",
+			"[data-telemetry-label='Resilience']",
 		);
 		const value = panel?.querySelector("strong");
 		const body = panel?.querySelector("span");
@@ -112,13 +110,10 @@ const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL ?? "";
 				"API live",
 				`${projectCount} cached projects available without replacing the static fallback.`,
 			);
-			if (telemetryStatus) {
-				telemetryStatus.textContent = statusText;
-			}
+			if (telemetryStatus) telemetryStatus.textContent = statusText;
 		} catch {
 			if (telemetryStatus) {
-				telemetryStatus.textContent =
-					"API telemetry unavailable; static fallback remains active.";
+				telemetryStatus.textContent = "Core experience is fully available.";
 			}
 		}
 	}

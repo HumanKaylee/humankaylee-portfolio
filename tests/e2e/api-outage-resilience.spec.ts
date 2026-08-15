@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const outageRoutes = [
 	{
 		path: "/",
-		heading: /systems atelier/i,
+		heading: /Systems built to hold up/i,
 		marker: /practical AI-assisted systems/i,
 		link: { name: /for recruiters/i, href: "/resume/" },
 	},
@@ -23,11 +23,11 @@ const outageRoutes = [
 	},
 	{
 		path: "/resume/",
-		heading: /resume/i,
-		marker: /approved local source/i,
+		heading: /Joe Poznanski/i,
+		marker: /Principal Software Engineer/i,
 		link: {
-			name: /Download resume PDF/i,
-			href: "/downloads/humankaylee-resume.pdf",
+			name: /Download full resume \(PDF\)/i,
+			href: "/downloads/joe-poznanski-resume.pdf",
 		},
 	},
 	{
@@ -41,11 +41,11 @@ const outageRoutes = [
 	},
 	{
 		path: "/contact/",
-		heading: /contact route/i,
-		marker: /mailto fallback/i,
+		heading: /contact joe/i,
+		marker: /fastest route is direct email/i,
 		link: {
-			name: /contact-pending@humankaylee\.example/i,
-			href: "mailto:contact-pending@humankaylee.example",
+			name: /josephpoznanski@gmail\.com/i,
+			href: "mailto:josephpoznanski@gmail.com",
 		},
 	},
 ];
@@ -99,7 +99,7 @@ test.describe("API outage resilience @api-down @B-056", () => {
 				).toHaveAttribute("href", "/contact/");
 				if (route.link) {
 					await expect(
-						page.getByRole("link", { name: route.link.name }),
+						page.getByRole("link", { name: route.link.name }).first(),
 					).toHaveAttribute("href", route.link.href);
 				}
 				await expect(page.locator("body")).not.toContainText(rawErrorText);
@@ -107,39 +107,32 @@ test.describe("API outage resilience @api-down @B-056", () => {
 		}
 	});
 
-	test("sanitizes backend outage responses while keeping contact fallback actionable", async ({
-		page,
-	}) => {
-		await page.route("**/api/contact", async (route) => {
-			await route.fulfill({
-				status: 503,
-				contentType: "application/json",
-				body: JSON.stringify({
-					error: {
-						code: "database_unavailable",
-						message:
-							"sqlx::Error: store unavailable at /srv/internal/contact-store.jsonl\nstack trace: contact_delivery.rs:42",
-					},
-				}),
-			});
+	test("keeps contact independent from a failing backend", async ({ page }) => {
+		let contactApiCalled = false;
+		await page.route("**/api/contact", (route) => {
+			contactApiCalled = true;
+			return route.abort("failed");
 		});
 
 		await page.goto("/contact/");
 		await fillContactForm(page);
-		await page.getByRole("button", { name: "Send message" }).click();
-
-		await expect(page.getByRole("status")).toContainText(/api unavailable/i);
+		await page.locator("form.contact-form").evaluate((form) => {
+			form.dispatchEvent(
+				new Event("submit", { bubbles: true, cancelable: true }),
+			);
+		});
 		await expect(page.getByRole("status")).toContainText(
-			"Use the email link below if the API is unavailable.",
+			"Nothing was sent or stored by this site",
 		);
 		await expect(page.getByLabel("Message")).toHaveValue(
 			"I would like to discuss the portfolio systems work.",
 		);
 		await expect(
 			page.getByRole("link", {
-				name: /contact-pending@humankaylee\.example/i,
+				name: /josephpoznanski@gmail\.com/i,
 			}),
-		).toHaveAttribute("href", "mailto:contact-pending@humankaylee.example");
+		).toHaveAttribute("href", "mailto:josephpoznanski@gmail.com");
 		await expect(page.locator("body")).not.toContainText(rawErrorText);
+		expect(contactApiCalled).toBe(false);
 	});
 });

@@ -32,7 +32,7 @@ const coreRoutes = [
 	},
 	{
 		path: "/resume/",
-		marker: /Download resume PDF/i,
+		marker: /Download full resume \(PDF\)/i,
 	},
 	{
 		path: "/notes/",
@@ -40,7 +40,7 @@ const coreRoutes = [
 	},
 	{
 		path: "/contact/",
-		marker: /mailto fallback/i,
+		marker: /fastest route is direct email/i,
 	},
 ];
 
@@ -91,7 +91,7 @@ test.describe("quality @quality @noscript", () => {
 
 			await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 			await expect(page.locator("main")).toContainText(route.marker);
-			await expect(page.locator(".static-fallback-note")).toBeVisible();
+			await expect(page.locator(".noscript-banner")).toBeVisible();
 		});
 	}
 });

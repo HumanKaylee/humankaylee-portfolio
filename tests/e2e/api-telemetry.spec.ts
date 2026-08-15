@@ -41,7 +41,7 @@ test.describe("home API telemetry @api-telemetry", () => {
 
 		await expect(
 			page.getByRole("heading", {
-				name: /Local build, test, accessibility, and API fallback posture\./i,
+				name: /Evidence built into the delivery path/i,
 			}),
 		).toBeVisible();
 		await expect(
@@ -62,13 +62,10 @@ test.describe("home API telemetry @api-telemetry", () => {
 		await page.goto("/");
 
 		await expect(
-			page.getByRole("article", { name: /API fallback: Graceful fallback/i }),
-		).toContainText("Graceful fallback");
+			page.getByRole("article", { name: /Resilience: Failure aware/i }),
+		).toContainText("Failure aware");
 		await expect(page.getByRole("status")).toContainText(
-			"API telemetry unavailable",
-		);
-		await expect(page.getByRole("status")).toContainText(
-			"static fallback remains active",
+			"Core experience is fully available",
 		);
 	});
 });
@@ -83,17 +80,17 @@ test.describe("home telemetry static shell @static-shell", () => {
 
 		await expect(
 			page.getByRole("heading", {
-				name: /Local build, test, accessibility, and API fallback posture\./i,
+				name: /Evidence built into the delivery path/i,
 			}),
 		).toBeVisible();
 		await expect(
-			page.getByRole("article", { name: /Rendering: Static output/i }),
+			page.getByRole("article", { name: /Rendering: Fast by default/i }),
 		).toContainText("Build");
 		await expect(
-			page.getByRole("article", { name: /API fallback: Graceful fallback/i }),
+			page.getByRole("article", { name: /Resilience: Failure aware/i }),
 		).toBeVisible();
 		await expect(page.getByRole("status")).toContainText(
-			"Production launch is not claimed",
+			"Core routes, accessibility, and verification evidence are available now",
 		);
 	});
 });

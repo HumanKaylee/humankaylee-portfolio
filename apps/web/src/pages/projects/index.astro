@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 import ProjectAtlas from "../../components/ProjectAtlas.astro";
-import ProjectCard from "../../components/ProjectCard.astro";
 import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -13,35 +12,28 @@ const projects = ((await getCollection("projects")) as ProjectEntry[]).filter(
 );
 const categories = [
 	...new Set(projects.map((project: ProjectEntry) => project.data.category)),
-];
+].sort();
 ---
 
 <BaseLayout
-	title="Project Atlas | HumanKaylee"
-	description="A static project atlas for HumanKaylee's automation, operations, backend, and creative web systems."
+	title="Project Atlas | Joe Poznanski"
+	description="A static project atlas for Joe Poznanski's automation, operations, backend, and creative web systems."
 	canonicalPath="/projects/"
 	ogImage={routeInventoryById.projects.seo.ogImage}
 >
 	<section class="page-shell" aria-labelledby="projects-title">
 		<header class="page-header">
 			<p class="section-kicker">Project atlas</p>
-			<h1 id="projects-title">Project atlas for practical systems work.</h1>
+			<h1 id="projects-title">Selected systems, mapped by capability.</h1>
 			<p class="page-intro">
-				CLI Fleet Synchronization, remote workstation recovery, and the
-				portfolio build itself are represented as accessible cards first. Later
-				interactive maps will consume the same static collection data.
+				Automation, operations, and creative web work presented through the
+				problem, architecture, verification, and outcome.
 			</p>
+			<ul class="project-taxonomy" aria-label="Published project categories">
+				{categories.map((category) => <li>{category}</li>)}
+			</ul>
 		</header>
 
-		<aside class="paper-panel" aria-label="Project categories">
-			<p class="eyebrow">Taxonomy</p>
-			<p class="body-copy">{categories.join(" / ")}</p>
-		</aside>
-
 		<ProjectAtlas projects={projects} />
-
-		<div class="artifact-grid">
-			{projects.map((project: ProjectEntry) => <ProjectCard project={project} />)}
-		</div>
 	</section>
 </BaseLayout>

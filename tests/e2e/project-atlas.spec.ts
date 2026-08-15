@@ -1,60 +1,29 @@
 import { expect, test } from "@playwright/test";
 
-const atlasCategories = [
-	"AI",
-	"automation",
-	"infrastructure",
-	"backend",
-	"creative web",
-	"operations",
-];
+const publishedAtlasCategories = ["creative web", "operations"];
 
 test.describe("project atlas @atlas", () => {
-	test("surfaces public best-for audience chips on cards and atlas artifacts", async ({
+	test("surfaces public audience and proof on every static project node", async ({
 		page,
 	}) => {
 		await page.goto("/projects/");
 
-		const projectCard = page.locator(
-			"article.project-card#cli-fleet-synchronization-and-mcp-rollout",
-		);
-		await expect(
-			projectCard.getByRole("group", {
-				name: "Best for CLI Fleet Synchronization and MCP Rollout",
-			}),
-		).toContainText(/senior engineer/i);
-		await expect(
-			projectCard.getByRole("group", {
-				name: "Best for CLI Fleet Synchronization and MCP Rollout",
-			}),
-		).toContainText(/collaborator/i);
-
 		const atlasNode = page
-			.getByRole("link", {
-				name: /Open case study for CLI Fleet Synchronization and MCP Rollout/i,
-			})
-			.filter({ hasText: /Sanitized rollout matrix/i });
+			.locator("[data-atlas-node]")
+			.filter({ hasText: /CLI Fleet Synchronization and MCP Rollout/i });
+		await expect(atlasNode).toContainText(/Sanitized rollout matrix/i);
 		await expect(
 			atlasNode.getByRole("group", {
 				name: "Best for CLI Fleet Synchronization and MCP Rollout",
 			}),
 		).toContainText(/senior engineer/i);
-
-		await page.setViewportSize({ width: 1440, height: 1100 });
-		await page.goto("/projects/");
-
-		const artifact = page.locator(
-			"#constellation-artifact-humankaylee-portfolio-build",
+		await expect(atlasNode).toHaveAttribute(
+			"href",
+			"/projects/cli-fleet-synchronization-and-mcp-rollout/",
 		);
-		const artifactAudience = artifact.getByRole("group", {
-			name: "Best for HumanKaylee Portfolio Build",
-		});
-		for (const audience of ["recruiter", "senior engineer", "collaborator"]) {
-			await expect(artifactAudience).toContainText(new RegExp(audience, "i"));
-		}
 	});
 
-	test("renders accessible category filters and static atlas nodes", async ({
+	test("renders accessible category filters and a complete static index", async ({
 		page,
 	}) => {
 		await page.goto("/projects/");
@@ -62,7 +31,7 @@ test.describe("project atlas @atlas", () => {
 		const filters = page.getByRole("navigation", {
 			name: "Project atlas filters",
 		});
-		for (const category of atlasCategories) {
+		for (const category of publishedAtlasCategories) {
 			await expect(
 				filters.getByRole("link", { name: new RegExp(category, "i") }),
 			).toHaveAttribute(
@@ -72,19 +41,13 @@ test.describe("project atlas @atlas", () => {
 		}
 
 		const atlas = page.getByRole("region", {
-			name: "Accessible project atlas",
+			name: "Four projects, two capability clusters.",
 		});
 		await expect(atlas).toBeVisible();
-
-		const node = atlas.getByRole("link", {
-			name: /Open case study for CLI Fleet Synchronization and MCP Rollout/i,
-		});
-		await expect(node).toHaveAttribute(
-			"href",
-			"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+		await expect(atlas.locator("[data-atlas-node]")).toHaveCount(4);
+		await expect(atlas).toContainText(
+			/Four projects, two capability clusters/i,
 		);
-		await expect(node).toHaveAttribute("data-atlas-node", "true");
-		await expect(atlas.getByText(/4 published nodes/i)).toBeVisible();
 	});
 
 	test("keeps atlas nodes keyboard reachable @keyboard", async ({ page }) => {
@@ -97,15 +60,13 @@ test.describe("project atlas @atlas", () => {
 				const active = document.activeElement;
 				return active?.getAttribute("aria-label") ?? active?.textContent ?? "";
 			});
-			if (/Open case study/i.test(focusedLabel)) {
-				break;
-			}
+			if (/View project detail/i.test(focusedLabel)) break;
 		}
 
-		expect(focusedLabel).toMatch(/Open case study/i);
+		expect(focusedLabel).toMatch(/View project detail/i);
 	});
 
-	test("adds a lazy desktop constellation without replacing the static atlas @constellation", async ({
+	test("uses a desktop constellation as a direct-link visual index", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 1440, height: 1100 });
@@ -115,101 +76,69 @@ test.describe("project atlas @atlas", () => {
 			name: /Desktop project constellation/i,
 		});
 		await expect(constellation).toBeVisible();
-
-		for (const category of atlasCategories) {
-			await expect(
-				constellation.locator(`[data-constellation-cluster="${category}"]`),
-			).toBeVisible();
-		}
-
+		const clusters = constellation.locator("[data-constellation-cluster]");
+		await expect(clusters).toHaveCount(2);
+		const clusterLabels = (await clusters.allTextContents()).map((label) =>
+			label.trim(),
+		);
+		expect(clusterLabels).toEqual(
+			expect.arrayContaining(publishedAtlasCategories),
+		);
 		const nodes = constellation.locator("[data-constellation-node]");
 		await expect(nodes).toHaveCount(4);
-		await expect(
-			constellation.getByText(/Constellation focus helper is lazy-loaded/i),
-		).toBeVisible();
-		await expect(
-			page.locator('script[data-constellation-loader="idle-module"]'),
-		).toHaveAttribute("type", "module");
-
-		const firstNode = constellation.getByRole("link", {
-			name: /Focus constellation artifact for CLI Fleet Synchronization/i,
-		});
-		await expect(firstNode).toHaveAttribute(
-			"href",
-			"#constellation-artifact-cli-fleet-synchronization-and-mcp-rollout",
-		);
-
-		await page.waitForFunction(() => document.body.dataset.constellationReady);
-		await firstNode.click();
-
-		const artifact = page.locator(
-			"#constellation-artifact-cli-fleet-synchronization-and-mcp-rollout",
-		);
-		await expect(artifact).toBeFocused();
-		await expect(artifact).toContainText(
-			"CLI Fleet Synchronization and MCP Rollout",
-		);
-		await expect(
-			artifact.getByRole("link", { name: /Open constellation case study/i }),
-		).toHaveAttribute(
-			"href",
-			"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+		await expect(nodes.first()).toHaveAttribute("href", /\/projects\/.+\/$/);
+		await expect(page.locator("script[data-constellation-loader]")).toHaveCount(
+			0,
 		);
 	});
 
-	test("keeps the static atlas usable if the desktop constellation module fails @constellation", async ({
-		page,
+	test("keeps the complete static index without JavaScript", async ({
+		browser,
 	}) => {
-		const pageErrors: string[] = [];
-		page.on("pageerror", (error) => pageErrors.push(error.message));
-		await page.setViewportSize({ width: 1440, height: 1100 });
-		await page.route("**/scripts/project-constellation.mjs", (route) =>
-			route.abort("failed"),
-		);
-
-		await page.goto("/projects/");
-
-		await expect(
-			page.getByRole("region", { name: "Accessible project atlas" }),
-		).toBeVisible();
-		await expect(page.locator("[data-project-constellation]")).toBeVisible();
-		await expect
-			.poll(
-				() => page.evaluate(() => document.body.dataset.constellationReady),
-				{ timeout: 2000 },
-			)
-			.toBe("module-error");
-		expect(pageErrors).toEqual([]);
+		const context = await browser.newContext({ javaScriptEnabled: false });
+		const page = await context.newPage();
+		try {
+			await page.goto("http://127.0.0.1:4321/projects/");
+			await expect(page.locator("[data-atlas-node]")).toHaveCount(4);
+			await expect(
+				page.getByRole("region", {
+					name: "Four projects, two capability clusters.",
+				}),
+			).toBeVisible();
+		} finally {
+			await context.close();
+		}
 	});
 
-	test("keeps mobile users on the static atlas instead of the desktop constellation @constellation", async ({
+	test("keeps mobile on the compact index without enhancement copy", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 390, height: 900 });
 		await page.goto("/projects/");
 
-		await expect(
-			page.getByRole("region", { name: "Accessible project atlas" }),
-		).toBeVisible();
 		await expect(page.locator("[data-project-constellation]")).toBeHidden();
-		await page.waitForFunction(
-			() => document.body.dataset.constellationReady === "mobile-skipped",
+		await expect(page.locator("[data-atlas-node]")).toHaveCount(4);
+		await expect(page.locator("main")).not.toContainText(
+			/Progressive enhancement/i,
 		);
 	});
 });
 
 test.describe("project atlas @reduced-motion", () => {
-	test("shows a poster fallback instead of motion-dependent atlas copy", async ({
+	test("keeps the static atlas readable with motion suppressed", async ({
 		page,
 	}) => {
 		await page.emulateMedia({ reducedMotion: "reduce" });
 		await page.goto("/projects/");
 
-		await expect(
-			page.getByText(/Reduced-motion poster fallback/i),
-		).toBeVisible();
-		await expect(
-			page.getByText(/Motion enhancement waits for user-capable contexts/i),
-		).toBeHidden();
+		await expect(page.locator("[data-atlas-node]")).toHaveCount(4);
+		const duration = await page
+			.locator("[data-atlas-node]")
+			.first()
+			.evaluate((node) => getComputedStyle(node).transitionDuration);
+		const durationMs = duration.endsWith("ms")
+			? Number.parseFloat(duration)
+			: Number.parseFloat(duration) * 1000;
+		expect(durationMs).toBeLessThanOrEqual(0.001);
 	});
 });

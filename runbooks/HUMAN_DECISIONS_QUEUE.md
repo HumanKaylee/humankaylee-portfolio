@@ -1,10 +1,10 @@
 # HUMAN_DECISIONS_QUEUE — 2026-05-26
 
-Status: PARTIALLY RESOLVED — 12 of 14 decisions accepted as defaults; D-03 (API host) and D-04 (region) await operator selection before M2 (backend deploy) dispatches.
+Status: RESOLVED — all 14 decisions are recorded. M2 may deploy to Fly.io in `iad`; contact delivery remains disabled for v1.
 
-To accept the two remaining defaults: replace each `UNRESOLVED` with the default value listed for that row, then commit. To override: replace with your chosen value.
+Operator selections recorded on 2026-07-24 supersede earlier host, region, contact-delivery, and retention defaults.
 
-Verify pattern (canonical): `grep -c 'Decision: __________ (UNRESOLVED)' runbooks/HUMAN_DECISIONS_QUEUE.md` — expect `0` to unblock M2.
+Verification: each decision entry below has a dated resolved value before M2 dispatches.
 
 ---
 
@@ -34,9 +34,9 @@ Verify pattern (canonical): `grep -c 'Decision: __________ (UNRESOLVED)' runbook
 - Alternatives: `Fly.io`, `Railway`
 - Owner: operator
 - Resolution time: 10 min
-- Decision: __________ (UNRESOLVED)
+- Decision: `Fly.io` (RESOLVED 2026-07-24)
 
-> Operator override note: leaving this open per operator request "go ahead and do all of that except the actual hosting service". M2 (backend deploy) is blocked until this resolves. M1 (frontend, Cloudflare Pages) and M5 (case-study content + cryo embed) proceed in parallel.
+> Operator decision: use the prepared Fly.io deployment. This is a managed-container choice for the small stateless Axum API; M2 may proceed after provider authentication.
 
 ---
 
@@ -46,9 +46,9 @@ Verify pattern (canonical): `grep -c 'Decision: __________ (UNRESOLVED)' runbook
 - Alternatives: `Ashburn US`
 - Owner: operator
 - Resolution time: 2 min
-- Decision: __________ (UNRESOLVED)
+- Decision: `iad (Ashburn, Virginia, US)` (RESOLVED 2026-07-24)
 
-> Operator override note: depends on D-03. Defaults to `Falkenstein EU` if D-03 = `Hetzner CX22` (Hetzner Falkenstein is the cheapest EU DC); to `iad` (Ashburn) if D-03 = `Fly.io` and US latency matters; to nearest Railway region if D-03 = `Railway`.
+> Operator decision: deploy Fly.io in `iad` for East Coast US latency. `apps/api/fly.toml` is pinned to the same region.
 
 ---
 
@@ -58,7 +58,9 @@ Verify pattern (canonical): `grep -c 'Decision: __________ (UNRESOLVED)' runbook
 - Alternatives: `mailto-only-exception`
 - Owner: operator
 - Resolution time: 5 min
-- Decision: `store + Resend nightly` (RESOLVED 2026-05-26)
+- Decision: `disabled for v1` (RESOLVED 2026-07-24)
+
+> Operator decision: do not collect, transmit, store, or email contact-message PII until a separate provider, retention, deletion, encryption, and incident-response review is approved.
 
 ---
 
@@ -68,7 +70,9 @@ Verify pattern (canonical): `grep -c 'Decision: __________ (UNRESOLVED)' runbook
 - Alternatives: `30d`, `1yr`, `indefinite`
 - Owner: operator
 - Resolution time: 2 min
-- Decision: `90 days` (RESOLVED 2026-05-26)
+- Decision: `not applicable while contact delivery is disabled` (RESOLVED 2026-07-24)
+
+> Operator decision: choose and implement retention only before any future contact-delivery enablement.
 
 ---
 
@@ -152,4 +156,4 @@ Verify pattern (canonical): `grep -c 'Decision: __________ (UNRESOLVED)' runbook
 
 ---
 
-**12 of 14 resolved. 2 remain: D-03 (API host) + D-04 (region).** These block M2 only; M1 (frontend) and M5 (content + cryo embed) proceed.
+**14 of 14 decisions resolved.** M2 is approved for Fly.io in `iad`; production evidence, DNS/TLS verification, and the final launch checklist still require their own completed records.

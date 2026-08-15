@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const implementedRoutes = [
 	{
 		path: "/",
-		heading: /systems atelier/i,
+		heading: /Systems built to hold up/i,
 		marker: /practical AI-assisted systems/i,
 	},
 	{
@@ -23,8 +23,8 @@ const implementedRoutes = [
 	},
 	{
 		path: "/resume/",
-		heading: /resume/i,
-		marker: /Download resume PDF/i,
+		heading: /Joe Poznanski/i,
+		marker: /Download full resume \(PDF\)/i,
 	},
 	{
 		path: "/notes/",
@@ -33,8 +33,8 @@ const implementedRoutes = [
 	},
 	{
 		path: "/contact/",
-		heading: /contact route/i,
-		marker: /mailto fallback/i,
+		heading: /contact joe/i,
+		marker: /fastest route is direct email/i,
 	},
 ];
 
@@ -69,9 +69,11 @@ test.describe("route coverage @quality", () => {
 
 		await page.goto("/projects/");
 		await expect(
-			page.getByRole("link", {
-				name: "View project detail for CLI Fleet Synchronization and MCP Rollout",
-			}),
+			page
+				.getByRole("link", {
+					name: "View project detail for CLI Fleet Synchronization and MCP Rollout",
+				})
+				.first(),
 		).toHaveAttribute("href", projectDetail);
 	});
 });

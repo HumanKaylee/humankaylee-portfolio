@@ -37,7 +37,7 @@ issueTrace:
   backlogId: "B-019"
   githubIssue: 25
   parentIssue: 3
-  closureRule: "Keep #25 open until HumanKaylee records a publication decision and any synthetic proof pack passes review."
+  closureRule: "Keep #25 open until Joe Poznanski records a publication decision and any synthetic proof pack passes review."
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "phase-1-content-review"
@@ -59,7 +59,7 @@ seo:
   title: "YouTube AI Video Pipeline"
   description: "A deferred AI workflow case-study candidate awaiting redaction review."
   canonicalPath: "/case-studies/youtube-ai-video-pipeline/"
-  ogImage: "/social/default.svg"
+  ogImage: "/social/default.png"
 ---
 
 # YouTube AI Video Pipeline

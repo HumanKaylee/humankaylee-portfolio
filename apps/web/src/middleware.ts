@@ -11,7 +11,7 @@ const securityHeaders = {
 		"font-src 'self'",
 		"style-src 'self' 'unsafe-inline'",
 		"script-src 'self' 'unsafe-inline'",
-		"connect-src 'self'",
+		"connect-src 'self' https://api.humankaylee.dev",
 	].join("; "),
 	"Cross-Origin-Opener-Policy": "same-origin",
 	"Cross-Origin-Resource-Policy": "same-origin",

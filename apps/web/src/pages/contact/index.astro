@@ -5,19 +5,25 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout
-	title="Contact | HumanKaylee"
-	description="API-enhanced contact route with a visible mailto fallback for recruiter and project inquiries."
+	title="Contact | Joe Poznanski"
+	description="A direct contact route for recruiter and project inquiries, with a visible email fallback."
 	canonicalPath="/contact/"
 	ogImage={routeInventoryById.contact.seo.ogImage}
 >
 	<section class="page-shell" aria-labelledby="contact-title">
 		<header class="page-header">
 			<p class="section-kicker">Contact</p>
-			<h1 id="contact-title">Contact route with API enhancement and fallback.</h1>
+			<h1 id="contact-title">Contact Joe.</h1>
 			<p class="page-intro">
-				Send a concise recruiter, collaborator, or project note. The form
-				enhances through the Rust API when available, while the mailto path
-				remains visible if JavaScript or the backend is unavailable.
+				The fastest route is direct email. Use the optional composer below if
+				you want help structuring the subject and message.
+			</p>
+			<a class="contact-primary" data-touch-target="true" href="mailto:josephpoznanski@gmail.com">
+				Email Joe directly
+			</a>
+			<p class="contact-guidance">
+				<strong>Useful context to include:</strong> role, project goal, timeline,
+				or the system question you want to discuss.
 			</p>
 		</header>
 

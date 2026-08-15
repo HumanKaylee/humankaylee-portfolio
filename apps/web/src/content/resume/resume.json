@@ -1,12 +1,12 @@
 {
-	"title": "HumanKaylee Resume",
+	"title": "Joe Poznanski Resume",
 	"slug": "resume",
 	"pdfSourcePath": "approved-local-resume-pdf-imported-2026-05-23",
-	"pdfDownloadPath": "/downloads/humankaylee-resume.pdf",
+	"pdfDownloadPath": "/downloads/joe-poznanski-resume.pdf",
 	"sourceStatus": "approved-source",
 	"workflowState": "complete",
 	"pdfStatus": "published",
-	"sourceAsset": "apps/web/public/downloads/humankaylee-resume.pdf",
+	"sourceAsset": "apps/web/public/downloads/joe-poznanski-resume.pdf",
 	"approvalState": "approved",
 	"workflowSteps": [
 		{
@@ -27,9 +27,9 @@
 		}
 	],
 	"seo": {
-		"title": "HumanKaylee Resume",
+		"title": "Joe Poznanski Resume",
 		"description": "HTML resume entry point with a downloadable PDF for recruiter review.",
 		"canonicalPath": "/resume/",
-		"ogImage": "/social/default.svg"
+		"ogImage": "/social/default.png"
 	}
 }

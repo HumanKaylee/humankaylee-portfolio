@@ -71,7 +71,7 @@ const expectedPublishCandidateTitles = [
 	"CLI Fleet Synchronization and MCP Rollout",
 	"Creative Web Systems Atlas Demo",
 	"Cryo Flow Sim — Stage 1 Showcase",
-	"HumanKaylee Portfolio Build",
+	"Joe Poznanski Portfolio Build",
 	"Remote Workstation Recovery and Operational Debugging",
 ];
 
@@ -544,7 +544,7 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		"missing openItems clearance",
 		"missing atlas fallback artifact inspection evidence",
 	]);
-	expectReadinessRow(packet, "HumanKaylee Portfolio Build", [
+	expectReadinessRow(packet, "Joe Poznanski Portfolio Build", [
 		"checklist answers recorded",
 		"missing openItems clearance",
 		"missing production domain evidence",
@@ -568,7 +568,7 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		"inspect atlas fallback artifacts",
 		"capture production or owner-approved production-equivalent provider preview evidence",
 	]);
-	expectStatusRow(status, "HumanKaylee Portfolio Build", [
+	expectStatusRow(status, "Joe Poznanski Portfolio Build", [
 		"review recorded checklist answers",
 		"inspect public artifacts",
 		"add real production domain",

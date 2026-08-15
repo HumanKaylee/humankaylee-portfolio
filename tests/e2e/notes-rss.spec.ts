@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 
 const site = JSON.parse(
 	readFileSync("apps/web/src/content/site/site.json", "utf8"),
-) as { siteUrl: string };
+) as { siteName: string; siteUrl: string };
 const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
 
 const publishedNotes = [
@@ -118,7 +118,7 @@ test.describe("notes and RSS @notes-rss", () => {
 		expect(xml).toContain('<?xml version="1.0"');
 		expect(xml).toContain('<rss version="2.0">');
 		expect(xml).toContain("<channel>");
-		expect(xml).toContain("<title>HumanKaylee Portfolio Notes</title>");
+		expect(xml).toContain(`<title>${site.siteName} Notes</title>`);
 
 		for (const note of publishedNotes) {
 			expect(xml).toContain(`<title>${note.title}</title>`);

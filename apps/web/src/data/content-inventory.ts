@@ -140,7 +140,7 @@ const seoExample = {
 	title: "Example page",
 	description: "A safe public summary.",
 	canonicalPath: "/examples/example-page/",
-	ogImage: "/social/default.svg",
+	ogImage: "/social/default.png",
 };
 
 export const CONTENT_VALIDATION_EXAMPLES: Readonly<
@@ -329,14 +329,14 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			"seo",
 		],
 		validExample: {
-			title: "HumanKaylee Resume",
+			title: "Joe Poznanski Resume",
 			slug: "resume",
 			pdfSourcePath: "approved-local-resume-pdf-imported-2026-05-23",
-			pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+			pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 			sourceStatus: "approved-source",
 			workflowState: "complete",
 			pdfStatus: "published",
-			sourceAsset: "apps/web/public/downloads/humankaylee-resume.pdf",
+			sourceAsset: "apps/web/public/downloads/joe-poznanski-resume.pdf",
 			approvalState: "approved",
 			workflowSteps: [
 				{
@@ -357,21 +357,21 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 				},
 			],
 			seo: {
-				title: "HumanKaylee Resume",
+				title: "Joe Poznanski Resume",
 				description:
 					"HTML resume entry point with a downloadable PDF for recruiter review.",
 				canonicalPath: "/resume/",
-				ogImage: "/social/default.svg",
+				ogImage: "/social/default.png",
 			},
 		},
 		invalidExamples: [
 			{
 				reason: "claims a final PDF before source approval",
 				entry: {
-					title: "HumanKaylee Resume",
+					title: "Joe Poznanski Resume",
 					slug: "resume",
 					pdfSourcePath: "pending-approved-resume-source",
-					pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+					pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 					sourceStatus: "placeholder",
 					workflowState: "complete",
 					pdfStatus: "published",
@@ -397,9 +397,9 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			"seo",
 		],
 		validExample: {
-			siteName: "HumanKaylee Portfolio",
+			siteName: "Joe Poznanski Portfolio",
 			siteDescription: "A systems atelier portfolio.",
-			siteUrl: "https://humankaylee.example",
+			siteUrl: "https://joepoznanski.io",
 			defaultOgImage: "/social/default.png",
 			seo: {
 				...seoExample,
@@ -410,9 +410,9 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			{
 				reason: "site URL must be absolute",
 				entry: {
-					siteName: "HumanKaylee Portfolio",
+					siteName: "Joe Poznanski Portfolio",
 					siteDescription: "A systems atelier portfolio.",
-					siteUrl: "humankaylee.example",
+					siteUrl: "joepoznanski.io",
 					defaultOgImage: "/social/default.png",
 					seo: seoExample,
 				},

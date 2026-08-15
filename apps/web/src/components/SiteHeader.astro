@@ -6,20 +6,37 @@ type Props = {
 };
 
 const { nav } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+function isCurrentRoute(href: string) {
+	if (href === "/") {
+		return currentPath === href;
+	}
+
+	if (href === "/projects/" && currentPath.startsWith("/case-studies/")) {
+		return true;
+	}
+
+	return currentPath === href.slice(0, -1) || currentPath.startsWith(href);
+}
 ---
 
 <header class="site-header">
-	<a class="brand-lockup" href="/" aria-label="HumanKaylee home">
-		<span class="brand-mark" aria-hidden="true">HK</span>
+	<a class="brand-lockup" href="/" aria-label="Joe Poznanski home">
+		<span class="brand-mark" aria-hidden="true">JP</span>
 		<span>
-			<span class="brand-title">HumanKaylee</span>
+			<span class="brand-title">Joe Poznanski</span>
 			<span class="brand-subtitle">Systems Atelier</span>
 		</span>
 	</a>
 	<nav class="primary-nav" aria-label="Primary navigation">
 		{
 			nav.map((item) => (
-				<a data-touch-target="true" href={item.href}>
+				<a
+					aria-current={isCurrentRoute(item.href) ? "page" : undefined}
+					data-touch-target="true"
+					href={item.href}
+				>
 					{item.label}
 				</a>
 			))

@@ -11,8 +11,12 @@ const corePaths = [
 	"/projects/",
 	"/case-studies/",
 	"/notes/",
+	"/now/",
+	"/uses/",
+	"/reading/",
 	"/resume/",
 	"/contact/",
+	"/changelog/",
 ] as const;
 
 function escapeXml(value: string) {

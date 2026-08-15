@@ -55,8 +55,8 @@ test("Phase 7 metadata readiness uses shared site metadata without clearing doma
 
 	assert.equal(
 		site.siteUrl,
-		"https://humankaylee.example",
-		"expected reserved placeholder to stay centralized in site.json until final domain selection",
+		"https://joepoznanski.io",
+		"expected the configured public site origin to stay centralized in site.json",
 	);
 
 	for (const [label, content] of [
@@ -74,8 +74,8 @@ test("Phase 7 metadata readiness uses shared site metadata without clearing doma
 
 	expectNotContains(
 		rss,
-		'const siteUrl = "https://humankaylee.example"',
-		"RSS hardcoded placeholder origin",
+		'const siteUrl = "https://joepoznanski.io"',
+		"RSS hardcoded public origin",
 	);
 	expectContains(
 		notesRssSpec,

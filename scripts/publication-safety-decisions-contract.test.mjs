@@ -116,7 +116,7 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 		"account-linked",
 		"exclude from v1",
 		"Creative Web Systems Atlas Demo",
-		"HumanKaylee decision pending",
+		"Joe Poznanski decision pending",
 	]);
 	expectTableRow(decision, "YouTube AI Video Pipeline", [
 		"B-019",
@@ -124,7 +124,7 @@ test("B-018 and B-019 publication safety decisions are recorded without publishi
 		"account identifiers",
 		"exclude from v1",
 		"defer until synthetic proof pack exists",
-		"HumanKaylee decision pending",
+		"Joe Poznanski decision pending",
 	]);
 
 	expectAll(status, [

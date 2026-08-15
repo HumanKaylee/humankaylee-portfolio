@@ -14,20 +14,14 @@
 
 import { execSync } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "..");
 
-const CRATE_DIR = resolve(
-	repoRoot,
-	"apps/api/crates/blackscholes-wasm",
-);
-const OUT_DIR = resolve(
-	repoRoot,
-	"apps/web/public/wasm/blackscholes",
-);
+const CRATE_DIR = resolve(repoRoot, "apps/api/crates/blackscholes-wasm");
+const OUT_DIR = resolve(repoRoot, "apps/web/public/wasm/blackscholes");
 const WASM_BINARY = resolve(OUT_DIR, "blackscholes_wasm_bg.wasm");
 const WASM_JS = resolve(OUT_DIR, "blackscholes_wasm.js");
 
@@ -38,7 +32,7 @@ if (!existsSync(CRATE_DIR)) {
 	process.exit(1);
 }
 
-let wasmPackPath = "wasm-pack";
+const wasmPackPath = "wasm-pack";
 try {
 	execSync("wasm-pack --version", { stdio: "pipe" });
 } catch {
@@ -53,9 +47,11 @@ try {
 const cmd = [
 	wasmPackPath,
 	"build",
-	"--target", "web",
+	"--target",
+	"web",
 	"--release",
-	"--out-dir", OUT_DIR,
+	"--out-dir",
+	OUT_DIR,
 	CRATE_DIR,
 ].join(" ");
 
@@ -93,15 +89,13 @@ const wasmBytes = statSync(WASM_BINARY).size;
 const jsBytes = statSync(WASM_JS).size;
 const KB = (n) => `${(n / 1024).toFixed(1)} KB`;
 
-console.log(`[wasm-build] OK`);
+console.log("[wasm-build] OK");
 console.log(`  WASM binary : ${WASM_BINARY} (${KB(wasmBytes)} raw)`);
 console.log(`  JS glue     : ${WASM_JS} (${KB(jsBytes)})`);
 
 const RAW_CEILING_BYTES = 102_400; // 100 KB — generous ceiling
 if (wasmBytes > RAW_CEILING_BYTES) {
 	console.warn(
-		`[wasm-build] WARNING: WASM binary is ${KB(wasmBytes)}, ` +
-		`above the ${KB(RAW_CEILING_BYTES)} ceiling. ` +
-		`Run wasm-opt -Oz to reduce size.`,
+		`[wasm-build] WARNING: WASM binary is ${KB(wasmBytes)}, above the ${KB(RAW_CEILING_BYTES)} ceiling. Run wasm-opt -Oz to reduce size.`,
 	);
 }

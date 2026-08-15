@@ -108,7 +108,7 @@ test.describe("visual surfaces @visual-surfaces", () => {
 		await page.goto("/projects/");
 		await expectSurfaceTreatment(page, ".project-atlas-shell");
 		await expectSurfaceTreatment(page, ".atlas-filter-nav");
-		await expectSurfaceTreatment(page, ".atlas-motion-panel");
+		await expectSurfaceTreatment(page, ".project-constellation");
 		await expectSurfaceTreatment(page, ".atlas-category-panel");
 		await expectSurfaceTreatment(page, ".atlas-node-card");
 
@@ -119,7 +119,7 @@ test.describe("visual surfaces @visual-surfaces", () => {
 
 		await page.goto("/resume/");
 		await expectSurfaceTreatment(page, ".paper-panel");
-		await expectSurfaceTreatment(page, ".workflow-list");
+		await expectSurfaceTreatment(page, ".resume-clearance-chip");
 
 		await page.goto("/notes/");
 		await expectSurfaceTreatment(page, ".project-card");

@@ -8,6 +8,7 @@ import {
 	LIGHTHOUSE_THRESHOLDS,
 	LIGHTHOUSE_WARMUP_ROUTE,
 	lighthouseDryRunPlan,
+	pnpmInvocation,
 	runAuditPlan,
 } from "./lighthouse-local.mjs";
 
@@ -37,6 +38,22 @@ describe("lighthouse local gate contract", () => {
 			accessibility: 0.95,
 			"best-practices": 0.95,
 			seo: 0.95,
+		});
+	});
+
+	it("runs pnpm through Corepack without a Windows command shell", () => {
+		assert.deepEqual(
+			pnpmInvocation("win32", "C:\\Program Files\\nodejs\\node.exe"),
+			{
+				command: "C:\\Program Files\\nodejs\\node.exe",
+				args: [
+					"C:\\Program Files\\nodejs\\node_modules\\corepack\\dist\\pnpm.js",
+				],
+			},
+		);
+		assert.deepEqual(pnpmInvocation("linux", "/usr/bin/node"), {
+			command: "pnpm",
+			args: [],
 		});
 	});
 

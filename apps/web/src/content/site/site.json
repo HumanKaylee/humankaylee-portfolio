@@ -1,12 +1,12 @@
 {
-	"siteName": "HumanKaylee Portfolio",
+	"siteName": "Joe Poznanski Portfolio",
 	"siteDescription": "A static-first systems atelier portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and polished user-facing tools.",
-	"siteUrl": "https://humankaylee.example",
-	"defaultOgImage": "/social/default.svg",
+	"siteUrl": "https://joepoznanski.io",
+	"defaultOgImage": "/social/default.png",
 	"seo": {
-		"title": "HumanKaylee Portfolio",
-		"description": "A static-first systems atelier portfolio for HumanKaylee.",
+		"title": "Joe Poznanski Portfolio",
+		"description": "A static-first systems atelier portfolio for Joe Poznanski.",
 		"canonicalPath": "/",
-		"ogImage": "/social/default.svg"
+		"ogImage": "/social/default.png"
 	}
 }

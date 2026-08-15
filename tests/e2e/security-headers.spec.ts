@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
 const launchRoutes = [
@@ -9,6 +10,17 @@ const launchRoutes = [
 	"/contact/",
 ];
 
+const wrangler = readFileSync("wrangler.toml", "utf8");
+const configuredApiBaseUrl = wrangler.match(
+	/^PUBLIC_API_BASE_URL\s*=\s*"([^"]+)"\s*$/m,
+)?.[1];
+
+if (!configuredApiBaseUrl) {
+	throw new Error("wrangler.toml must define production PUBLIC_API_BASE_URL");
+}
+
+const configuredApiOrigin = new URL(configuredApiBaseUrl).origin;
+
 const expectedHeaders = {
 	"content-security-policy": [
 		"default-src 'self'",
@@ -16,6 +28,7 @@ const expectedHeaders = {
 		"object-src 'none'",
 		"frame-ancestors 'none'",
 		"form-action 'self' mailto:",
+		`connect-src 'self' ${configuredApiOrigin}`,
 	],
 	"cross-origin-opener-policy": ["same-origin"],
 	"cross-origin-resource-policy": ["same-origin"],

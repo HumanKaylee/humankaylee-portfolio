@@ -18,7 +18,7 @@ const projectDetailPages = [
 	},
 	{
 		slug: "humankaylee-portfolio-build",
-		title: "HumanKaylee Portfolio Build",
+		title: "Joe Poznanski Portfolio Build",
 		summary:
 			"Static-first portfolio system with Rust API proof, content contracts, and launch verification.",
 		relatedCaseStudy: "/case-studies/humankaylee-portfolio-build/",
@@ -52,7 +52,7 @@ test.describe("project detail routes @projects @noscript", () => {
 			await expect(page.getByText(project.summary)).toBeVisible();
 			await expect(
 				page.getByRole("link", {
-					name: new RegExp(`Read related case study: ${project.title}`, "i"),
+					name: new RegExp(`Read the full case study: ${project.title}`, "i"),
 				}),
 			).toHaveAttribute("href", project.relatedCaseStudy);
 			await expect(

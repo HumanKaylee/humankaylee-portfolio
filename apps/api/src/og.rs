@@ -208,7 +208,11 @@ mod tests {
     #[test]
     fn render_og_png_returns_valid_png_magic_header() {
         let png = render_og_png("Test Title", "Test Subtitle").expect("render");
-        assert_eq!(&png[..8], b"\x89PNG\r\n\x1a\n", "must start with PNG magic header");
+        assert_eq!(
+            &png[..8],
+            b"\x89PNG\r\n\x1a\n",
+            "must start with PNG magic header"
+        );
         assert!(png.len() > 1000, "PNG should be more than 1 KB");
     }
 

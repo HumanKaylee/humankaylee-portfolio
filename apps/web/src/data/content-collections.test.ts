@@ -29,6 +29,14 @@ describe("Astro content collection fixtures", () => {
 		expect(entries).toHaveLength(7);
 	});
 
+	it("uses the approved production domain for canonical metadata", () => {
+		const site = JSON.parse(
+			readFileSync(join(contentRoot, "site", "site.json"), "utf8"),
+		) as { siteUrl?: string };
+
+		expect(site.siteUrl).toBe("https://joepoznanski.io");
+	});
+
 	it("keeps v1 case-study outlines linked to the source redaction guide without claiming launch approval", () => {
 		const entries = readdirSync(join(contentRoot, "case-studies")).filter(
 			(file) => file.endsWith(".md"),

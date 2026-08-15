@@ -9,17 +9,24 @@ const { nav } = Astro.props;
 ---
 
 <footer class="site-footer">
-	<p>
-		Static-first portfolio shell. Interactive systems maps and Rust telemetry are
-		progressive enhancements, not content dependencies.
-	</p>
-	<nav aria-label="Footer navigation">
-		{
-			nav.map((item) => (
-				<a data-touch-target="true" href={item.href}>
-					{item.label}
-				</a>
-			))
-		}
-	</nav>
+	<div class="footer-summary">
+		<p class="section-kicker">Build dependable systems</p>
+		<p>Principal engineer working across aerospace, automation, AI tooling, and operator-grade software.</p>
+	</div>
+	<div class="footer-links">
+		<nav class="footer-actions" aria-label="Portfolio actions">
+			<a data-touch-target="true" href="/resume/">Resume</a>
+			<a data-touch-target="true" href="mailto:josephpoznanski@gmail.com">Email Joe</a>
+		</nav>
+		<nav class="footer-nav" aria-label="Footer navigation">
+			{
+				nav.map((item) => (
+					<a data-touch-target="true" href={item.href}>
+						{item.label}
+					</a>
+				))
+			}
+			<a data-touch-target="true" href="/changelog/">Site changelog</a>
+		</nav>
+	</div>
 </footer>
