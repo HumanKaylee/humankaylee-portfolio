@@ -11,6 +11,7 @@ import {
 	siteMetadataSchema,
 	usesEntrySchema,
 } from "./lib/contracts/content";
+import { workSchema } from "./lib/contracts/work";
 
 const caseStudies = defineCollection({
 	loader: glob({
@@ -68,6 +69,14 @@ const uses = defineCollection({
 	schema: usesEntrySchema,
 });
 
+const work = defineCollection({
+	loader: glob({
+		base: "./apps/web/src/content/work",
+		pattern: "**/*.md",
+	}),
+	schema: workSchema,
+});
+
 const reading = defineCollection({
 	loader: glob({
 		base: "./apps/web/src/content/reading",
@@ -85,4 +94,5 @@ export const collections = {
 	resume,
 	site,
 	uses,
+	work,
 };
