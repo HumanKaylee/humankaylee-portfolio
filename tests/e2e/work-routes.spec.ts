@@ -32,9 +32,17 @@ const allPublishedWork = [
 ] as const;
 
 const internalWorkCopy =
-	/PR evidence|approval pass|production launch|deployment status|fallback mode|API health|launch readiness|openItems|redaction/i;
+	/PR evidence|approval pass|launch approval|approval checklist|production launch|deployment status|fallback mode|API health|launch readiness|openItems|redaction/i;
 
 test.describe("Work routes @work", () => {
+	test("keeps prior launch-review phrases inside the visitor-copy guard", () => {
+		const missedPhrases = ["launch approval", "approval checklist"].filter(
+			(phrase) => !internalWorkCopy.test(phrase),
+		);
+
+		expect(missedPhrases).toEqual([]);
+	});
+
 	test("renders the three flagships in approved order and supporting work separately", async ({
 		page,
 	}) => {
