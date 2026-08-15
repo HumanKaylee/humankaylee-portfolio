@@ -3,6 +3,8 @@ Thumbs.db
 
 node_modules/
 .pnpm-store/
+.worktrees/
+.superpowers/sdd/
 dist/
 .astro/
 .vercel/
