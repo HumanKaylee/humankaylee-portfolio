@@ -13,12 +13,8 @@ const socialImageRoutes = [
 		path: "/",
 	},
 	{
-		label: "projects index",
-		path: "/projects/",
-	},
-	{
-		label: "case studies index",
-		path: "/case-studies/",
+		label: "Work index",
+		path: "/work/",
 	},
 	{
 		label: "notes index",
@@ -29,12 +25,8 @@ const socialImageRoutes = [
 		path: "/contact/",
 	},
 	{
-		label: "project detail",
-		path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
-	},
-	{
-		label: "case-study detail",
-		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+		label: "Work detail",
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 	},
 	{
 		label: "note detail",
@@ -104,41 +96,22 @@ test.describe("page metadata @metadata", () => {
 		});
 	}
 
-	test("renders item-specific JSON-LD on project and case-study detail pages", async ({
+	test("renders item-specific CreativeWork JSON-LD on Work detail pages", async ({
 		page,
 	}) => {
-		await page.goto("/projects/cli-fleet-synchronization-and-mcp-rollout/");
+		await page.goto("/work/cli-fleet-synchronization-and-mcp-rollout/");
 
-		let structuredData = await page
+		const structuredData = await page
 			.locator('script[type="application/ld+json"]')
 			.allTextContents();
-		let jsonLdText = structuredData.join("\n");
-
-		expect(jsonLdText).toContain('"@type":"SoftwareSourceCode"');
-		expect(jsonLdText).toContain(
-			'"name":"CLI Fleet Synchronization and MCP Rollout"',
-		);
-		expect(jsonLdText).toContain(
-			`"url":"${expectedSiteUrl}/projects/cli-fleet-synchronization-and-mcp-rollout/"`,
-		);
-		expect(jsonLdText).not.toContain("/home/joe");
-
-		await page.goto("/case-studies/cli-fleet-synchronization-and-mcp-rollout/");
-
-		structuredData = await page
-			.locator('script[type="application/ld+json"]')
-			.allTextContents();
-		jsonLdText = structuredData.join("\n");
+		const jsonLdText = structuredData.join("\n");
 
 		expect(jsonLdText).toContain('"@type":"CreativeWork"');
+		expect(jsonLdText).toContain('"name":"CLI Fleet Synchronization"');
 		expect(jsonLdText).toContain(
-			'"name":"CLI Fleet Synchronization and MCP Rollout"',
+			`"url":"${expectedSiteUrl}/work/cli-fleet-synchronization-and-mcp-rollout/"`,
 		);
-		expect(jsonLdText).toContain(
-			`"url":"${expectedSiteUrl}/case-studies/cli-fleet-synchronization-and-mcp-rollout/"`,
-		);
-		expect(jsonLdText).not.toContain("Complete the final approval checklist");
-		expect(jsonLdText).not.toContain("openItems");
+		expect(jsonLdText).not.toMatch(/redaction|openItems|checklistStatus/i);
 		expect(jsonLdText).not.toContain("/home/joe");
 	});
 

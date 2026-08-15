@@ -17,7 +17,6 @@ export type RouteInventoryEntry = Readonly<{
 	owner: RouteOwner;
 	status: RouteStatus;
 	primary: boolean;
-	legacy?: boolean;
 	seo: RouteSeo;
 }>;
 
@@ -235,70 +234,6 @@ export const routeInventory = [
 			title: "Reading | Joe Poznanski",
 			description: "Books, papers, posts, and talks Joe Poznanski is reading.",
 			canonicalPath: "/reading/",
-			ogImage: defaultOgImage,
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "projects",
-		label: "Projects",
-		path: "/projects/",
-		owner: "page-composition",
-		status: "planned",
-		primary: false,
-		legacy: true,
-		seo: {
-			title: "Projects | Joe Poznanski portfolio",
-			description: "Legacy project index pending the Work route migration.",
-			canonicalPath: "/projects/",
-			ogImage: defaultOgImage,
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "project-detail",
-		label: "Project detail",
-		path: "/projects/[slug]/",
-		owner: "page-composition",
-		status: "planned",
-		primary: false,
-		legacy: true,
-		seo: {
-			title: "Project detail | Joe Poznanski portfolio",
-			description: "Legacy project detail pending the Work route migration.",
-			canonicalPath: "/projects/[slug]/",
-			ogImage: defaultOgImage,
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "case-studies",
-		label: "Case studies",
-		path: "/case-studies/",
-		owner: "content",
-		status: "draft",
-		primary: false,
-		legacy: true,
-		seo: {
-			title: "Case studies | Joe Poznanski portfolio",
-			description: "Legacy case-study index pending the Work route migration.",
-			canonicalPath: "/case-studies/",
-			ogImage: defaultOgImage,
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "case-study-detail",
-		label: "Case study detail",
-		path: "/case-studies/[slug]/",
-		owner: "content",
-		status: "draft",
-		primary: false,
-		legacy: true,
-		seo: {
-			title: "Case study detail | Joe Poznanski portfolio",
-			description: "Legacy case-study detail pending the Work route migration.",
-			canonicalPath: "/case-studies/[slug]/",
 			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},

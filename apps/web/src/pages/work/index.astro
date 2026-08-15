@@ -1,0 +1,260 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import MediaFrame from "../../components/MediaFrame.astro";
+import { routeInventoryById } from "../../data/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type WorkEntry = CollectionEntry<"work">;
+
+const publishedWork = ((await getCollection("work")) as WorkEntry[]).filter(
+	(entry) => entry.data.publicationStatus === "publish",
+);
+const featuredWork = publishedWork
+	.filter((entry) => entry.data.featuredOrder !== undefined)
+	.sort(
+		(left, right) =>
+			(left.data.featuredOrder ?? Number.MAX_SAFE_INTEGER) -
+			(right.data.featuredOrder ?? Number.MAX_SAFE_INTEGER),
+	);
+const supportingWork = publishedWork
+	.filter((entry) => entry.data.featuredOrder === undefined)
+	.sort((left, right) => left.data.title.localeCompare(right.data.title));
+---
+
+<BaseLayout
+	title={routeInventoryById.work.seo.title}
+	description={routeInventoryById.work.seo.description}
+	canonicalPath={routeInventoryById.work.seo.canonicalPath}
+	ogImage={routeInventoryById.work.seo.ogImage}
+>
+	<div class="page-shell work-index">
+		<header class="work-index__header">
+			<p class="work-index__kicker">Selected work</p>
+			<h1>Systems made legible through proof.</h1>
+			<p>
+				Three engineering stories about simulation, configuration drift, and
+				recovery—each framed by the decisions, evidence, and limits that make
+				the result trustworthy.
+			</p>
+		</header>
+
+		<section data-featured-work aria-labelledby="featured-work-title">
+			<header class="work-index__section-header">
+				<p>01—03</p>
+				<p id="featured-work-title" class="featured-work-label">Flagship work</p>
+			</header>
+			<div class="featured-work-list">
+				{
+					featuredWork.map((work, index) => (
+						<article class="featured-work">
+							<div class="featured-work__copy">
+								<p class="featured-work__meta">
+									<span>{String(index + 1).padStart(2, "0")}</span>
+									<span>{work.data.discipline}</span>
+									<span>{work.data.year}</span>
+								</p>
+								<h2>
+									<a href={`/work/${work.data.slug}/`}>{work.data.title}</a>
+								</h2>
+								<p>{work.data.lede}</p>
+								<dl>
+									<div>
+										<dt>Responsibility</dt>
+										<dd>{work.data.role}</dd>
+									</div>
+									<div>
+										<dt>Strongest evidence</dt>
+										<dd>{work.data.evidence.summary}</dd>
+									</div>
+								</dl>
+								<a
+									class="signal-link"
+									data-touch-target="true"
+									href={`/work/${work.data.slug}/`}
+								>
+									Read the case study <span aria-hidden="true">→</span>
+								</a>
+							</div>
+							<MediaFrame media={work.data.media}>
+								<div class="evidence-flow" aria-label={work.data.media.alt}>
+									<ol>
+										<li><strong>Problem boundary</strong><span>{work.data.problem}</span></li>
+										<li><strong>System boundary</strong><span>{work.data.architecture.overview}</span></li>
+										<li><strong>Evidence</strong><span>{work.data.evidence.summary}</span></li>
+										<li><strong>Known limits</strong><span>{work.data.evidence.limits}</span></li>
+									</ol>
+								</div>
+							</MediaFrame>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section data-supporting-work aria-labelledby="supporting-work-title">
+			<header class="work-index__section-header">
+				<p>Supporting work</p>
+				<h2 id="supporting-work-title">Working technical demonstrations.</h2>
+			</header>
+			<div class="supporting-work-list">
+				{
+					supportingWork.map((work) => (
+						<article>
+							<p>{work.data.discipline}</p>
+							<h2>
+								<a href={`/work/${work.data.slug}/`}>{work.data.title}</a>
+							</h2>
+							<p>{work.data.lede}</p>
+							<strong>{work.data.evidence.summary}</strong>
+						</article>
+					))
+				}
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.work-index__header {
+		display: grid;
+		max-width: 76rem;
+		gap: var(--space-4);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.work-index__header > p:last-child {
+		max-width: 48rem;
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.work-index__kicker,
+	.work-index__section-header > p,
+	.featured-work__meta,
+	.featured-work dt,
+	.supporting-work-list article > p:first-child {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.work-index__section-header {
+		display: grid;
+		gap: var(--space-3);
+		border-top: 1px solid var(--line);
+		padding-top: var(--space-4);
+	}
+
+	.featured-work-label {
+		font-size: clamp(1.2rem, 2vw, 1.6rem);
+		font-weight: 700;
+	}
+
+	.featured-work-list {
+		display: grid;
+	}
+
+	.featured-work {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+		gap: clamp(2rem, 5vw, 6rem);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.featured-work__copy {
+		display: grid;
+		align-content: start;
+		gap: var(--space-4);
+	}
+
+	.featured-work__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+	}
+
+	.featured-work h2,
+	.supporting-work-list h2 {
+		font-size: clamp(2rem, 4.5vw, 4.4rem);
+	}
+
+	.featured-work dl {
+		display: grid;
+		gap: var(--space-3);
+		margin: 0;
+	}
+
+	.featured-work dl div {
+		display: grid;
+		gap: var(--space-1);
+	}
+
+	.featured-work dd {
+		margin: 0;
+	}
+
+	.evidence-flow {
+		padding: clamp(1.25rem, 4vw, 3rem);
+		background: var(--color-technical);
+		color: var(--color-media);
+	}
+
+	.evidence-flow ol {
+		display: grid;
+		gap: var(--space-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.evidence-flow li {
+		display: grid;
+		gap: var(--space-1);
+		border-top: 1px solid color-mix(in srgb, var(--color-media) 20%, transparent);
+		padding-top: var(--space-2);
+	}
+
+	.evidence-flow strong {
+		color: var(--color-signal);
+		font-family: var(--font-evidence);
+		font-size: 0.68rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.supporting-work-list {
+		display: grid;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.supporting-work-list article {
+		display: grid;
+		grid-template-columns: 0.35fr 1fr 1fr;
+		gap: var(--space-4);
+		align-items: start;
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.supporting-work-list article > strong {
+		grid-column: 2 / -1;
+		border-left: 0.25rem solid var(--color-signal);
+		padding-left: var(--space-3);
+	}
+
+	@media (max-width: 62rem) {
+		.featured-work,
+		.supporting-work-list article {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.supporting-work-list article > strong {
+			grid-column: auto;
+		}
+	}
+</style>

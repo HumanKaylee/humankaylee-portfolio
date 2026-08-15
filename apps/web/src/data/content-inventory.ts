@@ -25,10 +25,6 @@ export type RouteInventoryEntry = Readonly<{
 		| "about"
 		| "notes"
 		| "note-detail"
-		| "projects"
-		| "project-detail"
-		| "case-studies"
-		| "case-study-detail"
 		| "notes-build-log"
 		| "resume"
 		| "contact"
@@ -57,10 +53,6 @@ const routeKindById = {
 	now: "now",
 	uses: "uses",
 	reading: "reading",
-	projects: "projects",
-	"project-detail": "project-detail",
-	"case-studies": "case-studies",
-	"case-study-detail": "case-study-detail",
 } satisfies Readonly<Record<RouteId, RouteInventoryEntry["kind"]>>;
 
 const contentSourcesById = {
@@ -83,29 +75,6 @@ const contentSourcesById = {
 	now: ["current focus items", "now entry date", "entry summary"],
 	uses: ["hardware list", "software list", "tooling philosophy"],
 	reading: ["reading items by kind", "status badges", "takeaways"],
-	projects: [
-		"project taxonomy",
-		"project cards",
-		"status labels",
-		"proof links",
-	],
-	"project-detail": [
-		"project metadata",
-		"featured case-study crosslinks",
-		"artifact notes",
-		"publication status",
-	],
-	"case-studies": [
-		"case-study outline summaries",
-		"redaction status labels",
-		"safe artifacts",
-	],
-	"case-study-detail": [
-		"case-study outline",
-		"redaction review source",
-		"safe artifacts",
-		"verification notes",
-	],
 } satisfies Readonly<Record<RouteId, readonly string[]>>;
 
 export const ROUTE_INVENTORY: readonly RouteInventoryEntry[] =

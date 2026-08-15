@@ -47,17 +47,17 @@ describe("routeInventory", () => {
 		}
 	});
 
-	it("keeps legacy project records non-primary while exposing canonical Work and About routes", () => {
+	it("exposes canonical Work and About routes without legacy public route records", () => {
 		expect(routeInventoryById.work.path).toBe("/work/");
 		expect(routeInventoryById.about.path).toBe("/about/");
-		expect(routeInventoryById.projects).toMatchObject({
-			primary: false,
-			legacy: true,
-		});
-		expect(routeInventoryById["case-studies"]).toMatchObject({
-			primary: false,
-			legacy: true,
-		});
+		expect(routeInventory.map((route) => route.id)).not.toEqual(
+			expect.arrayContaining([
+				"projects",
+				"project-detail",
+				"case-studies",
+				"case-study-detail",
+			]),
+		);
 		expect(routeInventoryById.robots.seo.robots).toBe("noindex,nofollow");
 		expect(routeInventoryById["fallback-error"].seo.robots).toBe(
 			"noindex,nofollow",

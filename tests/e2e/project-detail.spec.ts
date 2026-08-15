@@ -1,63 +1,49 @@
 import { expect, test } from "@playwright/test";
 
-const projectDetailPages = [
+const workDetails = [
+	{
+		slug: "cryo-flow-sim",
+		title: "Cryogenic Flow Simulation",
+		marker: /deterministic simulation of cryogenic valve transients/i,
+	},
 	{
 		slug: "cli-fleet-synchronization-and-mcp-rollout",
-		title: "CLI Fleet Synchronization and MCP Rollout",
-		summary:
-			"Standardized multi-machine CLI setup with inventory, rollout, and verification evidence.",
-		relatedCaseStudy:
-			"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-	},
-	{
-		slug: "creative-web-systems-atlas-demo",
-		title: "Creative Web Systems Atlas Demo",
-		summary:
-			"Accessible project atlas concept with a progressive visual enhancement layer.",
-		relatedCaseStudy: "/case-studies/creative-web-systems-atlas-demo/",
-	},
-	{
-		slug: "humankaylee-portfolio-build",
-		title: "Joe Poznanski Portfolio Build",
-		summary:
-			"Static-first portfolio system with Rust API proof, content contracts, and launch verification.",
-		relatedCaseStudy: "/case-studies/humankaylee-portfolio-build/",
+		title: "CLI Fleet Synchronization",
+		marker: /cross-machine CLI rollout standardized local tool behavior/i,
 	},
 	{
 		slug: "remote-workstation-recovery-and-operational-debugging",
-		title: "Remote Workstation Recovery and Operational Debugging",
-		summary:
-			"Evidence-first recovery workflow for remote workstation and session failures.",
-		relatedCaseStudy:
-			"/case-studies/remote-workstation-recovery-and-operational-debugging/",
+		title: "Remote Workstation Recovery",
+		marker: /practical recovery workflow for a remote workstation/i,
+	},
+	{
+		slug: "black-scholes-wasm",
+		title: "Black-Scholes Options Pricer in Rust and WASM",
+		marker: /Rust crate compiled to WebAssembly powers a live/i,
 	},
 ] as const;
 
-test.describe("project detail routes @projects @noscript", () => {
+test.describe("Work detail routes @work @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 
-	for (const project of projectDetailPages) {
-		test(`renders the static-first project detail page for ${project.slug}`, async ({
+	for (const work of workDetails) {
+		test(`renders the static-first Work detail page for ${work.slug}`, async ({
 			page,
 		}) => {
-			const response = await page.goto(`/projects/${project.slug}/`);
+			const response = await page.goto(`/work/${work.slug}/`);
 
-			expect(response?.status(), project.slug).toBeLessThan(400);
+			expect(response?.status(), work.slug).toBe(200);
 			await expect(
-				page.getByRole("heading", {
-					level: 1,
-					name: project.title,
-				}),
+				page.getByRole("heading", { level: 1, name: work.title }),
 			).toBeVisible();
-			await expect(page.getByText(project.summary)).toBeVisible();
+			await expect(page.getByText(work.marker).first()).toBeVisible();
+			await expect(page.getByRole("heading", { name: "Proof" })).toBeVisible();
 			await expect(
-				page.getByRole("link", {
-					name: new RegExp(`Read the full case study: ${project.title}`, "i"),
-				}),
-			).toHaveAttribute("href", project.relatedCaseStudy);
+				page.locator(".proof-boundary dt").filter({ hasText: "Known limits" }),
+			).toBeVisible();
 			await expect(
-				page.getByRole("link", { name: /Back to project atlas/i }),
-			).toHaveAttribute("href", "/projects/");
+				page.getByRole("link", { name: /Next project:/i }),
+			).toHaveAttribute("href", /^\/work\/.+\/$/);
 			await expect(page.locator("body")).toHaveAttribute(
 				"data-enhancement",
 				"static-first",

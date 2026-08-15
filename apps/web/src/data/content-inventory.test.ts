@@ -36,7 +36,7 @@ describe("phase 1 content inventory", () => {
 		]);
 	});
 
-	it("lists canonical, secondary, and legacy content routes without promoting Projects", () => {
+	it("lists canonical and secondary content routes without duplicate public story routes", () => {
 		expect(ROUTE_INVENTORY.map((entry) => entry.path)).toEqual([
 			"/",
 			"/work/",
@@ -52,14 +52,15 @@ describe("phase 1 content inventory", () => {
 			"/now/",
 			"/uses/",
 			"/reading/",
-			"/projects/",
-			"/projects/[slug]/",
-			"/case-studies/",
-			"/case-studies/[slug]/",
 		]);
-		expect(
-			ROUTE_INVENTORY.filter((entry) => entry.kind === "projects"),
-		).toHaveLength(1);
+		expect(ROUTE_INVENTORY.map((entry) => entry.kind)).not.toEqual(
+			expect.arrayContaining([
+				"projects",
+				"project-detail",
+				"case-studies",
+				"case-study-detail",
+			]),
+		);
 	});
 
 	it("parses valid examples and rejects invalid examples with the real schemas", () => {
