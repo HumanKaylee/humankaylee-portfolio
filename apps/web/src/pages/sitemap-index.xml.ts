@@ -2,21 +2,21 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import type { APIRoute } from "astro";
 
-type CaseStudyEntry = CollectionEntry<"caseStudies">;
+import { isPublicNote } from "../data/public-notes";
+
 type NoteEntry = CollectionEntry<"notes">;
-type ProjectEntry = CollectionEntry<"projects">;
+type WorkEntry = CollectionEntry<"work">;
 
 const corePaths = [
 	"/",
-	"/projects/",
-	"/case-studies/",
+	"/work/",
+	"/about/",
 	"/notes/",
 	"/now/",
 	"/uses/",
 	"/reading/",
 	"/resume/",
 	"/contact/",
-	"/changelog/",
 ] as const;
 
 function escapeXml(value: string) {
@@ -34,27 +34,16 @@ function absoluteUrl(siteUrl: string, path: string) {
 
 export const GET: APIRoute = async () => {
 	const [site] = await getCollection("site");
-	const caseStudies = (await getCollection("caseStudies")) as CaseStudyEntry[];
 	const notes = (await getCollection("notes")) as NoteEntry[];
-	const projects = (await getCollection("projects")) as ProjectEntry[];
+	const work = (await getCollection("work")) as WorkEntry[];
 	const siteUrl = site.data.siteUrl.replace(/\/$/, "");
-	const projectPaths = projects
-		.filter((entry: ProjectEntry) => entry.data.publicationStatus === "publish")
-		.map((entry: ProjectEntry) => `/projects/${entry.data.slug}/`);
-	const caseStudyPaths = caseStudies
-		.filter(
-			(entry: CaseStudyEntry) => entry.data.publicationStatus === "publish",
-		)
-		.map((entry: CaseStudyEntry) => `/case-studies/${entry.data.slug}/`);
+	const workPaths = work
+		.filter((entry: WorkEntry) => entry.data.publicationStatus === "publish")
+		.map((entry: WorkEntry) => `/work/${entry.data.slug}/`);
 	const notePaths = notes
-		.filter((entry: NoteEntry) => entry.data.publicationStatus === "publish")
+		.filter(isPublicNote)
 		.map((entry: NoteEntry) => `/notes/${entry.data.slug}/`);
-	const paths = [
-		...corePaths,
-		...projectPaths,
-		...caseStudyPaths,
-		...notePaths,
-	];
+	const paths = [...corePaths, ...workPaths, ...notePaths];
 	const urls = paths
 		.map(
 			(path) =>

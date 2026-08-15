@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -8,190 +8,99 @@ const repoRoot = path.resolve(
 	"..",
 );
 const publicDir = path.join(repoRoot, "apps/web/public");
-
-const cards = [
-	["social/default.png", "SYSTEMS ATELIER", "HumanKaylee Portfolio"],
-	["social/home.png", "SYSTEMS ATELIER", "Practical AI-Assisted Systems Work"],
-	[
-		"social/projects.png",
-		"PROJECT ATLAS",
-		"Automation, Operations, Backend, Creative Web",
-	],
-	[
-		"social/project-detail.png",
-		"PROJECT DETAIL",
-		"Evidence Snapshot and Static-First Proof",
-	],
-	["social/case-studies.png", "CASE STUDIES", "Public-Safe Systems Narratives"],
-	[
-		"social/case-study-detail.png",
-		"CASE STUDY",
-		"Problem, Constraints, Verification, Operations",
-	],
-	["social/notes.png", "BUILD LOG", "Notes From the Systems Atelier"],
-	["social/resume.png", "RESUME", "Recruiter Fast Path and Static PDF Asset"],
-	[
-		"social/contact.png",
-		"CONTACT",
-		"API Enhancement With Visible Email Fallback",
-	],
-	["social/sitemap.png", "SITEMAP", "Machine-Readable Route Index"],
-	["social/robots.png", "ROBOTS", "Search Crawler Directives"],
-	["social/404.png", "FALLBACK", "Readable Recovery for Stale Links"],
-	[
-		"social/examples/example-page.png",
-		"EXAMPLE",
-		"Content Inventory Preview Contract",
-	],
-	[
-		"social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
-		"PROJECT",
-		"CLI Fleet Synchronization and MCP Rollout",
-	],
-	[
-		"social/projects/creative-web-systems-atlas-demo.png",
-		"PROJECT",
-		"Creative Web Systems Atlas Demo",
-	],
-	[
-		"social/projects/humankaylee-portfolio-build.png",
-		"PROJECT",
-		"HumanKaylee Portfolio Build",
-	],
-	[
-		"social/projects/remote-workstation-recovery-and-operational-debugging.png",
-		"PROJECT",
-		"Remote Workstation Recovery and Operational Debugging",
-	],
-	[
-		"social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
-		"CASE STUDY",
-		"CLI Fleet Synchronization and MCP Rollout",
-	],
-	[
-		"social/case-studies/creative-web-systems-atlas-demo.png",
-		"CASE STUDY",
-		"Creative Web Systems Atlas Demo",
-	],
-	[
-		"social/case-studies/humankaylee-portfolio-build.png",
-		"CASE STUDY",
-		"HumanKaylee Portfolio Build",
-	],
-	[
-		"social/case-studies/remote-workstation-recovery-and-operational-debugging.png",
-		"CASE STUDY",
-		"Remote Workstation Recovery and Operational Debugging",
-	],
-	[
-		"social/notes/api-offline-resilience.png",
-		"BUILD LOG",
-		"How the Portfolio Stays Useful When the API Is Offline",
-	],
-	[
-		"social/notes/content-starts-as-data.png",
-		"BUILD LOG",
-		"Why the Portfolio Content Starts as Data, Not Pages",
-	],
-	[
-		"social/notes/redaction-rules.png",
-		"BUILD LOG",
-		"Redaction Rules for Portfolio Case Studies",
-	],
+const sourcePoster = path.join(
+	publicDir,
+	"media/cryo-flow-sim-stage1-poster.png",
+);
+const outputPath = path.join(publicDir, "social/default.png");
+const name = "Joe Poznanski";
+const positioningLines = [
+	"Principal engineer",
+	"for systems that",
+	"cannot drift.",
 ];
 
-function generateCard([relativePath, kicker, title]) {
-	const outputPath = path.join(publicDir, relativePath);
-	mkdirSync(path.dirname(outputPath), { recursive: true });
-
-	const result = spawnSync(
-		"convert",
-		[
-			"-size",
-			"1200x630",
-			"gradient:#091612-#26382f",
-			"(",
-			"-size",
-			"1200x630",
-			"xc:none",
-			"-fill",
-			"#172921",
-			"-draw",
-			"polygon 740,0 1200,0 1200,630 910,630",
-			")",
-			"-composite",
-			"-fill",
-			"#d9a441",
-			"-draw",
-			"rectangle 86,78 1114,86",
-			"-fill",
-			"#f5ead1",
-			"-font",
-			"Helvetica-Bold",
-			"-pointsize",
-			"34",
-			"-gravity",
-			"NorthWest",
-			"-annotate",
-			"+86+118",
-			kicker,
-			"(",
-			"-background",
-			"none",
-			"-fill",
-			"#fff8e7",
-			"-font",
-			"Helvetica-Bold",
-			"-pointsize",
-			"72",
-			"-size",
-			"930x250",
-			`caption:${title}`,
-			")",
-			"-gravity",
-			"NorthWest",
-			"-geometry",
-			"+86+170",
-			"-composite",
-			"-fill",
-			"#c8d7c4",
-			"-font",
-			"Helvetica",
-			"-pointsize",
-			"30",
-			"-gravity",
-			"SouthWest",
-			"-annotate",
-			"+86+86",
-			"Static-first portfolio evidence - public-safe metadata",
-			"-fill",
-			"#d9a441",
-			"-draw",
-			"circle 1040,518 1088,518",
-			"-fill",
-			"#091612",
-			"-font",
-			"Helvetica-Bold",
-			"-pointsize",
-			"34",
-			"-gravity",
-			"SouthEast",
-			"-annotate",
-			"+104+90",
-			"HK",
-			"-strip",
-			outputPath,
-		],
-		{ stdio: "inherit" },
-	);
-
-	if (result.status !== 0) {
-		throw new Error(`Failed to generate ${relativePath}`);
+function firstExistingPath(paths, label) {
+	const result = paths.find((candidate) => existsSync(candidate));
+	if (!result) {
+		throw new Error(`Could not find a local ${label} font for social preview`);
 	}
+	return result;
 }
 
-for (const card of cards) {
-	generateCard(card);
+function ffmpegFilterPath(filePath) {
+	return filePath.replaceAll("\\", "/").replace(":", "\\:");
 }
 
-console.log(`Generated ${cards.length} social preview assets.`);
+const regularFont = ffmpegFilterPath(
+	firstExistingPath(
+		[
+			"C:/Windows/Fonts/arial.ttf",
+			"/System/Library/Fonts/Supplemental/Arial.ttf",
+			"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+		],
+		"regular",
+	),
+);
+const boldFont = ffmpegFilterPath(
+	firstExistingPath(
+		[
+			"C:/Windows/Fonts/arialbd.ttf",
+			"/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+			"/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+		],
+		"bold",
+	),
+);
+
+if (!existsSync(sourcePoster)) {
+	throw new Error(`Missing authentic source poster: ${sourcePoster}`);
+}
+
+mkdirSync(path.dirname(outputPath), { recursive: true });
+
+const positioningFilters = positioningLines
+	.map(
+		(line, index) =>
+			`drawtext=fontfile='${boldFont}':text='${line}':fontcolor=0x11120F:fontsize=48:x=58:y=${220 + index * 66}`,
+	)
+	.join(",");
+const filter = [
+	`[0:v]drawbox=x=58:y=60:w=86:h=12:color=0xD9FF43:t=fill,drawtext=fontfile='${regularFont}':text='${name}':fontcolor=0x11120F:fontsize=32:x=58:y=106,${positioningFilters}[text]`,
+	"[1:v]scale=1120:630,crop=660:630:0:0[media]",
+	"[text][media]hstack=inputs=2[out]",
+].join(";");
+
+const result = spawnSync(
+	"ffmpeg",
+	[
+		"-hide_banner",
+		"-loglevel",
+		"error",
+		"-y",
+		"-f",
+		"lavfi",
+		"-i",
+		"color=c=0xF2F1EB:s=540x630",
+		"-i",
+		sourcePoster,
+		"-filter_complex",
+		filter,
+		"-map",
+		"[out]",
+		"-frames:v",
+		"1",
+		"-update",
+		"1",
+		outputPath,
+	],
+	{ stdio: "inherit" },
+);
+
+if (result.status !== 0) {
+	throw new Error("Failed to generate social/default.png");
+}
+
+console.log(
+	`Generated social/default.png from cryo-flow-sim-stage1-poster.png: ${name} — ${positioningLines.join(" ")}`,
+);

@@ -3,23 +3,13 @@ import { expect, test } from "@playwright/test";
 
 const launchRoutes = [
 	"/",
-	"/projects/",
-	"/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
+	"/work/",
+	"/work/cryo-flow-sim/",
+	"/about/",
 	"/resume/",
 	"/notes/",
 	"/contact/",
 ];
-
-const wrangler = readFileSync("wrangler.toml", "utf8");
-const configuredApiBaseUrl = wrangler.match(
-	/^PUBLIC_API_BASE_URL\s*=\s*"([^"]+)"\s*$/m,
-)?.[1];
-
-if (!configuredApiBaseUrl) {
-	throw new Error("wrangler.toml must define production PUBLIC_API_BASE_URL");
-}
-
-const configuredApiOrigin = new URL(configuredApiBaseUrl).origin;
 
 const expectedHeaders = {
 	"content-security-policy": [
@@ -28,7 +18,8 @@ const expectedHeaders = {
 		"object-src 'none'",
 		"frame-ancestors 'none'",
 		"form-action 'self' mailto:",
-		`connect-src 'self' ${configuredApiOrigin}`,
+		"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+		"connect-src 'self'",
 	],
 	"cross-origin-opener-policy": ["same-origin"],
 	"cross-origin-resource-policy": ["same-origin"],
@@ -42,6 +33,17 @@ const expectedHeaders = {
 	"x-content-type-options": ["nosniff"],
 	"x-frame-options": ["DENY"],
 };
+
+function staticContentSecurityPolicy() {
+	const headers = readFileSync("apps/web/public/_headers", "utf8");
+	const policy = headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)?.[1];
+
+	if (!policy) {
+		throw new Error("_headers must define Content-Security-Policy");
+	}
+
+	return policy;
+}
 
 test.describe("security headers @security", () => {
 	for (const route of launchRoutes) {
@@ -63,6 +65,19 @@ test.describe("security headers @security", () => {
 					).toContain(fragment);
 				}
 			}
+
+			expect(response.headers()["content-security-policy"]).not.toContain(
+				"api.humankaylee.dev",
+			);
 		});
 	}
+
+	test("keeps middleware and static-host CSP semantics identical", async ({
+		request,
+	}) => {
+		const response = await request.get("/");
+		const middlewarePolicy = response.headers()["content-security-policy"];
+
+		expect(middlewarePolicy).toBe(staticContentSecurityPolicy());
+	});
 });

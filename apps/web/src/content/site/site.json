@@ -1,11 +1,11 @@
 {
 	"siteName": "Joe Poznanski Portfolio",
-	"siteDescription": "A static-first systems atelier portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and polished user-facing tools.",
+	"siteDescription": "Principal engineer for systems that cannot drift.",
 	"siteUrl": "https://joepoznanski.io",
 	"defaultOgImage": "/social/default.png",
 	"seo": {
 		"title": "Joe Poznanski Portfolio",
-		"description": "A static-first systems atelier portfolio for Joe Poznanski.",
+		"description": "Principal engineer for systems that cannot drift.",
 		"canonicalPath": "/",
 		"ogImage": "/social/default.png"
 	}

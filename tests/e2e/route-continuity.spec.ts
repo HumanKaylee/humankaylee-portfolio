@@ -1,110 +1,77 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
-async function routeContinuityState(page: import("@playwright/test").Page) {
-	return page.evaluate(() => {
-		const main = document.querySelector("main");
-		const header = document.querySelector("header");
+type RedirectRule = {
+	source: string;
+	destination: string;
+	status: string;
+};
 
-		return {
-			headerTransitionName: header
-				? getComputedStyle(header).viewTransitionName
-				: "",
-			mainTabIndex: main?.getAttribute("tabindex") ?? "",
-			mainTransitionName: main ? getComputedStyle(main).viewTransitionName : "",
-			routeContinuity: document.body.dataset.routeContinuity ?? "",
-			supportsViewTransitions: CSS.supports("view-transition-name: route-main"),
-		};
-	});
-}
-
-async function viewTransitionRuleMedia(page: import("@playwright/test").Page) {
-	return page.evaluate(() => {
-		const mediaRules: string[] = [];
-
-		function walkRules(rules: CSSRuleList, activeMedia: string[]) {
-			for (const rule of Array.from(rules)) {
-				if (rule.cssText.trim().startsWith("@view-transition")) {
-					mediaRules.push(activeMedia.join(" && ") || "<none>");
-				}
-
-				if ("cssRules" in rule) {
-					const media =
-						rule instanceof CSSMediaRule ? rule.media.mediaText : "";
-					walkRules(
-						(rule as CSSGroupingRule).cssRules,
-						media ? [...activeMedia, media] : activeMedia,
-					);
-				}
-			}
-		}
-
-		for (const sheet of Array.from(document.styleSheets)) {
-			try {
-				walkRules(sheet.cssRules, []);
-			} catch {
-				// Ignore stylesheets the browser will not expose through CSSOM.
-			}
-		}
-
-		return mediaRules;
-	});
+function redirectRules(): RedirectRule[] {
+	return readFileSync("apps/web/public/_redirects", "utf8")
+		.split(/\r?\n/)
+		.map((line) => line.trim())
+		.filter((line) => line.length > 0 && !line.startsWith("#"))
+		.map((line) => {
+			const [source, destination, status] = line.split(/\s+/);
+			return { source, destination, status };
+		});
 }
 
 test.describe("route continuity @route-continuity @keyboard", () => {
-	test("uses native page continuity without intercepting keyboard navigation", async ({
+	test("keeps keyboard navigation on the canonical Work route", async ({
 		page,
 	}) => {
 		await page.goto("/");
 
-		const state = await routeContinuityState(page);
-		expect(state.routeContinuity).toBe("native-view-transitions");
-		expect(state.mainTabIndex).toBe("-1");
-
-		if (state.supportsViewTransitions) {
-			expect(state.headerTransitionName).toBe("route-chrome");
-			expect(state.mainTransitionName).toBe("route-main");
-		}
-
-		await page
+		const workLink = page
 			.getByRole("navigation", { name: "Primary navigation" })
-			.getByRole("link", { name: "Projects" })
-			.focus();
+			.getByRole("link", { name: "Work" });
+		await workLink.focus();
 		await page.keyboard.press("Enter");
 
-		await expect(page).toHaveURL(/\/projects\/$/);
+		await expect(page).toHaveURL(/\/work\/$/);
 		await expect(
 			page.getByRole("heading", {
 				level: 1,
-				name: /Project atlas for practical systems work/i,
+				name: "Systems made legible through proof.",
 			}),
 		).toBeVisible();
 		await expect(page.locator("main")).toContainText(
-			"CLI Fleet Synchronization",
+			"Cryogenic Flow Simulation",
 		);
 	});
 
-	test("removes named transitions when reduced motion is requested", async ({
-		page,
-	}) => {
-		await page.emulateMedia({ reducedMotion: "reduce" });
-		await page.goto("/");
+	test("permanently redirects legacy detail and index routes without loops", () => {
+		const rules = redirectRules();
 
-		const state = await routeContinuityState(page);
-		expect(state.routeContinuity).toBe("native-view-transitions");
+		expect(rules).toEqual(
+			expect.arrayContaining([
+				{ source: "/projects", destination: "/work/", status: "301" },
+				{ source: "/projects/", destination: "/work/", status: "301" },
+				{
+					source: "/projects/*",
+					destination: "/work/:splat",
+					status: "301",
+				},
+				{ source: "/case-studies", destination: "/work/", status: "301" },
+				{ source: "/case-studies/", destination: "/work/", status: "301" },
+				{
+					source: "/case-studies/*",
+					destination: "/work/:splat",
+					status: "301",
+				},
+			]),
+		);
 
-		if (state.supportsViewTransitions) {
-			expect(state.headerTransitionName).toBe("none");
-			expect(state.mainTransitionName).toBe("none");
+		for (const rule of rules) {
+			expect(rule.destination, `${rule.source} must not loop`).not.toBe(
+				rule.source,
+			);
+			expect(
+				rule.source,
+				"canonical Work routes must not redirect",
+			).not.toMatch(/^\/work(?:\/|$)/);
 		}
-	});
-
-	test("only opts into browser page transitions for no-preference users", async ({
-		page,
-	}) => {
-		await page.goto("/");
-
-		expect(await viewTransitionRuleMedia(page)).toContain(
-			"(prefers-reduced-motion: no-preference)",
-		);
 	});
 });

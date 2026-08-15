@@ -7,6 +7,10 @@ const repoRoot = process.cwd();
 const publicDir = path.join(repoRoot, "apps/web/public");
 const scannedRoots = ["apps/web/src"];
 const pngSignature = "89504e470d0a1a0a";
+const socialGenerator = readFileSync(
+	path.join(repoRoot, "scripts/generate-social-preview-assets.mjs"),
+	"utf8",
+);
 
 function listFiles(entryPath) {
 	const fullPath = path.join(repoRoot, entryPath);
@@ -115,6 +119,18 @@ test("referenced PNG social preview assets are valid 1200x630 images", () => {
 	}
 
 	assert.deepEqual(invalidAssets, []);
+});
+
+test("the default social card composes authentic project media without the retired theme", () => {
+	assert.match(socialGenerator, /cryo-flow-sim-stage1-poster\.png/);
+	assert.match(socialGenerator, /"Principal engineer"/);
+	assert.match(socialGenerator, /"for systems that"/);
+	assert.match(socialGenerator, /"cannot drift\."/);
+	assert.match(socialGenerator, /Joe Poznanski/);
+	assert.doesNotMatch(
+		socialGenerator,
+		/SYSTEMS ATELIER|gradient:#091612|#091612|#26382f/i,
+	);
 });
 
 test("unpublished case-study candidates use the generic social preview", () => {

@@ -30,7 +30,7 @@ const socialImageRoutes = [
 	},
 	{
 		label: "note detail",
-		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
+		path: "/notes/wasm-black-scholes-options-pricer/",
 	},
 	{
 		label: "resume",
@@ -115,12 +115,37 @@ test.describe("page metadata @metadata", () => {
 		expect(jsonLdText).not.toContain("/home/joe");
 	});
 
+	test("keeps the Cryogenic Flow canonical, Open Graph, and JSON-LD URLs aligned", async ({
+		page,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/cryo-flow-sim/`;
+
+		await page.goto("/work/cryo-flow-sim/");
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+
+		const jsonLdText = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		).join("\n");
+		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
+		expect(jsonLdText).toContain(
+			'"description":"Principal engineer for systems that cannot drift."',
+		);
+		expect(jsonLdText).not.toMatch(
+			/humankaylee\.dev|\/projects\/|\/case-studies\//i,
+		);
+	});
+
 	test("renders note-specific BlogPosting JSON-LD on note detail pages", async ({
 		page,
 	}) => {
-		await page.goto(
-			"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-		);
+		await page.goto("/notes/wasm-black-scholes-options-pricer/");
 
 		const structuredData = await page
 			.locator('script[type="application/ld+json"]')
@@ -129,12 +154,12 @@ test.describe("page metadata @metadata", () => {
 
 		expect(jsonLdText).toContain('"@type":"BlogPosting"');
 		expect(jsonLdText).toContain(
-			'"headline":"How the portfolio stays useful when the API is offline"',
+			'"headline":"A Black-Scholes options pricer in Rust, compiled to WASM"',
 		);
 		expect(jsonLdText).toContain(
-			`"url":"${expectedSiteUrl}/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"`,
+			`"url":"${expectedSiteUrl}/notes/wasm-black-scholes-options-pricer/"`,
 		);
-		expect(jsonLdText).toContain('"datePublished":"2026-05-24"');
+		expect(jsonLdText).toContain('"datePublished":"2026-05-26"');
 		expect(jsonLdText).not.toContain("/home/joe");
 	});
 });
