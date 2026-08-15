@@ -25,7 +25,7 @@ const notes = ((await getCollection("notes")) as NoteEntry[])
 	title="Notes and Build Log | Joe Poznanski"
 	description="Published engineering notes and build-log entries from Joe Poznanski's static-first portfolio."
 	canonicalPath="/notes/"
-	ogImage={routeInventoryById["notes-build-log"].seo.ogImage}
+	ogImage={routeInventoryById.notes.seo.ogImage}
 >
 	<section class="page-shell" aria-labelledby="notes-title">
 		<header class="page-header">
