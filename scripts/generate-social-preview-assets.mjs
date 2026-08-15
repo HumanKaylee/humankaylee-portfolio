@@ -12,7 +12,7 @@ const sourcePoster = path.join(
 	publicDir,
 	"media/cryo-flow-sim-stage1-poster.png",
 );
-const outputPath = path.join(publicDir, "social/default.png");
+const defaultOutputPath = path.join(publicDir, "social/default.png");
 const name = "Joe Poznanski";
 const positioningLines = [
 	"Principal engineer",
@@ -26,6 +26,20 @@ function firstExistingPath(paths, label) {
 		throw new Error(`Could not find a local ${label} font for social preview`);
 	}
 	return result;
+}
+
+function requestedOutputPath(args) {
+	if (args.length === 0) {
+		return defaultOutputPath;
+	}
+
+	if (args.length !== 2 || args[0] !== "--output" || !args[1].trim()) {
+		throw new Error(
+			"Usage: node scripts/generate-social-preview-assets.mjs [--output <png-path>]",
+		);
+	}
+
+	return path.resolve(repoRoot, args[1]);
 }
 
 function ffmpegFilterPath(filePath) {
@@ -52,6 +66,7 @@ const boldFont = ffmpegFilterPath(
 		"bold",
 	),
 );
+const outputPath = requestedOutputPath(process.argv.slice(2));
 
 if (!existsSync(sourcePoster)) {
 	throw new Error(`Missing authentic source poster: ${sourcePoster}`);
@@ -98,9 +113,9 @@ const result = spawnSync(
 );
 
 if (result.status !== 0) {
-	throw new Error("Failed to generate social/default.png");
+	throw new Error(`Failed to generate ${outputPath}`);
 }
 
 console.log(
-	`Generated social/default.png from cryo-flow-sim-stage1-poster.png: ${name} — ${positioningLines.join(" ")}`,
+	`Generated ${path.relative(repoRoot, outputPath)} from cryo-flow-sim-stage1-poster.png: ${name} — ${positioningLines.join(" ")}`,
 );

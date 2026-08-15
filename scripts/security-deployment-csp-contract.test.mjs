@@ -36,13 +36,76 @@ function configuredProductionApiOrigin() {
 	return origin;
 }
 
-function cspConnectSrc(csp, label) {
-	const directive = csp
+function cspDirectives(csp, label) {
+	const directives = new Map();
+
+	for (const value of csp
 		.split(";")
 		.map((value) => value.trim())
-		.find((value) => value.startsWith("connect-src"));
-	assert.ok(directive, `${label} must include a connect-src directive`);
-	return directive.split(/\s+/).slice(1);
+		.filter(Boolean)) {
+		const [name, ...sources] = value.split(/\s+/);
+		assert.equal(
+			directives.has(name),
+			false,
+			`${label} must not repeat ${name}`,
+		);
+		directives.set(name, [...sources].sort());
+	}
+
+	return directives;
+}
+
+function staticContentSecurityPolicy() {
+	const headers = readRequiredFile(files.headers);
+	const csp = headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)?.[1];
+	assert.ok(csp, "_headers must define Content-Security-Policy");
+	return csp;
+}
+
+function middlewareContentSecurityPolicy() {
+	const middleware = readRequiredFile(files.middleware);
+	const block = middleware.match(
+		/"Content-Security-Policy":\s*\[([\s\S]*?)\]\.join\("; "\)/,
+	)?.[1];
+	assert.ok(block, "middleware must define Content-Security-Policy directives");
+
+	const directives = [...block.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
+	assert.ok(directives.length > 0, "middleware CSP must not be empty");
+	return directives.join("; ");
+}
+
+function normalizedCsp(csp, label) {
+	return Object.fromEntries(
+		[...cspDirectives(csp, label).entries()].sort(([left], [right]) =>
+			left.localeCompare(right),
+		),
+	);
+}
+
+function assertStaticFrontendBoundary(csp, label, apiOrigin) {
+	const directives = cspDirectives(csp, label);
+	const connectSources = directives.get("connect-src");
+	const scriptSources = directives.get("script-src");
+
+	assert.ok(connectSources, `${label} must include connect-src`);
+	assert.ok(
+		connectSources.includes("'self'"),
+		`${label} connect-src must retain 'self'`,
+	);
+	assert.ok(
+		!connectSources.includes(apiOrigin),
+		`${label} connect-src must reject retired API origin ${apiOrigin}`,
+	);
+	assert.deepEqual(
+		connectSources,
+		["'self'"],
+		`${label} connect-src must stay static-frontend only`,
+	);
+	assert.ok(scriptSources, `${label} must include script-src`);
+	assert.ok(
+		scriptSources.includes("'wasm-unsafe-eval'"),
+		`${label} script-src must preserve the WASM allowance`,
+	);
 }
 
 test("Fly production contact delivery uses the safe disabled mode", () => {
@@ -105,36 +168,33 @@ test("Cloudflare Pages preview variables use a scalar TOML table", () => {
 	);
 });
 
-test("static headers retain self while permitting the configured production API origin", () => {
+test("static headers enforce the approved static frontend CSP boundary", () => {
 	const apiOrigin = configuredProductionApiOrigin();
-	const headers = readRequiredFile(files.headers);
-	const csp = headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)?.[1];
-	assert.ok(csp, "_headers must define Content-Security-Policy");
-
-	const sources = cspConnectSrc(csp, "static Content-Security-Policy");
-	assert.ok(
-		sources.includes("'self'"),
-		"static connect-src must retain 'self'",
-	);
-	assert.ok(
-		sources.includes(apiOrigin),
-		`static connect-src must allow configured PUBLIC_API_BASE_URL origin ${apiOrigin}`,
+	assertStaticFrontendBoundary(
+		staticContentSecurityPolicy(),
+		"static Content-Security-Policy",
+		apiOrigin,
 	);
 });
 
-test("middleware CSP retains self while permitting the configured production API origin", () => {
+test("middleware enforces the approved static frontend CSP boundary", () => {
 	const apiOrigin = configuredProductionApiOrigin();
-	const middleware = readRequiredFile(files.middleware);
-	const csp = middleware.match(/"connect-src ([^"]+)"/)?.[1];
-	assert.ok(csp, "middleware must define a connect-src CSP directive");
-
-	const sources = cspConnectSrc(`connect-src ${csp}`, "middleware CSP");
-	assert.ok(
-		sources.includes("'self'"),
-		"middleware connect-src must retain 'self'",
+	assertStaticFrontendBoundary(
+		middlewareContentSecurityPolicy(),
+		"middleware Content-Security-Policy",
+		apiOrigin,
 	);
-	assert.ok(
-		sources.includes(apiOrigin),
-		`middleware connect-src must allow configured PUBLIC_API_BASE_URL origin ${apiOrigin}`,
+});
+
+test("middleware and static host CSP directive semantics stay aligned", () => {
+	assert.deepEqual(
+		normalizedCsp(
+			middlewareContentSecurityPolicy(),
+			"middleware Content-Security-Policy",
+		),
+		normalizedCsp(
+			staticContentSecurityPolicy(),
+			"static Content-Security-Policy",
+		),
 	);
 });

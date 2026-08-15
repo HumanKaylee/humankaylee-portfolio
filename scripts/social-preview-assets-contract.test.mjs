@@ -1,5 +1,15 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import {
+	existsSync,
+	mkdtempSync,
+	readFileSync,
+	readdirSync,
+	rmSync,
+	statSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
@@ -72,6 +82,10 @@ function readPngDimensions(assetPath) {
 	};
 }
 
+function sha256(content) {
+	return createHash("sha256").update(content).digest("hex");
+}
+
 test("all source social preview references resolve to public assets", () => {
 	const references = collectSocialReferences();
 
@@ -131,6 +145,64 @@ test("the default social card composes authentic project media without the retir
 		socialGenerator,
 		/SYSTEMS ATELIER|gradient:#091612|#091612|#26382f/i,
 	);
+});
+
+test("the real generator supports isolated deterministic output", () => {
+	const tempDirectory = mkdtempSync(path.join(tmpdir(), "social-preview-"));
+	const generatedPaths = [
+		path.join(tempDirectory, "first.png"),
+		path.join(tempDirectory, "second.png"),
+	];
+	const committedPath = path.join(publicDir, "social/default.png");
+	const committedBefore = readFileSync(committedPath);
+
+	try {
+		for (const generatedPath of generatedPaths) {
+			const result = spawnSync(
+				process.execPath,
+				[
+					path.join(repoRoot, "scripts/generate-social-preview-assets.mjs"),
+					"--output",
+					generatedPath,
+				],
+				{ cwd: repoRoot, encoding: "utf8" },
+			);
+
+			assert.equal(
+				result.status,
+				0,
+				`generator failed: ${result.stderr || result.stdout}`,
+			);
+			assert.ok(existsSync(generatedPath), `${generatedPath} must be created`);
+			assert.match(
+				result.stdout,
+				/cryo-flow-sim-stage1-poster\.png: Joe Poznanski — Principal engineer for systems that cannot drift\./,
+			);
+			assert.deepEqual(readPngDimensions(generatedPath), {
+				width: 1200,
+				height: 630,
+			});
+			assert.ok(
+				statSync(generatedPath).size > 100_000,
+				"generated preview must contain nontrivial image data",
+			);
+		}
+
+		assert.equal(
+			sha256(readFileSync(generatedPaths[0])),
+			sha256(readFileSync(generatedPaths[1])),
+			"two runs on the same platform must be deterministic",
+		);
+		assert.equal(
+			sha256(readFileSync(committedPath)),
+			sha256(committedBefore),
+			"isolated generation must not mutate the committed default",
+		);
+	} finally {
+		rmSync(tempDirectory, { recursive: true, force: true });
+	}
+
+	assert.equal(existsSync(tempDirectory), false);
 });
 
 test("unpublished case-study candidates use the generic social preview", () => {
