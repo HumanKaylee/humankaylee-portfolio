@@ -208,6 +208,7 @@ test.describe("About, resume, and contact @primary-routes", () => {
 		await expect(page.locator(".resume-summary")).toHaveText(
 			resumeContent.summary,
 		);
+		await expect(page.locator(".resume-summary")).toBeVisible();
 		const representativeJob = resumeContent.experience[0];
 		const printedJob = page.locator(".resume-job").filter({
 			has: page.getByRole("heading", {
@@ -216,9 +217,9 @@ test.describe("About, resume, and contact @primary-routes", () => {
 			}),
 		});
 		await expect(printedJob).toBeVisible();
-		await expect(printedJob.locator(".resume-bullets li").first()).toHaveText(
-			representativeJob.bullets[0],
-		);
+		const printedBullet = printedJob.locator(".resume-bullets li").first();
+		await expect(printedBullet).toHaveText(representativeJob.bullets[0]);
+		await expect(printedBullet).toBeVisible();
 		const representativeSkill = resumeContent.skillGroups[0];
 		const printedSkill = page.locator(".resume-skill-row").filter({
 			has: page.locator("dt", { hasText: representativeSkill.label }),
@@ -229,9 +230,15 @@ test.describe("About, resume, and contact @primary-routes", () => {
 		await expect(printedSkill.locator("dd")).toHaveText(
 			representativeSkill.items,
 		);
+		await expect(printedSkill).toBeVisible();
 		await expect(page.locator(".resume-clearance")).toContainText(
 			resumeContent.clearance,
 		);
+		await expect(
+			page
+				.locator(".resume-clearance")
+				.getByText(resumeContent.clearance, { exact: true }),
+		).toBeVisible();
 
 		const collapsedPrintSections = await page
 			.locator("[data-print-resume='true'] .resume-section")

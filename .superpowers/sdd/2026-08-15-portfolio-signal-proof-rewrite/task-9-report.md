@@ -93,3 +93,27 @@ DONE
 - Scope: the résumé/contact E2E contract, the restored-plus-appended Node contract, and this report only.
 
 DONE
+
+---
+
+## Review round 2 — printable résumé evidence
+
+### Test-quality outcome
+
+- Added explicit print-media visibility assertions for the résumé summary, one representative experience bullet, one representative skill row, and the clearance text.
+- Retained the existing shared-content text assertions and the negative check that rejects any collapsed, hidden, or zero-height print section.
+- No production page or style changed in this review round.
+
+### Visibility RED/GREEN evidence
+
+- Gap proof: with test-only CSS hiding `.resume-summary`, the prior focused print test still passed 1/1. Its text assertion found the hidden descendant, demonstrating that the contract could not falsify a print visibility regression.
+- RED: after adding the explicit visibility assertions and keeping the same fixture, the focused print test failed exactly at `.resume-summary` with `Expected: visible` and `Received: hidden`.
+- GREEN: after removing the test-only fixture, the focused print test passed 1/1 and the complete Task 9 E2E suite passed 6/6.
+- Biome passed on the modified E2E contract after applying its one-line formatting correction.
+
+### Corrective commit
+
+- Message: `test: require printable resume evidence`
+- Scope: the Task 9 E2E print contract and this report only.
+
+DONE
