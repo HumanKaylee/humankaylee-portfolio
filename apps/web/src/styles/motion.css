@@ -22,6 +22,10 @@
 		scroll-behavior: auto;
 	}
 
+	[data-project-stage] {
+		scroll-behavior: auto;
+	}
+
 	*,
 	*::before,
 	*::after {

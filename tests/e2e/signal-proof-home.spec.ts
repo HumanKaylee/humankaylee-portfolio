@@ -111,14 +111,16 @@ for (const viewport of [
 	});
 }
 
-test("renders exactly the three approved flagships as normal Work links and complete static panels", async ({
+test("progressively enhances exactly one approved flagship while retaining normal Work links", async ({
 	page,
 }) => {
 	await page.goto("/");
 
+	const stage = page.locator("[data-project-stage]");
 	const triggers = page.locator("[data-stage-trigger]");
 	const panels = page.locator("[data-stage-panel]");
 
+	await expect(stage).toHaveAttribute("data-enhanced", "true");
 	await expect(triggers).toHaveCount(3);
 	await expect(triggers).toHaveText(flagshipTitles);
 	expect(
@@ -131,7 +133,12 @@ test("renders exactly the three approved flagships as normal Work links and comp
 		await panels.evaluateAll((items) =>
 			items.map((panel) => panel.hasAttribute("hidden")),
 		),
-	).toEqual([false, false, false]);
+	).toEqual([false, true, true]);
+	expect(
+		await triggers.evaluateAll((links) =>
+			links.map((link) => link.getAttribute("aria-current")),
+		),
+	).toEqual(["true", "false", "false"]);
 	await expect(
 		page.locator('[data-stage-panel="cryo-flow-sim"] img'),
 	).toHaveAttribute("alt", /Cryogenic flow simulation dashboard/i);
@@ -148,6 +155,50 @@ test("renders exactly the three approved flagships as normal Work links and comp
 	await expect(
 		page.locator("[data-project-stage] svg, [data-project-stage] canvas"),
 	).toHaveCount(0);
+});
+
+test("selects a panel on pointer and keyboard focus while preserving normal link navigation", async ({
+	page,
+}) => {
+	await page.goto("/");
+
+	const fleet = page.locator(
+		'[data-stage-trigger="cli-fleet-synchronization-and-mcp-rollout"]',
+	);
+	const recovery = page.locator(
+		'[data-stage-trigger="remote-workstation-recovery-and-operational-debugging"]',
+	);
+	const selectedTriggers = page.locator(
+		'[data-stage-trigger][aria-current="true"]',
+	);
+	const visiblePanels = page.locator("[data-stage-panel]:not([hidden])");
+
+	await fleet.hover();
+	await expect(selectedTriggers).toHaveCount(1);
+	await expect(fleet).toHaveAttribute("aria-current", "true");
+	await expect(visiblePanels).toHaveCount(1);
+	await expect(
+		page.locator(
+			'[data-stage-panel="cli-fleet-synchronization-and-mcp-rollout"]',
+		),
+	).toBeVisible();
+
+	await recovery.focus();
+	await expect(selectedTriggers).toHaveCount(1);
+	await expect(recovery).toHaveAttribute("aria-current", "true");
+	await expect(visiblePanels).toHaveCount(1);
+	await expect(
+		page.locator(
+			'[data-stage-panel="remote-workstation-recovery-and-operational-debugging"]',
+		),
+	).toBeVisible();
+
+	await Promise.all([
+		page.waitForURL(
+			"**/work/remote-workstation-recovery-and-operational-debugging/",
+		),
+		recovery.click(),
+	]);
 });
 
 test("uses the responsive Cryogenic Flow poster without loading homepage video playback", async ({
@@ -204,13 +255,30 @@ test.describe("static homepage without JavaScript", () => {
 	}) => {
 		await page.goto("/");
 
-		await expect(page.locator("[data-stage-trigger]")).toHaveText(
-			flagshipTitles,
-		);
-		await expect(page.locator("[data-stage-panel]")).toHaveCount(3);
-		for (const panel of await page.locator("[data-stage-panel]").all()) {
+		const triggers = page.locator("[data-stage-trigger]");
+		const panels = page.locator("[data-stage-panel]");
+
+		await expect(triggers).toHaveText(flagshipTitles);
+		expect(
+			await triggers.evaluateAll((links) =>
+				links.map((link) => link.getAttribute("href")),
+			),
+		).toEqual(flagshipHrefs);
+		await expect(panels).toHaveCount(3);
+		for (const panel of await panels.all()) {
 			await expect(panel).toBeVisible();
 		}
+		expect(
+			await panels.evaluateAll((items) =>
+				items.every((panel) =>
+					Boolean(
+						panel.compareDocumentPosition(
+							document.querySelector("[data-stage-trigger]") as Node,
+						) & Node.DOCUMENT_POSITION_PRECEDING,
+					),
+				),
+			),
+		).toBe(true);
 		await expect(page.locator("main video")).toHaveCount(0);
 		await expect(page.locator("main")).not.toContainText(internalHomepageCopy);
 	});

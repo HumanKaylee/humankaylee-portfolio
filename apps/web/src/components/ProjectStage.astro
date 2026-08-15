@@ -79,6 +79,51 @@ const { projects } = Astro.props;
 	</div>
 </section>
 
+<script>
+	function activate(stage: HTMLElement, slug: string) {
+		for (const trigger of stage.querySelectorAll<HTMLElement>(
+			"[data-stage-trigger]",
+		)) {
+			trigger.setAttribute(
+				"aria-current",
+				String(trigger.dataset.stageTrigger === slug),
+			);
+		}
+
+		for (const panel of stage.querySelectorAll<HTMLElement>(
+			"[data-stage-panel]",
+		)) {
+			panel.hidden = panel.dataset.stagePanel !== slug;
+		}
+	}
+
+	for (const stage of document.querySelectorAll<HTMLElement>(
+		"[data-project-stage]",
+	)) {
+		const triggers = stage.querySelectorAll<HTMLElement>("[data-stage-trigger]");
+		const initialSlug = triggers[0]?.dataset.stageTrigger;
+
+		if (!initialSlug) {
+			continue;
+		}
+
+		stage.dataset.enhanced = "true";
+		activate(stage, initialSlug);
+
+		for (const trigger of triggers) {
+			const slug = trigger.dataset.stageTrigger;
+			if (!slug) {
+				continue;
+			}
+
+			const select = () => activate(stage, slug);
+			trigger.addEventListener("pointerenter", select);
+			trigger.addEventListener("focusin", select);
+			trigger.addEventListener("click", select);
+		}
+	}
+</script>
+
 <style>
 	.project-stage {
 		display: grid;

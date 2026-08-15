@@ -109,6 +109,13 @@
 	content: "→";
 }
 
+[data-project-stage][data-enhanced="true"]
+	[data-stage-trigger][aria-current="true"] {
+	color: var(--color-ink);
+	text-decoration-color: var(--color-signal);
+	text-decoration-thickness: 0.12em;
+}
+
 .site-footer {
 	display: grid;
 	grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);

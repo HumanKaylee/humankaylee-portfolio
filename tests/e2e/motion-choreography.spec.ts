@@ -39,6 +39,34 @@ async function readRevealStates(page: Page) {
 }
 
 test.describe("purposeful motion @motion", () => {
+	test("presents the complete project-stage state immediately for reduced-motion users", async ({
+		page,
+	}) => {
+		await page.emulateMedia({ reducedMotion: "reduce" });
+		await page.goto("/");
+
+		const stage = page.locator("[data-project-stage]");
+		const transitionDurations = await page
+			.locator("[data-stage-panel]")
+			.evaluateAll((panels) =>
+				panels.map((panel) => getComputedStyle(panel).transitionDuration),
+			);
+
+		await expect(stage).toHaveAttribute("data-enhanced", "true");
+		await expect(stage).toHaveCSS("scroll-behavior", "auto");
+		await expect(
+			page.locator('[data-stage-trigger][aria-current="true"]'),
+		).toHaveCount(1);
+		await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(
+			1,
+		);
+		expect(
+			transitionDurations.every((duration) =>
+				duration.split(",").every((value) => toMilliseconds(value) <= 0.001),
+			),
+		).toBe(true);
+	});
+
 	test("adds restrained evidence reveal motion when motion is allowed", async ({
 		page,
 	}) => {
