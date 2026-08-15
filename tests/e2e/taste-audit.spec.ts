@@ -181,6 +181,15 @@ test.describe("Signal / Proof capture audit @taste-audit", () => {
 						"true",
 					);
 					await expect(page.locator("#bs-price")).not.toHaveText("—");
+					await page.evaluate(() => {
+						document.documentElement.style.scrollBehavior = "auto";
+						document.documentElement.scrollTop = 0;
+						document.body.scrollTop = 0;
+					});
+					expect(
+						await page.evaluate(() => window.scrollY),
+						"full-page evidence starts from the document origin",
+					).toBe(0);
 				}
 				await page.screenshot({
 					fullPage: true,

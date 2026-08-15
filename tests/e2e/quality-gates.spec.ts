@@ -136,6 +136,12 @@ test.describe("Signal / Proof quality @quality", () => {
 		}) => {
 			const response = await page.goto(route.path);
 			expect(response?.status()).toBe(200);
+			const auditedStates: string[] = [];
+			const controls = page.locator("#bs-controls");
+			if (route.path === "/work/black-scholes-wasm/") {
+				await expect(controls).toHaveAttribute("aria-hidden", "true");
+				await expect(controls).toHaveAttribute("inert", "");
+			}
 
 			const accessibilityScanResults = await new AxeBuilder({ page })
 				.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -146,6 +152,30 @@ test.describe("Signal / Proof quality @quality", () => {
 				);
 
 			expect(launchBlockingViolations).toEqual([]);
+			auditedStates.push("pre-intersection");
+			if (route.path === "/work/black-scholes-wasm/") {
+				expect(
+					accessibilityScanResults.passes.map((rule) => rule.id),
+				).toContain("aria-hidden-focus");
+
+				await page.locator(".bs-demo").scrollIntoViewIfNeeded();
+				await expect(controls).not.toHaveAttribute("aria-hidden", "true");
+				await expect(controls).not.toHaveAttribute("inert", "");
+				await expect(page.locator("#bs-price")).toHaveText(/^\$\d+\.\d{4}$/);
+
+				const activeControlScanResults = await new AxeBuilder({ page })
+					.include("#bs-controls")
+					.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+					.analyze();
+				const activeControlViolations =
+					activeControlScanResults.violations.filter((violation) =>
+						["serious", "critical"].includes(violation.impact ?? ""),
+					);
+
+				expect(activeControlViolations).toEqual([]);
+				auditedStates.push("active-controls");
+				expect(auditedStates).toEqual(["pre-intersection", "active-controls"]);
+			}
 		});
 	}
 

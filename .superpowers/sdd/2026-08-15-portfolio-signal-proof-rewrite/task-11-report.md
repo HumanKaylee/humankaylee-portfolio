@@ -272,3 +272,29 @@ Final correction evidence:
 No deploy, push, dependency change, secret mutation, or external launch probe occurred.
 
 Final corrective commit message: `fix: align proof loading and reading order`.
+
+## Final active-state evidence correction
+
+The final evidence re-review found that the Black-Scholes runtime correction was green but two release artifacts had not caught up with it. The committed desktop/mobile full-page captures still showed the retired `visible island` / `client:visible` wording, and the route-level Axe check exercised only the inert pre-intersection state.
+
+The accessibility correction was test-first. A required audited-state assertion failed 0/1 with only `pre-intersection` recorded and `active-controls` absent. The final test keeps the original whole-page scan while the demo is below the viewport, positively requires the `aria-hidden-focus` rule to pass while `#bs-controls` is both `aria-hidden` and `inert`, scrolls the demo into view, waits for both attributes to clear and for a real formatted price, and then runs an independent serious/critical Axe scan scoped to the live controls. The exact Black-Scholes case passed 1/1, and the complete current ten-route accessibility matrix passed 10/10.
+
+Only `work-black-scholes-desktop.png` and `work-black-scholes-mobile.png` were regenerated. The first initialized rerun passed 2/2 but visual comparison exposed a capture-only fixed-position artifact because the full-page image began at the demo's scroll offset. A document-origin assertion then failed 0/2 at desktop/mobile offsets 4,430 and 5,770. Capture setup now restores the document origin after the real pricer initializes; the final rerun passed 2/2. Old and new same-viewport images were opened together. The final pair contains the current `loads when the demo enters view` wording throughout, shows the initialized `$10.4506` pricer, contains no skip-link/fixed-rule artifact, and preserves the approved hierarchy, crop, spacing, typography, borders, contrast, and overflow behavior.
+
+Final capture hashes:
+
+- Desktop SHA-256: `A50174593A9F850D03833EF96EC67EF273670A5C33C96765BC2E9937562DABC1`
+- Mobile SHA-256: `FF4A30AE94763D569560FD92FB6211BDDF4444FDCEA2195C27C946535B74EF5C`
+
+Proportional verification:
+
+- Focused initialized capture audit: 2/2 passed.
+- Full current Axe route matrix: 10/10 passed.
+- Accessibility and visual Node contracts: 5/5 passed.
+- Focused Biome check: 2 files checked with no fixes required after applying the formatter's one-line array layout.
+- Typecheck: 70 files, 0 errors, 0 warnings, 13 existing Zod deprecation hints.
+- Build: 15 pages in 2.14 seconds.
+
+No production source, dependency, visual baseline, deploy, push, or external launch surface changed in this correction.
+
+Final evidence corrective commit message: `test: complete active Black-Scholes release evidence`.
