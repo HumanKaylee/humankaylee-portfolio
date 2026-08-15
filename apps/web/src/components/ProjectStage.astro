@@ -63,10 +63,6 @@ const { projects } = Astro.props;
 									</dl>
 									<div class="evidence-flow__boundary">
 										<p>
-											<strong>Evidence boundary</strong>
-											<span>{project.data.evidence.scope}</span>
-										</p>
-										<p>
 											<strong>Known limit</strong>
 											<span>{project.data.evidence.limits}</span>
 										</p>
@@ -200,7 +196,7 @@ const { projects } = Astro.props;
 
 	.evidence-flow__boundary {
 		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--space-4);
 	}
 

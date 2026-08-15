@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
 
 const flagshipHrefs = [
 	"/work/cryo-flow-sim/",
@@ -14,24 +14,29 @@ const flagshipTitles = [
 ] as const;
 
 const internalHomepageCopy =
-	/fallback mode|API health|for recruiters|for engineers|launch readiness|deployment status/i;
+	/fallback mode|API health|for recruiters|for engineers|launch readiness|deployment status|PR evidence|production launch/i;
 
-test("presents Joe, a Work action, authentic media, and three flagships in the first viewport", async ({
-	page,
-}) => {
-	await page.setViewportSize({ width: 1440, height: 1000 });
+async function expectFirstViewportStory(
+	page: Page,
+	viewport: { width: number; height: number },
+) {
+	await page.setViewportSize(viewport);
 	await page.goto("/");
 
 	const identity = page.getByRole("link", { name: "Joe Poznanski home" });
+	const role = page.locator(".home-hero .section-kicker");
 	const heading = page.getByRole("heading", { level: 1 });
+	const value = page.locator(".home-hero__lede");
 	const workAction = page.getByRole("link", { name: "View selected work" });
 	const heroPoster = page.locator(".home-hero [data-video-poster] img");
 
 	await expect(identity).toBeVisible();
+	await expect(role).toContainText("Joe Poznanski");
+	await expect(role).toContainText("Principal Software Engineer");
 	await expect(heading).toHaveText(
 		"Principal engineer for systems that cannot drift.",
 	);
-	await expect(page.locator(".home-hero")).toContainText(
+	await expect(value).toHaveText(
 		"I turn ambiguous operational problems into reliable software, from simulation and infrastructure to automation and recovery.",
 	);
 	await expect(workAction).toHaveAttribute("href", "/work/");
@@ -40,15 +45,71 @@ test("presents Joe, a Work action, authentic media, and three flagships in the f
 		/Cryogenic flow simulation dashboard/i,
 	);
 	await expect(heroPoster).toBeVisible();
-	await expect(page.locator("[data-stage-trigger]")).toHaveCount(3);
-	await expect(page.locator("main")).not.toContainText(internalHomepageCopy);
 
-	for (const element of [identity, heading, workAction, heroPoster]) {
+	for (const [label, element] of [
+		["identity", identity],
+		["role", role],
+		["heading", heading],
+		["value", value],
+		["Work action", workAction],
+	] as const) {
 		const box = await element.boundingBox();
-		expect(box, "required first-viewport element has a box").not.toBeNull();
-		expect(box?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(1000);
+		expect(box, `${label} has a box`).not.toBeNull();
+		expect(
+			box?.y ?? -1,
+			`${label} starts inside the viewport`,
+		).toBeGreaterThanOrEqual(0);
+		expect(
+			(box?.y ?? Number.POSITIVE_INFINITY) + (box?.height ?? 0),
+			`${label} is fully visible in the first viewport`,
+		).toBeLessThanOrEqual(viewport.height);
 	}
-});
+
+	const posterIntersection = await heroPoster.evaluate((element) => {
+		const rect = element.getBoundingClientRect();
+		const visibleWidth = Math.max(
+			0,
+			Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0),
+		);
+		const visibleHeight = Math.max(
+			0,
+			Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0),
+		);
+		return {
+			visibleAreaRatio:
+				rect.width > 0 && rect.height > 0
+					? (visibleWidth * visibleHeight) / (rect.width * rect.height)
+					: 0,
+			visibleHeight,
+			visibleWidthRatio: rect.width > 0 ? visibleWidth / rect.width : 0,
+		};
+	});
+
+	expect(
+		posterIntersection.visibleAreaRatio,
+		"at least 75% of the authentic poster is visible",
+	).toBeGreaterThanOrEqual(0.75);
+	expect(
+		posterIntersection.visibleHeight,
+		"at least 160px of authentic poster height is visible",
+	).toBeGreaterThanOrEqual(160);
+	expect(
+		posterIntersection.visibleWidthRatio,
+		"the authentic poster is not horizontally clipped",
+	).toBeGreaterThanOrEqual(0.95);
+	await expect(page.locator("main")).not.toContainText(internalHomepageCopy);
+}
+
+for (const viewport of [
+	{ label: "desktop", width: 1440, height: 1000 },
+	{ label: "mobile", width: 390, height: 844 },
+]) {
+	test(`presents the complete identity and authentic poster in the ${viewport.label} first viewport`, async ({
+		page,
+	}) => {
+		await expectFirstViewportStory(page, viewport);
+	});
+}
 
 test("renders exactly the three approved flagships as normal Work links and complete static panels", async ({
 	page,
