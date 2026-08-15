@@ -75,6 +75,56 @@ describe("workSchema", () => {
 		expect(workSchema.safeParse(candidate).success).toBe(false);
 	});
 
+	it.each(["label", "summary", "values", "scope", "limits"])(
+		"rejects evidence missing %s",
+		(field) => {
+			const candidate = structuredClone(validWork) as {
+				evidence: Record<string, unknown>;
+			};
+			delete candidate.evidence[field];
+			expect(workSchema.safeParse(candidate).success).toBe(false);
+		},
+	);
+
+	it.each(["kind", "width", "height", "alt", "caption"])(
+		"rejects media missing %s",
+		(field) => {
+			const candidate = structuredClone(validWork) as {
+				media: Record<string, unknown>;
+			};
+			delete candidate.media[field];
+			expect(workSchema.safeParse(candidate).success).toBe(false);
+		},
+	);
+
+	it.each(["title", "description", "canonicalPath", "ogImage"])(
+		"rejects SEO metadata missing %s",
+		(field) => {
+			const candidate = structuredClone(validWork) as {
+				seo: Record<string, unknown>;
+			};
+			delete candidate.seo[field];
+			expect(workSchema.safeParse(candidate).success).toBe(false);
+		},
+	);
+
+	it.each(["src", "poster"])("rejects video media missing %s", (field) => {
+		const candidate = structuredClone(validWork) as {
+			media: Record<string, unknown>;
+		};
+		delete candidate.media[field];
+		expect(workSchema.safeParse(candidate).success).toBe(false);
+	});
+
+	it("rejects image media without a source", () => {
+		const candidate = structuredClone(validWork) as {
+			media: Record<string, unknown>;
+		};
+		candidate.media.kind = "image";
+		candidate.media.src = undefined;
+		expect(workSchema.safeParse(candidate).success).toBe(false);
+	});
+
 	it("rejects blocked content marked publish", () => {
 		expect(
 			workSchema.safeParse({
