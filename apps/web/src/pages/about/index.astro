@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { resumeContent } from "../../data/resume";
 import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -13,9 +14,9 @@ type UsesSection = UsesEntry["data"]["sections"][number];
 type UsesItem = UsesSection["items"][number];
 type ReadingItem = ReadingEntry["data"]["items"][number];
 
-const latestNow = ((await getCollection("now")) as NowEntry[]).sort(
-	(left, right) => right.data.date.localeCompare(left.data.date),
-)[0];
+const latestNow = ((await getCollection("now")) as NowEntry[])
+	.filter((entry: NowEntry) => entry.data.status === "current")
+	.sort((left, right) => right.data.date.localeCompare(left.data.date))[0];
 const latestUses = ((await getCollection("uses")) as UsesEntry[]).sort(
 	(left, right) =>
 		right.data.lastReviewed.localeCompare(left.data.lastReviewed),
@@ -59,29 +60,6 @@ const principles = [
 		copy: "I favor typed interfaces, static-first delivery, and stop conditions that fail loudly. The goal is software whose behavior remains understandable when a dependency or assumption breaks.",
 	},
 ];
-
-const experience = [
-	{
-		company: "Otto Aerospace",
-		role: "Principal Software Engineer, SuperNatural Vision Program",
-		dates: "2025–present",
-	},
-	{
-		company: "Blue Origin",
-		role: "Senior Simulation / Aerospace Operations Software Engineer",
-		dates: "2022–2025",
-	},
-	{
-		company: "Avenger Flight Group",
-		role: "Director of Simulation & Software Engineering",
-		dates: "2014–2022",
-	},
-	{
-		company: "SIMCOM Training",
-		role: "Flight Simulation Supervisor & Project Manager",
-		dates: "2011–2014",
-	},
-];
 ---
 
 <BaseLayout
@@ -94,12 +72,7 @@ const experience = [
 		<header class="page-header about-intro">
 			<p class="section-kicker">About Joe Poznanski</p>
 			<h1 id="about-title">Engineering judgment for systems that have to hold up.</h1>
-			<p class="page-intro">
-				I am a principal software engineer with 15+ years building mission-critical
-				aerospace and high-fidelity simulation software. I turn ambiguous operational
-				problems into reliable, test-backed systems across Rust, C++, Python,
-				distributed infrastructure, and operator-facing tools.
-			</p>
+			<p class="page-intro">{resumeContent.aboutSummary}</p>
 			<div class="about-actions" aria-label="About next steps">
 				<a class="signal-link" data-touch-target="true" href="/work/">See selected work</a>
 				<a data-touch-target="true" href="/resume/">Read the full résumé</a>
@@ -143,13 +116,13 @@ const experience = [
 				<h2 id="experience-title">Experience</h2>
 			</div>
 			<ol class="experience-list">
-				{experience.map((job) => (
+				{resumeContent.experience.map((job) => (
 					<li>
 						<div>
 							<h3>{job.company}</h3>
-							<p>{job.role}</p>
+							<p>{job.aboutRole}</p>
 						</div>
-						<p class="eyebrow">{job.dates}</p>
+						<p class="eyebrow">{job.aboutDates}</p>
 					</li>
 				))}
 			</ol>

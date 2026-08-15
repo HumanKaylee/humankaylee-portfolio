@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { isPublicNote } from "../../data/public-notes";
 import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -14,18 +15,8 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 	timeZone: "UTC",
 });
 
-const portfolioOperationNotes = new Set([
-	"how-the-portfolio-stays-useful-when-the-api-is-offline",
-	"redaction-rules-for-portfolio-case-studies",
-	"why-the-portfolio-content-starts-as-data-not-pages",
-]);
-
 const notes = ((await getCollection("notes")) as NoteEntry[])
-	.filter(
-		(note: NoteEntry) =>
-			note.data.publicationStatus === "publish" &&
-			!portfolioOperationNotes.has(note.data.slug),
-	)
+	.filter(isPublicNote)
 	.sort((left: NoteEntry, right: NoteEntry) =>
 		right.data.publishedAt.localeCompare(left.data.publishedAt),
 	);
@@ -47,30 +38,95 @@ const notes = ((await getCollection("notes")) as NoteEntry[])
 			</p>
 		</header>
 
-		<div class="artifact-grid">
+		<div class="notes-list">
 			{
 				notes.map((note: NoteEntry) => (
-					<article class="project-card" aria-labelledby={`${note.data.slug}-title`}>
-						<p class="project-category">
+					<article class="notes-entry" aria-labelledby={`${note.data.slug}-title`}>
+						<div class="notes-entry-meta">
 							<time datetime={note.data.publishedAt}>
 								{dateFormatter.format(new Date(`${note.data.publishedAt}T00:00:00Z`))}
 							</time>
-						</p>
-						<h2 id={`${note.data.slug}-title`}>{note.data.title}</h2>
-						<p class="body-copy">{note.data.summary}</p>
-						<ul class="note-tags" aria-label={`${note.data.title} tags`}>
-							{note.data.tags.map((tag: string) => <li>{tag}</li>)}
-						</ul>
-						<a
-							data-touch-target="true"
-							href={`/notes/${note.data.slug}/`}
-							aria-label={note.data.title}
-						>
-							Read note
-						</a>
+							<ul class="notes-tags" aria-label={`${note.data.title} tags`}>
+								{note.data.tags.map((tag: string) => <li>{tag}</li>)}
+							</ul>
+						</div>
+						<div class="notes-entry-copy">
+							<h2 id={`${note.data.slug}-title`}>{note.data.title}</h2>
+							<p>{note.data.summary}</p>
+							<a
+								data-touch-target="true"
+								href={`/notes/${note.data.slug}/`}
+								aria-label={note.data.title}
+							>
+								Read note
+							</a>
+						</div>
 					</article>
 				))
 			}
 		</div>
 	</section>
+
+	<style>
+		.notes-list {
+			display: grid;
+			border-top: 1px solid var(--line);
+		}
+
+		.notes-entry {
+			display: grid;
+			grid-template-columns: minmax(10rem, 0.45fr) minmax(0, 1.55fr);
+			gap: clamp(1.5rem, 5vw, 5rem);
+			border-bottom: 1px solid var(--line);
+			border-radius: 0;
+			background: transparent;
+			box-shadow: none;
+			padding-block: clamp(2rem, 5vw, 4rem);
+		}
+
+		.notes-entry-meta,
+		.notes-entry-copy {
+			display: grid;
+			align-content: start;
+			gap: var(--space-3);
+		}
+
+		.notes-entry-meta {
+			color: var(--color-muted);
+			font-family: var(--font-evidence);
+			font-size: 0.78rem;
+			letter-spacing: 0.04em;
+		}
+
+		.notes-entry h2 {
+			max-width: 18ch;
+			font-size: clamp(2rem, 4vw, 3.75rem);
+		}
+
+		.notes-entry-copy > p {
+			max-width: 62ch;
+			color: var(--color-muted);
+		}
+
+		.notes-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--space-1);
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.notes-tags li + li::before {
+			margin-inline-end: var(--space-1);
+			content: "·";
+		}
+
+		@media (max-width: 48rem) {
+			.notes-entry {
+				grid-template-columns: minmax(0, 1fr);
+				gap: var(--space-4);
+			}
+		}
+	</style>
 </BaseLayout>

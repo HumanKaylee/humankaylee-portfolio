@@ -8,7 +8,6 @@ tags:
   - "options"
 publishedAt: "2026-05-26"
 publicationStatus: "publish"
-demoComponent: "BlackScholesDemo"
 seo:
   title: "Black-Scholes options pricer in Rust → WASM"
   description: "How a Rust crate compiled to WebAssembly powers a live, in-browser European options pricer with real-time Greeks."
@@ -72,9 +71,10 @@ Move the sliders and watch the readout update. A few reference points:
 
 ## Live pricer
 
-Adjust spot price, strike, time to expiry, rate, and volatility below. The
-call and put prices update instantly via the WASM module — no network request,
-no server, no latency.
+The canonical Work story includes the interactive browser tool, its verified
+scope, and known limits. [Open the live Black-Scholes tool](/work/black-scholes-wasm/)
+to adjust the five market inputs and inspect prices and Greeks without a server
+round trip.
 
 The source for the Rust crate is at
 `apps/api/crates/blackscholes-wasm/src/lib.rs` in the portfolio repository.

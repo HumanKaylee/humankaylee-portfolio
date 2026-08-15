@@ -1,4 +1,17 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
+
+const aboutSource = readFileSync(
+	"apps/web/src/pages/about/index.astro",
+	"utf8",
+);
+const resumeSource = readFileSync(
+	"apps/web/src/pages/resume/index.astro",
+	"utf8",
+);
+const resumeMetadata = JSON.parse(
+	readFileSync("apps/web/src/content/resume/resume.json", "utf8"),
+) as { sourceStatus: string; approvalState: string };
 
 test.describe("About, resume, and contact @primary-routes", () => {
 	test("About presents a human narrative with selected secondary material", async ({
@@ -62,6 +75,39 @@ test.describe("About, resume, and contact @primary-routes", () => {
 
 		await expect(page.locator("main")).not.toContainText(
 			/build log|launch readiness|refining this portfolio|shipping this portfolio evolution/i,
+		);
+	});
+
+	test("About and Resume consume one approved typed resume source", async ({
+		page,
+	}) => {
+		expect(resumeMetadata).toMatchObject({
+			sourceStatus: "approved-source",
+			approvalState: "approved",
+		});
+		expect(aboutSource).toMatch(/from "\.\.\/\.\.\/data\/resume"/);
+		expect(resumeSource).toMatch(/from "\.\.\/\.\.\/data\/resume"/);
+
+		for (const path of ["/about/", "/resume/"]) {
+			await page.goto(path);
+			for (const company of [
+				"Otto Aerospace",
+				"Blue Origin",
+				"Avenger Flight Group",
+				"SIMCOM Training",
+			]) {
+				const companyName =
+					path === "/about/"
+						? page.getByText(company, { exact: true })
+						: page.locator(".resume-job-company").filter({ hasText: company });
+				await expect(companyName).toBeVisible();
+			}
+		}
+	});
+
+	test("About selects current Now entries before sorting", () => {
+		expect(aboutSource).toMatch(
+			/\.filter\(\s*\(entry: NowEntry\) => entry\.data\.status === "current"\s*\)/,
 		);
 	});
 });

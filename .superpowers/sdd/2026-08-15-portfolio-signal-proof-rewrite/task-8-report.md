@@ -52,3 +52,58 @@ The successful build still emits the known missing `caseStudies` and `projects` 
 - Scope: only the seven Task 8 files listed above.
 
 DONE
+
+---
+
+## Review round 1 corrective pass
+
+This corrective section supersedes the original route/RSS continuity statement above: operational note sources remain preserved, but their public routes and feed items are now intentionally absent.
+
+### Outcome
+
+Addressed every accepted review finding without changing the visible résumé facts or restoring duplicate Note/demo behavior.
+
+- Added one `isPublicNote` predicate with an explicit three-slug suppression boundary. The Notes index, detail static-path generator, and RSS caller all consume it.
+- Preserved the three operational Markdown sources while removing their generated routes and RSS items. Their direct URLs now return Astro's standard 404.
+- Added one typed `resumeContent` source with approved-source provenance. About consumes its About summary and experience projections; Resume consumes its contact, full summary, highlights, experience, skills, and clearance.
+- Filtered Now records to `status === "current"` before date sorting.
+- Replaced Notes' `artifact-grid`, `project-card`, `paper-panel`, and `note-tags` hooks with Notes-owned thin-rule editorial styles. Runtime checks prove transparent surfaces, zero radius, no shadow, and a one-pixel rule.
+- Revised the Black–Scholes source note to point to `/work/black-scholes-wasm/` in context. The note no longer promises controls below, carries demo metadata, or receives a page-injected duplicate tool link.
+- Removed the brittle exactly-one-article assertion. The index test now positively identifies Black–Scholes and explicitly rejects each suppressed title.
+
+### Corrective RED/GREEN evidence
+
+- RED: the first combined corrective run executed four tests and failed three on missing shared résumé provenance, two legacy Notes hooks, and RSS containing suppressed/build-log content.
+- Independent RED: after separating behaviors, the focused suite executed seven tests and failed six for the exact review findings: no shared résumé imports, no current-Now filter, legacy Notes hooks, a suppressed direct route returning 200, the broken `adjust ... below` promise, and suppressed/build-log RSS content. The original About behavior remained green.
+- GREEN: `pnpm exec playwright test tests/e2e/about-resume-contact.spec.ts tests/e2e/notes-rss.spec.ts --workers=1` passed 7/7.
+- Biome: all nine touched TypeScript/Astro test and source files passed after formatting.
+- `pnpm typecheck`: PASS with 0 errors and 0 warnings; 13 pre-existing deprecation hints.
+- `pnpm build`: PASS, 15 pages built. The only generated Note detail is Black–Scholes; all three suppressed `dist/notes/<slug>/index.html` paths are absent.
+- Generated-output probes found no `build-log`, `artifact-grid`, `project-card`, `paper-panel`, or `adjust ... below` occurrence in the Notes index, Black–Scholes detail, or RSS.
+- The known Task 10 sitemap notices for removed `caseStudies` and `projects` collections remain unchanged and were not hidden.
+
+### Corrective files
+
+- Created `apps/web/src/data/public-notes.ts`.
+- Created `apps/web/src/data/resume.ts`.
+- Modified `apps/web/src/pages/about/index.astro`.
+- Modified `apps/web/src/pages/resume/index.astro` only to consume shared data; visible résumé content and styling are unchanged.
+- Modified `apps/web/src/pages/notes/index.astro`.
+- Modified `apps/web/src/pages/notes/[slug].astro`.
+- Modified `apps/web/src/pages/rss.xml.ts`.
+- Modified `apps/web/src/content/notes/wasm-black-scholes-options-pricer.md`.
+- Modified the two Task 8 E2E files and this report.
+
+### Risks and boundaries
+
+- Operational note suppression remains an explicit editorial decision by slug. It cannot accidentally hide a future technical note because of a broad title or tag match.
+- The source Markdown files remain in the collection directory, but all public discovery and route callers share the same predicate. Changing a suppressed note back to public requires a deliberate predicate edit and will fail the negative route/feed tests until the contract is intentionally updated.
+- The approved résumé metadata remains in the existing content record; the typed source records its provenance path and status while centralizing the human-readable facts used by both pages.
+- No global styles, note source files other than Black–Scholes, navigation model, sitemap, redirects, Work route, dependency, or unrelated test was changed.
+- No push, deploy, publish, or external state change was performed.
+
+## Corrective commit
+
+- Message: `fix: keep About and Notes visitor focused`
+
+DONE
