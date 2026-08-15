@@ -3,31 +3,18 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
-	caseStudySchema,
 	notesEntrySchema,
-	projectMetadataSchema,
 	resumeDataSchema,
 	siteMetadataSchema,
 } from "../lib/contracts/content";
+import { workSchema } from "../lib/contracts/work";
 import {
 	CONTENT_VALIDATION_EXAMPLES,
-	PROJECT_CATEGORIES,
 	PUBLICATION_STATUSES,
 	ROUTE_INVENTORY,
 } from "./content-inventory";
 
 describe("phase 1 content inventory", () => {
-	it("pins the project taxonomy to the PRD categories", () => {
-		expect(PROJECT_CATEGORIES).toEqual([
-			"AI",
-			"automation",
-			"infrastructure",
-			"backend",
-			"creative web",
-			"operations",
-		]);
-	});
-
 	it("keeps the publication statuses limited to the launch workflow", () => {
 		expect(PUBLICATION_STATUSES).toEqual([
 			"publish",
@@ -66,15 +53,9 @@ describe("phase 1 content inventory", () => {
 	it("parses valid examples and rejects invalid examples with the real schemas", () => {
 		const examples = CONTENT_VALIDATION_EXAMPLES;
 
-		expect(
-			caseStudySchema.safeParse(examples.caseStudies.validExample).success,
-		).toBe(true);
+		expect(workSchema.safeParse(examples.work.validExample).success).toBe(true);
 		expect(
 			notesEntrySchema.safeParse(examples.notesBuildLog.validExample).success,
-		).toBe(true);
-		expect(
-			projectMetadataSchema.safeParse(examples.projectCatalog.validExample)
-				.success,
 		).toBe(true);
 		expect(
 			resumeDataSchema.safeParse(examples.resume.validExample).success,
@@ -83,16 +64,11 @@ describe("phase 1 content inventory", () => {
 			siteMetadataSchema.safeParse(examples.siteMetadata.validExample).success,
 		).toBe(true);
 
-		for (const invalid of examples.caseStudies.invalidExamples) {
-			expect(caseStudySchema.safeParse(invalid.entry).success).toBe(false);
+		for (const invalid of examples.work.invalidExamples) {
+			expect(workSchema.safeParse(invalid.entry).success).toBe(false);
 		}
 		for (const invalid of examples.notesBuildLog.invalidExamples) {
 			expect(notesEntrySchema.safeParse(invalid.entry).success).toBe(false);
-		}
-		for (const invalid of examples.projectCatalog.invalidExamples) {
-			expect(projectMetadataSchema.safeParse(invalid.entry).success).toBe(
-				false,
-			);
 		}
 		for (const invalid of examples.resume.invalidExamples) {
 			expect(resumeDataSchema.safeParse(invalid.entry).success).toBe(false);
@@ -102,21 +78,18 @@ describe("phase 1 content inventory", () => {
 		}
 	});
 
-	it("keeps case-study required-field inventory aligned with the real schema", () => {
-		expect(CONTENT_VALIDATION_EXAMPLES.caseStudies.requiredFields).toEqual(
+	it("keeps Work required-field inventory aligned with the real schema", () => {
+		expect(CONTENT_VALIDATION_EXAMPLES.work.requiredFields).toEqual(
 			expect.arrayContaining([
-				"audienceFit",
-				"redactionReview",
+				"discipline",
+				"decisions",
+				"evidence",
+				"media",
 				"publicationStatus",
-				"redactionStatus",
 			]),
 		);
-		expect(
-			CONTENT_VALIDATION_EXAMPLES.caseStudies.requiredFields,
-		).not.toContain("publication_status");
-		expect(
-			CONTENT_VALIDATION_EXAMPLES.caseStudies.requiredFields,
-		).not.toContain("redaction_status");
+		expect(CONTENT_VALIDATION_EXAMPLES).not.toHaveProperty("caseStudies");
+		expect(CONTENT_VALIDATION_EXAMPLES).not.toHaveProperty("projectCatalog");
 	});
 
 	it("keeps the resume validation example aligned with the approved PDF source", () => {

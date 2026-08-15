@@ -1,16 +1,10 @@
 import {
 	type PublicationStatus as ContractPublicationStatus,
-	type PortfolioCategory,
-	portfolioCategories,
 	publicationStatuses,
 } from "../lib/contracts/content";
 import { routeInventory } from "./routes";
 
 type RouteId = (typeof routeInventory)[number]["id"];
-
-export const PROJECT_CATEGORIES = portfolioCategories;
-
-export type ProjectCategory = PortfolioCategory;
 
 export const PUBLICATION_STATUSES = publicationStatuses;
 
@@ -91,9 +85,8 @@ export const ROUTE_INVENTORY: readonly RouteInventoryEntry[] =
 	}));
 
 export type ContentTypeKey =
-	| "caseStudies"
+	| "work"
 	| "notesBuildLog"
-	| "projectCatalog"
 	| "resume"
 	| "siteMetadata"
 	| "now"
@@ -119,51 +112,71 @@ const seoExample = {
 export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 	Record<ContentTypeKey, ContentValidationExample>
 > = {
-	caseStudies: {
+	work: {
 		requiredFields: [
 			"title",
 			"slug",
-			"category",
-			"audienceFit",
+			"discipline",
+			"year",
+			"lede",
+			"problem",
+			"stakes",
+			"role",
+			"constraints",
+			"architecture",
+			"decisions",
+			"outcome",
+			"lessons",
+			"evidence",
+			"media",
 			"publicationStatus",
 			"redactionStatus",
 			"redactionReview",
-			"summary",
-			"problem",
-			"stakes",
-			"constraints",
-			"architecture",
-			"implementation",
-			"verification",
-			"operations",
-			"outcome",
-			"lessons",
-			"featuredEvidence",
 			"seo",
 		],
 		validExample: {
-			title: "Example case study",
-			slug: "example-case-study",
-			category: "backend",
-			summary: "A safe case-study summary.",
-			audienceFit: ["senior-engineer"],
+			title: "Example Work story",
+			slug: "example-work-story",
+			discipline: "operations",
+			year: 2026,
+			lede: "A safe Work summary.",
 			problem: "A bounded engineering problem.",
 			stakes: "The stakes were operational consistency.",
+			role: "System design and verification.",
 			constraints: ["Private details must stay generalized."],
 			architecture: {
 				overview: "A simple static-first architecture.",
 				diagramAlt: "A text-only system diagram.",
 			},
-			implementation: ["Implemented the bounded change."],
-			verification: ["Verified with automated checks."],
-			operations: ["Recorded safe operational notes."],
+			decisions: [
+				{
+					title: "Static delivery",
+					choice: "Render the complete narrative in HTML.",
+					alternatives: ["Require client-side rendering."],
+					tradeoff: "The story remains readable without JavaScript.",
+				},
+			],
 			outcome: "The public story is safe to draft.",
 			lessons: ["Keep evidence useful without leaking private context."],
-			featuredEvidence: {
+			evidence: {
 				label: "Public-safe proof",
-				summary:
-					"A curated evidence hook that stays useful without private details.",
+				summary: "A curated evidence hook without private details.",
+				values: [
+					{
+						label: "Verification",
+						value: "Passed",
+						detail: "The bounded check passed.",
+					},
+				],
 				scope: "Local and PR evidence only.",
+				limits: "Private environment details remain excluded.",
+			},
+			media: {
+				kind: "evidence-flow",
+				width: 1600,
+				height: 1000,
+				alt: "A semantic evidence sequence.",
+				caption: "Public-safe verification sequence.",
 			},
 			publicationStatus: "publish",
 			redactionStatus: "reviewed",
@@ -181,39 +194,9 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			{
 				reason: "missing the publication status flag",
 				entry: {
-					title: "Incomplete case study",
-					slug: "incomplete-case-study",
-					category: "operations",
-				},
-			},
-			{
-				reason: "claims approval without a completed checklist",
-				entry: {
-					title: "Wrong approval",
-					slug: "wrong-approval",
-					category: "operations",
-					summary: "A summary.",
-					audienceFit: ["senior-engineer"],
-					problem: "Problem.",
-					stakes: "Stakes.",
-					constraints: ["Constraint."],
-					architecture: { overview: "Overview.", diagramAlt: "Diagram." },
-					implementation: ["Implementation."],
-					verification: ["Verification."],
-					operations: ["Operations."],
-					outcome: "Outcome.",
-					lessons: ["Lesson."],
-					publicationStatus: "publish",
-					redactionStatus: "approved",
-					redactionReview: {
-						guidePath: "docs/CONTENT_REDACTION_GUIDE.md",
-						reviewer: "phase-1-content-review",
-						reviewedOn: "2026-05-23",
-						checklistStatus: "partial",
-						openItems: ["Checklist incomplete."],
-						notes: "Approval should fail.",
-					},
-					seo: seoExample,
+					title: "Incomplete Work story",
+					slug: "incomplete-work-story",
+					discipline: "operations",
 				},
 			},
 		],
@@ -244,43 +227,6 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 					title: "Date-free note",
 					slug: "date-free-note",
 					summary: "Missing date.",
-					publicationStatus: "publish",
-					seo: seoExample,
-				},
-			},
-		],
-	},
-	projectCatalog: {
-		requiredFields: [
-			"name",
-			"slug",
-			"category",
-			"summary",
-			"bestFor",
-			"proof",
-			"publicationStatus",
-			"seo",
-		],
-		validExample: {
-			name: "Project atlas example",
-			slug: "project-atlas-example",
-			category: "creative web",
-			summary: "A project summary.",
-			bestFor: ["recruiter"],
-			proof: "A safe proof statement.",
-			publicationStatus: "publish",
-			seo: seoExample,
-		},
-		invalidExamples: [
-			{
-				reason: "uses an unsupported category label",
-				entry: {
-					name: "Atlas with unknown category",
-					slug: "atlas-with-unknown-category",
-					category: "machine-learning",
-					summary: "A project summary.",
-					bestFor: ["recruiter"],
-					proof: "A safe proof statement.",
 					publicationStatus: "publish",
 					seo: seoExample,
 				},

@@ -42,7 +42,7 @@ evidence:
     - label: "Unavailable or out-of-scope target"
       value: "Skipped or blocked"
       detail: "Reachability and install presence were recorded rather than treated as success."
-  scope: "Local and PR evidence only; not production launch approval."
+  scope: "Public-safe verification evidence covering target inventory, registration, and per-target results."
   limits: "Credentials, sessions, histories, private paths, and private machine details are intentionally excluded."
 media:
   kind: "evidence-flow"

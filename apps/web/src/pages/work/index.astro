@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 import MediaFrame from "../../components/MediaFrame.astro";
+import WorkEvidenceFlow from "../../components/WorkEvidenceFlow.astro";
 import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -78,14 +79,7 @@ const supportingWork = publishedWork
 								</a>
 							</div>
 							<MediaFrame media={work.data.media}>
-								<div class="evidence-flow" aria-label={work.data.media.alt}>
-									<ol>
-										<li><strong>Problem boundary</strong><span>{work.data.problem}</span></li>
-										<li><strong>System boundary</strong><span>{work.data.architecture.overview}</span></li>
-										<li><strong>Evidence</strong><span>{work.data.evidence.summary}</span></li>
-										<li><strong>Known limits</strong><span>{work.data.evidence.limits}</span></li>
-									</ol>
-								</div>
+								<WorkEvidenceFlow work={work} />
 							</MediaFrame>
 						</article>
 					))
@@ -196,35 +190,6 @@ const supportingWork = publishedWork
 
 	.featured-work dd {
 		margin: 0;
-	}
-
-	.evidence-flow {
-		padding: clamp(1.25rem, 4vw, 3rem);
-		background: var(--color-technical);
-		color: var(--color-media);
-	}
-
-	.evidence-flow ol {
-		display: grid;
-		gap: var(--space-3);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.evidence-flow li {
-		display: grid;
-		gap: var(--space-1);
-		border-top: 1px solid color-mix(in srgb, var(--color-media) 20%, transparent);
-		padding-top: var(--space-2);
-	}
-
-	.evidence-flow strong {
-		color: var(--color-signal);
-		font-family: var(--font-evidence);
-		font-size: 0.68rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
 	}
 
 	.supporting-work-list {

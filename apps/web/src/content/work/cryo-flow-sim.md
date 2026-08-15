@@ -44,8 +44,8 @@ evidence:
     - label: "Unexpected clamps"
       value: "0"
       detail: "Artifact validation reported zero unexpected clamp events."
-  scope: "Local artifact evidence; Stage 2 scope requires a separate approval pass."
-  limits: "Stage 2 is deferred and requires a separate approval pass; validation thresholds were manually calibrated against the first successful run."
+  scope: "Stage 1 artifact evidence from the deterministic capture and validation run."
+  limits: "Stage 2 is outside this release; validation thresholds were manually calibrated against the first successful run."
 media:
   kind: "video"
   src: "/media/cryo-flow-sim-stage1.mp4"

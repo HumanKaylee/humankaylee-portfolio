@@ -26,17 +26,21 @@ const { media, playback = false } = Astro.props;
 				/>
 			</picture>
 		) : media.kind === "video" ? (
-			<video
-				controls
-				preload="none"
-				poster={media.poster}
-				width={media.width}
-				height={media.height}
-				aria-label={media.alt}
-			>
-				<source src={media.src} type="video/mp4" />
-				<a href={media.src}>Open the simulation video</a>
-			</video>
+			<>
+				<video
+					controls
+					preload="none"
+					poster={media.poster}
+					width={media.width}
+					height={media.height}
+					aria-label={media.alt}
+				>
+					<source src={media.src} type="video/mp4" />
+				</video>
+				<a class="media-fallback" data-touch-target="true" href={media.src}>
+					Open the simulation video
+				</a>
+			</>
 		) : media.kind === "image" ? (
 			<img
 				src={media.src}
@@ -84,5 +88,13 @@ const { media, playback = false } = Astro.props;
 		font-family: var(--font-evidence);
 		font-size: 0.75rem;
 		line-height: 1.5;
+	}
+
+	.media-fallback {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding-inline: var(--space-3);
+		font-weight: 700;
 	}
 </style>

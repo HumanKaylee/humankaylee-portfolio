@@ -8,6 +8,7 @@ import EvidenceStrip from "../../components/EvidenceStrip.astro";
 import MediaFrame from "../../components/MediaFrame.astro";
 import NextWork from "../../components/NextWork.astro";
 import ReadingProgress from "../../components/ReadingProgress.astro";
+import WorkEvidenceFlow from "../../components/WorkEvidenceFlow.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import type { WorkEntryData } from "../../lib/contracts/work";
 
@@ -45,10 +46,6 @@ type Props = {
 const { work, nextWork, projectNumber } = Astro.props as Props;
 const { data } = work;
 const canonicalUrl = `https://joepoznanski.io/work/${data.slug}/`;
-const visitorScope = data.evidence.scope.replace(
-	/;\s*not production launch approval\.?$/i,
-	".",
-);
 const structuredData = {
 	"@context": "https://schema.org",
 	"@type": "CreativeWork",
@@ -87,30 +84,7 @@ const structuredData = {
 
 		<div class="work-detail__media">
 			<MediaFrame media={data.media} playback={data.media.kind === "video"}>
-				<div
-					class="evidence-flow"
-					data-evidence-flow
-					aria-label={data.media.alt}
-				>
-					<ol>
-						<li>
-							<strong>Problem boundary</strong>
-							<span>{data.problem}</span>
-						</li>
-						<li>
-							<strong>System boundary</strong>
-							<span>{data.architecture.overview}</span>
-						</li>
-						<li>
-							<strong>Evidence</strong>
-							<span>{data.evidence.summary}</span>
-						</li>
-						<li>
-							<strong>Known limits</strong>
-							<span>{data.evidence.limits}</span>
-						</li>
-					</ol>
-				</div>
+				<WorkEvidenceFlow work={work} />
 			</MediaFrame>
 		</div>
 
@@ -201,7 +175,7 @@ const structuredData = {
 			<dl class="proof-boundary">
 				<div>
 					<dt>Evidence boundary</dt>
-					<dd>{visitorScope}</dd>
+					<dd>{data.evidence.scope}</dd>
 				</div>
 				<div>
 					<dt>Known limits</dt>
@@ -272,36 +246,6 @@ const structuredData = {
 
 	.work-detail__media {
 		margin-bottom: var(--space-5);
-	}
-
-	.evidence-flow {
-		padding: clamp(1.25rem, 5vw, 4rem);
-		background: var(--color-technical);
-		color: var(--color-media);
-	}
-
-	.evidence-flow ol {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: var(--space-4);
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.evidence-flow li {
-		display: grid;
-		gap: var(--space-2);
-		border-top: 1px solid color-mix(in srgb, var(--color-media) 24%, transparent);
-		padding-top: var(--space-3);
-	}
-
-	.evidence-flow strong {
-		color: var(--color-signal);
-		font-family: var(--font-evidence);
-		font-size: 0.7rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
 	}
 
 	.work-glance {
@@ -397,7 +341,6 @@ const structuredData = {
 	}
 
 	@media (max-width: 48rem) {
-		.evidence-flow ol,
 		.work-glance,
 		.decision-list {
 			grid-template-columns: minmax(0, 1fr);
