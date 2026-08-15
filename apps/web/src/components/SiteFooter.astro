@@ -16,6 +16,7 @@ const { nav, profile } = Astro.props;
 		<p>Principal engineer for systems that cannot drift.</p>
 	</div>
 	<div class="footer-links">
+		<p class="section-kicker">Explore</p>
 		<nav class="footer-nav" aria-label="Secondary navigation">
 			{
 				nav.map((item) => (
@@ -25,6 +26,7 @@ const { nav, profile } = Astro.props;
 				))
 			}
 		</nav>
+		<p class="section-kicker">Elsewhere</p>
 		<nav class="footer-actions" aria-label="Joe Poznanski elsewhere">
 			<a data-touch-target="true" href={profile.github}>GitHub</a>
 			<a data-touch-target="true" href={profile.linkedin}>LinkedIn</a>

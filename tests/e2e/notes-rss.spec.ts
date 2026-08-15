@@ -6,7 +6,19 @@ const site = JSON.parse(
 ) as { siteName: string; siteUrl: string };
 const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
 
-const publishedNotes = [
+const blackScholesNote = {
+	title: "A Black-Scholes options pricer in Rust, compiled to WASM",
+	path: "/notes/wasm-black-scholes-options-pricer/",
+	summary:
+		"How a ~150-line Rust crate becomes a live, in-browser options pricer with sub-millisecond Greeks — without a server round-trip.",
+	body: /The Black-Scholes model prices European options/i,
+	dateLabel: "May 26, 2026",
+	datetime: "2026-05-26",
+	pubDate: "Tue, 26 May 2026 00:00:00 GMT",
+	tags: ["rust", "wasm", "options"],
+};
+
+const sourceNotes = [
 	{
 		title: "How the portfolio stays useful when the API is offline",
 		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
@@ -42,6 +54,8 @@ const publishedNotes = [
 	},
 ];
 
+const publishedNotes = [blackScholesNote, ...sourceNotes];
+
 const privateContentPatterns = [
 	/\/home\/joe/i,
 	/100\.77\.\d+\.\d+/,
@@ -56,12 +70,13 @@ test.describe("notes and RSS @notes-rss", () => {
 	}) => {
 		await page.goto("/notes/");
 
-		await expect(page.getByRole("heading", { level: 1 })).toContainText(
-			/notes|build log/i,
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+			"Technical notes.",
 		);
 
 		const main = page.locator("main");
-		for (const note of publishedNotes) {
+		await expect(main.getByRole("article")).toHaveCount(1);
+		for (const note of [blackScholesNote]) {
 			const article = main.getByRole("article", {
 				name: new RegExp(note.title, "i"),
 			});
@@ -78,6 +93,12 @@ test.describe("notes and RSS @notes-rss", () => {
 			await expect(article.getByText(note.dateLabel)).toBeVisible();
 		}
 
+		for (const note of sourceNotes) {
+			await expect(main).not.toContainText(note.title);
+		}
+		await expect(main).not.toContainText(
+			/build log|portfolio architecture|publication boundaries|Phase 1/i,
+		);
 		await expect(main).not.toContainText(/needs-redaction|defer/i);
 
 		const indexHtml = await main.textContent();
@@ -106,6 +127,9 @@ test.describe("notes and RSS @notes-rss", () => {
 				expect(articleText ?? "").not.toMatch(pattern);
 			}
 		}
+
+		await page.goto(blackScholesNote.path);
+		await expect(page.locator("article")).not.toContainText(/build log/i);
 	});
 
 	test("serves a valid published-notes RSS feed", async ({ request }) => {

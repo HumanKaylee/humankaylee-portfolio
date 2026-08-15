@@ -1,0 +1,312 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import { routeInventoryById } from "../../data/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type NowEntry = CollectionEntry<"now">;
+type UsesEntry = CollectionEntry<"uses">;
+type ReadingEntry = CollectionEntry<"reading">;
+type NowItem = NowEntry["data"]["items"][number];
+type UsesSection = UsesEntry["data"]["sections"][number];
+type UsesItem = UsesSection["items"][number];
+type ReadingItem = ReadingEntry["data"]["items"][number];
+
+const latestNow = ((await getCollection("now")) as NowEntry[]).sort(
+	(left, right) => right.data.date.localeCompare(left.data.date),
+)[0];
+const latestUses = ((await getCollection("uses")) as UsesEntry[]).sort(
+	(left, right) =>
+		right.data.lastReviewed.localeCompare(left.data.lastReviewed),
+)[0];
+const latestReading = ((await getCollection("reading")) as ReadingEntry[]).sort(
+	(left, right) => right.data.quarter.localeCompare(left.data.quarter),
+)[0];
+
+const currentFocus: NowItem[] =
+	latestNow?.data.items
+		.filter((item: NowItem) => item.label !== "Refining this portfolio")
+		.slice(0, 3) ?? [];
+
+const selectedToolNames = new Set([
+	"Rust",
+	"Python",
+	"GitHub Actions",
+	"ripgrep (rg)",
+]);
+const selectedTools: UsesItem[] =
+	latestUses?.data.sections
+		.flatMap((section: UsesSection) => section.items)
+		.filter((item: UsesItem) => selectedToolNames.has(item.name)) ?? [];
+
+const currentReading: ReadingItem[] =
+	latestReading?.data.items
+		.filter((item: ReadingItem) => item.status === "reading")
+		.slice(0, 3) ?? [];
+
+const principles = [
+	{
+		title: "Make the failure legible",
+		copy: "I separate reachability, state, ownership, and verification before changing a shared system. A useful recovery leaves the next operator with a clear diagnosis, not just a green light.",
+	},
+	{
+		title: "Put evidence beside the claim",
+		copy: "Tests, artifacts, constraints, and known limits belong next to the decision they support. That keeps technical judgment reviewable and prevents confidence from outrunning proof.",
+	},
+	{
+		title: "Choose explicit boundaries",
+		copy: "I favor typed interfaces, static-first delivery, and stop conditions that fail loudly. The goal is software whose behavior remains understandable when a dependency or assumption breaks.",
+	},
+];
+
+const experience = [
+	{
+		company: "Otto Aerospace",
+		role: "Principal Software Engineer, SuperNatural Vision Program",
+		dates: "2025–present",
+	},
+	{
+		company: "Blue Origin",
+		role: "Senior Simulation / Aerospace Operations Software Engineer",
+		dates: "2022–2025",
+	},
+	{
+		company: "Avenger Flight Group",
+		role: "Director of Simulation & Software Engineering",
+		dates: "2014–2022",
+	},
+	{
+		company: "SIMCOM Training",
+		role: "Flight Simulation Supervisor & Project Manager",
+		dates: "2011–2014",
+	},
+];
+---
+
+<BaseLayout
+	title={`${routeInventoryById.about.seo.title}`}
+	description={routeInventoryById.about.seo.description}
+	canonicalPath={routeInventoryById.about.seo.canonicalPath}
+	ogImage={routeInventoryById.about.seo.ogImage}
+>
+	<section class="page-shell about-page" aria-labelledby="about-title">
+		<header class="page-header about-intro">
+			<p class="section-kicker">About Joe Poznanski</p>
+			<h1 id="about-title">Engineering judgment for systems that have to hold up.</h1>
+			<p class="page-intro">
+				I am a principal software engineer with 15+ years building mission-critical
+				aerospace and high-fidelity simulation software. I turn ambiguous operational
+				problems into reliable, test-backed systems across Rust, C++, Python,
+				distributed infrastructure, and operator-facing tools.
+			</p>
+			<div class="about-actions" aria-label="About next steps">
+				<a class="signal-link" data-touch-target="true" href="/work/">See selected work</a>
+				<a data-touch-target="true" href="/resume/">Read the full résumé</a>
+			</div>
+		</header>
+
+		<section class="about-section" aria-labelledby="current-focus-title">
+			<div class="about-section-heading">
+				<p class="section-kicker">Now</p>
+				<h2 id="current-focus-title">Current focus</h2>
+			</div>
+			<ul class="about-list">
+				{currentFocus.map((item: NowItem) => (
+					<li>
+						<h3>{item.label}</h3>
+						<p>{item.note}</p>
+					</li>
+				))}
+			</ul>
+			<a data-touch-target="true" href="/now/">View the current Now page</a>
+		</section>
+
+		<section class="about-section" aria-labelledby="principles-title">
+			<div class="about-section-heading">
+				<p class="section-kicker">How I work</p>
+				<h2 id="principles-title">Operating principles</h2>
+			</div>
+			<ol class="about-list about-principles">
+				{principles.map((principle) => (
+					<li>
+						<h3>{principle.title}</h3>
+						<p>{principle.copy}</p>
+					</li>
+				))}
+			</ol>
+		</section>
+
+		<section class="about-section" aria-labelledby="experience-title">
+			<div class="about-section-heading">
+				<p class="section-kicker">Career</p>
+				<h2 id="experience-title">Experience</h2>
+			</div>
+			<ol class="experience-list">
+				{experience.map((job) => (
+					<li>
+						<div>
+							<h3>{job.company}</h3>
+							<p>{job.role}</p>
+						</div>
+						<p class="eyebrow">{job.dates}</p>
+					</li>
+				))}
+			</ol>
+			<a data-touch-target="true" href="/resume/">View experience and verified outcomes</a>
+		</section>
+
+		<section class="about-section" aria-labelledby="selected-tools-title">
+			<div class="about-section-heading">
+				<p class="section-kicker">Uses</p>
+				<h2 id="selected-tools-title">Selected tools</h2>
+			</div>
+			<dl class="tools-list">
+				{selectedTools.map((tool: UsesItem) => (
+					<div>
+						<dt>{tool.name}</dt>
+						<dd>{tool.why}</dd>
+					</div>
+				))}
+			</dl>
+			<a data-touch-target="true" href="/uses/">See the complete Uses list</a>
+		</section>
+
+		<section class="about-section" aria-labelledby="current-reading-title">
+			<div class="about-section-heading">
+				<p class="section-kicker">Learning</p>
+				<h2 id="current-reading-title">Current reading</h2>
+			</div>
+			<ul class="reading-list">
+				{currentReading.map((item: ReadingItem) => (
+					<li>
+						<h3>{item.title}</h3>
+						<p class="eyebrow">{item.author}</p>
+						{item.takeaway && <p>{item.takeaway}</p>}
+					</li>
+				))}
+			</ul>
+			<a data-touch-target="true" href="/reading/">Browse all reading notes</a>
+		</section>
+	</section>
+</BaseLayout>
+
+<style>
+	.about-page {
+		gap: 0;
+	}
+
+	.about-intro {
+		display: grid;
+		gap: var(--space-4);
+		padding-block-end: var(--space-6);
+	}
+
+	.about-intro h1 {
+		max-width: 12ch;
+	}
+
+	.about-intro .page-intro {
+		max-width: 66ch;
+		font-size: clamp(1.15rem, 2vw, 1.45rem);
+	}
+
+	.about-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-4);
+		align-items: center;
+	}
+
+	.about-section {
+		display: grid;
+		grid-template-columns: minmax(12rem, 0.75fr) minmax(0, 1.75fr);
+		gap: clamp(2rem, 6vw, 7rem);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.about-section > :not(.about-section-heading) {
+		grid-column: 2;
+	}
+
+	.about-section-heading {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.about-section h2 {
+		font-size: clamp(2.25rem, 4vw, 4rem);
+	}
+
+	.about-list,
+	.experience-list,
+	.reading-list {
+		display: grid;
+		gap: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.about-list li,
+	.experience-list li,
+	.reading-list li,
+	.tools-list > div {
+		display: grid;
+		gap: var(--space-2);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-4);
+	}
+
+	.about-list li:first-child,
+	.experience-list li:first-child,
+	.reading-list li:first-child,
+	.tools-list > div:first-child {
+		border-top: 0;
+		padding-block-start: 0;
+	}
+
+	.about-list p,
+	.experience-list p,
+	.reading-list p,
+	.tools-list dd {
+		max-width: 68ch;
+		color: var(--color-muted);
+	}
+
+	.experience-list li {
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: var(--space-4);
+	}
+
+	.tools-list {
+		display: grid;
+		gap: 0;
+		margin: 0;
+	}
+
+	.tools-list dt {
+		font-size: 1.2rem;
+		font-weight: 700;
+	}
+
+	.tools-list dd {
+		margin: 0;
+	}
+
+	@media (max-width: 48rem) {
+		.about-section {
+			grid-template-columns: minmax(0, 1fr);
+			gap: var(--space-5);
+		}
+
+		.about-section > :not(.about-section-heading) {
+			grid-column: 1;
+		}
+
+		.experience-list li {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>
