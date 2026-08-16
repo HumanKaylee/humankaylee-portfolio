@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { createServer } from "node:net";
-import { dirname, join } from "node:path";
+import { dirname, join, win32 } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
@@ -69,7 +69,13 @@ export function pnpmInvocation(
 	return {
 		command: nodePath,
 		args: [
-			join(dirname(nodePath), "node_modules", "corepack", "dist", "pnpm.js"),
+			win32.join(
+				win32.dirname(nodePath),
+				"node_modules",
+				"corepack",
+				"dist",
+				"pnpm.js",
+			),
 		],
 	};
 }

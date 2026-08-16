@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install social preview generator dependency
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y ffmpeg
+
       - name: Run lint
         run: pnpm lint
 
