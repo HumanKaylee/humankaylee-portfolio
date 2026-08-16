@@ -3,7 +3,7 @@ name: Portfolio verification artifact
 on:
   push:
     branches:
-      - codex/portfolio-verify-20260815-112146-4f06d5
+      - codex/signal-proof-rewrite-20260815
 
 permissions:
   contents: read
