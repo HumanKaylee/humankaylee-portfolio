@@ -25,9 +25,9 @@ const launchGates = [
 		command: 'pnpm test:e2e -- --grep "@api-down"',
 	},
 	{
-		label: "@api-telemetry",
-		name: "Run API telemetry gate",
-		command: 'pnpm test:e2e -- --grep "@api-telemetry"',
+		label: "@static-runtime",
+		name: "Run static no-API gate",
+		command: 'pnpm test:e2e -- --grep "@static-runtime"',
 	},
 	{
 		label: "@journey",

@@ -56,7 +56,7 @@ const resumeLaunchBoundaryText =
 	/published resume|published PDF|public resume|public PDF|live resume|production resume/i;
 
 test.describe("API outage resilience @api-down @B-056", () => {
-	test("keeps representative static routes usable when API requests fail", async ({
+	test("keeps representative static routes usable when API requests fail @static-runtime", async ({
 		page,
 	}) => {
 		const apiRequests: string[] = [];
