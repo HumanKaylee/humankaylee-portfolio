@@ -54,6 +54,15 @@ media:
   height: 1080
   alt: "Cryogenic flow simulation dashboard during a verified valve-transition scenario."
   caption: "Deterministic Stage 1 capture at 1920 by 1080."
+  loop:
+    src: "/media/cryo-flow-sim-loop-960.mp4"
+    poster: "/media/cryo-flow-sim-loop-960.webp"
+    width: 960
+    height: 540
+    durationSeconds: 10
+    sizeBytes: 222403
+    alt: "Cryogenic flow dashboard showing coordinated valve travel and changing telemetry."
+    description: "A ten-second silent loop: the overview transitions into coordinated valve movement, active transfer flow, and changing tank telemetry before returning to a stable frame."
 publicationStatus: "publish"
 redactionStatus: "reviewed"
 redactionReview:
