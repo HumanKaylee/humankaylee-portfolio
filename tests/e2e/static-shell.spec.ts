@@ -5,7 +5,7 @@ const coreRoutes = [
 		path: "/",
 		heading:
 			/Principal engineer for simulation, controls, and operational software/i,
-		copy: /A flagship system, backed by working software/i,
+		copy: /Flagship systems, backed by working software/i,
 	},
 	{
 		path: "/work/",
@@ -16,6 +16,16 @@ const coreRoutes = [
 		path: "/work/cryo-flow-sim/",
 		heading: /Cryogenic Flow Simulation/i,
 		copy: /92 tests passed/i,
+	},
+	{
+		path: "/work/conformal-cooling-channel-generation/",
+		heading: /Conformal Cooling Channel Generation/i,
+		copy: /Fresh gear-cavity capture/i,
+	},
+	{
+		path: "/work/black-scholes-wasm/",
+		heading: /Black-Scholes Options Pricer/i,
+		copy: /Live pricer/i,
 	},
 	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
@@ -153,10 +163,14 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toBeVisible();
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(2);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(3);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
-		for (const href of ["/work/cryo-flow-sim/", "/work/black-scholes-wasm/"]) {
+		for (const href of [
+			"/work/cryo-flow-sim/",
+			"/work/conformal-cooling-channel-generation/",
+			"/work/black-scholes-wasm/",
+		]) {
 			await expect(
 				page.locator(`.proof-gallery a[href="${href}"]`),
 			).toHaveCount(2);
@@ -308,9 +322,9 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 					label: element.textContent?.trim(),
 				})),
 			);
-		expect(links).toHaveLength(4);
-		expect(new Set(links.map((link) => link.href)).size).toBe(4);
-		expect(new Set(links.map((link) => link.label)).size).toBe(4);
+		expect(links).toHaveLength(5);
+		expect(new Set(links.map((link) => link.href)).size).toBe(5);
+		expect(new Set(links.map((link) => link.label)).size).toBe(5);
 	});
 });
 
@@ -332,7 +346,7 @@ test.describe("Signal / Proof static shell @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(2);
+				).toHaveCount(3);
 			}
 		});
 	}

@@ -51,7 +51,11 @@ test("Signal / Proof surfaces bind claims to ProofGallery, CapabilityMatrix, Evi
 	assert.match(workEvidenceFlow, /data\.evidence/);
 
 	assert.match(mediaFrame, /<picture[\s\S]*data-video-poster/);
-	assert.match(mediaFrame, /srcset="\/media\/cryo-flow-sim-stage1-640\.webp/);
+	assert.match(
+		mediaFrame,
+		/\.map\(\(source\) => `\$\{source\.src\} \$\{source\.width\}w`\)/,
+	);
+	assert.match(mediaFrame, /srcset=\{responsivePosterSrcset\}/);
 	assert.match(mediaFrame, /<video[\s\S]*preload="none"/);
 	assert.match(
 		mediaFrame,

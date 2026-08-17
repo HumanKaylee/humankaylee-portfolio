@@ -29,12 +29,12 @@ describe("Astro content collection fixtures", () => {
 		expect(contentConfig).not.toMatch(/\bprojects,|\bcaseStudies,/);
 	});
 
-	it("keeps exactly four unified Work records", () => {
+	it("keeps exactly five unified Work records", () => {
 		const entries = readdirSync(join(contentRoot, "work")).filter((file) =>
 			file.endsWith(".md"),
 		);
 
-		expect(entries).toHaveLength(4);
+		expect(entries).toHaveLength(5);
 	});
 
 	it("uses the approved production domain for canonical metadata", () => {
@@ -53,7 +53,7 @@ describe("Astro content collection fixtures", () => {
 			.map((entry) => readFileSync(join(contentRoot, "work", entry), "utf8"))
 			.filter((contents) => contents.includes('publicationStatus: "publish"'));
 
-		expect(published).toHaveLength(4);
+		expect(published).toHaveLength(5);
 
 		for (const contents of published) {
 			expect(contents).toContain(

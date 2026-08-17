@@ -42,24 +42,27 @@ const viewports = [
 ] as const;
 
 async function waitForStableMedia(page: Page) {
-	await page
-		.locator(".media-frame img, [data-case-study-media-gallery] img")
-		.evaluateAll(async (elements) => {
-			for (const element of elements) {
-				const image = element as HTMLImageElement;
-				if (!image.complete || image.naturalWidth === 0) {
-					await new Promise<void>((resolve, reject) => {
-						image.addEventListener("load", () => resolve(), { once: true });
-						image.addEventListener(
-							"error",
-							() => reject(new Error("media image failed to load")),
-							{ once: true },
-						);
-					});
-				}
-				await image.decode();
+	const images = page.locator(
+		".media-frame img, [data-case-study-media-gallery] img",
+	);
+	for (let index = 0; index < (await images.count()); index += 1) {
+		const image = images.nth(index);
+		await image.scrollIntoViewIfNeeded();
+		await image.evaluate(async (element) => {
+			const media = element as HTMLImageElement;
+			if (!media.complete || media.naturalWidth === 0) {
+				await new Promise<void>((resolve, reject) => {
+					media.addEventListener("load", () => resolve(), { once: true });
+					media.addEventListener(
+						"error",
+						() => reject(new Error("media image failed to load")),
+						{ once: true },
+					);
+				});
 			}
+			await media.decode();
 		});
+	}
 	await page.locator("video[poster]").evaluateAll(async (elements) => {
 		for (const element of elements) {
 			const video = element as HTMLVideoElement;
@@ -97,12 +100,14 @@ async function waitForStableMedia(page: Page) {
 			video.pause();
 		}
 	});
-	await page.evaluate(
-		() =>
-			new Promise<void>((resolve) =>
-				requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-			),
-	);
+	await page.evaluate(() => {
+		document.documentElement.style.scrollBehavior = "auto";
+		document.documentElement.scrollTop = 0;
+		document.body.scrollTop = 0;
+		return new Promise<void>((resolve) =>
+			requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+		);
+	});
 }
 
 test("keeps the homepage hierarchy compact at desktop and mobile @taste-audit", async ({

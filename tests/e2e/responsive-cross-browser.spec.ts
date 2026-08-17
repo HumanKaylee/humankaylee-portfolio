@@ -5,7 +5,7 @@ const launchRoutes = [
 		path: "/",
 		heading:
 			/Principal engineer for simulation, controls, and operational software/i,
-		marker: /A flagship system, backed by working software/i,
+		marker: /Flagship systems, backed by working software/i,
 		primaryLink: /View selected work/i,
 	},
 	{
@@ -18,6 +18,12 @@ const launchRoutes = [
 		path: "/work/cryo-flow-sim/",
 		heading: /Cryogenic Flow Simulation/i,
 		marker: /Proof/i,
+		primaryLink: /Open the simulation video/i,
+	},
+	{
+		path: "/work/conformal-cooling-channel-generation/",
+		heading: /Conformal Cooling Channel Generation/i,
+		marker: /Fresh gear-cavity capture/i,
 		primaryLink: /Open the simulation video/i,
 	},
 	{
@@ -175,7 +181,7 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 				/Principal engineer for simulation, controls, and operational software/i,
 			);
 			await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(
-				2,
+				3,
 			);
 			await expect(
 				page.getByRole("link", { name: /View selected work/i }),

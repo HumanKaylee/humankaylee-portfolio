@@ -143,7 +143,7 @@ describe("workSchema", () => {
 		const candidate = structuredClone(validWork) as {
 			evidenceMedia: Record<string, unknown>[];
 		};
-		delete candidate.evidenceMedia[0].responsiveSources;
+		Reflect.deleteProperty(candidate.evidenceMedia[0], "responsiveSources");
 		expect(workSchema.safeParse(candidate).success).toBe(false);
 	});
 

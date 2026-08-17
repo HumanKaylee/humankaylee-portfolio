@@ -51,6 +51,16 @@ async function waitForStableMedia(page: Page) {
 		.evaluateAll(async (elements) => {
 			for (const element of elements) {
 				const image = element as HTMLImageElement;
+				const bounds = image.getBoundingClientRect();
+				const isVisibleInViewport =
+					bounds.bottom >= 0 && bounds.top <= window.innerHeight;
+				if (
+					image.loading === "lazy" &&
+					!isVisibleInViewport &&
+					!image.complete
+				) {
+					continue;
+				}
 				if (!image.complete || image.naturalWidth === 0) {
 					await new Promise<void>((resolve, reject) => {
 						image.addEventListener("load", () => resolve(), { once: true });
@@ -81,7 +91,15 @@ async function waitForStableMedia(page: Page) {
 			}
 			await poster.decode();
 
-			if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
+			const hasActiveSource = Boolean(
+				video.currentSrc ||
+					video.getAttribute("src") ||
+					video.querySelector("source[src]"),
+			);
+			if (
+				hasActiveSource &&
+				video.readyState < HTMLMediaElement.HAVE_METADATA
+			) {
 				await new Promise<void>((resolve, reject) => {
 					video.addEventListener("loadedmetadata", () => resolve(), {
 						once: true,

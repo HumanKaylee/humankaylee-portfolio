@@ -14,6 +14,7 @@ const expectedResponsiveRoutes = [
 	"/",
 	"/work/",
 	"/work/cryo-flow-sim/",
+	"/work/conformal-cooling-channel-generation/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/work/black-scholes-wasm/",
