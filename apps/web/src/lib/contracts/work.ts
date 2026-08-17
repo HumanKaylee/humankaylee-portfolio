@@ -8,6 +8,17 @@ import {
 	slugSchema,
 } from "./content";
 
+const workLoopMediaSchema = z.object({
+	src: z.string().min(1),
+	poster: z.string().min(1),
+	width: z.number().int().positive(),
+	height: z.number().int().positive(),
+	durationSeconds: z.number().min(6).max(12),
+	sizeBytes: z.number().int().positive().max(2_097_152),
+	alt: z.string().min(1),
+	description: z.string().min(1),
+});
+
 export const workSchema = z
 	.object({
 		title: z.string().min(1),
@@ -60,6 +71,7 @@ export const workSchema = z
 			height: z.number().int().positive(),
 			alt: z.string().min(1),
 			caption: z.string().min(1),
+			loop: workLoopMediaSchema.optional(),
 		}),
 		demoComponent: z.literal("BlackScholesDemo").optional(),
 		publicationStatus: publicationStatusSchema,
@@ -101,3 +113,4 @@ export const workSchema = z
 
 export type WorkEntryData = z.infer<typeof workSchema>;
 export type WorkMedia = WorkEntryData["media"];
+export type WorkLoopMedia = z.infer<typeof workLoopMediaSchema>;
