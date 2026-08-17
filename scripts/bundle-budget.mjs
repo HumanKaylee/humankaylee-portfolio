@@ -16,6 +16,7 @@ export const REQUIRED_RELEASE_ROUTES = [
 	"/work/",
 	"/work/black-scholes-wasm/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
+	"/work/conformal-cooling-channel-generation/",
 	"/work/cryo-flow-sim/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 ];

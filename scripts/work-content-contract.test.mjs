@@ -9,7 +9,7 @@ function frontmatterValue(entry, field) {
 	)?.[1];
 }
 
-test("Work content has one flagship, one supporting proof, two archives, and required local assets", () => {
+test("Work content has two flagships, one supporting proof, two archives, and required local assets", () => {
 	const dir = "apps/web/src/content/work";
 	const files = readdirSync(dir).filter((name) => name.endsWith(".md"));
 	const source = files.map((name) =>
@@ -19,13 +19,21 @@ test("Work content has one flagship, one supporting proof, two archives, and req
 		frontmatterValue(entry, "placement"),
 	);
 	const slugs = source.map((entry) => frontmatterValue(entry, "slug"));
+	const featuredOrders = source.map((entry) =>
+		Number(frontmatterValue(entry, "featuredOrder")),
+	);
 
 	assert.deepEqual([...placements].sort(), [
 		"archive",
 		"archive",
 		"flagship",
+		"flagship",
 		"supporting",
 	]);
+	assert.deepEqual(
+		[...featuredOrders].sort((left, right) => left - right),
+		[1, 2, 3, 4, 5],
+	);
 	assert.equal(new Set(files).size, files.length);
 	assert.ok(slugs.every((slug) => slug));
 	assert.equal(new Set(slugs).size, slugs.length);

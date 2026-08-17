@@ -11,23 +11,26 @@ import { routeInventoryById } from "../data/routes";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 type WorkEntry = CollectionEntry<"work">;
-const publishedWork = ((await getCollection("work")) as WorkEntry[]).filter(
-	(project) => project.data.publicationStatus === "publish",
-);
+const publishedWork = ((await getCollection("work")) as WorkEntry[])
+	.filter((project) => project.data.publicationStatus === "publish")
+	.sort((left, right) => left.data.featuredOrder - right.data.featuredOrder);
 const flagships = publishedWork.filter(
 	(project) => project.data.placement === "flagship",
 );
-const supporting = publishedWork
-	.filter((project) => project.data.placement === "supporting")
-	.sort((left, right) => left.data.title.localeCompare(right.data.title));
+const supporting = publishedWork.filter(
+	(project) => project.data.placement === "supporting",
+);
 
-if (flagships.length !== 1) {
+if (flagships.length !== 2) {
 	throw new Error(
-		`Homepage requires exactly one published flagship; found ${flagships.length}.`,
+		`Homepage requires exactly two published flagships; found ${flagships.length}.`,
 	);
 }
 
 const cryogenicFlow = flagships[0];
+if (cryogenicFlow.data.slug !== "cryo-flow-sim") {
+	throw new Error("Cryogenic Flow must remain the ordered homepage hero.");
+}
 const homepageProof = [...flagships, ...supporting];
 ---
 

@@ -112,16 +112,19 @@ for (const viewport of [
 	});
 }
 
-test("leads with one flagship, one supporting proof, and no archive projects", async ({
+test("leads with two flagships, one supporting proof, and no archive projects", async ({
 	page,
 }) => {
 	await page.goto("/");
 
 	const flagship = page.locator('[data-proof-placement="flagship"]');
 	const supporting = page.locator('[data-proof-placement="supporting"]');
-	await expect(flagship).toHaveCount(1);
+	await expect(flagship).toHaveCount(2);
 	await expect(supporting).toHaveCount(1);
-	await expect(flagship).toContainText("Cryogenic Flow Simulation");
+	await expect(flagship.locator("h3")).toHaveText([
+		"Cryogenic Flow Simulation",
+		"Conformal Cooling Channel Generation",
+	]);
 	await expect(supporting).toContainText(
 		"Black-Scholes Options Pricer in Rust and WASM",
 	);
@@ -133,6 +136,11 @@ test("leads with one flagship, one supporting proof, and no archive projects", a
 			name: "Black-Scholes Options Pricer in Rust and WASM",
 		}),
 	).toHaveAttribute("href", "/work/black-scholes-wasm/");
+	await expect(page.locator("[data-proof-placement] h3")).toHaveText([
+		"Cryogenic Flow Simulation",
+		"Conformal Cooling Channel Generation",
+		"Black-Scholes Options Pricer in Rust and WASM",
+	]);
 	await expect(page.locator("main")).not.toContainText(
 		"CLI Fleet Synchronization",
 	);
@@ -155,7 +163,7 @@ test("stays static and useful during an API outage", async ({ page }) => {
 		"Principal engineer for simulation, controls, and operational software.",
 	);
 	await expect(page.locator('[data-proof-placement="flagship"]')).toHaveCount(
-		1,
+		2,
 	);
 	await expect(page.locator('[data-proof-placement="supporting"]')).toHaveCount(
 		1,
@@ -173,16 +181,16 @@ test.describe("static homepage without JavaScript", () => {
 	}) => {
 		await page.goto("/");
 
-		await expect(
-			page.locator('[data-proof-placement="flagship"]'),
-		).toBeVisible();
+		await expect(page.locator('[data-proof-placement="flagship"]')).toHaveCount(
+			2,
+		);
 		await expect(
 			page.locator('[data-proof-placement="supporting"]'),
 		).toBeVisible();
-		await expect(page.locator("[data-motion-loop]")).toHaveCount(2);
-		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(2);
+		await expect(page.locator("[data-motion-loop]")).toHaveCount(3);
+		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(3);
 		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
-		await expect(page.locator("[data-motion-description]")).toHaveCount(2);
+		await expect(page.locator("[data-motion-description]")).toHaveCount(3);
 		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("main")).not.toContainText(internalHomepageCopy);

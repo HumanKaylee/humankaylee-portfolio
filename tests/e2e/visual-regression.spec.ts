@@ -16,6 +16,10 @@ const visualRoutes = [
 	{ label: "work", path: "/work/" },
 	{ label: "work-cryo", path: "/work/cryo-flow-sim/" },
 	{
+		label: "work-conformal-cooling",
+		path: "/work/conformal-cooling-channel-generation/",
+	},
+	{
 		label: "work-cli-fleet",
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 	},
@@ -42,57 +46,57 @@ async function stabilizeVisualState(page: Page) {
 }
 
 async function waitForStableMedia(page: Page) {
-	await page.locator(".media-frame img").evaluateAll(async (elements) => {
+	await page
+		.locator(".media-frame img, [data-case-study-media-gallery] img")
+		.evaluateAll(async (elements) => {
+			for (const element of elements) {
+				const image = element as HTMLImageElement;
+				if (!image.complete || image.naturalWidth === 0) {
+					await new Promise<void>((resolve, reject) => {
+						image.addEventListener("load", () => resolve(), { once: true });
+						image.addEventListener(
+							"error",
+							() => reject(new Error("media image failed to load")),
+							{ once: true },
+						);
+					});
+				}
+				await image.decode();
+			}
+		});
+	await page.locator("video[poster]").evaluateAll(async (elements) => {
 		for (const element of elements) {
-			const image = element as HTMLImageElement;
-			if (!image.complete || image.naturalWidth === 0) {
+			const video = element as HTMLVideoElement;
+			const poster = new Image();
+			poster.src = video.poster;
+			if (!poster.complete || poster.naturalWidth === 0) {
 				await new Promise<void>((resolve, reject) => {
-					image.addEventListener("load", () => resolve(), { once: true });
-					image.addEventListener(
+					poster.addEventListener("load", () => resolve(), { once: true });
+					poster.addEventListener(
 						"error",
-						() => reject(new Error("media image failed to load")),
+						() => reject(new Error("video poster failed to load")),
 						{ once: true },
 					);
 				});
 			}
-			await image.decode();
+			await poster.decode();
+
+			if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
+				await new Promise<void>((resolve, reject) => {
+					video.addEventListener("loadedmetadata", () => resolve(), {
+						once: true,
+					});
+					video.addEventListener(
+						"error",
+						() => reject(new Error("video metadata failed to load")),
+						{ once: true },
+					);
+					video.preload = "metadata";
+					video.load();
+				});
+			}
 		}
 	});
-	await page
-		.locator(".media-frame video[poster]")
-		.evaluateAll(async (elements) => {
-			for (const element of elements) {
-				const video = element as HTMLVideoElement;
-				const poster = new Image();
-				poster.src = video.poster;
-				if (!poster.complete || poster.naturalWidth === 0) {
-					await new Promise<void>((resolve, reject) => {
-						poster.addEventListener("load", () => resolve(), { once: true });
-						poster.addEventListener(
-							"error",
-							() => reject(new Error("video poster failed to load")),
-							{ once: true },
-						);
-					});
-				}
-				await poster.decode();
-
-				if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
-					await new Promise<void>((resolve, reject) => {
-						video.addEventListener("loadedmetadata", () => resolve(), {
-							once: true,
-						});
-						video.addEventListener(
-							"error",
-							() => reject(new Error("video metadata failed to load")),
-							{ once: true },
-						);
-						video.preload = "metadata";
-						video.load();
-					});
-				}
-			}
-		});
 	await page.evaluate(
 		() =>
 			new Promise<void>((resolve) =>

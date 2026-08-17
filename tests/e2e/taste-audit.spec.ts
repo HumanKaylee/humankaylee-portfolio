@@ -18,6 +18,10 @@ const surfaces = [
 	{ label: "work", path: "/work/" },
 	{ label: "work-cryo", path: "/work/cryo-flow-sim/" },
 	{
+		label: "work-conformal-cooling",
+		path: "/work/conformal-cooling-channel-generation/",
+	},
+	{
 		label: "work-cli-fleet",
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 	},
@@ -38,22 +42,24 @@ const viewports = [
 ] as const;
 
 async function waitForStableMedia(page: Page) {
-	await page.locator(".media-frame img").evaluateAll(async (elements) => {
-		for (const element of elements) {
-			const image = element as HTMLImageElement;
-			if (!image.complete || image.naturalWidth === 0) {
-				await new Promise<void>((resolve, reject) => {
-					image.addEventListener("load", () => resolve(), { once: true });
-					image.addEventListener(
-						"error",
-						() => reject(new Error("media image failed to load")),
-						{ once: true },
-					);
-				});
+	await page
+		.locator(".media-frame img, [data-case-study-media-gallery] img")
+		.evaluateAll(async (elements) => {
+			for (const element of elements) {
+				const image = element as HTMLImageElement;
+				if (!image.complete || image.naturalWidth === 0) {
+					await new Promise<void>((resolve, reject) => {
+						image.addEventListener("load", () => resolve(), { once: true });
+						image.addEventListener(
+							"error",
+							() => reject(new Error("media image failed to load")),
+							{ once: true },
+						);
+					});
+				}
+				await image.decode();
 			}
-			await image.decode();
-		}
-	});
+		});
 	await page.locator("video[poster]").evaluateAll(async (elements) => {
 		for (const element of elements) {
 			const video = element as HTMLVideoElement;
@@ -142,6 +148,7 @@ test("keeps visible public copy free of em and en dashes @taste-audit", async ({
 }) => {
 	for (const path of [
 		"/work/cryo-flow-sim/",
+		"/work/conformal-cooling-channel-generation/",
 		"/work/black-scholes-wasm/",
 		"/about/",
 		"/notes/wasm-black-scholes-options-pricer/",
@@ -179,7 +186,7 @@ test.describe("Signal / Proof capture audit @taste-audit", () => {
 							.evaluateAll((items) =>
 								items.map((item) => item.getAttribute("data-proof-placement")),
 							),
-					).toEqual(["flagship", "supporting"]);
+					).toEqual(["flagship", "flagship", "supporting"]);
 				}
 				if (surface.path === "/work/black-scholes-wasm/") {
 					await page.locator(".bs-demo").scrollIntoViewIfNeeded();

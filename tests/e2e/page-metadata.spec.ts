@@ -29,6 +29,10 @@ const socialImageRoutes = [
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 	},
 	{
+		label: "Conformal Work detail",
+		path: "/work/conformal-cooling-channel-generation/",
+	},
+	{
 		label: "note detail",
 		path: "/notes/wasm-black-scholes-options-pricer/",
 	},
@@ -140,6 +144,31 @@ test.describe("page metadata @metadata", () => {
 		expect(jsonLdText).not.toMatch(
 			/humankaylee\.dev|\/projects\/|\/case-studies\//i,
 		);
+	});
+
+	test("keeps the Conformal Cooling canonical and CreativeWork JSON-LD aligned", async ({
+		page,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/conformal-cooling-channel-generation/`;
+
+		await page.goto("/work/conformal-cooling-channel-generation/");
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+
+		const jsonLdText = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		).join("\n");
+		expect(jsonLdText).toContain('"@type":"CreativeWork"');
+		expect(jsonLdText).toContain(
+			'"name":"Conformal Cooling Channel Generation"',
+		);
+		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
 	});
 
 	test("renders note-specific BlogPosting JSON-LD on note detail pages", async ({

@@ -2,9 +2,13 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const coreRoutes = [
-	{ path: "/", marker: /A flagship system, backed by working software/i },
+	{ path: "/", marker: /Flagship systems, backed by working software/i },
 	{ path: "/work/", marker: /Flagship work/i },
 	{ path: "/work/cryo-flow-sim/", marker: /92 tests passed/i },
+	{
+		path: "/work/conformal-cooling-channel-generation/",
+		marker: /Fresh gear-cavity capture/i,
+	},
 	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		marker: /Verification matrix/i,
@@ -77,7 +81,7 @@ test.describe("Signal / Proof quality @quality @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(2);
+				).toHaveCount(3);
 			}
 		});
 	}

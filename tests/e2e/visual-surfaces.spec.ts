@@ -4,6 +4,7 @@ const releaseRoutes = [
 	"/",
 	"/work/",
 	"/work/cryo-flow-sim/",
+	"/work/conformal-cooling-channel-generation/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/about/",
@@ -77,11 +78,11 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toHaveCount(1);
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(2);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(3);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator(".proof-gallery .media-frame")).toHaveCount(1);
 		await expect(page.locator(".proof-gallery .evidence-flow")).toHaveCount(1);
-		await expect(page.locator("[data-motion-loop]")).toHaveCount(2);
+		await expect(page.locator("[data-motion-loop]")).toHaveCount(3);
 		await expect(
 			page.locator(".project-atlas-shell, .evidence-drawer, .telemetry-strip"),
 		).toHaveCount(0);
@@ -117,7 +118,10 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 	test("keeps every flagship media frame and proof section legible", async ({
 		page,
 	}) => {
-		for (const route of releaseRoutes.slice(2, 5)) {
+		for (const route of [
+			"/work/cryo-flow-sim/",
+			"/work/conformal-cooling-channel-generation/",
+		]) {
 			await page.goto(route);
 			await expect(page.locator(".media-frame")).toHaveCount(1);
 			await expect(
@@ -137,6 +141,6 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		}
 
 		await page.goto("/");
-		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(2);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(3);
 	});
 });

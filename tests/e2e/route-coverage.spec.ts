@@ -18,6 +18,11 @@ const implementedRoutes = [
 		marker: /Proof/i,
 	},
 	{
+		path: "/work/conformal-cooling-channel-generation/",
+		heading: /Conformal Cooling Channel Generation/i,
+		marker: /Evidence boundary/i,
+	},
+	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		heading: /CLI Fleet Synchronization/i,
 		marker: /Proof/i,

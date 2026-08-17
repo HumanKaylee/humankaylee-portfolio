@@ -21,6 +21,7 @@ const expectedAccessibilityRoutes = [
 	"/",
 	"/work/",
 	"/work/cryo-flow-sim/",
+	"/work/conformal-cooling-channel-generation/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/work/black-scholes-wasm/",
@@ -120,6 +121,7 @@ test("B-048 accessibility audit has a dedicated artifact and checklist contract"
 	for (const currentSurface of [
 		"/work/",
 		"/work/cryo-flow-sim/",
+		"/work/conformal-cooling-channel-generation/",
 		"/work/cli-fleet-synchronization-and-mcp-rollout/",
 		"/work/remote-workstation-recovery-and-operational-debugging/",
 		"ProofGallery",

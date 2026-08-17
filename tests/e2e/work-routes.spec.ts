@@ -4,6 +4,10 @@ import { expect, test } from "@playwright/test";
 const allPublishedWork = [
 	{ title: "Cryogenic Flow Simulation", slug: "cryo-flow-sim" },
 	{
+		title: "Conformal Cooling Channel Generation",
+		slug: "conformal-cooling-channel-generation",
+	},
+	{
 		title: "Black-Scholes Options Pricer in Rust and WASM",
 		slug: "black-scholes-wasm",
 	},
@@ -41,14 +45,17 @@ test.describe("Work routes @work", () => {
 	}) => {
 		await page.goto("/work/");
 
-		await expect(page.locator("[data-flagship-work] article")).toHaveCount(1);
-		expect(
-			await page.locator("[data-flagship-work] .signal-link").textContent(),
-		).toBe("Read the case study");
+		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
+		await expect(
+			page.locator("[data-flagship-work] .signal-link"),
+		).toHaveText(["Read the case study", "Read the case study"]);
 		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Cryogenic Flow Simulation",
+		);
+		await expect(page.locator("[data-flagship-work]")).toContainText(
+			"Conformal Cooling Channel Generation",
 		);
 		await expect(page.locator("[data-supporting-work]")).toContainText(
 			"Black-Scholes Options Pricer in Rust and WASM",
@@ -62,6 +69,7 @@ test.describe("Work routes @work", () => {
 
 		for (const path of [
 			"/work/cryo-flow-sim/",
+			"/work/conformal-cooling-channel-generation/",
 			"/work/black-scholes-wasm/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
@@ -86,8 +94,9 @@ test.describe("Work routes @work", () => {
 		expect(response?.status()).toBe(200);
 		await expect(page.locator("[data-flagship-work] h2")).toHaveText([
 			"Cryogenic Flow Simulation",
+			"Conformal Cooling Channel Generation",
 		]);
-		await expect(page.locator("[data-flagship-work] article")).toHaveCount(1);
+		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
@@ -108,6 +117,7 @@ test.describe("Work routes @work", () => {
 		page,
 	}) => {
 		const expectedNext = [
+			"Conformal Cooling Channel Generation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
@@ -472,7 +482,7 @@ test.describe("Work routes @work @noscript", () => {
 		);
 		await expect(
 			page.getByRole("link", {
-				name: "Next project: Black-Scholes Options Pricer in Rust and WASM",
+				name: "Next project: Conformal Cooling Channel Generation",
 			}),
 		).toBeVisible();
 	});

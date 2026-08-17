@@ -16,6 +16,7 @@ const expectedVisualRoutes = [
 	["home", "/"],
 	["work", "/work/"],
 	["work-cryo", "/work/cryo-flow-sim/"],
+	["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 	[
 		"work-remote-recovery",
@@ -98,6 +99,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		["home", "/"],
 		["work", "/work/"],
 		["work-cryo", "/work/cryo-flow-sim/"],
+		["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 		[
 			"work-remote-recovery",
