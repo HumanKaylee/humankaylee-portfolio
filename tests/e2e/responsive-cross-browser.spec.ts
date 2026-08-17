@@ -5,7 +5,7 @@ const launchRoutes = [
 		path: "/",
 		heading:
 			/Principal engineer for simulation, controls, and operational software/i,
-		marker: /Three systems\. Three kinds of proof/i,
+		marker: /A flagship system, backed by working software/i,
 		primaryLink: /View selected work/i,
 	},
 	{
@@ -174,7 +174,9 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 			await expect(page.getByRole("heading", { level: 1 })).toContainText(
 				/Principal engineer for simulation, controls, and operational software/i,
 			);
-			await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
+			await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(
+				2,
+			);
 			await expect(
 				page.getByRole("link", { name: /View selected work/i }),
 			).toBeVisible();

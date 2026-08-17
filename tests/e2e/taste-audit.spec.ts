@@ -54,41 +54,39 @@ async function waitForStableMedia(page: Page) {
 			await image.decode();
 		}
 	});
-	await page
-		.locator(".media-frame video[poster]")
-		.evaluateAll(async (elements) => {
-			for (const element of elements) {
-				const video = element as HTMLVideoElement;
-				const poster = new Image();
-				poster.src = video.poster;
-				if (!poster.complete || poster.naturalWidth === 0) {
-					await new Promise<void>((resolve, reject) => {
-						poster.addEventListener("load", () => resolve(), { once: true });
-						poster.addEventListener(
-							"error",
-							() => reject(new Error("video poster failed to load")),
-							{ once: true },
-						);
-					});
-				}
-				await poster.decode();
-
-				if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
-					await new Promise<void>((resolve, reject) => {
-						video.addEventListener("loadedmetadata", () => resolve(), {
-							once: true,
-						});
-						video.addEventListener(
-							"error",
-							() => reject(new Error("video metadata failed to load")),
-							{ once: true },
-						);
-						video.preload = "metadata";
-						video.load();
-					});
-				}
+	await page.locator("video[poster]").evaluateAll(async (elements) => {
+		for (const element of elements) {
+			const video = element as HTMLVideoElement;
+			const poster = new Image();
+			poster.src = video.poster;
+			if (!poster.complete || poster.naturalWidth === 0) {
+				await new Promise<void>((resolve, reject) => {
+					poster.addEventListener("load", () => resolve(), { once: true });
+					poster.addEventListener(
+						"error",
+						() => reject(new Error("video poster failed to load")),
+						{ once: true },
+					);
+				});
 			}
-		});
+			await poster.decode();
+
+			if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
+				await new Promise<void>((resolve, reject) => {
+					video.addEventListener("loadedmetadata", () => resolve(), {
+						once: true,
+					});
+					video.addEventListener(
+						"error",
+						() => reject(new Error("video metadata failed to load")),
+						{ once: true },
+					);
+					video.preload = "metadata";
+					video.load();
+				});
+			}
+		}
+	});
 	await page.evaluate(
 		() =>
 			new Promise<void>((resolve) =>
@@ -118,7 +116,7 @@ test("keeps the homepage hierarchy compact at desktop and mobile @taste-audit", 
 	await expect(
 		page.getByRole("link", { name: /View selected work/i }),
 	).toBeVisible();
-	await expect(page.locator(".project-stage")).toBeVisible();
+	await expect(page.locator(".proof-gallery")).toBeVisible();
 
 	await page.setViewportSize({ width: 390, height: 844 });
 	await page.reload({ waitUntil: "networkidle" });
@@ -158,21 +156,12 @@ test.describe("Signal / Proof capture audit @taste-audit", () => {
 				await waitForStableMedia(page);
 				if (surface.path === "/" && viewport.label === "mobile") {
 					expect(
-						await page.locator("[data-stage-pair]").evaluateAll((pairs) =>
-							pairs.map((pair) => {
-								const trigger = pair.querySelector<HTMLElement>(
-									"[data-stage-trigger]",
-								);
-								const panel =
-									pair.querySelector<HTMLElement>("[data-stage-panel]");
-								return `${trigger?.dataset.stageTrigger}:${panel?.dataset.stagePanel}:${pair.children[1] === panel}`;
-							}),
-						),
-					).toEqual([
-						"cryo-flow-sim:cryo-flow-sim:true",
-						"cli-fleet-synchronization-and-mcp-rollout:cli-fleet-synchronization-and-mcp-rollout:true",
-						"remote-workstation-recovery-and-operational-debugging:remote-workstation-recovery-and-operational-debugging:true",
-					]);
+						await page
+							.locator("[data-proof-placement]")
+							.evaluateAll((items) =>
+								items.map((item) => item.getAttribute("data-proof-placement")),
+							),
+					).toEqual(["flagship", "supporting"]);
 				}
 				if (surface.path === "/work/black-scholes-wasm/") {
 					await page.locator(".bs-demo").scrollIntoViewIfNeeded();

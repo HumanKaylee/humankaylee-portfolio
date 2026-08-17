@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const coreRoutes = [
-	{ path: "/", marker: /Three systems\. Three kinds of proof/i },
+	{ path: "/", marker: /A flagship system, backed by working software/i },
 	{ path: "/work/", marker: /Flagship work/i },
 	{ path: "/work/cryo-flow-sim/", marker: /92 tests passed/i },
 	{
@@ -75,7 +75,9 @@ test.describe("Signal / Proof quality @quality @noscript", () => {
 				page.locator(".noscript-banner, .static-fallback-note"),
 			).toHaveCount(0);
 			if (route.path === "/") {
-				await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
+				await expect(
+					page.locator("[data-proof-placement]:visible"),
+				).toHaveCount(2);
 			}
 		});
 	}
@@ -99,7 +101,7 @@ test.describe("Signal / Proof quality @quality @reduced-motion", () => {
 					document.body,
 					...Array.from(
 						document.querySelectorAll(
-							"a, button, [data-project-stage], [data-motion-loop], main",
+							"a, button, [data-proof-placement], [data-motion-loop], main",
 						),
 					),
 				];

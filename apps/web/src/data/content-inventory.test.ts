@@ -82,6 +82,7 @@ describe("phase 1 content inventory", () => {
 		expect(CONTENT_VALIDATION_EXAMPLES.work.requiredFields).toEqual(
 			expect.arrayContaining([
 				"discipline",
+				"placement",
 				"decisions",
 				"evidence",
 				"media",

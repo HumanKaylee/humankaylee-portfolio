@@ -70,23 +70,24 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		}
 	});
 
-	test("renders the homepage as a three-story ProjectStage with real evidence", async ({
+	test("renders the homepage as a proof gallery and capability matrix with real evidence", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 1440, height: 1200 });
 		await page.goto("/");
 
-		await expect(page.locator(".project-stage")).toHaveCount(1);
-		await expect(page.locator(".work-row")).toHaveCount(3);
-		await expect(page.locator("[data-stage-panel]")).toHaveCount(3);
-		await expect(page.locator(".project-stage .media-frame")).toHaveCount(3);
-		await expect(page.locator(".project-stage .evidence-flow")).toHaveCount(2);
+		await expect(page.locator(".proof-gallery")).toHaveCount(1);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(2);
+		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
+		await expect(page.locator(".proof-gallery .media-frame")).toHaveCount(1);
+		await expect(page.locator(".proof-gallery .evidence-flow")).toHaveCount(1);
+		await expect(page.locator("[data-motion-loop]")).toHaveCount(2);
 		await expect(
 			page.locator(".project-atlas-shell, .evidence-drawer, .telemetry-strip"),
 		).toHaveCount(0);
 
 		const treatments = await page
-			.locator(".work-row, .project-stage__panel")
+			.locator(".proof-gallery__item, [data-capability-proof] article")
 			.evaluateAll((elements) =>
 				elements.map((element) => {
 					const style = getComputedStyle(element);
@@ -136,6 +137,6 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		}
 
 		await page.goto("/");
-		await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(2);
 	});
 });

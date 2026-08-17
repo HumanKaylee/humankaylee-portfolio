@@ -3,6 +3,7 @@ title: "Black-Scholes Options Pricer in Rust and WASM"
 slug: "black-scholes-wasm"
 discipline: "tools"
 year: 2026
+placement: "supporting"
 lede: "A Rust crate compiled to WebAssembly powers a live, in-browser European options pricer with real-time Greeks and no server round-trip."
 problem: "A live browser pricer needs deterministic calculation, explicit handling of degenerate inputs, and a safe boundary for malformed data without a server round-trip."
 stakes: "Incorrect pricing or a malformed browser boundary would undermine an educational tool that presents option prices and Greeks."

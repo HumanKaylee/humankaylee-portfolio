@@ -9,19 +9,23 @@ function frontmatterValue(entry, field) {
 	)?.[1];
 }
 
-test("Work content has three unique flagships and required local assets", () => {
+test("Work content has one flagship, one supporting proof, two archives, and required local assets", () => {
 	const dir = "apps/web/src/content/work";
 	const files = readdirSync(dir).filter((name) => name.endsWith(".md"));
 	const source = files.map((name) =>
 		readFileSync(path.join(dir, name), "utf8"),
 	);
-	const featuredOrders = source
-		.map((entry) => frontmatterValue(entry, "featuredOrder"))
-		.filter((value) => value !== undefined);
+	const placements = source.map((entry) =>
+		frontmatterValue(entry, "placement"),
+	);
 	const slugs = source.map((entry) => frontmatterValue(entry, "slug"));
 
-	assert.deepEqual([...featuredOrders].sort(), ["1", "2", "3"]);
-	assert.equal(new Set(featuredOrders).size, 3);
+	assert.deepEqual([...placements].sort(), [
+		"archive",
+		"archive",
+		"flagship",
+		"supporting",
+	]);
 	assert.equal(new Set(files).size, files.length);
 	assert.ok(slugs.every((slug) => slug));
 	assert.equal(new Set(slugs).size, slugs.length);

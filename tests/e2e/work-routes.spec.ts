@@ -1,8 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const flagshipWork = [
+const allPublishedWork = [
 	{ title: "Cryogenic Flow Simulation", slug: "cryo-flow-sim" },
+	{
+		title: "Black-Scholes Options Pricer in Rust and WASM",
+		slug: "black-scholes-wasm",
+	},
 	{
 		title: "CLI Fleet Synchronization",
 		slug: "cli-fleet-synchronization-and-mcp-rollout",
@@ -12,6 +16,10 @@ const flagshipWork = [
 		slug: "remote-workstation-recovery-and-operational-debugging",
 	},
 ] as const;
+
+const nonBlackScholesWork = allPublishedWork.filter(
+	(work) => work.slug !== "black-scholes-wasm",
+);
 
 const detailHeadings = [
 	"The situation",
@@ -23,18 +31,42 @@ const detailHeadings = [
 	"Reflection",
 ] as const;
 
-const allPublishedWork = [
-	...flagshipWork,
-	{
-		title: "Black-Scholes Options Pricer in Rust and WASM",
-		slug: "black-scholes-wasm",
-	},
-] as const;
-
 const internalWorkCopy =
 	/PR evidence|approval pass|launch approval|approval checklist|production launch|deployment status|fallback mode|API health|launch readiness|openItems|redaction/i;
 
 test.describe("Work routes @work", () => {
+	test("separates flagship, supporting, and archive work while preserving every route", async ({
+		page,
+		request,
+	}) => {
+		await page.goto("/work/");
+
+		await expect(page.locator("[data-flagship-work] article")).toHaveCount(1);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
+		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
+		await expect(page.locator("[data-flagship-work]")).toContainText(
+			"Cryogenic Flow Simulation",
+		);
+		await expect(page.locator("[data-supporting-work]")).toContainText(
+			"Black-Scholes Options Pricer in Rust and WASM",
+		);
+		await expect(page.locator("[data-archive-work]")).toContainText(
+			"CLI Fleet Synchronization",
+		);
+		await expect(page.locator("[data-archive-work]")).toContainText(
+			"Remote Workstation Recovery",
+		);
+
+		for (const path of [
+			"/work/cryo-flow-sim/",
+			"/work/black-scholes-wasm/",
+			"/work/cli-fleet-synchronization-and-mcp-rollout/",
+			"/work/remote-workstation-recovery-and-operational-debugging/",
+		]) {
+			expect((await request.get(path)).status(), path).toBe(200);
+		}
+	});
+
 	test("keeps prior launch-review phrases inside the visitor-copy guard", () => {
 		const missedPhrases = ["launch approval", "approval checklist"].filter(
 			(phrase) => !internalWorkCopy.test(phrase),
@@ -43,25 +75,29 @@ test.describe("Work routes @work", () => {
 		expect(missedPhrases).toEqual([]);
 	});
 
-	test("renders the three flagships in approved order and supporting work separately", async ({
+	test("renders the approved work hierarchy with distinct visual weight", async ({
 		page,
 	}) => {
 		const response = await page.goto("/work/");
 
 		expect(response?.status()).toBe(200);
-		await expect(page.locator("[data-featured-work] h2")).toHaveText(
-			flagshipWork.map((item) => item.title),
-		);
-		await expect(page.locator("[data-featured-work] article")).toHaveCount(3);
+		await expect(page.locator("[data-flagship-work] h2")).toHaveText([
+			"Cryogenic Flow Simulation",
+		]);
+		await expect(page.locator("[data-flagship-work] article")).toHaveCount(1);
 		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
 				name: "Black-Scholes Options Pricer in Rust and WASM",
 			}),
 		).toHaveAttribute("href", "/work/black-scholes-wasm/");
-		await expect(page.locator("[data-featured-work]")).not.toContainText(
+		await expect(page.locator("[data-flagship-work]")).not.toContainText(
 			/Black-Scholes/i,
 		);
+		await expect(page.locator("[data-archive-work] h3")).toHaveText([
+			"CLI Fleet Synchronization",
+			"Remote Workstation Recovery",
+		]);
 		await expect(page.locator("main")).not.toContainText(internalWorkCopy);
 	});
 
@@ -69,12 +105,13 @@ test.describe("Work routes @work", () => {
 		page,
 	}) => {
 		const expectedNext = [
+			"Black-Scholes Options Pricer in Rust and WASM",
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
-			"Black-Scholes Options Pricer in Rust and WASM",
+			"Cryogenic Flow Simulation",
 		] as const;
 
-		for (const [index, work] of flagshipWork.entries()) {
+		for (const [index, work] of allPublishedWork.entries()) {
 			await page.goto(`/work/${work.slug}/`);
 			await expect(
 				page.getByRole("heading", { level: 1, name: work.title }),
@@ -93,13 +130,6 @@ test.describe("Work routes @work", () => {
 				}),
 			).toBeVisible();
 		}
-
-		await page.goto("/work/black-scholes-wasm/");
-		await expect(
-			page.getByRole("link", {
-				name: "Next project: Cryogenic Flow Simulation",
-			}),
-		).toHaveAttribute("href", "/work/cryo-flow-sim/");
 
 		for (const work of allPublishedWork) {
 			await page.goto(`/work/${work.slug}/`);
@@ -238,7 +268,7 @@ test.describe("Work routes @work", () => {
 	test("maps the Black-Scholes demo only from its Work record", async ({
 		page,
 	}) => {
-		for (const work of flagshipWork) {
+		for (const work of nonBlackScholesWork) {
 			await page.goto(`/work/${work.slug}/`);
 			await expect(page.locator(".bs-demo")).toHaveCount(0);
 		}
@@ -439,7 +469,7 @@ test.describe("Work routes @work @noscript", () => {
 		);
 		await expect(
 			page.getByRole("link", {
-				name: "Next project: CLI Fleet Synchronization",
+				name: "Next project: Black-Scholes Options Pricer in Rust and WASM",
 			}),
 		).toBeVisible();
 	});

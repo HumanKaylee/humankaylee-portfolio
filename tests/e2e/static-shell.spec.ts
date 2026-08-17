@@ -5,7 +5,7 @@ const coreRoutes = [
 		path: "/",
 		heading:
 			/Principal engineer for simulation, controls, and operational software/i,
-		copy: /Three systems\. Three kinds of proof/i,
+		copy: /A flagship system, backed by working software/i,
 	},
 	{
 		path: "/work/",
@@ -126,11 +126,7 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		).toHaveAttribute("href", "/work/");
 		await expect(page.locator("#hero-title")).toBeInViewport();
 		await expect(
-			page
-				.getByRole("img", {
-					name: /Cryogenic flow simulation dashboard/i,
-				})
-				.first(),
+			page.locator(".home-hero [data-motion-video]"),
 		).toBeInViewport();
 	});
 
@@ -151,24 +147,19 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		}
 	});
 
-	test("renders complete ProjectStage links and evidence before enhancement", async ({
+	test("renders complete selected proof and capability evidence before enhancement", async ({
 		page,
 	}) => {
 		await page.goto("/");
 
-		await expect(page.locator(".project-stage")).toBeVisible();
-		await expect(page.locator(".work-row")).toHaveCount(3);
-		await expect(page.locator("[data-stage-panel]")).toHaveCount(3);
-		await expect(page.locator(".project-stage .media-frame")).toHaveCount(3);
+		await expect(page.locator(".proof-gallery")).toBeVisible();
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(2);
+		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
-		for (const href of [
-			"/work/cryo-flow-sim/",
-			"/work/cli-fleet-synchronization-and-mcp-rollout/",
-			"/work/remote-workstation-recovery-and-operational-debugging/",
-		]) {
+		for (const href of ["/work/cryo-flow-sim/", "/work/black-scholes-wasm/"]) {
 			await expect(
-				page.locator(`.project-stage a[href="${href}"]`),
-			).toHaveCount(1);
+				page.locator(`.proof-gallery a[href="${href}"]`),
+			).toHaveCount(2);
 		}
 	});
 
@@ -304,20 +295,22 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		await expect(page.locator(".site-footer")).not.toHaveCSS("display", "none");
 	});
 
-	test("labels three flagship Work links uniquely", async ({ page }) => {
+	test("labels all Work hierarchy links uniquely", async ({ page }) => {
 		await page.goto("/work/");
 
 		const links = await page
-			.locator(".featured-work h2 a")
+			.locator(
+				"[data-flagship-work] h2 a, [data-supporting-work] h2 a, [data-archive-work] h3 a",
+			)
 			.evaluateAll((elements) =>
 				elements.map((element) => ({
 					href: element.getAttribute("href"),
 					label: element.textContent?.trim(),
 				})),
 			);
-		expect(links).toHaveLength(3);
-		expect(new Set(links.map((link) => link.href)).size).toBe(3);
-		expect(new Set(links.map((link) => link.label)).size).toBe(3);
+		expect(links).toHaveLength(4);
+		expect(new Set(links.map((link) => link.href)).size).toBe(4);
+		expect(new Set(links.map((link) => link.label)).size).toBe(4);
 	});
 });
 
@@ -337,7 +330,9 @@ test.describe("Signal / Proof static shell @noscript", () => {
 				page.locator(".noscript-banner, .static-fallback-note"),
 			).toHaveCount(0);
 			if (route.path === "/") {
-				await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
+				await expect(
+					page.locator("[data-proof-placement]:visible"),
+				).toHaveCount(2);
 			}
 		});
 	}

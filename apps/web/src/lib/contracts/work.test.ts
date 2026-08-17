@@ -7,7 +7,7 @@ const validWork = {
 	slug: "cryo-flow-sim",
 	discipline: "simulation",
 	year: 2026,
-	featuredOrder: 1,
+	placement: "flagship",
 	lede: "A deterministic cryogenic flow simulation with auditable capture evidence.",
 	problem: "Make transient system behavior reproducible without live hardware.",
 	stakes: "Incorrect state transitions can misrepresent boundary behavior.",
@@ -69,10 +69,19 @@ describe("workSchema", () => {
 		expect(workSchema.safeParse(validWork).success).toBe(true);
 	});
 
-	it.each(["role", "evidence", "media"])("rejects missing %s", (field) => {
-		const candidate = structuredClone(validWork) as Record<string, unknown>;
-		delete candidate[field];
-		expect(workSchema.safeParse(candidate).success).toBe(false);
+	it.each(["placement", "role", "evidence", "media"])(
+		"rejects missing %s",
+		(field) => {
+			const candidate = structuredClone(validWork) as Record<string, unknown>;
+			delete candidate[field];
+			expect(workSchema.safeParse(candidate).success).toBe(false);
+		},
+	);
+
+	it("rejects unknown placement values", () => {
+		expect(
+			workSchema.safeParse({ ...validWork, placement: "featured" }).success,
+		).toBe(false);
 	});
 
 	it.each(["label", "summary", "values", "scope", "limits"])(

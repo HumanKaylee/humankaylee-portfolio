@@ -12,16 +12,25 @@ type WorkEntry = CollectionEntry<"work">;
 const publishedWork = ((await getCollection("work")) as WorkEntry[]).filter(
 	(entry) => entry.data.publicationStatus === "publish",
 );
-const featuredWork = publishedWork
-	.filter((entry) => entry.data.featuredOrder !== undefined)
-	.sort(
-		(left, right) =>
-			(left.data.featuredOrder ?? Number.MAX_SAFE_INTEGER) -
-			(right.data.featuredOrder ?? Number.MAX_SAFE_INTEGER),
-	);
-const supportingWork = publishedWork
-	.filter((entry) => entry.data.featuredOrder === undefined)
+const flagshipWork = publishedWork
+	.filter((entry) => entry.data.placement === "flagship")
 	.sort((left, right) => left.data.title.localeCompare(right.data.title));
+const supportingWork = publishedWork
+	.filter((entry) => entry.data.placement === "supporting")
+	.sort((left, right) => left.data.title.localeCompare(right.data.title));
+const archiveWork = publishedWork
+	.filter((entry) => entry.data.placement === "archive")
+	.sort((left, right) => left.data.title.localeCompare(right.data.title));
+
+if (
+	flagshipWork.length !== 1 ||
+	supportingWork.length !== 1 ||
+	archiveWork.length !== 2
+) {
+	throw new Error(
+		`Work hierarchy requires one flagship, one supporting demonstration, and two archive entries; found ${flagshipWork.length}, ${supportingWork.length}, and ${archiveWork.length}.`,
+	);
+}
 ---
 
 <BaseLayout
@@ -35,20 +44,20 @@ const supportingWork = publishedWork
 			<p class="work-index__kicker">Selected work</p>
 			<h1>Systems made legible through proof.</h1>
 			<p>
-				Three engineering stories about simulation, configuration drift, and
-				recovery—each framed by the decisions, evidence, and limits that make
-				the result trustworthy.
+				A flagship simulation, a working browser demonstration, and an
+				operational archive. Each stays framed by the decisions, evidence, and
+				limits that make the result trustworthy.
 			</p>
 		</header>
 
-		<section data-featured-work aria-labelledby="featured-work-title">
+		<section data-flagship-work aria-labelledby="flagship-work-title">
 			<header class="work-index__section-header">
-				<p>01—03</p>
-				<p id="featured-work-title" class="featured-work-label">Flagship work</p>
+				<p>01</p>
+				<p id="flagship-work-title" class="featured-work-label">Flagship work</p>
 			</header>
 			<div class="featured-work-list">
 				{
-					featuredWork.map((work, index) => (
+					flagshipWork.map((work, index) => (
 						<article class="featured-work">
 							<div class="featured-work__copy">
 								<p class="featured-work__meta">
@@ -98,10 +107,44 @@ const supportingWork = publishedWork
 						<article>
 							<p>{work.data.discipline}</p>
 							<h2>
-								<a href={`/work/${work.data.slug}/`}>{work.data.title}</a>
+								<a
+									data-touch-target="true"
+									href={`/work/${work.data.slug}/`}
+								>
+									{work.data.title}
+								</a>
 							</h2>
 							<p>{work.data.lede}</p>
 							<strong>{work.data.evidence.summary}</strong>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section data-archive-work aria-labelledby="archive-work-title">
+			<header class="work-index__section-header">
+				<p>Operational archive</p>
+				<h2 id="archive-work-title">Additional systems and recovery work.</h2>
+			</header>
+			<div class="archive-work-list">
+				{
+					archiveWork.map((work) => (
+						<article>
+							<p>{work.data.discipline}</p>
+							<h3>
+								<a
+									data-touch-target="true"
+									href={`/work/${work.data.slug}/`}
+								>
+									{work.data.title}
+								</a>
+							</h3>
+							<p>{work.data.lede}</p>
+							<p class="archive-work__evidence">
+								<strong>{work.data.evidence.label}</strong>
+								<span>{work.data.evidence.summary}</span>
+							</p>
 						</article>
 					))
 				}
@@ -128,7 +171,9 @@ const supportingWork = publishedWork
 	.work-index__section-header > p,
 	.featured-work__meta,
 	.featured-work dt,
-	.supporting-work-list article > p:first-child {
+	.supporting-work-list article > p:first-child,
+	.archive-work-list article > p:first-child,
+	.archive-work__evidence strong {
 		color: var(--color-muted);
 		font-family: var(--font-evidence);
 		font-size: 0.72rem;
@@ -212,14 +257,63 @@ const supportingWork = publishedWork
 		padding-left: var(--space-3);
 	}
 
+	[data-supporting-work],
+	[data-archive-work] {
+		padding-top: var(--space-6);
+	}
+
+	.archive-work-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		border-bottom: 1px solid var(--line);
+	}
+
+	.archive-work-list article {
+		display: grid;
+		align-content: start;
+		gap: var(--space-3);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.archive-work-list article:nth-child(odd) {
+		padding-right: var(--space-5);
+	}
+
+	.archive-work-list article:nth-child(even) {
+		border-left: 1px solid var(--line);
+		padding-left: var(--space-5);
+	}
+
+	.archive-work-list h3 {
+		font-size: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	.archive-work-list article > p:not(:first-child),
+	.archive-work__evidence span {
+		color: var(--color-muted);
+	}
+
+	.archive-work__evidence {
+		display: grid;
+		gap: var(--space-1);
+	}
+
 	@media (max-width: 62rem) {
 		.featured-work,
-		.supporting-work-list article {
+		.supporting-work-list article,
+		.archive-work-list {
 			grid-template-columns: minmax(0, 1fr);
 		}
 
 		.supporting-work-list article > strong {
 			grid-column: auto;
+		}
+
+		.archive-work-list article:nth-child(odd),
+		.archive-work-list article:nth-child(even) {
+			border-left: 0;
+			padding-inline: 0;
 		}
 	}
 </style>

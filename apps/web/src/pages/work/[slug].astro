@@ -16,16 +16,19 @@ type WorkEntry = CollectionEntry<"work">;
 type WorkDecision = WorkEntryData["decisions"][number];
 
 export async function getStaticPaths() {
+	const placementOrder: Record<string, number> = {
+		flagship: 0,
+		supporting: 1,
+		archive: 2,
+	};
 	const publishedWork = ((await getCollection("work")) as WorkEntry[])
 		.filter((entry) => entry.data.publicationStatus === "publish")
-		.sort((left, right) => {
-			const leftOrder = left.data.featuredOrder ?? Number.MAX_SAFE_INTEGER;
-			const rightOrder = right.data.featuredOrder ?? Number.MAX_SAFE_INTEGER;
-			return (
-				leftOrder - rightOrder ||
-				left.data.title.localeCompare(right.data.title)
-			);
-		});
+		.sort(
+			(left, right) =>
+				placementOrder[left.data.placement] -
+					placementOrder[right.data.placement] ||
+				left.data.title.localeCompare(right.data.title),
+		);
 
 	return publishedWork.map((work, index) => ({
 		params: { slug: work.data.slug },

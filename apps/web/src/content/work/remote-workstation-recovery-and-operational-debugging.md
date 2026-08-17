@@ -3,7 +3,7 @@ title: "Remote Workstation Recovery"
 slug: "remote-workstation-recovery-and-operational-debugging"
 discipline: "reliability"
 year: 2026
-featuredOrder: 3
+placement: "archive"
 lede: "A practical recovery workflow for a remote workstation that looked broken from the outside but needed targeted triage, not blanket resets."
 problem: "Remote access, CLI startup, and session handling can fail in ways that look systemic even when the issue is local to one account, socket, or stale process."
 stakes: "Fast, accurate diagnosis matters because unnecessary resets and shared-state changes increase downtime and make later recovery harder."

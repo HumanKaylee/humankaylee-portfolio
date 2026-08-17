@@ -61,7 +61,7 @@ const validWork = {
 	slug: "cryo-flow-sim",
 	discipline: "simulation",
 	year: 2026,
-	featuredOrder: 1,
+	placement: "flagship",
 	lede: "A deterministic cryogenic flow simulation.",
 	problem: "Make transient behavior reproducible without live hardware.",
 	stakes: "Incorrect state transitions can misrepresent boundary behavior.",

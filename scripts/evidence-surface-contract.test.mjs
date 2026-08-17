@@ -4,8 +4,10 @@ import { test } from "node:test";
 
 const files = {
 	evidenceStrip: "apps/web/src/components/EvidenceStrip.astro",
+	capabilityMatrix: "apps/web/src/components/CapabilityMatrix.astro",
 	home: "apps/web/src/pages/index.astro",
 	mediaFrame: "apps/web/src/components/MediaFrame.astro",
+	proofGallery: "apps/web/src/components/ProofGallery.astro",
 	projectStage: "apps/web/src/components/ProjectStage.astro",
 	workDetail: "apps/web/src/pages/work/[slug].astro",
 	workEvidenceFlow: "apps/web/src/components/WorkEvidenceFlow.astro",
@@ -18,19 +20,27 @@ function readRequiredFile(path) {
 	return content;
 }
 
-test("Signal / Proof surfaces bind claims to ProjectStage, EvidenceStrip, and real media", () => {
+test("Signal / Proof surfaces bind claims to ProofGallery, CapabilityMatrix, EvidenceStrip, and real media", () => {
 	const home = readRequiredFile(files.home);
-	const projectStage = readRequiredFile(files.projectStage);
+	const capabilityMatrix = readRequiredFile(files.capabilityMatrix);
 	const evidenceStrip = readRequiredFile(files.evidenceStrip);
 	const mediaFrame = readRequiredFile(files.mediaFrame);
+	const proofGallery = readRequiredFile(files.proofGallery);
 	const workDetail = readRequiredFile(files.workDetail);
 	const workEvidenceFlow = readRequiredFile(files.workEvidenceFlow);
 
-	assert.match(home, /<ProjectStage projects=\{flagships\}/);
+	assert.match(home, /<ProofGallery projects=\{homepageProof\}/);
+	assert.match(home, /<CapabilityMatrix records=\{capabilityProof\}/);
 	assert.match(home, /<EvidenceStrip[\s\S]*Verified Cryogenic Flow evidence/);
-	assert.match(projectStage, /projects\.map/);
-	assert.match(projectStage, /<WorkRow project=\{project\}/);
-	assert.match(projectStage, /<MediaFrame media=\{project\.data\.media\}/);
+	assert.match(proofGallery, /projects\.map/);
+	assert.match(
+		proofGallery,
+		/data-proof-placement=\{project\.data\.placement\}/,
+	);
+	assert.match(proofGallery, /<MotionLoop loop=\{project\.data\.media\.loop\}/);
+	assert.match(proofGallery, /<MediaFrame media=\{project\.data\.media\}/);
+	assert.match(capabilityMatrix, /records\.map/);
+	assert.match(capabilityMatrix, /data-capability-proof/);
 	assert.match(evidenceStrip, /<dl>/);
 	assert.match(evidenceStrip, /items\.map/);
 

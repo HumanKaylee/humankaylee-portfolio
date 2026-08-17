@@ -133,7 +133,7 @@ test("B-055 runbook route matrix stays aligned with executable Signal / Proof re
 		documentedResponsiveRoutes(runbook),
 		expectedResponsiveRoutes,
 	);
-	assert.match(runbook, /ProjectStage/);
+	assert.match(runbook, /ProofGallery/);
 	assert.match(runbook, /Black-Scholes/);
 	assert.doesNotMatch(
 		runbook,

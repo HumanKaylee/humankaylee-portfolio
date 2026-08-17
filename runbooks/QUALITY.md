@@ -16,7 +16,7 @@ diagnosable.
 ## Local checks
 
 - `pnpm test:e2e -- --grep "@keyboard"` verifies keyboard reachability for
-  primary navigation, ProjectStage Work links, résumé access, and direct
+  primary navigation, ProofGallery Work links, résumé access, and direct
   contact channels.
 - `pnpm test:e2e -- --grep "@accessibility"` runs Axe against the public route
   set and fails on serious or critical findings.
@@ -29,15 +29,15 @@ diagnosable.
 - `pnpm test:e2e -- --grep "@static-shell|@visual-surfaces"` verifies core
   static shell and art-directed surface coverage, including notes/build-log
   index and detail routes, as local QA evidence only. The gate requires
-  meaningful static HTML, ProjectStage, EvidenceStrip, real media, current Work
-  routes, and the flat Signal / Proof visual surface.
+  meaningful static HTML, ProofGallery, CapabilityMatrix, EvidenceStrip, real
+  media, current Work routes, and the flat Signal / Proof visual surface.
 - `pnpm test:e2e -- --grep "@quality"` runs the static quality matrix:
   no-JavaScript, reduced-motion, privacy, route, and accessibility checks on
   the launch routes.
 - `runbooks/ACCESSIBILITY_AUDIT.md` records the B-048 page-by-page checklist and
   the local/CI evidence boundary.
 - `runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md` records B-049 reduced-motion,
-  no-WebGL, static ProjectStage, and current platform screenshot evidence.
+  no-WebGL, static ProofGallery, and current platform screenshot evidence.
 - `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs` keeps
   those artifacts tied to backlog and launch evidence.
 - `node scripts/lighthouse-local.mjs --dry-run` prints the B-050 audit plan with

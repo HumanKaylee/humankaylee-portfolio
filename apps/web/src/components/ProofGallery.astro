@@ -1,0 +1,169 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import MediaFrame from "./MediaFrame.astro";
+import MotionLoop from "./MotionLoop.astro";
+import WorkEvidenceFlow from "./WorkEvidenceFlow.astro";
+
+type Props = {
+	projects: CollectionEntry<"work">[];
+};
+
+const { projects } = Astro.props;
+---
+
+<section class="proof-gallery" aria-labelledby="selected-proof-title">
+	<header class="proof-gallery__header">
+		<p class="section-kicker">Selected proof</p>
+		<h2 id="selected-proof-title">A flagship system, backed by working software.</h2>
+		<p>
+			The lead case study carries measured motion evidence. A smaller browser
+			demonstration shows the same preference for explicit boundaries.
+		</p>
+	</header>
+	<div class="proof-gallery__list">
+		{
+			projects.map((project, index) => (
+				<article
+					class="proof-gallery__item"
+					data-proof-placement={project.data.placement}
+				>
+					<div class="proof-gallery__copy">
+						<p class="proof-gallery__meta">
+							<span>{String(index + 1).padStart(2, "0")}</span>
+							<span>{project.data.placement}</span>
+							<span>{project.data.discipline}</span>
+						</p>
+						<h3>
+							<a
+								data-touch-target="true"
+								href={`/work/${project.data.slug}/`}
+							>
+								{project.data.title}
+							</a>
+						</h3>
+						<p>{project.data.lede}</p>
+						<p class="proof-gallery__evidence">
+							<strong>{project.data.evidence.label}</strong>
+							<span>{project.data.evidence.summary}</span>
+						</p>
+						<a
+							class="signal-link"
+							data-touch-target="true"
+							href={`/work/${project.data.slug}/`}
+						>
+							Read the case study
+						</a>
+					</div>
+				<div class="proof-gallery__media">
+					{project.data.media.loop ? (
+						<MotionLoop loop={project.data.media.loop} />
+					) : (
+						<MediaFrame media={project.data.media}>
+							<WorkEvidenceFlow work={project} />
+						</MediaFrame>
+					)}
+				</div>
+				</article>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.proof-gallery {
+		display: grid;
+		gap: var(--space-5);
+		padding-block: var(--space-6);
+	}
+
+	.proof-gallery__header {
+		display: grid;
+		grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr) minmax(16rem, 0.55fr);
+		gap: var(--space-4);
+		align-items: end;
+	}
+
+	.proof-gallery__header .section-kicker,
+	.proof-gallery__header > p:last-child,
+	.proof-gallery__meta,
+	.proof-gallery__copy > p:not(.proof-gallery__meta, .proof-gallery__evidence) {
+		color: var(--color-muted);
+	}
+
+	.proof-gallery__header h2 {
+		font-size: clamp(2rem, 4.5vw, 4.5rem);
+	}
+
+	.proof-gallery__list {
+		display: grid;
+	}
+
+	.proof-gallery__item {
+		display: grid;
+		grid-template-columns: minmax(0, 0.82fr) minmax(22rem, 1.18fr);
+		gap: clamp(2rem, 5vw, 6rem);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.proof-gallery__item[data-proof-placement="supporting"] {
+		grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.8fr);
+	}
+
+	.proof-gallery__copy {
+		display: grid;
+		align-content: start;
+		gap: var(--space-4);
+	}
+
+	.proof-gallery__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.proof-gallery__copy h3 {
+		font-size: clamp(2rem, 4.5vw, 4.4rem);
+	}
+
+	.proof-gallery__evidence {
+		display: grid;
+		gap: var(--space-1);
+		border-left: 0.25rem solid var(--color-signal);
+		padding-left: var(--space-3);
+	}
+
+	.proof-gallery__evidence strong {
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.proof-gallery__media {
+		min-width: 0;
+		align-self: start;
+		overflow: hidden;
+		border: 1px solid var(--line);
+		border-radius: var(--radius-media);
+		background: var(--color-media);
+	}
+
+	.proof-gallery__media :global(.media-frame) {
+		border: 0;
+		border-radius: 0;
+	}
+
+	@media (width <= 64rem) {
+		.proof-gallery__header,
+		.proof-gallery__item,
+		.proof-gallery__item[data-proof-placement="supporting"] {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

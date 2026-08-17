@@ -15,27 +15,21 @@ function toMilliseconds(duration: string) {
 }
 
 test.describe("purposeful motion @motion", () => {
-	test("presents the complete project-stage state immediately for reduced-motion users", async ({
+	test("presents complete proof without loading motion media for reduced-motion users", async ({
 		page,
 	}) => {
 		await page.emulateMedia({ reducedMotion: "reduce" });
 		await page.goto("/");
 
-		const stage = page.locator("[data-project-stage]");
 		const transitionDurations = await page
-			.locator("[data-stage-panel]")
-			.evaluateAll((panels) =>
-				panels.map((panel) => getComputedStyle(panel).transitionDuration),
+			.locator("[data-proof-placement]")
+			.evaluateAll((items) =>
+				items.map((item) => getComputedStyle(item).transitionDuration),
 			);
 
-		await expect(stage).toHaveAttribute("data-enhanced", "true");
-		await expect(stage).toHaveCSS("scroll-behavior", "auto");
-		await expect(
-			page.locator('[data-stage-trigger][aria-current="true"]'),
-		).toHaveCount(1);
-		await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(
-			1,
-		);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(2);
+		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
+		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);
 		expect(
 			transitionDurations.every((duration) =>
 				duration.split(",").every((value) => toMilliseconds(value) <= 0.001),
@@ -94,24 +88,22 @@ test.describe("purposeful motion @motion", () => {
 test.describe("purposeful motion @motion @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 
-	test("keeps every project proof visible and linked without JavaScript", async ({
+	test("keeps selected proof visible and linked without JavaScript", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 1440, height: 1000 });
 		await page.goto("/");
 
-		await expect(page.locator("[data-project-stage]")).not.toHaveAttribute(
-			"data-enhanced",
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(2);
+		await expect(page.locator("[data-capability-proof]:visible")).toHaveCount(
+			6,
 		);
-		await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
-		await expect(page.locator(".work-row")).toHaveCount(3);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
-		for (const href of [
-			"/work/cryo-flow-sim/",
-			"/work/cli-fleet-synchronization-and-mcp-rollout/",
-			"/work/remote-workstation-recovery-and-operational-debugging/",
-		]) {
+		for (const href of ["/work/cryo-flow-sim/", "/work/black-scholes-wasm/"]) {
 			await expect(page.locator(`a[href="${href}"]`).first()).toBeVisible();
 		}
+		await expect(page.locator("main")).not.toContainText(
+			/CLI Fleet Synchronization|Remote Workstation Recovery/,
+		);
 	});
 });

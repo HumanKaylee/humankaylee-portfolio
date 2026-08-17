@@ -35,7 +35,7 @@ async function stabilizeFallbackView(page: Page) {
 }
 
 test.describe("Signal / Proof no-WebGL behavior @no-webgl", () => {
-	test("keeps the complete static ProjectStage and authentic media without WebGL", async ({
+	test("keeps the complete proof gallery and authentic media without WebGL", async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 1440, height: 1100 });
@@ -48,18 +48,16 @@ test.describe("Signal / Proof no-WebGL behavior @no-webgl", () => {
 		expect(response?.status()).toBe(200);
 		await page.waitForLoadState("networkidle");
 
-		await expect(page.locator(".project-stage")).toBeVisible();
-		await expect(page.locator(".work-row")).toHaveCount(3);
-		await expect(page.locator("[data-stage-panel]")).toHaveCount(3);
+		await expect(page.locator(".proof-gallery")).toBeVisible();
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(2);
+		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
 		await expect(page.locator("script[src*='constellation']")).toHaveCount(0);
-		await expect(
-			page
-				.getByRole("img", {
-					name: /Cryogenic flow simulation dashboard/i,
-				})
-				.first(),
-		).toBeVisible();
+		await expect(page.locator("[data-motion-video]").first()).toHaveAttribute(
+			"aria-label",
+			/Cryogenic flow dashboard showing coordinated valve travel/i,
+		);
+		await expect(page.locator("[data-motion-video]").first()).toBeVisible();
 		await expect(
 			page.getByRole("link", { name: /Cryogenic Flow Simulation/i }).first(),
 		).toHaveAttribute("href", "/work/cryo-flow-sim/");

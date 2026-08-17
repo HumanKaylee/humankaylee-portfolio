@@ -51,7 +51,7 @@ Each label produces `<label>-desktop-<platform>.png` and
 
 | Label | Public route | Readiness boundary |
 | --- | --- | --- |
-| `home` | `/` | Home heading and ProjectStage are visible |
+| `home` | `/` | Home heading, ProofGallery, and CapabilityMatrix are visible |
 | `work` | `/work/` | Work index heading is visible |
 | `work-cryo` | `/work/cryo-flow-sim/` | Cryogenic proof surface is visible |
 | `work-cli-fleet` | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof surface is visible |

@@ -8,9 +8,9 @@ Status: local and CI evidence only; not production launch evidence
 
 This runbook records the release evidence for motion-sensitive, no-JavaScript,
 and no-WebGL contexts. Public comprehension must never depend on animation, a
-GPU context, video playback, or a backend request. ProjectStage, WorkRow,
-EvidenceStrip, native links, and authentic media provide the complete static
-reading path.
+GPU context, video playback, or a backend request. ProofGallery,
+CapabilityMatrix, EvidenceStrip, native links, and authentic media provide the
+complete static reading path.
 
 ## Commands
 
@@ -38,8 +38,8 @@ Run the dedicated no-WebGL behavior and screenshot gate:
 pnpm exec playwright test tests/e2e/no-webgl.spec.ts
 ```
 
-Refresh that screenshot only after inspecting an intentional ProjectStage
-change:
+Refresh that screenshot only after inspecting an intentional ProofGallery or
+CapabilityMatrix change:
 
 ```bash
 pnpm exec playwright test tests/e2e/no-webgl.spec.ts --update-snapshots
@@ -76,26 +76,29 @@ disables animations before every capture. Current Linux baselines include:
 
 Automated checks prove:
 
-- `.project-stage`, `.work-row`, and `[data-stage-panel]` content is complete
+- `[data-proof-placement]` and `[data-capability-proof]` content is complete
   immediately for reduced-motion users.
+- `[data-motion-video]` keeps its poster but receives no MP4 source when reduced
+  motion is requested.
 - Signal-link movement is suppressed when reduced motion is requested.
 - Route navigation uses native links and normal document scrolling.
-- Every Work proof remains visible without animation timing or enhancement
+- Every selected proof remains visible without animation timing or enhancement
   state.
 
 ## No-WebGL fallback evidence
 
-The release is HTML and CSS first. The homepage ProjectStage uses WorkRow,
-MediaFrame, and EvidenceStrip content without requesting a canvas, SVG scene,
-or GPU context. Work detail, résumé, Notes, About, and Static direct contact
-channels likewise remain usable with WebGL disabled.
+The release is HTML and CSS first. The homepage ProofGallery and
+CapabilityMatrix use MotionLoop, MediaFrame, and EvidenceStrip content without
+requesting a canvas, SVG scene, or GPU context. Work detail, résumé, Notes,
+About, and Static direct contact channels likewise remain usable with WebGL
+disabled.
 
 Current evidence:
 
-- `tests/e2e/no-webgl.spec.ts` disables WebGL and `navigator.gpu`, requires all
-  three Work rows and stage panels, requires authentic Cryogenic media and its
-  canonical `/work/cryo-flow-sim/` link, and positively requires the complete
-  static ProjectStage.
+- `tests/e2e/no-webgl.spec.ts` disables WebGL and `navigator.gpu`, requires both
+  selected proof records and all six capability records, requires authentic
+  Cryogenic media and its canonical `/work/cryo-flow-sim/` link, and positively
+  requires the complete static ProofGallery.
 - `no-webgl-signal-proof-home-linux.png` and
   `no-webgl-signal-proof-home-win32.png` are the current platform baselines.
 - `tests/e2e/static-shell.spec.ts` verifies meaningful HTML, normal Work links,
@@ -108,7 +111,7 @@ Current evidence:
 
 | Surface | Reduced motion | No-WebGL / low capability | Native scrolling | Evidence | Result |
 | --- | --- | --- | --- | --- | --- |
-| Home ProjectStage | All three stories are immediately visible | Static Work rows, stage panels, and authentic media remain complete | Normal page scroll and native Work links | `@motion`, `@no-webgl`, current visual baselines | Pass locally |
+| Home proof gallery | Flagship, supporting proof, and capabilities are immediately visible | Static proof records, capability records, and authentic media remain complete | Normal page scroll and native Work links | `@motion`, `@no-webgl`, current visual baselines | Pass locally |
 | Work index | No reveal timing is required | Published Work links and proof text are ordinary HTML | Native anchors and document flow | `@responsive`, `@noscript` | Pass locally |
 | Work detail | Reading progress is hidden for reduced motion | Narrative, EvidenceStrip, native media, and fallback links remain usable | Long-form document flow | `@work`, `@noscript` | Pass locally |
 | Résumé | Shared motion does not affect scan order | PDF link and print content require no GPU capability | Native links and print flow | résumé print and accessibility checks | Pass locally |

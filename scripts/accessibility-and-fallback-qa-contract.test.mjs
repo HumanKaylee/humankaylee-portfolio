@@ -5,12 +5,13 @@ import { test } from "node:test";
 const files = {
 	accessibilityRunbook: "runbooks/ACCESSIBILITY_AUDIT.md",
 	backlog: "docs/BACKLOG.md",
+	capabilityMatrix: "apps/web/src/components/CapabilityMatrix.astro",
 	contact: "apps/web/src/pages/contact/index.astro",
 	contactForm: "apps/web/src/components/ContactForm.astro",
 	evidence: "runbooks/LAUNCH_EVIDENCE.md",
 	fallbackRunbook: "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md",
 	noWebglSpec: "tests/e2e/no-webgl.spec.ts",
-	projectStage: "apps/web/src/components/ProjectStage.astro",
+	proofGallery: "apps/web/src/components/ProofGallery.astro",
 	retiredAtlasLoader: "apps/web/public/scripts/project-constellation.mjs",
 	quality: "runbooks/QUALITY.md",
 	qualitySpec: "tests/e2e/quality-gates.spec.ts",
@@ -121,7 +122,8 @@ test("B-048 accessibility audit has a dedicated artifact and checklist contract"
 		"/work/cryo-flow-sim/",
 		"/work/cli-fleet-synchronization-and-mcp-rollout/",
 		"/work/remote-workstation-recovery-and-operational-debugging/",
-		"ProjectStage",
+		"ProofGallery",
+		"CapabilityMatrix",
 		"EvidenceStrip",
 		"Static direct contact channels",
 	]) {
@@ -165,7 +167,8 @@ test("B-049 preserves rigorous static and no-WebGL evidence for Signal / Proof",
 	const evidence = readRequiredFile(files.evidence);
 	const fallback = readRequiredFile(files.fallbackRunbook);
 	const noWebglSpec = readRequiredFile(files.noWebglSpec);
-	const projectStage = readRequiredFile(files.projectStage);
+	const capabilityMatrix = readRequiredFile(files.capabilityMatrix);
+	const proofGallery = readRequiredFile(files.proofGallery);
 	const quality = readRequiredFile(files.quality);
 
 	expectContains(backlog, "### B-049: Add reduced-motion and no-WebGL QA pass");
@@ -190,11 +193,12 @@ test("B-049 preserves rigorous static and no-WebGL evidence for Signal / Proof",
 	);
 	expectContains(quality, "runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md");
 	for (const currentSurface of [
-		"ProjectStage",
+		"ProofGallery",
+		"CapabilityMatrix",
 		"EvidenceStrip",
-		".project-stage",
-		".work-row",
-		"[data-stage-panel]",
+		"[data-proof-placement]",
+		"[data-capability-proof]",
+		"[data-motion-video]",
 		"no-webgl-signal-proof-home-linux.png",
 		"work-desktop-linux.png",
 		"work-cryo-desktop-linux.png",
@@ -223,7 +227,8 @@ test("B-049 preserves rigorous static and no-WebGL evidence for Signal / Proof",
 	]) {
 		expectNotContains(quality, retiredQualitySurface);
 	}
-	expectContains(quality, "ProjectStage");
+	expectContains(quality, "ProofGallery");
+	expectContains(quality, "CapabilityMatrix");
 	expectContains(quality, "static direct channels");
 	expectContains(
 		quality,
@@ -234,23 +239,24 @@ test("B-049 preserves rigorous static and no-WebGL evidence for Signal / Proof",
 
 	for (const requirement of [
 		"@no-webgl",
-		".project-stage",
-		".work-row",
-		"[data-stage-panel]",
+		".proof-gallery",
+		"[data-proof-placement]",
+		"[data-capability-proof]",
 		'page.locator("canvas, svg")',
 		"script[src*='constellation']",
-		"Cryogenic flow simulation dashboard",
+		"Cryogenic flow dashboard showing coordinated valve travel",
 		"/work/cryo-flow-sim/",
 		"no-webgl-signal-proof-home",
 		"toHaveScreenshot",
 	]) {
 		expectContains(noWebglSpec, requirement);
 	}
-	expectContains(projectStage, "<MediaFrame");
-	expectContains(projectStage, "<WorkRow");
-	expectContains(projectStage, "data-stage-panel");
-	expectNotContains(projectStage, "ProjectAtlas");
-	expectNotContains(projectStage, "project-constellation.mjs");
+	expectContains(proofGallery, "<MotionLoop");
+	expectContains(proofGallery, "<MediaFrame");
+	expectContains(proofGallery, "data-proof-placement");
+	expectContains(capabilityMatrix, "data-capability-proof");
+	expectNotContains(proofGallery, "ProjectAtlas");
+	expectNotContains(proofGallery, "project-constellation.mjs");
 	assert.equal(
 		existsSync(files.retiredAtlasLoader),
 		false,

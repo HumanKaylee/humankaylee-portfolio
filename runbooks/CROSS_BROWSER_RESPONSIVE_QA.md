@@ -31,7 +31,7 @@ The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 
 | Public route | First-load behavior |
 | --- | --- |
-| `/` | Identity, ProjectStage proof, and selected-Work link |
+| `/` | Identity, ProofGallery evidence, capability proof, and selected-Work link |
 | `/work/` | Work index, flagship proof, and case-study link |
 | `/work/cryo-flow-sim/` | Cryogenic proof and authentic video path |
 | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof and next-Work path |
@@ -54,8 +54,8 @@ The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 
 The automated LinkedIn in-app mobile check is an approximation, not a real
 device-app certification. It disables JavaScript and uses a mobile viewport plus
-a LinkedIn-style user agent. The first load must retain the Home identity, all
-three ProjectStage panels, the selected-Work link, and a layout without
+a LinkedIn-style user agent. The first load must retain the Home identity, both
+selected ProofGallery records, the selected-Work link, and a layout without
 horizontal overflow.
 
 Real LinkedIn app validation remains a manual public-origin task. If the real

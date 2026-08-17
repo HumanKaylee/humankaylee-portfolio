@@ -1,56 +1,17 @@
 import AxeBuilder from "@axe-core/playwright";
 import { type Page, expect, test } from "@playwright/test";
 
-const flagshipHrefs = [
-	"/work/cryo-flow-sim/",
-	"/work/cli-fleet-synchronization-and-mcp-rollout/",
-	"/work/remote-workstation-recovery-and-operational-debugging/",
-] as const;
-
-const flagshipTitles = [
-	"Cryogenic Flow Simulation",
-	"CLI Fleet Synchronization",
-	"Remote Workstation Recovery",
-] as const;
-
 const internalHomepageCopy =
 	/fallback mode|API health|for recruiters|for engineers|launch readiness|deployment status|PR evidence|production launch/i;
 
-async function expectPairedProjectStage(page: Page) {
-	expect(
-		await page.locator("[data-stage-pair]").evaluateAll((pairs) =>
-			pairs.map((pair) => {
-				const trigger = pair.querySelector<HTMLElement>("[data-stage-trigger]");
-				const panel = pair.querySelector<HTMLElement>("[data-stage-panel]");
-				return {
-					trigger: trigger?.dataset.stageTrigger,
-					panel: panel?.dataset.stagePanel,
-					triggerRowFirst: pair.children[0]?.contains(trigger ?? null) ?? false,
-					panelImmediatelyAfterRow: pair.children[1] === panel,
-				};
-			}),
-		),
-	).toEqual([
-		{
-			trigger: "cryo-flow-sim",
-			panel: "cryo-flow-sim",
-			triggerRowFirst: true,
-			panelImmediatelyAfterRow: true,
-		},
-		{
-			trigger: "cli-fleet-synchronization-and-mcp-rollout",
-			panel: "cli-fleet-synchronization-and-mcp-rollout",
-			triggerRowFirst: true,
-			panelImmediatelyAfterRow: true,
-		},
-		{
-			trigger: "remote-workstation-recovery-and-operational-debugging",
-			panel: "remote-workstation-recovery-and-operational-debugging",
-			triggerRowFirst: true,
-			panelImmediatelyAfterRow: true,
-		},
-	]);
-}
+const capabilityLabels = [
+	"Simulation and controls",
+	"Rust and C++ systems",
+	"High-rate telemetry",
+	"Verification and validation",
+	"Distributed media",
+	"Human-in-the-loop agents",
+] as const;
 
 async function expectFirstViewportStory(
 	page: Page,
@@ -64,7 +25,7 @@ async function expectFirstViewportStory(
 	const heading = page.getByRole("heading", { level: 1 });
 	const value = page.locator(".home-hero__lede");
 	const workAction = page.getByRole("link", { name: "View selected work" });
-	const heroPoster = page.locator(".home-hero [data-video-poster] img");
+	const heroVideo = page.locator(".home-hero [data-motion-video]");
 
 	await expect(identity).toBeVisible();
 	await expect(role).toContainText("Joe Poznanski");
@@ -76,11 +37,15 @@ async function expectFirstViewportStory(
 		"I build high-fidelity simulation, telemetry, and operator-facing software across Rust, C++, distributed systems, and human-in-the-loop AI.",
 	);
 	await expect(workAction).toHaveAttribute("href", "/work/");
-	await expect(heroPoster).toHaveAttribute(
-		"alt",
-		/Cryogenic flow simulation dashboard/i,
+	await expect(heroVideo).toHaveAttribute(
+		"aria-label",
+		/Cryogenic flow dashboard showing coordinated valve travel/i,
 	);
-	await expect(heroPoster).toBeVisible();
+	await expect(heroVideo).toHaveAttribute(
+		"poster",
+		"/media/cryo-flow-sim-loop-960.webp",
+	);
+	await expect(heroVideo).toBeVisible();
 
 	for (const [label, element] of [
 		["identity", identity],
@@ -101,7 +66,7 @@ async function expectFirstViewportStory(
 		).toBeLessThanOrEqual(viewport.height);
 	}
 
-	const posterIntersection = await heroPoster.evaluate((element) => {
+	const mediaIntersection = await heroVideo.evaluate((element) => {
 		const rect = element.getBoundingClientRect();
 		const visibleWidth = Math.max(
 			0,
@@ -122,15 +87,15 @@ async function expectFirstViewportStory(
 	});
 
 	expect(
-		posterIntersection.visibleAreaRatio,
-		"at least 75% of the authentic poster is visible",
+		mediaIntersection.visibleAreaRatio,
+		"at least 75% of the authentic motion poster is visible",
 	).toBeGreaterThanOrEqual(0.75);
 	expect(
-		posterIntersection.visibleHeight,
+		mediaIntersection.visibleHeight,
 		"at least 160px of authentic poster height is visible",
 	).toBeGreaterThanOrEqual(160);
 	expect(
-		posterIntersection.visibleWidthRatio,
+		mediaIntersection.visibleWidthRatio,
 		"the authentic poster is not horizontally clipped",
 	).toBeGreaterThanOrEqual(0.95);
 	await expect(page.locator("main")).not.toContainText(internalHomepageCopy);
@@ -147,208 +112,38 @@ for (const viewport of [
 	});
 }
 
-test("progressively enhances exactly one approved flagship while retaining normal Work links", async ({
+test("leads with one flagship, one supporting proof, and no archive projects", async ({
 	page,
 }) => {
 	await page.goto("/");
 
-	const stage = page.locator("[data-project-stage]");
-	const triggers = page.locator("[data-stage-trigger]");
-	const panels = page.locator("[data-stage-panel]");
-
-	await expect(stage).toHaveAttribute("data-enhanced", "true");
-	await expect(triggers).toHaveCount(3);
-	await expect(triggers).toHaveText(flagshipTitles);
-	expect(
-		await triggers.evaluateAll((links) =>
-			links.map((link) => link.getAttribute("href")),
-		),
-	).toEqual(flagshipHrefs);
-	await expect(panels).toHaveCount(3);
-	expect(
-		await panels.evaluateAll((items) =>
-			items.map((panel) => panel.hasAttribute("hidden")),
-		),
-	).toEqual([false, true, true]);
-	expect(
-		await triggers.evaluateAll((links) =>
-			links.map((link) => link.getAttribute("aria-current")),
-		),
-	).toEqual(["true", "false", "false"]);
-	await expect(
-		page.locator('[data-stage-panel="cryo-flow-sim"] img'),
-	).toHaveAttribute("alt", /Cryogenic flow simulation dashboard/i);
-	await expect(
-		page.locator(
-			'[data-stage-panel="cli-fleet-synchronization-and-mcp-rollout"]',
-		),
-	).toContainText("Primary workstation account");
-	await expect(
-		page.locator(
-			'[data-stage-panel="remote-workstation-recovery-and-operational-debugging"]',
-		),
-	).toContainText("Reachability");
-	await expect(
-		page.locator("[data-project-stage] svg, [data-project-stage] canvas"),
-	).toHaveCount(0);
-});
-
-test("keeps project proof inline on mobile without an enhancement-only selection", async ({
-	page,
-}) => {
-	await page.setViewportSize({ width: 390, height: 844 });
-	await page.goto("/");
-
-	const stage = page.locator("[data-project-stage]");
-	const triggers = page.locator("[data-stage-trigger]");
-	const panels = page.locator("[data-stage-panel]");
-
-	await expect(stage).not.toHaveAttribute("data-enhanced");
-	await expect(triggers).toHaveCount(3);
-	expect(
-		await triggers.evaluateAll((links) =>
-			links.map((link) => link.getAttribute("href")),
-		),
-	).toEqual(flagshipHrefs);
-	await expect(panels).toHaveCount(3);
-	for (const panel of await panels.all()) {
-		await expect(panel).toBeVisible();
-	}
-	await expectPairedProjectStage(page);
-	expect(
-		await triggers.evaluateAll((links) =>
-			links.map((link) => link.hasAttribute("aria-current")),
-		),
-	).toEqual([false, false, false]);
-});
-
-test("restores inline project proof when the viewport leaves the enhancement mode", async ({
-	page,
-}) => {
-	await page.setViewportSize({ width: 1440, height: 1000 });
-	await page.goto("/");
-
-	const stage = page.locator("[data-project-stage]");
-	const panels = page.locator("[data-stage-panel]");
-
-	await expect(stage).toHaveAttribute("data-enhanced", "true");
-	await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(1);
-
-	await page.setViewportSize({ width: 390, height: 844 });
-	await expect(stage).not.toHaveAttribute("data-enhanced");
-	for (const panel of await panels.all()) {
-		await expect(panel).toBeVisible();
-	}
-	await expect(page.locator("[data-stage-trigger][aria-current]")).toHaveCount(
-		0,
+	const flagship = page.locator('[data-proof-placement="flagship"]');
+	const supporting = page.locator('[data-proof-placement="supporting"]');
+	await expect(flagship).toHaveCount(1);
+	await expect(supporting).toHaveCount(1);
+	await expect(flagship).toContainText("Cryogenic Flow Simulation");
+	await expect(supporting).toContainText(
+		"Black-Scholes Options Pricer in Rust and WASM",
 	);
-
-	await page.setViewportSize({ width: 1440, height: 1000 });
-	await expect(stage).toHaveAttribute("data-enhanced", "true");
 	await expect(
-		page.locator('[data-stage-trigger][aria-current="true"]'),
-	).toHaveCount(1);
-	await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(1);
-});
-
-test("selects a panel on pointer and keyboard focus while preserving normal link navigation", async ({
-	page,
-}) => {
-	await page.goto("/");
-
-	const fleet = page.locator(
-		'[data-stage-trigger="cli-fleet-synchronization-and-mcp-rollout"]',
+		flagship.getByRole("link", { name: "Cryogenic Flow Simulation" }),
+	).toHaveAttribute("href", "/work/cryo-flow-sim/");
+	await expect(
+		supporting.getByRole("link", {
+			name: "Black-Scholes Options Pricer in Rust and WASM",
+		}),
+	).toHaveAttribute("href", "/work/black-scholes-wasm/");
+	await expect(page.locator("main")).not.toContainText(
+		"CLI Fleet Synchronization",
 	);
-	const recovery = page.locator(
-		'[data-stage-trigger="remote-workstation-recovery-and-operational-debugging"]',
+	await expect(page.locator("main")).not.toContainText(
+		"Remote Workstation Recovery",
 	);
-	const selectedTriggers = page.locator(
-		'[data-stage-trigger][aria-current="true"]',
+	await expect(page.locator("[data-capability-proof] h3")).toHaveText(
+		capabilityLabels,
 	);
-	const visiblePanels = page.locator("[data-stage-panel]:not([hidden])");
-
-	await fleet.hover();
-	await expect(selectedTriggers).toHaveCount(1);
-	await expect(fleet).toHaveAttribute("aria-current", "true");
-	await expect(visiblePanels).toHaveCount(1);
-	await expect(
-		page.locator(
-			'[data-stage-panel="cli-fleet-synchronization-and-mcp-rollout"]',
-		),
-	).toBeVisible();
-
-	await recovery.focus();
-	expect(
-		await recovery.evaluate((trigger) => document.activeElement === trigger),
-	).toBe(true);
-	await expect(selectedTriggers).toHaveCount(1);
-	await expect(recovery).toHaveAttribute("aria-current", "true");
-	await expect(visiblePanels).toHaveCount(1);
-	await expect(
-		page.locator(
-			'[data-stage-panel="remote-workstation-recovery-and-operational-debugging"]',
-		),
-	).toBeVisible();
-
-	await Promise.all([
-		page.waitForURL(
-			"**/work/remote-workstation-recovery-and-operational-debugging/",
-		),
-		recovery.click(),
-	]);
-});
-
-test.describe("inline project proof for coarse pointers", () => {
-	test.use({ hasTouch: true });
-
-	test("leaves all panels visible even at desktop width", async ({ page }) => {
-		await page.setViewportSize({ width: 1440, height: 1000 });
-		await page.goto("/");
-
-		await expect(page.locator("[data-project-stage]")).not.toHaveAttribute(
-			"data-enhanced",
-		);
-		await expect(page.locator("[data-stage-panel]:not([hidden])")).toHaveCount(
-			3,
-		);
-		await expect(
-			page.locator("[data-stage-trigger][aria-current]"),
-		).toHaveCount(0);
-	});
-});
-
-test("uses the responsive Cryogenic Flow poster without loading homepage video playback", async ({
-	page,
-}) => {
-	await page.goto("/");
-
-	const sources = page.locator('[data-video-poster] source[type="image/webp"]');
-	await expect(sources).toHaveCount(2);
-	for (const source of await sources.all()) {
-		await expect(source).toHaveAttribute(
-			"srcset",
-			"/media/cryo-flow-sim-stage1-640.webp 640w, /media/cryo-flow-sim-stage1-960.webp 960w, /media/cryo-flow-sim-stage1-1440.webp 1440w",
-		);
-		await expect(source).toHaveAttribute(
-			"sizes",
-			"(max-width: 760px) 100vw, 50vw",
-		);
-	}
-
-	const posters = page.locator("[data-video-poster] img");
-	await expect(posters).toHaveCount(2);
-	for (const poster of await posters.all()) {
-		await expect(poster).toHaveAttribute("width", "1920");
-		await expect(poster).toHaveAttribute("height", "1080");
-		await expect(poster).toHaveAttribute(
-			"src",
-			"/media/cryo-flow-sim-stage1-1440.webp",
-		);
-	}
-	await expect(
-		page.locator('main img[src="/media/cryo-flow-sim-stage1-poster.png"]'),
-	).toHaveCount(0);
-	await expect(page.locator("main video")).toHaveCount(0);
+	await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
+	await expect(page.locator("canvas, svg")).toHaveCount(0);
 });
 
 test("stays static and useful during an API outage", async ({ page }) => {
@@ -359,8 +154,12 @@ test("stays static and useful during an API outage", async ({ page }) => {
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Principal engineer for simulation, controls, and operational software.",
 	);
-	await expect(page.locator("[data-stage-trigger]")).toHaveCount(3);
-	await expect(page.locator("[data-stage-panel]")).toHaveCount(3);
+	await expect(page.locator('[data-proof-placement="flagship"]')).toHaveCount(
+		1,
+	);
+	await expect(page.locator('[data-proof-placement="supporting"]')).toHaveCount(
+		1,
+	);
 	await expect(page.locator("main")).not.toContainText(
 		/Failed to fetch|ECONNREFUSED|TypeError:|API health/i,
 	);
@@ -369,26 +168,23 @@ test("stays static and useful during an API outage", async ({ page }) => {
 test.describe("static homepage without JavaScript", () => {
 	test.use({ javaScriptEnabled: false });
 
-	test("keeps every flagship link and panel readable in semantic order", async ({
+	test("keeps proof, poster descriptions, and links readable", async ({
 		page,
 	}) => {
 		await page.goto("/");
 
-		const triggers = page.locator("[data-stage-trigger]");
-		const panels = page.locator("[data-stage-panel]");
-
-		await expect(triggers).toHaveText(flagshipTitles);
-		expect(
-			await triggers.evaluateAll((links) =>
-				links.map((link) => link.getAttribute("href")),
-			),
-		).toEqual(flagshipHrefs);
-		await expect(panels).toHaveCount(3);
-		for (const panel of await panels.all()) {
-			await expect(panel).toBeVisible();
-		}
-		await expectPairedProjectStage(page);
-		await expect(page.locator("main video")).toHaveCount(0);
+		await expect(
+			page.locator('[data-proof-placement="flagship"]'),
+		).toBeVisible();
+		await expect(
+			page.locator('[data-proof-placement="supporting"]'),
+		).toBeVisible();
+		await expect(page.locator("[data-motion-loop]")).toHaveCount(2);
+		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(2);
+		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
+		await expect(page.locator("[data-motion-description]")).toHaveCount(2);
+		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);
+		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("main")).not.toContainText(internalHomepageCopy);
 	});
 });

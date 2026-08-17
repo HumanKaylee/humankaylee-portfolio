@@ -25,7 +25,7 @@ export const workSchema = z
 		slug: slugSchema,
 		discipline: z.enum(["simulation", "operations", "reliability", "tools"]),
 		year: z.number().int().min(2000).max(2100),
-		featuredOrder: z.number().int().positive().optional(),
+		placement: z.enum(["flagship", "supporting", "archive"]),
 		lede: z.string().min(1),
 		problem: z.string().min(1),
 		stakes: z.string().min(1),
