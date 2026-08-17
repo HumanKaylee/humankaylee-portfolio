@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { expect, test } from "@playwright/test";
 
 const workDetails = [
@@ -23,6 +25,16 @@ const workDetails = [
 	},
 ] as const;
 
+test("keeps responsive primary posters driven by Work record data", () => {
+	const mediaFrameSource = readFileSync(
+		"apps/web/src/components/MediaFrame.astro",
+		"utf8",
+	);
+
+	expect(mediaFrameSource).toContain("media.responsivePosterSources");
+	expect(mediaFrameSource).not.toMatch(/cryo-flow-sim-stage1-\d+\.webp/);
+});
+
 test.describe("Work detail routes @work @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 
@@ -47,6 +59,9 @@ test.describe("Work detail routes @work @noscript", () => {
 			await expect(page.locator("body")).toHaveAttribute(
 				"data-enhancement",
 				"static-first",
+			);
+			await expect(page.locator("[data-case-study-media-gallery]")).toHaveCount(
+				0,
 			);
 		});
 	}

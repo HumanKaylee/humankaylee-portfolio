@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 import BlackScholesDemo from "../../components/BlackScholesDemo.astro";
+import CaseStudyMediaGallery from "../../components/CaseStudyMediaGallery.astro";
 import CaseStudySection from "../../components/CaseStudySection.astro";
 import EvidenceStrip from "../../components/EvidenceStrip.astro";
 import MediaFrame from "../../components/MediaFrame.astro";
@@ -186,6 +187,8 @@ const structuredData = {
 				</div>
 			</dl>
 		</CaseStudySection>
+
+		<CaseStudyMediaGallery items={data.evidenceMedia} />
 
 		<CaseStudySection id="reflection" title="Reflection">
 			<p>{data.outcome}</p>

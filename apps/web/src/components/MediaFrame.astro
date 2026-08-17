@@ -8,6 +8,11 @@ type Props = {
 };
 
 const { media, playback = false } = Astro.props;
+const responsivePosterSrcset = media.responsivePosterSources
+	?.slice()
+	.sort((left, right) => left.width - right.width)
+	.map((source) => `${source.src} ${source.width}w`)
+	.join(", ");
 ---
 
 <figure class="media-frame" data-media-kind={media.kind}>
@@ -16,11 +21,13 @@ const { media, playback = false } = Astro.props;
 			<MotionLoop loop={media.loop} />
 		) : media.kind === "video" && !playback ? (
 			<picture class="media-poster" data-video-poster>
-				<source
-					type="image/webp"
-					srcset="/media/cryo-flow-sim-stage1-640.webp 640w, /media/cryo-flow-sim-stage1-960.webp 960w, /media/cryo-flow-sim-stage1-1440.webp 1440w"
-					sizes="(max-width: 760px) 100vw, 50vw"
-				/>
+				{responsivePosterSrcset ? (
+					<source
+						type="image/webp"
+						srcset={responsivePosterSrcset}
+						sizes="(max-width: 760px) 100vw, 50vw"
+					/>
+				) : null}
 				<img
 					src={media.poster}
 					width={media.width}
