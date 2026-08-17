@@ -3,7 +3,8 @@ import { expect, test } from "@playwright/test";
 const outageRoutes = [
 	{
 		path: "/",
-		heading: /Principal engineer for systems that cannot drift/i,
+		heading:
+			/Principal engineer for simulation, controls, and operational software/i,
 		marker: /Selected work/i,
 		link: { name: /View selected work/i, href: "/work/" },
 	},

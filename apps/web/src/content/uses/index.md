@@ -33,25 +33,21 @@ sections:
   - label: "AI-assisted development"
     items:
       - name: "Claude Code CLI"
-        why: "Primary AI pair-programmer for complex multi-file changes, agent swarm orchestration, and anything that benefits from deep codebase context."
+        why: "Used for context-aware multi-file analysis and implementation, with human review and repository checks defining the acceptance boundary."
       - name: "Codex CLI"
-        why: "Complementary agent runtime for tasks that benefit from a parallel execution lane or a different model's reasoning style."
+        why: "Used for bounded implementation and verification tasks where the work can be inspected against explicit tests and evidence."
       - name: "Agent swarm patterns"
-        why: "Independent tasks run in parallel lanes with explicit halt-state contracts, SHA sidecar verification, and orphan-runner detection. The overhead pays for itself on anything spanning more than 5 files."
+        why: "Independent work can run in parallel lanes when each lane has a clear owner, acceptance criteria, and independently verifiable output."
   - label: "Infrastructure"
     items:
       - name: "Cloudflare Pages"
         why: "Static frontend hosting with a global CDN. The build and deployment path stays simple and keeps the primary portfolio routes static-first."
-      - name: "Fly.io"
-        why: "Hosts a small optional API enhancement while the public site remains useful without it."
       - name: "GitHub Actions"
         why: "CI/CD for the monorepo. The pipeline runs Vitest, TypeScript checks, Playwright, and cargo test before any merge."
-      - name: "SQLite"
-        why: "A practical transactional database for local tooling and data pipelines where a simple deployment model is the right fit."
   - label: "CLI tooling"
     items:
       - name: "ripgrep (rg)"
-        why: "5-10x faster than grep on large repos. Respects .gitignore by default. The single biggest productivity uplift in the 2026-04-28 tooling rollout."
+        why: "Fast repository-scale text search with .gitignore-aware defaults and predictable command-line output."
       - name: "fd"
         why: "Replaces find with sane defaults and gitignore awareness. The syntax is intuitive enough to use without consulting the man page."
       - name: "bat, delta, lazygit"
@@ -69,11 +65,9 @@ it solves a real problem I had before, not when it trends on Hacker News. Most o
 the CLI tools here were added in a single deliberate rollout after auditing actual
 bottlenecks, not accumulated one-by-one over years of reading newsletters.
 
-**AI pair-programming is default-on.** Claude Code CLI is open for most coding
-sessions. The agent context window and file access make it genuinely useful for
-the kind of multi-file, multi-layer changes that used to require a whiteboard.
-The key shift is treating it as a pair-programmer with a persistent codebase
-understanding, not a code-completion widget.
+**AI work is evidence-bounded.** Agent tools are useful for multi-file analysis,
+implementation, and verification when the task has explicit acceptance criteria.
+Human review, repository checks, and live behavior remain the completion gate.
 
 **The Rust/Python/TypeScript split is intentional.** Rust owns anything where
 correctness and performance matter at the boundary: APIs, WASM, CLI tools with

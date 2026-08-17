@@ -44,7 +44,7 @@ export const resumeContent = {
 			aboutRole: "Senior Simulation / Aerospace Operations Software Engineer",
 			aboutDates: "2022–2025",
 			bullets: [
-				"Invented a Rust-based “Simulated Avionics Layer” streaming 500k+ telemetry signals (~5 GB/s) from a single server, cutting hardware spend $1.2M and integration labor 60%.",
+				"Built a Rust-based Simulated Avionics Layer delivering 500k+ telemetry signals at greater than 10 Hz from a single 32-core server. Maintained control-loop jitter below 1 ms at 100 Hz.",
 				"Automated test & compliance: Python/pytest + GitLab CI running 800+ unit/functional/HIL tests nightly, auto-generating DO-178C / AS9100 evidence; regression cycles 3 days → 2 hours.",
 				"Shipped the first-gen Operations Training Simulator (MVP in 18 months); trainee setup time −70%, NPS 93/100.",
 			],

@@ -13,8 +13,8 @@ constraints:
   - "No live hardware dependency; the simulation must run entirely from a Rust service with a browser-rendered UI."
   - "The capture pipeline must verify its own output with measurable thresholds, not just visual inspection."
 architecture:
-  overview: "A Rust workspace drives three crates: cryo-core owns the physics domain model, cryo-service exposes an Axum HTTP layer, and cryo-web serves the Three.js dashboard. Playwright orchestrates the Stage 1 capture scenario and validates the artifact."
-  diagramAlt: "A three-crate Rust workspace with a physics core, Axum service layer, and browser-rendered Three.js dashboard captured by a Playwright scenario harness."
+  overview: "A Rust workspace drives three crates: cryo-core owns the physics domain model, cryo-service exposes an Axum HTTP layer, and cryo-web serves the browser-rendered SVG/HTML/CSS dashboard. Playwright orchestrates the Stage 1 capture scenario and validates the artifact."
+  diagramAlt: "A three-crate Rust workspace with a physics core, Axum service layer, and browser-rendered SVG/HTML/CSS dashboard captured by a Playwright scenario harness."
 decisions:
   - title: "Fixed-seed capture"
     choice: "Drive the Stage 1 scenario from a fixed seed and scenario name."
@@ -128,7 +128,7 @@ The Rust workspace separates concerns into three crates:
 - **cryo-service** exposes an Axum HTTP layer that drives cryo-core and streams
   telemetry state to the browser. All responses are typed with serde so the
   dashboard never deserializes unverified data.
-- **cryo-web** renders the live dashboard in Three.js, sampling screenshots on
+- **cryo-web** renders the live dashboard in SVG, HTML, and CSS, sampling screenshots on
   a fixed interval so the capture harness has a reliable visual trace to work
   from.
 
@@ -176,7 +176,7 @@ of seeds first and derive threshold ranges from the distribution, so a
 regression is detectable without a known-good baseline run as the only
 reference point.
 
-The Three.js dashboard screenshots could also be generated at a lower
+The SVG/HTML/CSS dashboard screenshots could also be generated at a lower
 resolution for the poster use case, rather than downscaling the 1920x1080
 capture after the fact. That would reduce the poster asset size without a
 separate conversion step.

@@ -70,10 +70,10 @@ async function expectFirstViewportStory(
 	await expect(role).toContainText("Joe Poznanski");
 	await expect(role).toContainText("Principal Software Engineer");
 	await expect(heading).toHaveText(
-		"Principal engineer for systems that cannot drift.",
+		"Principal engineer for simulation, controls, and operational software.",
 	);
 	await expect(value).toHaveText(
-		"I turn ambiguous operational problems into reliable software, from simulation and infrastructure to automation and recovery.",
+		"I build high-fidelity simulation, telemetry, and operator-facing software across Rust, C++, distributed systems, and human-in-the-loop AI.",
 	);
 	await expect(workAction).toHaveAttribute("href", "/work/");
 	await expect(heroPoster).toHaveAttribute(
@@ -357,7 +357,7 @@ test("stays static and useful during an API outage", async ({ page }) => {
 
 	expect(response?.status()).toBe(200);
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-		"Principal engineer for systems that cannot drift.",
+		"Principal engineer for simulation, controls, and operational software.",
 	);
 	await expect(page.locator("[data-stage-trigger]")).toHaveCount(3);
 	await expect(page.locator("[data-stage-panel]")).toHaveCount(3);

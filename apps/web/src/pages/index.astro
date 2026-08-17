@@ -31,9 +31,9 @@ if (flagships.length !== 3) {
 const cryogenicFlow = flagships[0];
 ---
 
-<BaseLayout
+	<BaseLayout
 	title="Joe Poznanski | Principal Engineer"
-	description="Principal engineer for systems that cannot drift, from simulation and infrastructure to automation and recovery."
+	description="Principal engineer for simulation, controls, and operational software."
 	canonicalPath="/"
 	ogImage={routeInventoryById.home.seo.ogImage}
 >
@@ -41,10 +41,13 @@ const cryogenicFlow = flagships[0];
 		<section class="home-hero" aria-labelledby="hero-title">
 			<div class="home-hero__copy">
 				<p class="section-kicker">Joe Poznanski · Principal Software Engineer</p>
-				<h1 id="hero-title">Principal engineer for systems that cannot drift.</h1>
+				<h1 id="hero-title">
+					Principal engineer for simulation, controls, and operational software.
+				</h1>
 				<p class="home-hero__lede">
-					I turn ambiguous operational problems into reliable software, from
-					simulation and infrastructure to automation and recovery.
+					I build high-fidelity simulation, telemetry, and operator-facing
+					software across Rust, C++, distributed systems, and human-in-the-loop
+					AI.
 				</p>
 				<a class="signal-link" data-touch-target="true" href="/work/">
 					View selected work
@@ -223,7 +226,7 @@ const cryogenicFlow = flagships[0];
 		}
 
 		.home-hero h1 {
-			font-size: clamp(2.8rem, 13vw, 4.3rem);
+			font-size: clamp(2.4rem, 11vw, 4.3rem);
 		}
 	}
 </style>

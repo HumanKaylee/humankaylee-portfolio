@@ -135,7 +135,7 @@ test.describe("page metadata @metadata", () => {
 		).join("\n");
 		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
 		expect(jsonLdText).toContain(
-			'"description":"Principal engineer for systems that cannot drift."',
+			'"description":"Principal engineer for simulation, controls, and operational software."',
 		);
 		expect(jsonLdText).not.toMatch(
 			/humankaylee\.dev|\/projects\/|\/case-studies\//i,

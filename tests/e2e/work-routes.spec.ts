@@ -120,6 +120,8 @@ test.describe("Work routes @work", () => {
 			route.abort("failed"),
 		);
 		await page.goto("/work/cryo-flow-sim/");
+		await expect(page.locator("main")).toContainText(/SVG\/HTML\/CSS/i);
+		await expect(page.locator("main")).not.toContainText(/Three\.js/i);
 
 		const frame = page.locator('[data-media-kind="video"]');
 		const video = frame.locator("video");

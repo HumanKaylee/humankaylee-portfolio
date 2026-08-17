@@ -3,7 +3,8 @@ import { type Page, expect, test } from "@playwright/test";
 const launchRoutes = [
 	{
 		path: "/",
-		heading: /Principal engineer for systems that cannot drift/i,
+		heading:
+			/Principal engineer for simulation, controls, and operational software/i,
 		marker: /Three systems\. Three kinds of proof/i,
 		primaryLink: /View selected work/i,
 	},
@@ -171,7 +172,7 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 				waitUntil: "domcontentloaded",
 			});
 			await expect(page.getByRole("heading", { level: 1 })).toContainText(
-				/Principal engineer for systems that cannot drift/i,
+				/Principal engineer for simulation, controls, and operational software/i,
 			);
 			await expect(page.locator("[data-stage-panel]:visible")).toHaveCount(3);
 			await expect(

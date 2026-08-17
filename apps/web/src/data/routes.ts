@@ -32,7 +32,8 @@ export const routeInventory = [
 		primary: false,
 		seo: {
 			title: "Joe Poznanski portfolio",
-			description: "Principal engineer for systems that cannot drift.",
+			description:
+				"Principal engineer for simulation, controls, and operational software.",
 			canonicalPath: "/",
 			ogImage: defaultOgImage,
 			robots: "index,follow",

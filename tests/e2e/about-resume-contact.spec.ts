@@ -104,6 +104,15 @@ test.describe("About, resume, and contact @primary-routes", () => {
 		await expect(page.locator(".resume-summary")).toHaveText(
 			resumeContent.summary,
 		);
+		await expect(
+			page.getByText(
+				/500k\+ telemetry signals at greater than 10 Hz from a single 32-core server/i,
+			),
+		).toBeVisible();
+		await expect(
+			page.getByText(/control-loop jitter below 1 ms at 100 Hz/i),
+		).toBeVisible();
+		await expect(page.locator("main")).not.toContainText(/500k[^.]*100 Hz/i);
 		await expect(page.locator("#highlights .resume-bullets li")).toHaveText(
 			resumeContent.highlights,
 		);
