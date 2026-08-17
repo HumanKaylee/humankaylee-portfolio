@@ -1,5 +1,6 @@
 ---
 import type { WorkMedia } from "../lib/contracts/work";
+import MotionLoop from "./MotionLoop.astro";
 
 type Props = {
 	media: WorkMedia;
@@ -11,7 +12,9 @@ const { media, playback = false } = Astro.props;
 
 <figure class="media-frame" data-media-kind={media.kind}>
 	{
-		media.kind === "video" && !playback ? (
+		media.kind === "video" && !playback && media.loop ? (
+			<MotionLoop loop={media.loop} />
+		) : media.kind === "video" && !playback ? (
 			<picture class="media-poster" data-video-poster>
 				<source
 					type="image/webp"

@@ -1,0 +1,225 @@
+---
+import type { WorkLoopMedia } from "../lib/contracts/work";
+
+type Props = {
+	loop: WorkLoopMedia;
+};
+
+const { loop } = Astro.props;
+---
+
+<div
+	class="motion-loop"
+	data-motion-loop
+	data-motion-ready="false"
+	data-in-view="false"
+	data-user-paused="false"
+>
+	<div class="motion-loop__stage">
+		<video
+			data-motion-video
+			data-src={loop.src}
+			poster={loop.poster}
+			width={loop.width}
+			height={loop.height}
+			aria-label={loop.alt}
+			muted
+			loop
+			playsinline
+			preload="none"
+		></video>
+		<button
+			class="motion-loop__toggle"
+			type="button"
+			data-motion-toggle
+			aria-label="Pause animation"
+			hidden
+		>
+			<span data-motion-toggle-label>Pause</span>
+		</button>
+	</div>
+	<p class="motion-loop__description" data-motion-description>
+		{loop.description}
+	</p>
+</div>
+
+<script>
+	const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+	function updateToggle(root: HTMLElement, isPlaying: boolean) {
+		const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]");
+		const label = root.querySelector<HTMLElement>("[data-motion-toggle-label]");
+		const action = isPlaying ? "Pause" : "Play";
+
+		if (toggle) toggle.setAttribute("aria-label", `${action} animation`);
+		if (label) label.textContent = action;
+	}
+
+	function pauseOtherLoops(activeRoot: HTMLElement) {
+		for (const root of document.querySelectorAll<HTMLElement>(
+			"[data-motion-loop]",
+		)) {
+			if (root === activeRoot) continue;
+			const video = root.querySelector<HTMLVideoElement>("[data-motion-video]");
+			video?.pause();
+			root.dataset.playback = "paused";
+			updateToggle(root, false);
+		}
+	}
+
+	async function setPlayback(
+		root: HTMLElement,
+		shouldPlay: boolean,
+	): Promise<void> {
+		const video = root.querySelector<HTMLVideoElement>("[data-motion-video]");
+		if (!video) return;
+
+		const mayPlay =
+			shouldPlay &&
+			!reducedMotion.matches &&
+			document.visibilityState === "visible" &&
+			root.dataset.inView === "true" &&
+			root.dataset.userPaused !== "true";
+
+		if (!mayPlay) {
+			video.pause();
+			root.dataset.playback = "paused";
+			updateToggle(root, false);
+			return;
+		}
+
+		pauseOtherLoops(root);
+		if (!video.hasAttribute("src")) {
+			const source = video.dataset.src;
+			if (!source) return;
+			video.src = source;
+		}
+
+		try {
+			await video.play();
+			root.dataset.playback = "playing";
+			updateToggle(root, true);
+		} catch {
+			root.dataset.playback = "blocked";
+			updateToggle(root, false);
+		}
+	}
+
+	const roots = Array.from(
+		document.querySelectorAll<HTMLElement>("[data-motion-loop]"),
+	).filter((root) => root.dataset.motionReady !== "true");
+
+	for (const root of roots) {
+		root.dataset.motionReady = "true";
+		const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]");
+		if (toggle) {
+			toggle.hidden = reducedMotion.matches;
+			toggle.addEventListener("click", () => {
+				const video = root.querySelector<HTMLVideoElement>("[data-motion-video]");
+				if (!video) return;
+
+				if (!video.paused && root.dataset.userPaused !== "true") {
+					root.dataset.userPaused = "true";
+					void setPlayback(root, false);
+					return;
+				}
+
+				root.dataset.userPaused = "false";
+				void setPlayback(root, true);
+			});
+		}
+	}
+
+	if ("IntersectionObserver" in window) {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					const root = entry.target as HTMLElement;
+					root.dataset.inView = String(
+						entry.isIntersecting && entry.intersectionRatio >= 0.35,
+					);
+					void setPlayback(root, root.dataset.inView === "true");
+				}
+			},
+			{ threshold: [0, 0.35, 0.75] },
+		);
+		for (const root of roots) observer.observe(root);
+	}
+
+	document.addEventListener("visibilitychange", () => {
+		for (const root of document.querySelectorAll<HTMLElement>(
+			"[data-motion-loop]",
+		)) {
+			void setPlayback(root, root.dataset.inView === "true");
+		}
+	});
+
+	reducedMotion.addEventListener("change", () => {
+		for (const root of document.querySelectorAll<HTMLElement>(
+			"[data-motion-loop]",
+		)) {
+			const toggle = root.querySelector<HTMLButtonElement>("[data-motion-toggle]");
+			if (toggle) toggle.hidden = reducedMotion.matches;
+			void setPlayback(root, root.dataset.inView === "true");
+		}
+	});
+</script>
+
+<style>
+	.motion-loop {
+		display: grid;
+		min-width: 0;
+		background: var(--color-media);
+	}
+
+	.motion-loop__stage {
+		position: relative;
+	}
+
+	.motion-loop video {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		background: var(--color-media);
+	}
+
+	.motion-loop__toggle {
+		position: absolute;
+		right: var(--space-2);
+		bottom: var(--space-2);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 5rem;
+		min-height: 44px;
+		border: 1px solid color-mix(in srgb, var(--color-canvas) 52%, transparent);
+		border-radius: var(--radius-control);
+		padding-inline: var(--space-3);
+		background: color-mix(in srgb, var(--color-ink) 86%, transparent);
+		color: var(--color-canvas);
+		font: 700 0.75rem/1 var(--font-evidence);
+		cursor: pointer;
+	}
+
+	.motion-loop__toggle[hidden] {
+		display: none;
+	}
+
+	.motion-loop__description {
+		margin: 0;
+		border-top: 1px solid var(--line);
+		padding: var(--space-2) var(--space-3);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+		line-height: 1.5;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.motion-loop__toggle {
+			display: none;
+		}
+	}
+</style>

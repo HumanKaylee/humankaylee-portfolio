@@ -98,7 +98,9 @@ test.describe("Signal / Proof quality @quality @reduced-motion", () => {
 					document.documentElement,
 					document.body,
 					...Array.from(
-						document.querySelectorAll("a, button, [data-project-stage], main"),
+						document.querySelectorAll(
+							"a, button, [data-project-stage], [data-motion-loop], main",
+						),
 					),
 				];
 				const durations = candidates.flatMap((element) => {
