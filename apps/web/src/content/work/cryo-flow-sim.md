@@ -4,6 +4,7 @@ slug: "cryo-flow-sim"
 discipline: "simulation"
 year: 2026
 placement: "flagship"
+featuredOrder: 1
 lede: "A deterministic simulation of cryogenic valve transients and pressure cascades, captured as a 96.9-second 1080p video artifact verified by 92 passing tests and zero unexpected clamp events."
 problem: "Visualizing fluid dynamics in a cryogenic system requires accurate, reproducible state transitions across valves, tanks, and pipes, without depending on live hardware or an unpredictable animation loop."
 stakes: "An incorrect simulation misleads about system behavior at the exact boundary conditions where engineering errors are most costly: low temperatures, pressure differentials, and timed valve sequencing."
@@ -50,6 +51,13 @@ media:
   kind: "video"
   src: "/media/cryo-flow-sim-stage1.mp4"
   poster: "/media/cryo-flow-sim-stage1-1440.webp"
+  responsivePosterSources:
+    - src: "/media/cryo-flow-sim-stage1-640.webp"
+      width: 640
+    - src: "/media/cryo-flow-sim-stage1-960.webp"
+      width: 960
+    - src: "/media/cryo-flow-sim-stage1-1440.webp"
+      width: 1440
   width: 1920
   height: 1080
   alt: "Cryogenic flow simulation dashboard during a verified valve-transition scenario."

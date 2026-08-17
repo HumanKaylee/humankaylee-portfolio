@@ -8,6 +8,7 @@ const validWork = {
 	discipline: "simulation",
 	year: 2026,
 	placement: "flagship",
+	featuredOrder: 1,
 	lede: "A deterministic cryogenic flow simulation with auditable capture evidence.",
 	problem: "Make transient system behavior reproducible without live hardware.",
 	stakes: "Incorrect state transitions can misrepresent boundary behavior.",
@@ -40,11 +41,45 @@ const validWork = {
 		kind: "video",
 		src: "/media/cryo-flow-sim-stage1.mp4",
 		poster: "/media/cryo-flow-sim-stage1-poster.png",
+		responsivePosterSources: [
+			{ src: "/media/example-640.webp", width: 640 },
+			{ src: "/media/example-960.webp", width: 960 },
+			{ src: "/media/example-1440.webp", width: 1440 },
+		],
 		width: 1920,
 		height: 1080,
 		alt: "Cryogenic flow simulation dashboard during a valve transition.",
 		caption: "Deterministic Stage 1 capture.",
 	},
+	evidenceMedia: [
+		{
+			kind: "image",
+			src: "/media/example-1440.webp",
+			responsiveSources: [
+				{ src: "/media/example-640.webp", width: 640 },
+				{ src: "/media/example-960.webp", width: 960 },
+				{ src: "/media/example-1440.webp", width: 1440 },
+			],
+			width: 1440,
+			height: 810,
+			alt: "A deterministic geometry evidence frame.",
+			caption: "A deterministic geometry evidence frame.",
+		},
+		{
+			kind: "video",
+			src: "/media/example.mp4",
+			poster: "/media/example-poster-1440.webp",
+			responsivePosterSources: [
+				{ src: "/media/example-poster-640.webp", width: 640 },
+				{ src: "/media/example-poster-960.webp", width: 960 },
+				{ src: "/media/example-poster-1440.webp", width: 1440 },
+			],
+			width: 1536,
+			height: 864,
+			alt: "A deterministic workflow evidence recording.",
+			caption: "A deterministic workflow evidence recording.",
+		},
+	],
 	publicationStatus: "publish",
 	redactionStatus: "reviewed",
 	redactionReview: {
@@ -66,10 +101,18 @@ const validWork = {
 
 describe("workSchema", () => {
 	it("accepts a complete public Work entry", () => {
-		expect(workSchema.safeParse(validWork).success).toBe(true);
+		const parsed = workSchema.parse(validWork);
+		expect(parsed.featuredOrder).toBe(1);
+		expect(parsed.media.responsivePosterSources).toEqual(
+			validWork.media.responsivePosterSources,
+		);
+		expect(parsed.evidenceMedia?.map((item) => item.kind)).toEqual([
+			"image",
+			"video",
+		]);
 	});
 
-	it.each(["placement", "role", "evidence", "media"])(
+	it.each(["placement", "featuredOrder", "role", "evidence", "media"])(
 		"rejects missing %s",
 		(field) => {
 			const candidate = structuredClone(validWork) as Record<string, unknown>;
@@ -83,6 +126,37 @@ describe("workSchema", () => {
 			workSchema.safeParse({ ...validWork, placement: "featured" }).success,
 		).toBe(false);
 	});
+
+	it.each([0, -1])("rejects nonpositive featuredOrder %s", (featuredOrder) => {
+		expect(workSchema.safeParse({ ...validWork, featuredOrder }).success).toBe(
+			false,
+		);
+	});
+
+	it("rejects duplicate responsive widths", () => {
+		const candidate = structuredClone(validWork);
+		candidate.media.responsivePosterSources[1].width = 640;
+		expect(workSchema.safeParse(candidate).success).toBe(false);
+	});
+
+	it("rejects evidence images without responsive sources", () => {
+		const candidate = structuredClone(validWork) as {
+			evidenceMedia: Record<string, unknown>[];
+		};
+		delete candidate.evidenceMedia[0].responsiveSources;
+		expect(workSchema.safeParse(candidate).success).toBe(false);
+	});
+
+	it.each(["src", "poster", "responsivePosterSources"])(
+		"rejects evidence videos missing %s",
+		(field) => {
+			const candidate = structuredClone(validWork) as {
+				evidenceMedia: Record<string, unknown>[];
+			};
+			delete candidate.evidenceMedia[1][field];
+			expect(workSchema.safeParse(candidate).success).toBe(false);
+		},
+	);
 
 	it.each(["label", "summary", "values", "scope", "limits"])(
 		"rejects evidence missing %s",

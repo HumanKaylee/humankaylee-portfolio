@@ -83,11 +83,16 @@ describe("phase 1 content inventory", () => {
 			expect.arrayContaining([
 				"discipline",
 				"placement",
+				"featuredOrder",
 				"decisions",
 				"evidence",
 				"media",
 				"publicationStatus",
 			]),
+		);
+		expect(CONTENT_VALIDATION_EXAMPLES.work.validExample).toHaveProperty(
+			"featuredOrder",
+			1,
 		);
 		expect(CONTENT_VALIDATION_EXAMPLES).not.toHaveProperty("caseStudies");
 		expect(CONTENT_VALIDATION_EXAMPLES).not.toHaveProperty("projectCatalog");

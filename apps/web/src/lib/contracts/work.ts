@@ -8,6 +8,49 @@ import {
 	slugSchema,
 } from "./content";
 
+const workResponsiveSourceSchema = z.object({
+	src: z.string().min(1),
+	width: z.number().int().positive(),
+});
+
+const workResponsiveSourcesSchema = z
+	.array(workResponsiveSourceSchema)
+	.min(1)
+	.superRefine((sources, context) => {
+		const seenWidths = new Set<number>();
+		for (const [index, source] of sources.entries()) {
+			if (seenWidths.has(source.width)) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: [index, "width"],
+					message: "responsive source widths must be unique",
+				});
+			}
+			seenWidths.add(source.width);
+		}
+	});
+
+const workEvidenceImageSchema = z.object({
+	kind: z.literal("image"),
+	src: z.string().min(1),
+	responsiveSources: workResponsiveSourcesSchema,
+	width: z.number().int().positive(),
+	height: z.number().int().positive(),
+	alt: z.string().min(1),
+	caption: z.string().min(1),
+});
+
+const workEvidenceVideoSchema = z.object({
+	kind: z.literal("video"),
+	src: z.string().min(1),
+	poster: z.string().min(1),
+	responsivePosterSources: workResponsiveSourcesSchema,
+	width: z.number().int().positive(),
+	height: z.number().int().positive(),
+	alt: z.string().min(1),
+	caption: z.string().min(1),
+});
+
 const workLoopMediaSchema = z.object({
 	src: z.string().min(1),
 	poster: z.string().min(1),
@@ -26,6 +69,7 @@ export const workSchema = z
 		discipline: z.enum(["simulation", "operations", "reliability", "tools"]),
 		year: z.number().int().min(2000).max(2100),
 		placement: z.enum(["flagship", "supporting", "archive"]),
+		featuredOrder: z.number().int().positive(),
 		lede: z.string().min(1),
 		problem: z.string().min(1),
 		stakes: z.string().min(1),
@@ -67,12 +111,21 @@ export const workSchema = z
 			kind: z.enum(["image", "video", "evidence-flow"]),
 			src: z.string().min(1).optional(),
 			poster: z.string().min(1).optional(),
+			responsivePosterSources: workResponsiveSourcesSchema.optional(),
 			width: z.number().int().positive(),
 			height: z.number().int().positive(),
 			alt: z.string().min(1),
 			caption: z.string().min(1),
 			loop: workLoopMediaSchema.optional(),
 		}),
+		evidenceMedia: z
+			.array(
+				z.discriminatedUnion("kind", [
+					workEvidenceImageSchema,
+					workEvidenceVideoSchema,
+				]),
+			)
+			.optional(),
 		demoComponent: z.literal("BlackScholesDemo").optional(),
 		publicationStatus: publicationStatusSchema,
 		redactionStatus: caseStudyRedactionStatusSchema,
@@ -114,3 +167,7 @@ export const workSchema = z
 export type WorkEntryData = z.infer<typeof workSchema>;
 export type WorkMedia = WorkEntryData["media"];
 export type WorkLoopMedia = z.infer<typeof workLoopMediaSchema>;
+export type WorkResponsiveSource = z.infer<typeof workResponsiveSourceSchema>;
+export type WorkEvidenceMedia = z.infer<
+	typeof workEvidenceImageSchema | typeof workEvidenceVideoSchema
+>;
