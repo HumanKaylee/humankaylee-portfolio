@@ -33,7 +33,7 @@ const surfaces = [
 ] as const;
 
 const viewports = [
-	{ label: "desktop", size: { width: 1440, height: 1200 } },
+	{ label: "desktop", size: { width: 1440, height: 1000 } },
 	{ label: "mobile", size: { width: 390, height: 844 } },
 ] as const;
 
@@ -71,7 +71,10 @@ async function waitForStableMedia(page: Page) {
 			}
 			await poster.decode();
 
-			if (video.readyState < HTMLMediaElement.HAVE_METADATA) {
+			if (
+				video.currentSrc &&
+				video.readyState < HTMLMediaElement.HAVE_METADATA
+			) {
 				await new Promise<void>((resolve, reject) => {
 					video.addEventListener("loadedmetadata", () => resolve(), {
 						once: true,
@@ -85,6 +88,7 @@ async function waitForStableMedia(page: Page) {
 					video.load();
 				});
 			}
+			video.pause();
 		}
 	});
 	await page.evaluate(
@@ -98,7 +102,7 @@ async function waitForStableMedia(page: Page) {
 test("keeps the homepage hierarchy compact at desktop and mobile @taste-audit", async ({
 	page,
 }) => {
-	await page.setViewportSize({ width: 1440, height: 1200 });
+	await page.setViewportSize({ width: 1440, height: 1000 });
 	await page.goto("/", { waitUntil: "networkidle" });
 
 	const desktopMetrics = await page
@@ -131,6 +135,20 @@ test("keeps the homepage hierarchy compact at desktop and mobile @taste-audit", 
 		);
 	expect(navRows).toBeLessThanOrEqual(2);
 	await expect(page.locator("#hero-title")).toBeVisible();
+});
+
+test("keeps visible public copy free of em and en dashes @taste-audit", async ({
+	page,
+}) => {
+	for (const path of [
+		"/work/cryo-flow-sim/",
+		"/work/black-scholes-wasm/",
+		"/about/",
+		"/notes/wasm-black-scholes-options-pricer/",
+	]) {
+		await page.goto(path, { waitUntil: "networkidle" });
+		await expect(page.locator("body"), path).not.toContainText(/[—–]/);
+	}
 });
 
 test.describe("Signal / Proof capture audit @taste-audit", () => {

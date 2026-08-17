@@ -29,7 +29,7 @@ export const resumeContent = {
 			role: "Principal Software Engineer - SuperNatural Vision Program",
 			dates: "Aug 2025 - Present",
 			aboutRole: "Principal Software Engineer, SuperNatural Vision Program",
-			aboutDates: "2025–present",
+			aboutDates: "2025-present",
 			bullets: [
 				"Architected and shipped an 8K video-wall system: synchronized playback across a 4-node Mac Mini cluster (~50 GB/s aggregate) with sub-frame latency, driving immersive executive demos.",
 				"Built a Rust/tokio orchestration backend (async SSH dispatch, JSON-RPC playback control) with <100 ms command round-trip; and a Node.js/React operator dashboard with <16 ms UI updates.",
@@ -42,7 +42,7 @@ export const resumeContent = {
 			role: "Senior Simulation / Aerospace Operations Software Engineer",
 			dates: "May 2022 - Aug 2025",
 			aboutRole: "Senior Simulation / Aerospace Operations Software Engineer",
-			aboutDates: "2022–2025",
+			aboutDates: "2022-2025",
 			bullets: [
 				"Built a Rust-based Simulated Avionics Layer delivering 500k+ telemetry signals at greater than 10 Hz from a single 32-core server. Maintained control-loop jitter below 1 ms at 100 Hz.",
 				"Automated test & compliance: Python/pytest + GitLab CI running 800+ unit/functional/HIL tests nightly, auto-generating DO-178C / AS9100 evidence; regression cycles 3 days → 2 hours.",
@@ -55,7 +55,7 @@ export const resumeContent = {
 			role: "Director of Simulation & Software Engineering",
 			dates: "Jun 2014 - May 2022",
 			aboutRole: "Director of Simulation & Software Engineering",
-			aboutDates: "2014–2022",
+			aboutDates: "2014-2022",
 			bullets: [
 				"Scaled the company 11 → 200+ staff across three countries; hired and mentored the first 30 simulation/software engineers.",
 				"Designed a real-time C++17 / VxWorks / ZeroMQ data-bus (<120 ms) now fielded on 18+ aircraft simulators; earned 100% first-pass FAA approvals via CI/CD + automated DO-178C artifacts.",
@@ -68,7 +68,7 @@ export const resumeContent = {
 			role: "Flight Simulation Supervisor & Project Manager",
 			dates: "Feb 2011 - Jun 2014",
 			aboutRole: "Flight Simulation Supervisor & Project Manager",
-			aboutDates: "2011–2014",
+			aboutDates: "2011-2014",
 			bullets: [
 				"Built an enterprise C++/SQL analytics platform ingesting Qualification Test Guide data from 12 flight-training devices, auto-generating compliance logs.",
 			],

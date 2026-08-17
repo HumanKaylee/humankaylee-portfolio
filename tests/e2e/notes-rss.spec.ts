@@ -10,7 +10,7 @@ const blackScholesNote = {
 	title: "A Black-Scholes options pricer in Rust, compiled to WASM",
 	path: "/notes/wasm-black-scholes-options-pricer/",
 	summary:
-		"How a ~150-line Rust crate becomes a live, in-browser options pricer with sub-millisecond Greeks — without a server round-trip.",
+		"How a ~150-line Rust crate becomes a live, in-browser options pricer with sub-millisecond Greeks, without a server round-trip.",
 	body: /The Black-Scholes model prices European options/i,
 	dateLabel: "May 26, 2026",
 	datetime: "2026-05-26",

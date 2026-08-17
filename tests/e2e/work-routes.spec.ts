@@ -42,6 +42,9 @@ test.describe("Work routes @work", () => {
 		await page.goto("/work/");
 
 		await expect(page.locator("[data-flagship-work] article")).toHaveCount(1);
+		expect(
+			await page.locator("[data-flagship-work] .signal-link").textContent(),
+		).toBe("Read the case study");
 		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
