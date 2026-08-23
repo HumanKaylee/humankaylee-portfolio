@@ -47,4 +47,16 @@ describe("legal page factual contracts", () => {
 			);
 		}
 	});
+
+	it("does not promise that direct email is used only to read and reply", () => {
+		expect(privacySource.toLowerCase()).not.toContain(
+			"is used only to read and reply to what you sent",
+		);
+	});
+
+	it("does not claim that the operator's Google account cannot contain another person's data", () => {
+		expect(privacySource.toLowerCase()).not.toContain(
+			"does not request, receive, or process any other person's google data",
+		);
+	});
 });
