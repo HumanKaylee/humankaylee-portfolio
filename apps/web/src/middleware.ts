@@ -10,7 +10,7 @@ const securityHeaders = {
 		"img-src 'self' data:",
 		"font-src 'self'",
 		"style-src 'self' 'unsafe-inline'",
-		"script-src 'self' 'unsafe-inline'",
+		"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
 		"connect-src 'self'",
 	].join("; "),
 	"Cross-Origin-Opener-Policy": "same-origin",

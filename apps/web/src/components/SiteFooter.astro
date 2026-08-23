@@ -1,25 +1,36 @@
 ---
-import type { ShellLink } from "../lib/home-scaffold";
+import type { profile as profileData } from "../data/profile";
+import type { secondaryNavigation } from "../data/site-navigation";
 
 type Props = {
-	nav: readonly ShellLink[];
+	nav: typeof secondaryNavigation;
+	profile: typeof profileData;
 };
 
-const { nav } = Astro.props;
+const { nav, profile } = Astro.props;
 ---
 
 <footer class="site-footer">
-	<p>
-		Static-first portfolio shell. Interactive systems maps and Rust telemetry are
-		progressive enhancements, not content dependencies.
-	</p>
-	<nav aria-label="Footer navigation">
-		{
-			nav.map((item) => (
-				<a data-touch-target="true" href={item.href}>
-					{item.label}
-				</a>
-			))
-		}
-	</nav>
+	<div class="footer-summary">
+		<p class="section-kicker">Systems Atelier</p>
+		<p>Principal engineer for simulation, controls, and operational software.</p>
+	</div>
+	<div class="footer-links">
+		<p class="section-kicker">Explore</p>
+		<nav class="footer-nav" aria-label="Secondary navigation">
+			{
+				nav.map((item) => (
+					<a data-touch-target="true" href={item.href}>
+						{item.label}
+					</a>
+				))
+			}
+		</nav>
+		<p class="section-kicker">Elsewhere</p>
+		<nav class="footer-actions" aria-label="Joe Poznanski elsewhere">
+			<a data-touch-target="true" href={profile.github}>GitHub</a>
+			<a data-touch-target="true" href={profile.linkedin}>LinkedIn</a>
+			<a data-touch-target="true" href={`mailto:${profile.email}`}>Email</a>
+		</nav>
+	</div>
 </footer>

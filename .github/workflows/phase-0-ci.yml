@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install social preview generator dependency
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y ffmpeg
+
       - name: Verify preflight exists
         run: test -s runbooks/PREFLIGHT.md
 
@@ -71,8 +74,8 @@ jobs:
       - name: Run API outage resilience gate
         run: pnpm test:e2e -- --grep "@api-down"
 
-      - name: Run API telemetry gate
-        run: pnpm test:e2e -- --grep "@api-telemetry"
+      - name: Run static no-API gate
+        run: pnpm test:e2e -- --grep "@static-runtime"
 
       - name: Run journey smoke gate
         run: pnpm test:e2e -- --grep "@journey"

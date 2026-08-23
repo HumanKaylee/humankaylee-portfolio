@@ -306,22 +306,22 @@ test("content issue traceability ties open content issues to approval blockers w
 			githubIssue: 22,
 			parentIssue: 3,
 		},
-		"HumanKaylee Portfolio Build",
+		"Joe Poznanski Portfolio Build",
 	);
 	expectContains(
 		portfolioBuild,
 		'checklistStatus: "partial"',
-		"HumanKaylee Portfolio Build partial checklist status",
+		"Joe Poznanski Portfolio Build partial checklist status",
 	);
 	expectContains(
 		portfolioBuild,
 		"Production domain, provider, and deploy evidence are blocked in this repository snapshot.",
-		"HumanKaylee Portfolio Build production evidence open item",
+		"Joe Poznanski Portfolio Build production evidence open item",
 	);
 	expectContains(
 		portfolioBuild,
 		"Launch approval remains blocked until external evidence is captured and reviewed.",
-		"HumanKaylee Portfolio Build launch approval open item",
+		"Joe Poznanski Portfolio Build launch approval open item",
 	);
 	expectIssueTrace(
 		creative,
@@ -354,7 +354,7 @@ test("content issue traceability ties open content issues to approval blockers w
 		{
 			backlogId: "B-018",
 			closureRule:
-				"Keep #24 open until HumanKaylee records a publication decision and any synthetic proof pack passes review.",
+				"Keep #24 open until Joe Poznanski records a publication decision and any synthetic proof pack passes review.",
 			githubIssue: 24,
 			parentIssue: 3,
 		},
@@ -381,7 +381,7 @@ test("content issue traceability ties open content issues to approval blockers w
 		{
 			backlogId: "B-019",
 			closureRule:
-				"Keep #25 open until HumanKaylee records a publication decision and any synthetic proof pack passes review.",
+				"Keep #25 open until Joe Poznanski records a publication decision and any synthetic proof pack passes review.",
 			githubIssue: 25,
 			parentIssue: 3,
 		},
@@ -430,7 +430,7 @@ test("content issue traceability ties open content issues to approval blockers w
 			4: ["Keep #21 open"],
 		},
 	);
-	expectTableRowCells(status, "HumanKaylee Portfolio Build", {
+	expectTableRowCells(status, "Joe Poznanski Portfolio Build", {
 		1: ["B-016 / #22"],
 		2: ["`publish` / `reviewed`"],
 		3: ["production domain/provider evidence", "redaction approval"],
@@ -448,13 +448,13 @@ test("content issue traceability ties open content issues to approval blockers w
 	expectTableRowCells(status, "Kalshi Migration or Analytics Tooling", {
 		1: ["B-018 / #24"],
 		2: ["`defer` / `blocked`"],
-		3: ["HumanKaylee decision", "synthetic proof pack"],
+		3: ["Joe Poznanski decision", "synthetic proof pack"],
 		4: ["Keep #24 open"],
 	});
 	expectTableRowCells(status, "YouTube AI Video Pipeline", {
 		1: ["B-019 / #25"],
 		2: ["`needs-redaction` / `blocked`"],
-		3: ["HumanKaylee decision", "synthetic proof pack"],
+		3: ["Joe Poznanski decision", "synthetic proof pack"],
 		4: ["Keep #25 open"],
 	});
 
@@ -464,7 +464,7 @@ test("content issue traceability ties open content issues to approval blockers w
 	);
 	expectContains(
 		decision,
-		"#24 and #25 remain open until HumanKaylee records a publication decision and any synthetic proof pack passes review.",
+		"#24 and #25 remain open until Joe Poznanski records a publication decision and any synthetic proof pack passes review.",
 	);
 	expectContains(
 		status,

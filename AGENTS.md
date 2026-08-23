@@ -1,5 +1,11 @@
 # AGENTS.md - HumanKaylee Portfolio
 
+Project context for every coding agent (Codex reads this directly; Claude Code reads it
+via the `@AGENTS.md` import in `CLAUDE.md`).
+
+Engineering standards are host-level: `~/.claude/rules/engineering-standards.md` for
+Claude, the top block of `~/.codex/AGENTS.md` for Codex. They apply here too.
+
 ## Purpose
 
 This repository implements and documents HumanKaylee's private, resume-ready

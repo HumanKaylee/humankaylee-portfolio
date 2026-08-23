@@ -1,5 +1,5 @@
 {
-	"name": "HumanKaylee Portfolio Build",
+	"name": "Joe Poznanski Portfolio Build",
 	"slug": "humankaylee-portfolio-build",
 	"category": "creative web",
 	"summary": "Static-first portfolio system with Rust API proof, content contracts, and launch verification.",
@@ -10,9 +10,9 @@
 	},
 	"publicationStatus": "publish",
 	"seo": {
-		"title": "HumanKaylee Portfolio Build",
-		"description": "A project summary for building the HumanKaylee portfolio.",
+		"title": "Joe Poznanski Portfolio Build",
+		"description": "A project summary for building the Joe Poznanski portfolio.",
 		"canonicalPath": "/projects/humankaylee-portfolio-build/",
-		"ogImage": "/social/default.svg"
+		"ogImage": "/social/default.png"
 	}
 }

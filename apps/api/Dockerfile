@@ -4,6 +4,11 @@ FROM docker.io/library/rust:1.93-bookworm AS deps
 
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
+# Cargo resolves every declared workspace member, even while caching only the API
+# dependencies. Keep member manifests in this layer so `cargo fetch` can resolve
+# the workspace without invalidating the cache for ordinary source edits.
+COPY crates/blackscholes-wasm/Cargo.toml crates/blackscholes-wasm/Cargo.toml
+COPY crates/blackscholes-wasm/src/lib.rs crates/blackscholes-wasm/src/lib.rs
 # Create a dummy main so cargo fetch + a minimal build caches dependencies
 RUN mkdir src && echo "fn main() {}" > src/main.rs
 RUN cargo fetch --locked
@@ -12,6 +17,8 @@ RUN cargo fetch --locked
 FROM deps AS builder
 
 COPY src ./src
+# `src/og.rs` embeds this SVG at compile time via include_str!.
+COPY templates ./templates
 RUN cargo build --release --locked --bin humankaylee-api
 
 # Stage 3: minimal runtime image

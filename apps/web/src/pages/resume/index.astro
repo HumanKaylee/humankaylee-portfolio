@@ -1,56 +1,422 @@
 ---
 import { getCollection } from "astro:content";
 
+import { profile } from "../../data/profile";
+import { resumeContent } from "../../data/resume";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const [resume] = await getCollection("resume");
 const data = resume.data;
-type WorkflowStep = (typeof data.workflowSteps)[number];
+
+const { clearance, contact, experience, highlights, skillGroups, summary } =
+	resumeContent;
 ---
 
 <BaseLayout
-	title={`${data.seo.title} | HumanKaylee`}
-	description={data.seo.description}
+	title={`${data.seo.title} | ${profile.name}`}
+	description="Joe Poznanski: Principal Software Engineer for agentic AI and aerospace simulation. Summary, highlights, experience, and a downloadable PDF."
 	canonicalPath={data.seo.canonicalPath}
 	ogImage={data.seo.ogImage}
 	bodyClass="resume-print-route"
 >
-	<section class="page-shell" aria-labelledby="resume-title">
-		<header class="page-header resume-screen-header">
-			<p class="section-kicker">Resume</p>
-			<h1 id="resume-title">Resume path with a static PDF asset.</h1>
-			<p class="page-intro">
-				The downloadable resume PDF is served as a static asset from the
-				approved local source, keeping the recruiter path fast and independent
-				of JavaScript, WebGL, or API uptime.
-			</p>
+	<article class="page-shell resume-page" aria-labelledby="resume-title">
+		<header class="resume-hero">
+			<div class="resume-heading">
+				<p class="section-kicker">Résumé / Principal software engineer</p>
+				<h1 id="resume-title">{profile.name}</h1>
+				<p class="resume-subtitle">{contact.title}</p>
+			</div>
+
+			<div class="resume-contact">
+				<a data-touch-target="true" href={`mailto:${profile.email}`}>{profile.email}</a>
+				<a data-touch-target="true" href={profile.linkedin} rel="me">LinkedIn</a>
+				<span>{profile.location}</span>
+				<span>{contact.certs}</span>
+			</div>
+
+			<div class="resume-actions">
+				<a
+					class="signal-action resume-download"
+					data-touch-target="true"
+					href={data.pdfDownloadPath}
+					download
+				>
+					Download résumé PDF <span aria-hidden="true">↓</span>
+				</a>
+				<p>{clearance}</p>
+			</div>
+
+			<nav class="resume-section-nav" aria-label="Resume sections">
+				<a data-touch-target="true" href="#summary">Summary</a>
+				<a data-touch-target="true" href="#highlights">AI and automation</a>
+				<a data-touch-target="true" href="#experience">Experience</a>
+				<a data-touch-target="true" href="#skills">Skills</a>
+			</nav>
 		</header>
 
-		<article class="paper-panel resume-print-sheet" data-print-resume="true">
-			<p class="eyebrow">Static resume asset</p>
-			<h2>{data.title}</h2>
-			<p>
-				Source status: {data.sourceStatus}. Local source approval state:{" "}
-				{data.approvalState}. The downloadable PDF is served from{" "}
-				{data.pdfDownloadPath}.
-			</p>
-			<a
-				class="contact-link"
-				data-touch-target="true"
-				href={data.pdfDownloadPath}
-			>
-				Download resume PDF
-			</a>
-			<ul class="workflow-list">
-				{
-					data.workflowSteps.map((step: WorkflowStep) => (
-						<li>
-							<span>{step.step}</span>
-							<strong>{step.status}</strong>
-						</li>
-					))
-				}
-			</ul>
-		</article>
-	</section>
+		<div class="resume-body" data-print-resume="true">
+			<section class="resume-section" id="summary" aria-labelledby="summary-title">
+				<p class="resume-section-number" aria-hidden="true">01</p>
+				<div class="resume-section-content">
+					<h2 id="summary-title">Summary</h2>
+					<p class="resume-summary">{summary}</p>
+				</div>
+			</section>
+
+			<section class="resume-section" id="highlights" aria-labelledby="highlights-title">
+				<p class="resume-section-number" aria-hidden="true">02</p>
+				<div class="resume-section-content">
+					<h2 id="highlights-title">Agentic AI &amp; automation highlights</h2>
+					<ul class="resume-bullets">
+						{highlights.map((highlight) => <li>{highlight}</li>)}
+					</ul>
+				</div>
+			</section>
+
+			<section class="resume-section" id="experience" aria-labelledby="experience-title">
+				<p class="resume-section-number" aria-hidden="true">03</p>
+				<div class="resume-section-content">
+					<h2 id="experience-title">Experience</h2>
+					<ol class="resume-experience">
+						{experience.map((job) => (
+							<li class="resume-job">
+								<article>
+									<header class="resume-job-head">
+										<div>
+											<h3 class="resume-job-company">{job.company}</h3>
+											<p class="resume-job-role">{job.role}</p>
+										</div>
+										<div class="resume-job-meta">
+											<p class="resume-job-dates">{job.dates}</p>
+											<p class="resume-job-place">{job.place}</p>
+										</div>
+									</header>
+									<ul class="resume-bullets">
+										{job.bullets.map((bullet) => <li>{bullet}</li>)}
+									</ul>
+								</article>
+							</li>
+						))}
+					</ol>
+				</div>
+			</section>
+
+			<section class="resume-section" id="skills" aria-labelledby="skills-title">
+				<p class="resume-section-number" aria-hidden="true">04</p>
+				<div class="resume-section-content">
+					<h2 id="skills-title">Technical skills</h2>
+					<dl class="resume-skills">
+						{skillGroups.map((group) => (
+							<div class="resume-skill-row">
+								<dt>{group.label}</dt>
+								<dd>{group.items}</dd>
+							</div>
+						))}
+					</dl>
+				</div>
+			</section>
+
+			<section class="resume-section resume-clearance" aria-labelledby="clearance-title">
+				<p class="resume-section-number" aria-hidden="true">05</p>
+				<div class="resume-section-content">
+					<h2 id="clearance-title">Clearance</h2>
+					<p>{clearance}</p>
+				</div>
+			</section>
+		</div>
+	</article>
 </BaseLayout>
+
+<style>
+	.resume-page {
+		gap: 0;
+	}
+
+	.resume-page .section-kicker {
+		color: var(--color-muted);
+	}
+
+	.resume-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.65fr);
+		gap: var(--space-5) clamp(2rem, 6vw, 7rem);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.resume-heading {
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.resume-heading h1 {
+		max-width: none;
+	}
+
+	.resume-subtitle {
+		max-width: 48rem;
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.resume-contact {
+		display: flex;
+		min-width: 0;
+		flex-wrap: wrap;
+		align-content: start;
+		gap: var(--space-1) var(--space-4);
+		border-top: 1px solid var(--line);
+		padding-top: var(--space-3);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.8rem;
+	}
+
+	.resume-contact > * {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.resume-contact a {
+		color: var(--color-ink);
+	}
+
+	.resume-actions {
+		display: flex;
+		min-width: 0;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-4);
+		grid-column: 1 / -1;
+	}
+
+	.resume-actions p {
+		max-width: 54rem;
+		color: var(--color-muted);
+		font-size: 0.9rem;
+	}
+
+	.resume-section-nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 var(--space-4);
+		grid-column: 1 / -1;
+		border-block: 1px solid var(--line);
+		padding-block: var(--space-1);
+	}
+
+	.resume-section-nav a {
+		font-weight: 700;
+	}
+
+	.resume-body {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.resume-section {
+		display: grid;
+		grid-template-columns: minmax(3rem, 0.25fr) minmax(0, 1.75fr);
+		gap: clamp(1.5rem, 5vw, 5rem);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+		scroll-margin-top: var(--space-4);
+	}
+
+	.resume-section-number,
+	.resume-job-meta {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.78rem;
+	}
+
+	.resume-section-content {
+		display: grid;
+		gap: var(--space-5);
+	}
+
+	.resume-section h2 {
+		font-size: clamp(2rem, 4vw, 4rem);
+	}
+
+	.resume-summary {
+		max-width: 68ch;
+		font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+		line-height: 1.7;
+	}
+
+	.resume-bullets {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 76ch;
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	.resume-bullets li {
+		padding-left: var(--space-1);
+		line-height: 1.65;
+	}
+
+	.resume-bullets li::marker {
+		color: var(--color-muted);
+	}
+
+	.resume-experience {
+		display: grid;
+		gap: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.resume-job {
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.resume-job:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+
+	.resume-job article {
+		display: grid;
+		gap: var(--space-4);
+	}
+
+	.resume-job-head {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(11rem, auto);
+		gap: var(--space-3) var(--space-5);
+		align-items: start;
+	}
+
+	.resume-job-company {
+		font-size: clamp(1.35rem, 2.5vw, 2rem);
+	}
+
+	.resume-job-role {
+		margin-top: var(--space-1);
+		color: var(--color-muted);
+	}
+
+	.resume-job-meta {
+		display: grid;
+		gap: 0.25rem;
+		text-align: right;
+	}
+
+	.resume-job-meta p {
+		overflow-wrap: anywhere;
+	}
+
+	.resume-skills {
+		display: grid;
+		gap: 0;
+		margin: 0;
+	}
+
+	.resume-skill-row {
+		display: grid;
+		grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1.65fr);
+		gap: var(--space-4);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-3);
+	}
+
+	.resume-skill-row:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+
+	.resume-skill-row dt {
+		font-weight: 700;
+	}
+
+	.resume-skill-row dd {
+		margin: 0;
+		color: var(--color-muted);
+		overflow-wrap: anywhere;
+	}
+
+	@media (max-width: 48rem) {
+		.resume-hero,
+		.resume-section,
+		.resume-job-head,
+		.resume-skill-row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.resume-job-meta {
+			text-align: left;
+		}
+
+		.resume-section-number {
+			margin-bottom: calc(-1 * var(--space-4));
+		}
+	}
+
+	@media print {
+		@page {
+			margin: 0.55in;
+		}
+
+		:global(body.resume-print-route) {
+			background: #fff;
+			color: #111;
+			font-size: 9.5pt;
+		}
+
+		:global(.resume-print-route .site-header),
+		:global(.resume-print-route .site-footer),
+		:global(.resume-print-route .skip-link),
+		.resume-download,
+		.resume-section-nav,
+		.resume-actions p,
+		.resume-section-number {
+			display: none;
+		}
+
+		:global(.resume-print-route .site-main) {
+			width: 100%;
+			padding: 0;
+		}
+
+		.resume-page,
+		.resume-hero,
+		.resume-section,
+		.resume-section-content,
+		.resume-job article {
+			gap: 0.12in;
+			padding: 0;
+		}
+
+		.resume-hero,
+		.resume-section {
+			grid-template-columns: minmax(0, 1fr);
+			padding-block: 0.14in;
+		}
+
+		.resume-heading h1 {
+			font-size: 25pt;
+		}
+
+		.resume-section h2 {
+			font-size: 14pt;
+		}
+
+		.resume-job-company {
+			font-size: 11.5pt;
+		}
+
+		.resume-summary,
+		.resume-bullets li {
+			line-height: 1.35;
+		}
+
+		.resume-job,
+		.resume-skill-row {
+			break-inside: avoid;
+			padding-block: 0.1in;
+		}
+	}
+</style>

@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "project": "Conformal Cooling Channel Generation",
+  "evidenceBoundary": {
+    "uiApiCapture": "A real browser-driven UI/API job using the deterministic gear cavity fixture.",
+    "splitMoldCapture": "A separate repository command for the same parameterized gear family; these mold files are not UI/API job exports.",
+    "notEstablished": [
+      "thermal performance",
+      "hydraulic performance",
+      "cycle-time improvement",
+      "shop-floor manufacturability",
+      "physical prototype behavior"
+    ]
+  },
+  "source": {
+    "repository": "HumanKaylee/ConformalChannelCreator",
+    "repositoryUrl": "https://github.com/HumanKaylee/ConformalChannelCreator",
+    "uiApiCaptureCommit": "5514afad8321812037c556d6e21b6c2559851a8d",
+    "rendererCommit": "2926936a8a5104d6724ef6a00b3f0cfbffb23d21",
+    "cleanAtUiApiCapture": true
+  },
+  "runtime": {
+    "node": "v24.11.1",
+    "browser": "151.0.7922.34",
+    "applicationVersion": "0.2.0"
+  },
+  "fixture": {
+    "identifier": "gear-cavity-v1",
+    "filename": "gear-cavity.stl",
+    "sha256": "1a6ba4790081aea5eeab9624f83d9b82c29485757ac4bcb85ad6ca5335ef7a7f"
+  },
+  "parameters": {
+    "geometry": {
+      "Wall Thickness": 4,
+      "Channel Diameter": 4,
+      "Channel Spacing": 8,
+      "Max Overhang Angle": 45
+    },
+    "material": "H13",
+    "strategy": "Parallel",
+    "optimize": true
+  },
+  "uiApiJob": {
+    "id": "c7c8b136-39af-479f-bcdb-9258042c8d5b",
+    "status": "completed",
+    "createdAt": "2026-08-17T16:43:39.882311",
+    "completedAt": "2026-08-17T16:43:41.033237",
+    "durationSeconds": 1.137925,
+    "statistics": {
+      "status": "complete",
+      "num_channel_segments": 20,
+      "material": "H13",
+      "wall_thickness": 4,
+      "channel_diameter": 4,
+      "num_inlets": 0,
+      "num_outlets": 0,
+      "cross_section_counts": {
+        "circular": 20
+      },
+      "total_channel_length": 1337.7,
+      "step_times": {
+        "Loading Geometry": "0.0s",
+        "Computing Distance Field": "0.0s",
+        "Generating Channels": "0.5s",
+        "Optimizing Layout": "0.0s",
+        "Exporting Results": "0.6s"
+      },
+      "total_time": "1.1s",
+      "strategy": "straight_grid"
+    },
+    "command": "node scripts/portfolio_capture/capture_workflow.mjs --base-url <local-app> --input gear-cavity.stl --artifact-root conformal-cooling-capture-20260817 --source-commit <git-object-id>",
+    "viewport": {
+      "width": 1536,
+      "height": 864
+    },
+    "outputs": [
+      {
+        "filename": "channels.stl",
+        "path": "channels.stl",
+        "sizeBytes": 2116884,
+        "sha256": "7903a114eb2216db19e485933f01b57f39615adcbc738370b20e58eb5ff0ec86"
+      },
+      {
+        "filename": "channels.3mf",
+        "path": "channels.3mf",
+        "sizeBytes": 761719,
+        "sha256": "5aaafffa643b5d07c65567c2292a182d0a06769010c14d3145e81ac7422fbd6b"
+      },
+      {
+        "filename": "cavity.stl",
+        "path": "cavity.stl",
+        "sizeBytes": 4884,
+        "sha256": "1a6ba4790081aea5eeab9624f83d9b82c29485757ac4bcb85ad6ca5335ef7a7f"
+      },
+      {
+        "filename": "channels_only.stl",
+        "path": "channels_only.stl",
+        "sizeBytes": 2112084,
+        "sha256": "324c2d3d28a909f27112c150129b47485c6906f6fb2fb7b1310a088569b5873a"
+      }
+    ],
+    "validations": [
+      {
+        "name": "ordinary-ui-workflow",
+        "observedValue": "Generation Complete",
+        "passed": true,
+        "scope": "browser-visible application state"
+      },
+      {
+        "name": "expected-ui-job-exports",
+        "observedValue": 4,
+        "passed": true,
+        "scope": "real API job result directory"
+      }
+    ]
+  },
+  "splitMoldGenerator": {
+    "command": "conda run -n conformal python generate_conformal_cooling_molds.py --shape gear --resolution 1.0 --validate --output <artifact-root>/split-mold",
+    "status": "PASS",
+    "validation": {
+      "top": {
+        "watertight": true,
+        "vertices": 131460,
+        "faces": 264328,
+        "volumeMm3": 501658.7
+      },
+      "bottom": {
+        "watertight": true,
+        "vertices": 133621,
+        "faces": 268562,
+        "volumeMm3": 502190.5
+      },
+      "warnings": [
+        "gear top mold volume seems too large",
+        "gear bottom mold volume seems too large"
+      ]
+    },
+    "outputs": [
+      {
+        "filename": "gear_top_conformal.stl",
+        "sizeBytes": 13216484,
+        "sha256": "844f282dcb82bbbbbbab97cc9660efbaea2b44d0db9e5cdda73653d7b8d9eea6"
+      },
+      {
+        "filename": "gear_bottom_conformal.stl",
+        "sizeBytes": 13428184,
+        "sha256": "339058dcaf7f182c05aa11cf8317356b5b58124f175c2fa17874b349fbe28772"
+      },
+      {
+        "filename": "gear_validation.txt",
+        "sizeBytes": 378,
+        "sha256": "294d948fcdbdd35db5ef32fa8698affea86d169641f1d9f6c3119aa010c0fc73"
+      }
+    ]
+  },
+  "verification": {
+    "sourceBaseline": {
+      "pytest": {
+        "status": "failed",
+        "passed": 1056,
+        "skipped": 6,
+        "failed": 5,
+        "warnings": 220,
+        "durationSeconds": 152.35,
+        "knownFailures": [
+          "three SlowAPI version or contract assertions",
+          "one boolean performance assertion",
+          "one queue-position assertion"
+        ]
+      },
+      "ruff": {
+        "status": "failed",
+        "issues": 2611
+      },
+      "mypy": {
+        "status": "failed",
+        "errors": 397,
+        "affectedFiles": 60,
+        "checkedFiles": 93
+      }
+    },
+    "focusedCaptureRenderer": {
+      "pytest": {
+        "status": "passed",
+        "tests": 17
+      },
+      "ruff": {
+        "status": "passed"
+      },
+      "mypy": {
+        "status": "passed",
+        "scope": "render_evidence.py"
+      }
+    },
+    "frontend": {
+      "unitTests": {
+        "status": "passed",
+        "tests": 4
+      },
+      "build": {
+        "status": "passed",
+        "warnings": [
+          "pre-existing 1.09 MB chunk-size warning"
+        ]
+      }
+    }
+  },
+  "publishedAssets": [
+    {
+      "filename": "conformal-cavity-channels-1440.webp",
+      "sizeBytes": 53436,
+      "sha256": "c16b4b280e1341f41326f34e6fcc12116aa2d7b957e9da6d53e79531886996dd",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 810
+    },
+    {
+      "filename": "conformal-cavity-channels-640.webp",
+      "sizeBytes": 12060,
+      "sha256": "eb1ad908a8a2db8b56d82ce893fc399fcdef5df7ea0c6e7747def8be5db4192a",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "filename": "conformal-cavity-channels-960.webp",
+      "sizeBytes": 25016,
+      "sha256": "610d14f396dc5d62fa7f023e9d4bd14f76d5e3be1bb935700e9c7705849d070d",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "filename": "conformal-input-gear-1440.webp",
+      "sizeBytes": 15462,
+      "sha256": "917b0c132c3c7c580fce8b079fc41d534a07b48d1252e2271bd1f2947f21b624",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 810
+    },
+    {
+      "filename": "conformal-input-gear-640.webp",
+      "sizeBytes": 4620,
+      "sha256": "9ef0107ce9748aaf370d3637e3c6bb69eda4e8c4ad6257dd353a6cd26d19ccd4",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "filename": "conformal-input-gear-960.webp",
+      "sizeBytes": 8488,
+      "sha256": "0a6000d95f8e293199cd896adda2c19dfd60a41a4746eb7d17eedbbee9d8cda8",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "filename": "conformal-split-mold-ports-1440.webp",
+      "sizeBytes": 17102,
+      "sha256": "e5ce618f5a72d20024ee2dbbd7e8725cca28ca41df7e8f067be1b90c4c214e6b",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 810
+    },
+    {
+      "filename": "conformal-split-mold-ports-640.webp",
+      "sizeBytes": 5074,
+      "sha256": "2c49f8155ebb0969d466e21ae24b8beae5851f24bde8cde1a0f801efbe02438e",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "filename": "conformal-split-mold-ports-960.webp",
+      "sizeBytes": 8904,
+      "sha256": "5ded8e7b5f1f13cfe2faf3f7c58ee1f285c766d0f3792d3ae0ffd56701cacd87",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "filename": "conformal-validation-export-1440.webp",
+      "sizeBytes": 80662,
+      "sha256": "3b0ff8a65336aee67fefbaca4368b455694129476829ddb9cf33f4343a3c907b",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 810
+    },
+    {
+      "filename": "conformal-validation-export-640.webp",
+      "sizeBytes": 22238,
+      "sha256": "1c4d5daa23a208e68539e1148bab8eb550a13183e715c9a8126fa469638b9830",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "filename": "conformal-validation-export-960.webp",
+      "sizeBytes": 44930,
+      "sha256": "c445193479cf2ecfbda5baab46696c338a03bfa5f2abbd68be40344acb1f22e5",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "filename": "conformal-workflow-loop-poster-1440.webp",
+      "sizeBytes": 53436,
+      "sha256": "c16b4b280e1341f41326f34e6fcc12116aa2d7b957e9da6d53e79531886996dd",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 810
+    },
+    {
+      "filename": "conformal-workflow-loop-poster-640.webp",
+      "sizeBytes": 12060,
+      "sha256": "eb1ad908a8a2db8b56d82ce893fc399fcdef5df7ea0c6e7747def8be5db4192a",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "filename": "conformal-workflow-loop-poster-960.webp",
+      "sizeBytes": 25016,
+      "sha256": "610d14f396dc5d62fa7f023e9d4bd14f76d5e3be1bb935700e9c7705849d070d",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "filename": "conformal-workflow-loop.mp4",
+      "sizeBytes": 143702,
+      "sha256": "bbc92cf87d81cff2de807ccdf7b33d6e7a25f5518fe98ba1bbf8c857b22a54ad",
+      "mediaType": "video",
+      "codec": "h264",
+      "width": 960,
+      "height": 540,
+      "frameRate": "30/1",
+      "pixelFormat": "yuv420p",
+      "durationSeconds": 10,
+      "audioStreams": 0
+    },
+    {
+      "filename": "conformal-workflow-poster-1440.webp",
+      "sizeBytes": 17102,
+      "sha256": "e5ce618f5a72d20024ee2dbbd7e8725cca28ca41df7e8f067be1b90c4c214e6b",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 810
+    },
+    {
+      "filename": "conformal-workflow-poster-640.webp",
+      "sizeBytes": 5074,
+      "sha256": "2c49f8155ebb0969d466e21ae24b8beae5851f24bde8cde1a0f801efbe02438e",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "filename": "conformal-workflow-poster-960.webp",
+      "sizeBytes": 8904,
+      "sha256": "5ded8e7b5f1f13cfe2faf3f7c58ee1f285c766d0f3792d3ae0ffd56701cacd87",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 540
+    },
+    {
+      "filename": "conformal-workflow.mp4",
+      "sizeBytes": 877040,
+      "sha256": "7ca273dc97fab8655112e918e72a4574198d8b4b22929545bb1f006608582e97",
+      "mediaType": "video",
+      "codec": "h264",
+      "width": 1536,
+      "height": 864,
+      "frameRate": "30/1",
+      "pixelFormat": "yuv420p",
+      "durationSeconds": 31.033333,
+      "audioStreams": 0
+    }
+  ]
+}

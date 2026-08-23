@@ -1,83 +1,76 @@
 # Cross-Browser And Responsive QA Runbook
 
-Date: 2026-05-23
-Scope: B-055 cross-browser and responsive launch gate
+Date: 2026-08-15
+Scope: B-055 Signal / Proof cross-browser and responsive launch gate
 Status: local and CI evidence only; not production launch evidence
 
 ## Purpose
 
-This runbook records how the portfolio checks realistic recruiter and engineer
-viewing environments before production launch. It covers browser engines,
-mobile, tablet, desktop widths, a LinkedIn in-app mobile approximation, and
-issue triage categories.
+This runbook records the responsive checks for the current portfolio across
+Chromium, Firefox, and WebKit. It covers mobile, tablet, and desktop widths plus
+a LinkedIn in-app mobile approximation. Every route must expose its H1, proof
+marker, and primary path on first load without horizontal overflow.
 
 ## Automated Gate
 
-Run the focused gate:
+Run the focused Chromium gate:
 
 ```bash
 pnpm test:e2e -- --grep "@responsive"
 ```
 
-Run the cross-browser version when browser tooling is available:
+Run all configured browser engines when their binaries are installed:
 
 ```bash
 pnpm test:e2e -- --grep "@responsive" --browser=all
 ```
 
-The dedicated spec is `tests/e2e/responsive-cross-browser.spec.ts`. It checks
-the home, projects, representative case study, resume, notes/build-log, note
-detail, and contact routes for:
+The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 
-- Visible first-load heading and proof copy.
-- Recruiter-path links to resume, project evidence, or contact.
-- No horizontal overflow in the main content.
-- Static fallback note visibility.
-- Mobile, tablet, and desktop viewport readability.
-- A LinkedIn in-app mobile user-agent approximation for first-load readability.
+## Route Matrix
 
-The notes coverage currently includes `/notes/` and
-`/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/` because that
-build-log entry exercises long note titles, tag chips, and the static-first Rust
-API boundary without relying on private project details.
+| Public route | First-load behavior |
+| --- | --- |
+| `/` | Identity, ProofGallery evidence, capability proof, and selected-Work link |
+| `/work/` | Work index, flagship proof, and case-study link |
+| `/work/cryo-flow-sim/` | Cryogenic proof and authentic video path |
+| `/work/conformal-cooling-channel-generation/` | Conformal-channel workflow, evidence gallery, and source-boundary narrative |
+| `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof and next-Work path |
+| `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof and next-Work path |
+| `/work/black-scholes-wasm/` | Black-Scholes live-pricer narrative and next-Work path |
+| `/about/` | Engineering judgment and selected-Work path |
+| `/resume/` | Résumé evidence and PDF download |
+| `/notes/` | Published Technical Notes and Black-Scholes note path |
+| `/contact/` | Static direct-contact channels |
 
 ## Browser And Viewport Matrix
 
-| Browser  | mobile 390x844 | tablet 820x1180 | desktop 1440x1000 | Evidence source                                       | Triage |
-| -------- | -------------- | --------------- | ----------------- | ----------------------------------------------------- | ------ |
-| Chromium | Automated      | Automated       | Automated         | `pnpm test:e2e -- --grep "@responsive" --browser=all` | None   |
-| Firefox  | Automated      | Automated       | Automated         | `pnpm test:e2e -- --grep "@responsive" --browser=all` | None   |
-| WebKit   | Automated      | Automated       | Automated         | `pnpm test:e2e -- --grep "@responsive" --browser=all` | None   |
+| Browser | mobile 390×844 | tablet 820×1180 | desktop 1440×1000 | Evidence source | Triage |
+| --- | --- | --- | --- | --- | --- |
+| Chromium | Automated | Automated | Automated | `pnpm test:e2e -- --grep "@responsive" --browser=all` | None |
+| Firefox | Automated | Automated | Automated | `pnpm test:e2e -- --grep "@responsive" --browser=all` | None |
+| WebKit | Automated | Automated | Automated | `pnpm test:e2e -- --grep "@responsive" --browser=all` | None |
 
 ## LinkedIn In-App Mobile
 
 The automated LinkedIn in-app mobile check is an approximation, not a real
-device-app certification. It uses a mobile viewport and LinkedIn-style
-user-agent to confirm the first load still exposes the Systems Atelier heading,
-the recruiter proof copy, the resume path, and no horizontal overflow.
+device-app certification. It disables JavaScript and uses a mobile viewport plus
+a LinkedIn-style user agent. The first load must retain the Home identity, both
+selected ProofGallery records, the selected-Work link, and a layout without
+horizontal overflow.
 
-Real LinkedIn app validation remains a manual production-promotion task because
-it requires the final public URL and an actual mobile app surface. If real app
-behavior differs from the automated approximation, record it in this runbook and
-classify it using the triage categories below.
+Real LinkedIn app validation remains a manual public-origin task. If the real
+app differs from the approximation, capture the device, route, viewport, and
+reproduction before assigning a triage category.
 
 ## Issue Triage
 
-Use these categories for B-055 findings:
+- `launch blocker`: A recruiter or senior engineer cannot read identity, Work
+  proof, résumé, or direct-contact paths on a major browser or primary viewport.
+- `polish`: A spacing or rendering issue is visible but the core reading and
+  navigation journey remains intact.
+- `post-launch`: A long-tail browser refinement can wait because the complete
+  static content and primary paths remain usable.
 
-- `launch blocker`: Prevents a recruiter or senior engineer from reading the
-  home page, project proof, resume path, or contact path on a major browser or
-  primary mobile width.
-- `polish`: Visual or spacing issue that looks imperfect but does not block the
-  core reading or contact journey.
-- `post-launch`: Enhancement or long-tail browser refinement that is safe to
-  defer because static content, resume, project evidence, and contact fallback
-  remain usable.
-
-## Current Notes
-
-- The automated gate is production-like local evidence; it is not production
-  evidence until run against the final deployed site or an owner-approved production-equivalent provider preview URL.
-- Screenshots are optional when the automated gate passes, but any triaged
-  issue should include a screenshot or concise reproduction note.
-- Production launch evidence still belongs in `runbooks/LAUNCH_EVIDENCE.md`.
+The automated gate is production-like local evidence, not final-origin
+evidence. Public launch evidence belongs in `runbooks/LAUNCH_EVIDENCE.md`.

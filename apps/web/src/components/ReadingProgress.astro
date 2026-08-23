@@ -1,0 +1,78 @@
+---
+const progressId = `reading-progress-${Astro.url.pathname.replace(/[^a-z0-9]+/gi, "-")}`;
+---
+
+<div
+	id={progressId}
+	class="reading-progress"
+	data-reading-progress
+	data-reading-progress-state="idle"
+	data-reading-progress-initializations="0"
+	aria-hidden="true"
+>
+	<span data-reading-progress-value></span>
+</div>
+
+<script is:inline>
+	const progressCandidate = document.currentScript?.previousElementSibling;
+	const progress =
+		progressCandidate instanceof HTMLElement ? progressCandidate : null;
+	const value = progress?.querySelector("[data-reading-progress-value]");
+
+	if (progress && value && progress.dataset.readingProgressState === "idle") {
+		const controller = new AbortController();
+		progress.dataset.readingProgressState = "ready";
+		progress.dataset.readingProgressInitializations = String(
+			Number(progress.dataset.readingProgressInitializations ?? "0") + 1,
+		);
+		const update = () => {
+			const maximum = document.documentElement.scrollHeight - window.innerHeight;
+			const percent = maximum <= 0 ? 100 : (window.scrollY / maximum) * 100;
+			value.style.width = `${Math.min(100, Math.max(1, percent))}%`;
+		};
+		const stop = () => {
+			controller.abort();
+			progress.dataset.readingProgressState = "stopped";
+		};
+
+		update();
+		window.addEventListener("scroll", update, {
+			passive: true,
+			signal: controller.signal,
+		});
+		window.addEventListener("resize", update, {
+			passive: true,
+			signal: controller.signal,
+		});
+		window.addEventListener("pagehide", stop, {
+			once: true,
+			signal: controller.signal,
+		});
+	}
+</script>
+
+<style>
+	.reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: calc(var(--z-header) + 1);
+		width: 100%;
+		height: 0.2rem;
+		pointer-events: none;
+	}
+
+	.reading-progress span {
+		display: block;
+		width: 1%;
+		height: 100%;
+		background: var(--color-signal);
+		transition: width var(--motion-fast) linear;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.reading-progress {
+			display: none;
+		}
+	}
+</style>

@@ -2,102 +2,206 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
-import BuildTelemetryStrip from "../components/BuildTelemetryStrip.astro";
-import CtaCluster from "../components/CtaCluster.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import SystemsMapHero from "../components/SystemsMapHero.astro";
+import CapabilityMatrix from "../components/CapabilityMatrix.astro";
+import EvidenceStrip from "../components/EvidenceStrip.astro";
+import MediaFrame from "../components/MediaFrame.astro";
+import ProofGallery from "../components/ProofGallery.astro";
+import { capabilityProof } from "../data/capability-proof";
 import { routeInventoryById } from "../data/routes";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { homeScaffold } from "../lib/home-scaffold";
 
-const scaffold = homeScaffold();
-type ProjectEntry = CollectionEntry<"projects">;
-const allProjects = (await getCollection("projects")) as ProjectEntry[];
-const [resume] = await getCollection("resume");
-const projects = allProjects
-	.filter(
-		(project: ProjectEntry) => project.data.publicationStatus === "publish",
-	)
-	.slice(0, 3);
+type WorkEntry = CollectionEntry<"work">;
+const publishedWork = ((await getCollection("work")) as WorkEntry[])
+	.filter((project) => project.data.publicationStatus === "publish")
+	.sort((left, right) => left.data.featuredOrder - right.data.featuredOrder);
+const flagships = publishedWork.filter(
+	(project) => project.data.placement === "flagship",
+);
+const supporting = publishedWork.filter(
+	(project) => project.data.placement === "supporting",
+);
+
+if (flagships.length !== 2) {
+	throw new Error(
+		`Homepage requires exactly two published flagships; found ${flagships.length}.`,
+	);
+}
+
+const cryogenicFlow = flagships[0];
+if (cryogenicFlow.data.slug !== "cryo-flow-sim") {
+	throw new Error("Cryogenic Flow must remain the ordered homepage hero.");
+}
+const homepageProof = [...flagships, ...supporting];
 ---
 
-<BaseLayout
-	title="HumanKaylee | Systems Atelier"
-	description="A static-first portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and creative web work."
+	<BaseLayout
+	title="Joe Poznanski | Principal Engineer"
+	description="Principal engineer for simulation, controls, and operational software."
 	canonicalPath="/"
 	ogImage={routeInventoryById.home.seo.ogImage}
 >
-	<section class="hero-shell" aria-labelledby="hero-title">
-		<div class="hero-copy">
-			<p class="section-kicker">{scaffold.kicker}</p>
-			<h1 id="hero-title">{scaffold.heroTitle}</h1>
-			<p class="lede">{scaffold.intro}</p>
-			<p class="body-copy">{scaffold.noJsNote}</p>
-			<CtaCluster items={scaffold.ctas} />
-		</div>
-		<SystemsMapHero projects={allProjects} />
-	</section>
-
-	<BuildTelemetryStrip items={scaffold.telemetry} />
-
-	<section class="content-section" aria-labelledby="support-title">
-		<p class="section-kicker">Proof themes</p>
-		<h2 id="support-title">What the first scan should prove.</h2>
-		<ol class="support-statement-list">
-			{
-				scaffold.supportStatements.map((statement) => (
-					<li>
-						<span>{statement}</span>
-					</li>
-				))
-			}
-		</ol>
-	</section>
-
-	<section class="content-section" aria-labelledby="paths-title">
-		<p class="section-kicker">Audience paths</p>
-		<h2 id="paths-title">Recruiter first, engineer second, collaborators third.</h2>
-		<div class="path-grid">
-			<article class="path-card">
-				<p class="eyebrow">Recruiter path</p>
-				<h3>Skills, scope, resume, contact.</h3>
-				<p>
-					A quick scan of practical strengths, the downloadable static resume
-					asset from the approved local source, selected projects, and a direct
-					fallback contact route.
+	<div class="signal-proof-home">
+		<section class="home-hero" aria-labelledby="hero-title">
+			<div class="home-hero__copy">
+				<p class="section-kicker">Joe Poznanski · Principal Software Engineer</p>
+				<h1 id="hero-title">
+					Principal engineer for simulation, controls, and operational software.
+				</h1>
+				<p class="home-hero__lede">
+					I build high-fidelity simulation, telemetry, and operator-facing
+					software across Rust, C++, distributed systems, and human-in-the-loop
+					AI.
 				</p>
-				<a
-					class="contact-link"
-					data-touch-target="true"
-					href={resume.data.pdfDownloadPath}
-				>
-					Download resume PDF
+				<a class="signal-link" data-touch-target="true" href="/work/">
+					View selected work
 				</a>
-			</article>
-			<article class="path-card">
-				<p class="eyebrow">Engineer path</p>
-				<h3>Architecture, verification, operations.</h3>
-				<p>
-					Project cards and case-study outlines emphasize constraints, evidence,
-					and operational judgment over unsupported claims.
-				</p>
-			</article>
-			<article class="path-card">
-				<p class="eyebrow">Static baseline</p>
-				<h3>No API dependency for core content.</h3>
-				<p>
-					The home page, project index, resume workflow, and contact page remain
-					useful when JavaScript, WebGL, or the Rust API is unavailable.
-				</p>
-			</article>
-		</div>
-	</section>
+			</div>
+			<div class="home-hero__media">
+				<MediaFrame media={cryogenicFlow.data.media} />
+			</div>
+		</section>
 
-	<section class="content-section" aria-labelledby="featured-projects">
-		<p class="section-kicker">Featured projects</p>
-		<h2 id="featured-projects">Selected proof without private leakage.</h2>
-		<div class="artifact-grid">
-			{projects.map((project: ProjectEntry) => <ProjectCard project={project} />)}
-		</div>
-	</section>
+		<EvidenceStrip
+			items={cryogenicFlow.data.evidence.values}
+			label="Verified Cryogenic Flow evidence"
+		/>
+
+		<ProofGallery projects={homepageProof} />
+
+		<CapabilityMatrix records={capabilityProof} />
+
+		<section class="home-about" aria-labelledby="about-preview-title">
+			<div>
+				<p class="section-kicker">About</p>
+				<h2 id="about-preview-title">Judgment lives in the handoff.</h2>
+			</div>
+			<div class="home-about__copy">
+				<p>
+					I work from problem framing through implementation, verification, and
+					operator handoff. I value clear system boundaries, evidence that can be
+					repeated, and documentation that preserves the reasoning behind a
+					decision.
+				</p>
+				<a class="signal-link" data-touch-target="true" href="/about/">
+					More about how I work
+				</a>
+			</div>
+		</section>
+
+		<section class="home-contact" aria-labelledby="contact-invitation-title">
+			<p class="section-kicker">Start a conversation</p>
+			<h2 id="contact-invitation-title">
+				Working through a system where reliability matters?
+			</h2>
+			<a class="signal-link" data-touch-target="true" href="/contact/">
+				Contact Joe
+			</a>
+		</section>
+	</div>
 </BaseLayout>
+
+<style>
+	.signal-proof-home {
+		display: grid;
+		gap: 0;
+	}
+
+	.home-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 0.95fr) minmax(24rem, 1.05fr);
+		gap: clamp(2rem, 6vw, 7rem);
+		align-items: center;
+		min-height: min(44rem, calc(100vh - 8.5rem));
+		padding-bottom: var(--space-6);
+	}
+
+	.home-hero__copy {
+		display: grid;
+		gap: var(--space-4);
+		align-content: center;
+	}
+
+	.home-hero__copy .section-kicker,
+	.home-about .section-kicker,
+	.home-contact .section-kicker {
+		color: var(--color-muted);
+		font-size: 0.75rem;
+	}
+
+	.home-hero h1 {
+		font-size: clamp(3.2rem, 4.4vw, 5.5rem);
+	}
+
+	.home-hero__lede {
+		max-width: 40rem;
+		font-size: clamp(1.05rem, 1.65vw, 1.4rem);
+		line-height: 1.45;
+	}
+
+	.home-hero__media {
+		min-width: 0;
+	}
+
+	.home-about,
+	.home-contact {
+		padding-block: var(--space-6);
+	}
+
+	.home-about {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.7fr);
+		gap: clamp(2rem, 8vw, 10rem);
+	}
+
+	.home-about > div,
+	.home-about__copy {
+		display: grid;
+		align-content: start;
+		gap: var(--space-4);
+	}
+
+	.home-about__copy p {
+		font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+		line-height: 1.55;
+	}
+
+	.home-contact {
+		display: grid;
+		grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 1fr) auto;
+		gap: var(--space-4);
+		align-items: end;
+		border-top: 1px solid var(--line);
+	}
+
+	.home-contact h2 {
+		max-width: 58rem;
+		font-size: clamp(2.25rem, 5vw, 5rem);
+	}
+
+	@media (max-width: 64rem) {
+		.home-hero,
+		.home-about,
+		.home-contact {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.home-hero {
+			min-height: 0;
+		}
+
+		.home-contact {
+			align-items: start;
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.home-hero {
+			gap: var(--space-5);
+			padding-bottom: var(--space-5);
+		}
+
+		.home-hero h1 {
+			font-size: clamp(2.4rem, 11vw, 4.3rem);
+		}
+	}
+</style>

@@ -1,0 +1,319 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import MediaFrame from "../../components/MediaFrame.astro";
+import WorkEvidenceFlow from "../../components/WorkEvidenceFlow.astro";
+import { routeInventoryById } from "../../data/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type WorkEntry = CollectionEntry<"work">;
+
+const publishedWork = ((await getCollection("work")) as WorkEntry[]).filter(
+	(entry) => entry.data.publicationStatus === "publish",
+);
+const flagshipWork = publishedWork
+	.filter((entry) => entry.data.placement === "flagship")
+	.sort((left, right) => left.data.featuredOrder - right.data.featuredOrder);
+const supportingWork = publishedWork
+	.filter((entry) => entry.data.placement === "supporting")
+	.sort((left, right) => left.data.featuredOrder - right.data.featuredOrder);
+const archiveWork = publishedWork
+	.filter((entry) => entry.data.placement === "archive")
+	.sort((left, right) => left.data.featuredOrder - right.data.featuredOrder);
+
+if (
+	flagshipWork.length !== 2 ||
+	supportingWork.length !== 1 ||
+	archiveWork.length !== 2
+) {
+	throw new Error(
+		`Work hierarchy requires two flagships, one supporting demonstration, and two archive entries; found ${flagshipWork.length}, ${supportingWork.length}, and ${archiveWork.length}.`,
+	);
+}
+---
+
+<BaseLayout
+	title={routeInventoryById.work.seo.title}
+	description={routeInventoryById.work.seo.description}
+	canonicalPath={routeInventoryById.work.seo.canonicalPath}
+	ogImage={routeInventoryById.work.seo.ogImage}
+>
+	<div class="page-shell work-index">
+		<header class="work-index__header">
+			<p class="work-index__kicker">Selected work</p>
+			<h1>Systems made legible through proof.</h1>
+			<p>
+				Two flagship simulation systems, a working browser demonstration, and
+				an operational archive. Each stays framed by the decisions, evidence,
+				and limits that make the result trustworthy.
+			</p>
+		</header>
+
+		<section data-flagship-work aria-labelledby="flagship-work-title">
+			<header class="work-index__section-header">
+				<p>01</p>
+				<p id="flagship-work-title" class="featured-work-label">Flagship work</p>
+			</header>
+			<div class="featured-work-list">
+				{
+					flagshipWork.map((work, index) => (
+						<article class="featured-work">
+							<div class="featured-work__copy">
+								<p class="featured-work__meta">
+									<span>{String(index + 1).padStart(2, "0")}</span>
+									<span>{work.data.discipline}</span>
+									<span>{work.data.year}</span>
+								</p>
+								<h2>
+									<a href={`/work/${work.data.slug}/`}>{work.data.title}</a>
+								</h2>
+								<p>{work.data.lede}</p>
+								<dl>
+									<div>
+										<dt>Responsibility</dt>
+										<dd>{work.data.role}</dd>
+									</div>
+									<div>
+										<dt>Strongest evidence</dt>
+										<dd>{work.data.evidence.summary}</dd>
+									</div>
+								</dl>
+								<a
+									class="signal-link"
+									data-touch-target="true"
+									href={`/work/${work.data.slug}/`}
+								>
+									Read the case study
+								</a>
+							</div>
+							<MediaFrame media={work.data.media}>
+								<WorkEvidenceFlow work={work} />
+							</MediaFrame>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section data-supporting-work aria-labelledby="supporting-work-title">
+			<header class="work-index__section-header">
+				<p>Supporting work</p>
+				<h2 id="supporting-work-title">Working technical demonstrations.</h2>
+			</header>
+			<div class="supporting-work-list">
+				{
+					supportingWork.map((work) => (
+						<article>
+							<p>{work.data.discipline}</p>
+							<h2>
+								<a
+									data-touch-target="true"
+									href={`/work/${work.data.slug}/`}
+								>
+									{work.data.title}
+								</a>
+							</h2>
+							<p>{work.data.lede}</p>
+							<strong>{work.data.evidence.summary}</strong>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section data-archive-work aria-labelledby="archive-work-title">
+			<header class="work-index__section-header">
+				<p>Operational archive</p>
+				<h2 id="archive-work-title">Additional systems and recovery work.</h2>
+			</header>
+			<div class="archive-work-list">
+				{
+					archiveWork.map((work) => (
+						<article>
+							<p>{work.data.discipline}</p>
+							<h3>
+								<a
+									data-touch-target="true"
+									href={`/work/${work.data.slug}/`}
+								>
+									{work.data.title}
+								</a>
+							</h3>
+							<p>{work.data.lede}</p>
+							<p class="archive-work__evidence">
+								<strong>{work.data.evidence.label}</strong>
+								<span>{work.data.evidence.summary}</span>
+							</p>
+						</article>
+					))
+				}
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.work-index__header {
+		display: grid;
+		max-width: 76rem;
+		gap: var(--space-4);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.work-index__header > p:last-child {
+		max-width: 48rem;
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.work-index__kicker,
+	.work-index__section-header > p,
+	.featured-work__meta,
+	.featured-work dt,
+	.supporting-work-list article > p:first-child,
+	.archive-work-list article > p:first-child,
+	.archive-work__evidence strong {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.work-index__section-header {
+		display: grid;
+		gap: var(--space-3);
+		border-top: 1px solid var(--line);
+		padding-top: var(--space-4);
+	}
+
+	.featured-work-label {
+		font-size: clamp(1.2rem, 2vw, 1.6rem);
+		font-weight: 700;
+	}
+
+	.featured-work-list {
+		display: grid;
+	}
+
+	.featured-work {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+		gap: clamp(2rem, 5vw, 6rem);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.featured-work__copy {
+		display: grid;
+		align-content: start;
+		gap: var(--space-4);
+	}
+
+	.featured-work__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+	}
+
+	.featured-work h2,
+	.supporting-work-list h2 {
+		font-size: clamp(2rem, 4.5vw, 4.4rem);
+	}
+
+	.featured-work dl {
+		display: grid;
+		gap: var(--space-3);
+		margin: 0;
+	}
+
+	.featured-work dl div {
+		display: grid;
+		gap: var(--space-1);
+	}
+
+	.featured-work dd {
+		margin: 0;
+	}
+
+	.supporting-work-list {
+		display: grid;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.supporting-work-list article {
+		display: grid;
+		grid-template-columns: 0.35fr 1fr 1fr;
+		gap: var(--space-4);
+		align-items: start;
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.supporting-work-list article > strong {
+		grid-column: 2 / -1;
+		border-left: 0.25rem solid var(--color-signal);
+		padding-left: var(--space-3);
+	}
+
+	[data-supporting-work],
+	[data-archive-work] {
+		padding-top: var(--space-6);
+	}
+
+	.archive-work-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		border-bottom: 1px solid var(--line);
+	}
+
+	.archive-work-list article {
+		display: grid;
+		align-content: start;
+		gap: var(--space-3);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.archive-work-list article:nth-child(odd) {
+		padding-right: var(--space-5);
+	}
+
+	.archive-work-list article:nth-child(even) {
+		border-left: 1px solid var(--line);
+		padding-left: var(--space-5);
+	}
+
+	.archive-work-list h3 {
+		font-size: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	.archive-work-list article > p:not(:first-child),
+	.archive-work__evidence span {
+		color: var(--color-muted);
+	}
+
+	.archive-work__evidence {
+		display: grid;
+		gap: var(--space-1);
+	}
+
+	@media (max-width: 62rem) {
+		.featured-work,
+		.supporting-work-list article,
+		.archive-work-list {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.supporting-work-list article > strong {
+			grid-column: auto;
+		}
+
+		.archive-work-list article:nth-child(odd),
+		.archive-work-list article:nth-child(even) {
+			border-left: 0;
+			padding-inline: 0;
+		}
+	}
+</style>

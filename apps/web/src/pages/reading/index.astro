@@ -38,14 +38,22 @@ const statusLabel: Record<ReadingItem["status"], string> = {
 	queued: "Queued",
 };
 
+const itemCount = entry?.data.items.length ?? 0;
+const completedCount =
+	entry?.data.items.filter((item: ReadingItem) => item.status === "read")
+		.length ?? 0;
+const activeCount =
+	entry?.data.items.filter((item: ReadingItem) => item.status === "reading")
+		.length ?? 0;
+
 const { Content } = entry ? await render(entry) : { Content: null };
 ---
 
 <BaseLayout
-	title="Reading | HumanKaylee"
-	description="Books, papers, posts, and talks that HumanKaylee is reading or has read — with one-sentence takeaways."
+	title="Reading | Joe Poznanski"
+	description="Books, papers, posts, and talks that Joe Poznanski is reading or has read, with one-sentence takeaways."
 	canonicalPath="/reading/"
-	ogImage="/social/default.svg"
+	ogImage="/social/default.png"
 >
 	{
 		entry ? (
@@ -53,6 +61,10 @@ const { Content } = entry ? await render(entry) : { Content: null };
 				<header class="page-header">
 					<p class="section-kicker">Reading</p>
 					<h1 id="reading-title">{entry.data.title}</h1>
+					<p class="page-intro reading-summary">
+						{itemCount} entries: {completedCount} completed, {activeCount} in
+						progress, and the rest intentionally queued.
+					</p>
 				</header>
 
 				{kindOrder.map((kind) =>
@@ -61,21 +73,34 @@ const { Content } = entry ? await render(entry) : { Content: null };
 							class="reading-kind-group"
 							aria-labelledby={`reading-kind-${kind}`}
 						>
-							<h2 id={`reading-kind-${kind}`} class="section-heading">
-								{kindLabels[kind]}
-							</h2>
+							<div class="reading-kind-heading">
+								<h2 id={`reading-kind-${kind}`} class="section-heading">
+									{kindLabels[kind]}
+								</h2>
+								<p>{itemsByKind[kind].length} {itemsByKind[kind].length === 1 ? "item" : "items"}</p>
+							</div>
 							<ul class="reading-list">
-								{itemsByKind[kind].map((item: ReadingItem) => (
-									<li class="reading-item project-card">
+								{itemsByKind[kind].map((item: ReadingItem, index) => (
+									<li
+										class:list={[
+											"reading-item",
+											"project-card",
+											index === 0 && "reading-item-featured",
+										]}
+									>
 										<div class="reading-item-header">
 											<strong class="reading-item-title">
 												{item.link ? (
 													<a
-														href={item.link}
-														rel="noopener noreferrer"
-														class="reading-item-link"
-													>
-														{item.title}
+													href={item.link}
+													rel="noopener noreferrer"
+													target="_blank"
+													class="reading-item-link"
+												>
+													{item.title}
+													<span aria-hidden="true" class="external-link-mark">
+														↗
+													</span>
 													</a>
 												) : (
 													item.title
@@ -101,9 +126,10 @@ const { Content } = entry ? await render(entry) : { Content: null };
 				)}
 
 				{Content && (
-					<div class="reading-body">
+					<section class="reading-body reading-notes" aria-labelledby="reading-notes-title">
+						<h2 id="reading-notes-title">Why these are in the queue</h2>
 						<Content />
-					</div>
+					</section>
 				)}
 			</section>
 		) : (

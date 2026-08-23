@@ -24,10 +24,10 @@ const { Content } = entry ? await render(entry) : { Content: null };
 ---
 
 <BaseLayout
-	title="Now | HumanKaylee"
-	description="What HumanKaylee is focused on right now — current projects, reading, and working context."
+	title="Now | Joe Poznanski"
+	description="What Joe Poznanski is focused on right now: current projects, reading, and working context."
 	canonicalPath="/now/"
-	ogImage="/social/default.svg"
+	ogImage="/social/default.png"
 >
 	{
 		entry ? (
@@ -38,9 +38,15 @@ const { Content } = entry ? await render(entry) : { Content: null };
 					<p class="page-intro">{entry.data.summary}</p>
 				</header>
 
-				<div class="artifact-grid">
-					{items.map((item: NowItem) => (
-						<article class="project-card">
+				<div class="artifact-grid now-grid">
+					{items.map((item: NowItem, index: number) => (
+						<article
+							class:list={[
+								"project-card",
+								"now-focus-card",
+								index === 0 && "now-focus-card-primary",
+							]}
+						>
 							<h2 class="project-name">{item.label}</h2>
 							<p class="body-copy">{item.note}</p>
 						</article>
@@ -48,9 +54,10 @@ const { Content } = entry ? await render(entry) : { Content: null };
 				</div>
 
 				{Content && (
-					<div class="now-body">
+					<section class="now-body now-notes" aria-labelledby="now-notes-title">
+						<h2 id="now-notes-title">Working notes</h2>
 						<Content />
-					</div>
+					</section>
 				)}
 
 				<footer class="now-footer">
@@ -67,7 +74,7 @@ const { Content } = entry ? await render(entry) : { Content: null };
 						<a href="https://nownownow.com/about" rel="noopener noreferrer">
 							/now page
 						</a>
-						. The idea comes from Derek Sivers — a single snapshot of what I am
+						. The idea comes from Derek Sivers: a single snapshot of what I am
 						actually working on, updated when things change rather than when there
 						is something to announce.
 					</p>

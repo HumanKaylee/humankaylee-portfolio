@@ -3,49 +3,50 @@ import { expect, test } from "@playwright/test";
 const outageRoutes = [
 	{
 		path: "/",
-		heading: /systems atelier/i,
-		marker: /practical AI-assisted systems/i,
-		link: { name: /for recruiters/i, href: "/resume/" },
+		heading:
+			/Principal engineer for simulation, controls, and operational software/i,
+		marker: /Selected work/i,
+		link: { name: /View selected work/i, href: "/work/" },
 	},
 	{
-		path: "/projects/",
-		heading: /project atlas/i,
-		marker: /CLI Fleet Synchronization/i,
+		path: "/work/",
+		heading: /Systems made legible through proof/i,
+		marker: /Flagship work/i,
 		link: {
-			name: /View project detail for CLI Fleet Synchronization/i,
-			href: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
+			name: /CLI Fleet Synchronization/i,
+			href: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		},
 	},
 	{
-		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-		heading: /CLI Fleet Synchronization and MCP Rollout/i,
-		marker: /sanitized rollout matrix/i,
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
+		heading: /CLI Fleet Synchronization/i,
+		marker: /Proof/i,
 	},
 	{
 		path: "/resume/",
-		heading: /resume/i,
-		marker: /approved local source/i,
+		heading: /Joe Poznanski/i,
+		marker: /Download résumé PDF/i,
 		link: {
-			name: /Download resume PDF/i,
-			href: "/downloads/humankaylee-resume.pdf",
+			name: /Download résumé PDF/i,
+			href: "/downloads/joe-poznanski-resume.pdf",
 		},
 	},
 	{
 		path: "/notes/",
-		heading: /notes from the systems atelier/i,
-		marker: /build decisions/i,
+		heading: /Technical notes/i,
+		marker: /Black-Scholes/i,
 		link: {
-			name: /Why the portfolio content starts as data/i,
-			href: "/notes/why-the-portfolio-content-starts-as-data-not-pages/",
+			name: /A Black-Scholes options pricer in Rust, compiled to WASM/i,
+			href: "/notes/wasm-black-scholes-options-pricer/",
 		},
 	},
 	{
 		path: "/contact/",
-		heading: /contact route/i,
-		marker: /mailto fallback/i,
+		heading: /Let’s talk about the system behind the problem/i,
+		marker: /josephpoznanski@gmail\.com/i,
 		link: {
-			name: /contact-pending@humankaylee\.example/i,
-			href: "mailto:contact-pending@humankaylee.example",
+			name: /Email Joe/i,
+			href: "mailto:josephpoznanski@gmail.com",
 		},
 	},
 ];
@@ -55,18 +56,14 @@ const rawErrorText =
 const resumeLaunchBoundaryText =
 	/published resume|published PDF|public resume|public PDF|live resume|production resume/i;
 
-async function fillContactForm(page: import("@playwright/test").Page) {
-	await page.getByLabel("Your name").fill("Public Reviewer");
-	await page.getByLabel("Email address").fill("reviewer@example.com");
-	await page
-		.getByLabel("Message")
-		.fill("I would like to discuss the portfolio systems work.");
-}
-
 test.describe("API outage resilience @api-down @B-056", () => {
-	test("keeps representative static routes usable when API requests fail", async ({
+	test("keeps representative static routes usable when API requests fail @static-runtime", async ({
 		page,
 	}) => {
+		const apiRequests: string[] = [];
+		page.on("request", (request) => {
+			if (request.url().includes("/api/")) apiRequests.push(request.url());
+		});
 		await page.route("**/api/**", (route) => route.abort("failed"));
 
 		for (const route of outageRoutes) {
@@ -89,57 +86,42 @@ test.describe("API outage resilience @api-down @B-056", () => {
 				);
 				const primaryNav = page.getByLabel("Primary navigation");
 				await expect(
-					primaryNav.getByRole("link", { name: "Projects" }),
-				).toHaveAttribute("href", "/projects/");
+					primaryNav.getByRole("link", { name: "Work" }),
+				).toHaveAttribute("href", "/work/");
 				await expect(
-					primaryNav.getByRole("link", { name: "Resume" }),
+					primaryNav.getByRole("link", { name: "Résumé" }),
 				).toHaveAttribute("href", "/resume/");
 				await expect(
 					primaryNav.getByRole("link", { name: "Contact" }),
 				).toHaveAttribute("href", "/contact/");
 				if (route.link) {
 					await expect(
-						page.getByRole("link", { name: route.link.name }),
+						page.getByRole("link", { name: route.link.name }).first(),
 					).toHaveAttribute("href", route.link.href);
 				}
 				await expect(page.locator("body")).not.toContainText(rawErrorText);
 			});
 		}
+
+		expect(apiRequests).toEqual([]);
 	});
 
-	test("sanitizes backend outage responses while keeping contact fallback actionable", async ({
-		page,
-	}) => {
-		await page.route("**/api/contact", async (route) => {
-			await route.fulfill({
-				status: 503,
-				contentType: "application/json",
-				body: JSON.stringify({
-					error: {
-						code: "database_unavailable",
-						message:
-							"sqlx::Error: store unavailable at /srv/internal/contact-store.jsonl\nstack trace: contact_delivery.rs:42",
-					},
-				}),
-			});
+	test("keeps contact independent from a failing backend", async ({ page }) => {
+		let contactApiCalled = false;
+		await page.route("**/api/contact", (route) => {
+			contactApiCalled = true;
+			return route.abort("failed");
 		});
 
 		await page.goto("/contact/");
-		await fillContactForm(page);
-		await page.getByRole("button", { name: "Send message" }).click();
-
-		await expect(page.getByRole("status")).toContainText(/api unavailable/i);
-		await expect(page.getByRole("status")).toContainText(
-			"Use the email link below if the API is unavailable.",
-		);
-		await expect(page.getByLabel("Message")).toHaveValue(
-			"I would like to discuss the portfolio systems work.",
-		);
+		await expect(page.locator("form")).toHaveCount(0);
 		await expect(
 			page.getByRole("link", {
-				name: /contact-pending@humankaylee\.example/i,
+				name: "Email Joe",
+				exact: true,
 			}),
-		).toHaveAttribute("href", "mailto:contact-pending@humankaylee.example");
+		).toHaveAttribute("href", "mailto:josephpoznanski@gmail.com");
 		await expect(page.locator("body")).not.toContainText(rawErrorText);
+		expect(contactApiCalled).toBe(false);
 	});
 });

@@ -16,6 +16,7 @@ const files = {
 	research: "docs/RESEARCH.md",
 	roadmap: "docs/ROADMAP.md",
 	runbook: "runbooks/POST_LAUNCH_FEATURE_PREP.md",
+	retiredAtlasLoader: "apps/web/public/scripts/project-constellation.mjs",
 };
 
 function readRequiredFile(path) {
@@ -594,4 +595,23 @@ test("Phase 8 post-launch feature prep is documented without authorizing blocked
 		"before B-064 is approved",
 		"GitHub sync should not use ambiguous assistant approval shorthand",
 	);
+});
+
+test("post-launch prep does not retain a deferred WebGL or atlas loader", () => {
+	assert.equal(
+		existsSync(files.retiredAtlasLoader),
+		false,
+		"retired project constellation loader must stay deleted",
+	);
+
+	for (const path of [
+		"apps/web/src/pages/index.astro",
+		"apps/web/src/pages/work/index.astro",
+		"apps/web/src/layouts/BaseLayout.astro",
+	]) {
+		const source = readRequiredFile(path);
+		expectNotContains(source, "project-constellation.mjs");
+		expectNotContains(source, "data-constellation-loader");
+		expectNotContains(source, "ProjectAtlas");
+	}
 });

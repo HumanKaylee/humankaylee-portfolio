@@ -1,0 +1,132 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { WorkEntryData } from "../lib/contracts/work";
+
+type WorkEntry = CollectionEntry<"work">;
+type FlowStep = Readonly<{ label: string; value: string }>;
+type EvidenceValue = WorkEntryData["evidence"]["values"][number];
+
+type Props = {
+	work: WorkEntry;
+};
+
+const { work } = Astro.props as Props;
+const { data } = work;
+
+const genericSteps: readonly FlowStep[] = [
+	{ label: "Problem boundary", value: data.problem },
+	{ label: "System boundary", value: data.architecture.overview },
+	{ label: "Evidence", value: data.evidence.summary },
+	{ label: "Known limits", value: data.evidence.limits },
+];
+
+let steps = genericSteps;
+
+if (data.slug === "cli-fleet-synchronization-and-mcp-rollout") {
+	steps = [
+		{ label: "Inventory", value: data.decisions[0].choice },
+		{ label: "Registration", value: data.architecture.overview },
+		{ label: "Per-target verification", value: data.decisions[1].choice },
+		{ label: "Status matrix", value: data.evidence.summary },
+	];
+} else if (
+	data.slug === "remote-workstation-recovery-and-operational-debugging"
+) {
+	steps = [
+		{
+			label: "Viewer",
+			value:
+				data.evidence.values.find(
+					(item: EvidenceValue) => item.label === "Viewer behavior",
+				)?.detail ?? data.problem,
+		},
+		{
+			label: "Reachability",
+			value:
+				data.evidence.values.find(
+					(item: EvidenceValue) => item.label === "Reachability",
+				)?.detail ?? data.architecture.overview,
+		},
+		{ label: "Remote shell", value: data.architecture.overview },
+		{
+			label: "Role-local state",
+			value:
+				data.evidence.values.find(
+					(item: EvidenceValue) => item.label === "Role-local state",
+				)?.detail ?? data.constraints[0],
+		},
+		{ label: "Session continuity", value: data.decisions[0].choice },
+	];
+}
+---
+
+<div class="evidence-flow" data-evidence-flow aria-label={data.media.alt}>
+	<ol>
+		{
+			steps.map((step) => (
+				<li data-evidence-step>
+					<strong>{step.label}</strong>
+					<span>{step.value}</span>
+				</li>
+			))
+		}
+	</ol>
+	<dl aria-label={`${data.title} evidence values`}>
+		{
+			data.evidence.values.map((item: EvidenceValue) => (
+				<div data-evidence-role>
+					<dt>{item.label}</dt>
+					<dd>{item.value}</dd>
+				</div>
+			))
+		}
+	</dl>
+</div>
+
+<style>
+	.evidence-flow {
+		display: grid;
+		gap: var(--space-4);
+		padding: clamp(1.25rem, 4vw, 3rem);
+		background: var(--color-technical);
+		color: var(--color-media);
+	}
+
+	.evidence-flow ol,
+	.evidence-flow dl {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.evidence-flow li,
+	.evidence-flow dl > div {
+		display: grid;
+		gap: var(--space-1);
+		border-top: 1px solid color-mix(in srgb, var(--color-media) 20%, transparent);
+		padding-top: var(--space-2);
+	}
+
+	.evidence-flow strong,
+	.evidence-flow dt {
+		color: var(--color-signal);
+		font-family: var(--font-evidence);
+		font-size: 0.68rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.evidence-flow dd {
+		margin: 0;
+	}
+
+	@media (max-width: 48rem) {
+		.evidence-flow ol,
+		.evidence-flow dl {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

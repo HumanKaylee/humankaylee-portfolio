@@ -38,23 +38,19 @@ test("notes surfaces are covered by static-shell and visual-surface QA without p
 
 	for (const spec of [staticShell, visualSurfaces]) {
 		expectContains(spec, '"/notes/"', "notes index route coverage");
-		expectContains(
-			spec,
-			'"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"',
-			"notes detail route coverage",
-		);
 	}
 
 	expectContains(
 		staticShell,
-		"The static shell carries the recruiting story",
-		"note detail static-shell marker",
+		'"/notes/wasm-black-scholes-options-pricer/"',
+		"public notes detail route coverage",
 	);
 	expectContains(
-		visualSurfaces,
-		"article.paper-panel",
-		"note detail visual surface selector",
+		staticShell,
+		"European options",
+		"note detail static-shell marker",
 	);
+	expectContains(visualSurfaces, "releaseRoutes", "notes visual route matrix");
 	expectContains(
 		quality,
 		'`pnpm test:e2e -- --grep "@static-shell|@visual-surfaces"` verifies core static shell and art-directed surface coverage, including notes/build-log index and detail routes, as local QA evidence only.',

@@ -2,47 +2,30 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const coreRoutes = [
+	{ path: "/", marker: /Flagship systems, backed by working software/i },
+	{ path: "/work/", marker: /Flagship work/i },
+	{ path: "/work/cryo-flow-sim/", marker: /92 tests passed/i },
 	{
-		path: "/",
-		marker: /practical AI-assisted systems/i,
+		path: "/work/conformal-cooling-channel-generation/",
+		marker: /Fresh gear-cavity capture/i,
 	},
 	{
-		path: "/projects/",
-		marker: /CLI Fleet Synchronization/i,
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
+		marker: /Verification matrix/i,
 	},
 	{
-		path: "/case-studies/",
-		marker: /reviewed is not approved/i,
+		path: "/work/remote-workstation-recovery-and-operational-debugging/",
+		marker: /Layered triage matrix/i,
 	},
 	{
-		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-		marker: /sanitized rollout matrix/i,
+		path: "/work/black-scholes-wasm/",
+		marker: /Live pricer/i,
 	},
-	{
-		path: "/case-studies/remote-workstation-recovery-and-operational-debugging/",
-		marker: /public-safe narrative/i,
-	},
-	{
-		path: "/case-studies/humankaylee-portfolio-build/",
-		marker: /static-first architecture/i,
-	},
-	{
-		path: "/case-studies/creative-web-systems-atlas-demo/",
-		marker: /semantic project atlas fallback/i,
-	},
-	{
-		path: "/resume/",
-		marker: /Download resume PDF/i,
-	},
-	{
-		path: "/notes/",
-		marker: /build decisions/i,
-	},
-	{
-		path: "/contact/",
-		marker: /mailto fallback/i,
-	},
-];
+	{ path: "/about/", marker: /Operating principles/i },
+	{ path: "/resume/", marker: /Agentic AI & automation highlights/i },
+	{ path: "/notes/", marker: /Black-Scholes/i },
+	{ path: "/contact/", marker: /Useful context to include/i },
+] as const;
 
 const privateContentPatterns = [
 	{ label: "private Linux home path", pattern: /\/home\/joe/i },
@@ -82,28 +65,37 @@ function toMilliseconds(duration: string) {
 	return Number.parseFloat(trimmed) || 0;
 }
 
-test.describe("quality @quality @noscript", () => {
+test.describe("Signal / Proof quality @quality @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 
 	for (const route of coreRoutes) {
 		test(`keeps ${route.path} useful without JavaScript`, async ({ page }) => {
-			await page.goto(route.path);
+			const response = await page.goto(route.path);
 
+			expect(response?.status()).toBe(200);
 			await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 			await expect(page.locator("main")).toContainText(route.marker);
-			await expect(page.locator(".static-fallback-note")).toBeVisible();
+			await expect(
+				page.locator(".noscript-banner, .static-fallback-note"),
+			).toHaveCount(0);
+			if (route.path === "/") {
+				await expect(
+					page.locator("[data-proof-placement]:visible"),
+				).toHaveCount(3);
+			}
 		});
 	}
 });
 
-test.describe("quality @quality @reduced-motion", () => {
+test.describe("Signal / Proof quality @quality @reduced-motion", () => {
 	for (const route of coreRoutes) {
 		test(`keeps ${route.path} readable and minimizes motion`, async ({
 			page,
 		}) => {
 			await page.emulateMedia({ reducedMotion: "reduce" });
-			await page.goto(route.path);
+			const response = await page.goto(route.path);
 
+			expect(response?.status()).toBe(200);
 			await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 			await expect(page.locator("main")).toContainText(route.marker);
 
@@ -111,7 +103,11 @@ test.describe("quality @quality @reduced-motion", () => {
 				const candidates = [
 					document.documentElement,
 					document.body,
-					...Array.from(document.querySelectorAll("a, .project-card, main")),
+					...Array.from(
+						document.querySelectorAll(
+							"a, button, [data-proof-placement], [data-motion-loop], main",
+						),
+					),
 				];
 				const durations = candidates.flatMap((element) => {
 					const styles = getComputedStyle(element);
@@ -141,12 +137,19 @@ test.describe("quality @quality @reduced-motion", () => {
 	}
 });
 
-test.describe("quality @quality", () => {
+test.describe("Signal / Proof quality @quality", () => {
 	for (const route of coreRoutes) {
 		test(`has no serious or critical accessibility violations on ${route.path} @accessibility`, async ({
 			page,
 		}) => {
-			await page.goto(route.path);
+			const response = await page.goto(route.path);
+			expect(response?.status()).toBe(200);
+			const auditedStates: string[] = [];
+			const controls = page.locator("#bs-controls");
+			if (route.path === "/work/black-scholes-wasm/") {
+				await expect(controls).toHaveAttribute("aria-hidden", "true");
+				await expect(controls).toHaveAttribute("inert", "");
+			}
 
 			const accessibilityScanResults = await new AxeBuilder({ page })
 				.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -157,6 +160,30 @@ test.describe("quality @quality", () => {
 				);
 
 			expect(launchBlockingViolations).toEqual([]);
+			auditedStates.push("pre-intersection");
+			if (route.path === "/work/black-scholes-wasm/") {
+				expect(
+					accessibilityScanResults.passes.map((rule) => rule.id),
+				).toContain("aria-hidden-focus");
+
+				await page.locator(".bs-demo").scrollIntoViewIfNeeded();
+				await expect(controls).not.toHaveAttribute("aria-hidden", "true");
+				await expect(controls).not.toHaveAttribute("inert", "");
+				await expect(page.locator("#bs-price")).toHaveText(/^\$\d+\.\d{4}$/);
+
+				const activeControlScanResults = await new AxeBuilder({ page })
+					.include("#bs-controls")
+					.withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+					.analyze();
+				const activeControlViolations =
+					activeControlScanResults.violations.filter((violation) =>
+						["serious", "critical"].includes(violation.impact ?? ""),
+					);
+
+				expect(activeControlViolations).toEqual([]);
+				auditedStates.push("active-controls");
+				expect(auditedStates).toEqual(["pre-intersection", "active-controls"]);
+			}
 		});
 	}
 
@@ -164,7 +191,8 @@ test.describe("quality @quality", () => {
 		test(`does not expose private content in rendered ${route.path}`, async ({
 			page,
 		}) => {
-			await page.goto(route.path);
+			const response = await page.goto(route.path);
+			expect(response?.status()).toBe(200);
 
 			const rendered = await page.locator("body").innerText();
 			const publicAttributes = await page

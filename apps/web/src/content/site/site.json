@@ -1,12 +1,12 @@
 {
-	"siteName": "HumanKaylee Portfolio",
-	"siteDescription": "A static-first systems atelier portfolio for practical AI-assisted systems, automation, infrastructure, backend services, and polished user-facing tools.",
-	"siteUrl": "https://humankaylee.example",
-	"defaultOgImage": "/social/default.svg",
+	"siteName": "Joe Poznanski Portfolio",
+	"siteDescription": "Principal engineer for simulation, controls, and operational software.",
+	"siteUrl": "https://joepoznanski.io",
+	"defaultOgImage": "/social/default.png",
 	"seo": {
-		"title": "HumanKaylee Portfolio",
-		"description": "A static-first systems atelier portfolio for HumanKaylee.",
+		"title": "Joe Poznanski Portfolio",
+		"description": "Principal engineer for simulation, controls, and operational software.",
 		"canonicalPath": "/",
-		"ogImage": "/social/default.svg"
+		"ogImage": "/social/default.png"
 	}
 }

@@ -112,9 +112,15 @@ pub fn delta(spot: f64, strike: f64, t: f64, r: f64, sigma: f64, is_call: bool) 
     match d1_d2(spot, strike, t, r, sigma) {
         None => {
             if is_call {
-                if spot > strike { 1.0 } else { 0.0 }
+                if spot > strike {
+                    1.0
+                } else {
+                    0.0
+                }
+            } else if spot < strike {
+                -1.0
             } else {
-                if spot < strike { -1.0 } else { 0.0 }
+                0.0
             }
         }
         Some((d1, _d2)) => {
@@ -287,10 +293,7 @@ mod tests {
     fn deep_otm_call_near_zero() {
         // S=50, K=200, T=0.1, r=0.05, sigma=0.20 — extremely far OTM
         let p = price(50.0, 200.0, 0.1, 0.05, 0.20, true);
-        assert!(
-            p < 1e-10,
-            "Deep OTM call price should be ~0, got {p:.2e}"
-        );
+        assert!(p < 1e-10, "Deep OTM call price should be ~0, got {p:.2e}");
     }
 
     /// Deep ITM put: delta should be close to -1.

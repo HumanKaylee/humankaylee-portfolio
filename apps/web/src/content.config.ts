@@ -2,23 +2,14 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 
 import {
-	caseStudySchema,
 	notesEntrySchema,
 	nowEntrySchema,
-	projectMetadataSchema,
 	readingEntrySchema,
 	resumeDataSchema,
 	siteMetadataSchema,
 	usesEntrySchema,
 } from "./lib/contracts/content";
-
-const caseStudies = defineCollection({
-	loader: glob({
-		base: "./apps/web/src/content/case-studies",
-		pattern: "**/*.md",
-	}),
-	schema: caseStudySchema,
-});
+import { workSchema } from "./lib/contracts/work";
 
 const notes = defineCollection({
 	loader: glob({
@@ -26,14 +17,6 @@ const notes = defineCollection({
 		pattern: "**/*.md",
 	}),
 	schema: notesEntrySchema,
-});
-
-const projects = defineCollection({
-	loader: glob({
-		base: "./apps/web/src/content/projects",
-		pattern: "**/*.json",
-	}),
-	schema: projectMetadataSchema,
 });
 
 const resume = defineCollection({
@@ -68,6 +51,14 @@ const uses = defineCollection({
 	schema: usesEntrySchema,
 });
 
+const work = defineCollection({
+	loader: glob({
+		base: "./apps/web/src/content/work",
+		pattern: "**/*.md",
+	}),
+	schema: workSchema,
+});
+
 const reading = defineCollection({
 	loader: glob({
 		base: "./apps/web/src/content/reading",
@@ -77,12 +68,11 @@ const reading = defineCollection({
 });
 
 export const collections = {
-	caseStudies,
 	notes,
 	now,
-	projects,
 	reading,
 	resume,
 	site,
 	uses,
+	work,
 };

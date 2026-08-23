@@ -1,5 +1,5 @@
 ---
-title: "HumanKaylee Portfolio Build"
+title: "Joe Poznanski Portfolio Build"
 slug: "humankaylee-portfolio-build"
 category: "creative web"
 summary: "A public-safe case study about building the portfolio as a static-first, Astro-based experience with a Systems Atelier visual system and an optional Rust-backed enhancement layer."
@@ -60,10 +60,10 @@ redactionReview:
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
 seo:
-  title: "HumanKaylee Portfolio Build"
+  title: "Joe Poznanski Portfolio Build"
   description: "A case study about building this portfolio as a static-first, Systems Atelier site with an optional Rust-backed enhancement layer."
   canonicalPath: "/case-studies/humankaylee-portfolio-build/"
-  ogImage: "/social/default.svg"
+  ogImage: "/social/default.png"
 ---
 
 ## Product goal

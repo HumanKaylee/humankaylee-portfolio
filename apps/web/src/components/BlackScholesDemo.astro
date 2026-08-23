@@ -2,8 +2,8 @@
 /**
  * BlackScholesDemo — Astro island that loads the Rust→WASM Black-Scholes pricer.
  *
- * Uses client:visible so the WASM binary only loads when the island scrolls into
- * view, keeping the initial page weight unaffected.
+ * Uses an IntersectionObserver so the WASM binary only loads when the demo
+ * scrolls into view, keeping the initial page weight unaffected.
  *
  * Accessibility guarantees:
  *  - Every slider has an associated <label> and live aria-valuetext.
@@ -13,13 +13,17 @@
  */
 ---
 
-<section class="bs-demo" aria-labelledby="bs-demo-title">
+<section
+  class="bs-demo"
+  data-black-scholes-demo
+  aria-labelledby="bs-demo-title"
+>
   <header class="bs-demo-header">
     <h2 id="bs-demo-title" class="bs-demo-heading">
       Black-Scholes live pricer
     </h2>
     <p class="bs-demo-subheading">
-      Rust compiled to WebAssembly — adjust the sliders to reprice in real time.
+      Rust compiled to WebAssembly: adjust the sliders to reprice in real time.
     </p>
   </header>
 
@@ -34,12 +38,12 @@
     Live WASM demo requires a modern browser with WebAssembly support.
   </div>
 
-  <div class="bs-controls" id="bs-controls" aria-hidden="true">
+  <div class="bs-controls" id="bs-controls" aria-hidden="true" inert>
     <div class="bs-sliders">
 
       <div class="bs-field">
         <label for="bs-spot" class="bs-label">
-          <span class="bs-label-text">S — Spot price</span>
+          <span class="bs-label-text">S: Spot price</span>
           <output class="bs-label-value" id="bs-spot-out" for="bs-spot">$100</output>
         </label>
         <input
@@ -60,7 +64,7 @@
 
       <div class="bs-field">
         <label for="bs-strike" class="bs-label">
-          <span class="bs-label-text">K — Strike price</span>
+          <span class="bs-label-text">K: Strike price</span>
           <output class="bs-label-value" id="bs-strike-out" for="bs-strike">$100</output>
         </label>
         <input
@@ -81,7 +85,7 @@
 
       <div class="bs-field">
         <label for="bs-time" class="bs-label">
-          <span class="bs-label-text">T — Time to expiry</span>
+          <span class="bs-label-text">T: Time to expiry</span>
           <output class="bs-label-value" id="bs-time-out" for="bs-time">1.00 yr</output>
         </label>
         <input
@@ -102,7 +106,7 @@
 
       <div class="bs-field">
         <label for="bs-rate" class="bs-label">
-          <span class="bs-label-text">r — Risk-free rate</span>
+          <span class="bs-label-text">r: Risk-free rate</span>
           <output class="bs-label-value" id="bs-rate-out" for="bs-rate">5.0%</output>
         </label>
         <input
@@ -123,7 +127,7 @@
 
       <div class="bs-field">
         <label for="bs-sigma" class="bs-label">
-          <span class="bs-label-text">σ — Implied volatility</span>
+          <span class="bs-label-text">σ: Implied volatility</span>
           <output class="bs-label-value" id="bs-sigma-out" for="bs-sigma">20.0%</output>
         </label>
         <input
@@ -164,27 +168,27 @@
     >
       <div class="bs-readout-row bs-readout-price">
         <span class="bs-readout-label">Price</span>
-        <span class="bs-readout-value" id="bs-price">—</span>
+        <span class="bs-readout-value" id="bs-price">-</span>
       </div>
       <div class="bs-readout-row">
         <span class="bs-readout-label">Δ Delta</span>
-        <span class="bs-readout-value" id="bs-delta">—</span>
+        <span class="bs-readout-value" id="bs-delta">-</span>
       </div>
       <div class="bs-readout-row">
         <span class="bs-readout-label">Γ Gamma</span>
-        <span class="bs-readout-value" id="bs-gamma">—</span>
+        <span class="bs-readout-value" id="bs-gamma">-</span>
       </div>
       <div class="bs-readout-row">
         <span class="bs-readout-label">Θ Theta / day</span>
-        <span class="bs-readout-value" id="bs-theta">—</span>
+        <span class="bs-readout-value" id="bs-theta">-</span>
       </div>
       <div class="bs-readout-row">
         <span class="bs-readout-label">Vega / 1%σ</span>
-        <span class="bs-readout-value" id="bs-vega">—</span>
+        <span class="bs-readout-value" id="bs-vega">-</span>
       </div>
       <div class="bs-readout-row">
         <span class="bs-readout-label">Ρ Rho / 1%r</span>
-        <span class="bs-readout-value" id="bs-rho">—</span>
+        <span class="bs-readout-value" id="bs-rho">-</span>
       </div>
     </div>
   </div>
@@ -201,118 +205,159 @@
   </footer>
 </section>
 
+<script
+  is:inline
+>
+  window.__loadBlackScholesWasm = () =>
+    import("/wasm/blackscholes/blackscholes_wasm.js");
+</script>
+
 <script>
   (async () => {
-    // Graceful fallback: surface a message and bail if WASM is unavailable.
-    if (typeof WebAssembly === "undefined") {
-      const fallback = document.getElementById("bs-no-wasm");
-      if (fallback) fallback.hidden = false;
+    const demo = document.querySelector<HTMLElement>("[data-black-scholes-demo]");
+    if (!demo) {
       return;
     }
 
     type WasmQuoteResult = { price: number; delta: number; gamma: number; theta_per_day: number; vega: number; rho: number };
     type WasmModule = { default: () => Promise<void>; quote: (input: object) => WasmQuoteResult };
-    let wasmModule: WasmModule | null = null;
+    type WasmLoaderWindow = Window & { __loadBlackScholesWasm?: () => Promise<WasmModule> };
+    let started = false;
 
-    try {
-      // Dynamic import of the wasm-pack JS glue, then init the WASM binary.
-      // Both are served as static assets from /public/wasm/blackscholes/.
-      // The path is a runtime URL that Rollup cannot resolve statically —
-      // it is marked external in astro.config.mjs and suppressed here.
-      // @ts-ignore: runtime-only public asset, not resolvable at build time
-      const mod = await import(/* @vite-ignore */ "/wasm/blackscholes/blackscholes_wasm.js") as WasmModule;
-      await mod.default();
-      wasmModule = mod;
-    } catch (err) {
-      const fallback = document.getElementById("bs-no-wasm");
-      if (fallback) {
-        fallback.hidden = false;
-        fallback.textContent =
-          "Could not load WASM pricer. Check network connectivity and try again.";
+    async function initialize() {
+      if (started) return;
+      started = true;
+
+      // Graceful fallback: surface a message and bail if WASM is unavailable.
+      if (typeof WebAssembly === "undefined") {
+        const fallback = document.getElementById("bs-no-wasm");
+        if (fallback) fallback.hidden = false;
+        return;
       }
-      console.warn("[BlackScholesDemo] WASM load failed:", err);
+
+      let wasmModule: WasmModule | null = null;
+
+      try {
+        // Dynamic import of the wasm-pack JS glue, then init the WASM binary.
+        // Both are served as static assets from /public/wasm/blackscholes/.
+        // The inline loader above preserves the native public URL rather than
+        // asking Vite to transform a file that must be served as-is.
+        const loadWasm = (window as WasmLoaderWindow).__loadBlackScholesWasm;
+        if (!loadWasm) throw new Error("WASM loader is unavailable.");
+        const mod = await loadWasm();
+        await mod.default();
+        wasmModule = mod;
+      } catch (err) {
+        const fallback = document.getElementById("bs-no-wasm");
+        if (fallback) {
+          fallback.hidden = false;
+          fallback.textContent =
+            "Could not load WASM pricer. Check network connectivity and try again.";
+        }
+        console.warn("[BlackScholesDemo] WASM load failed:", err);
+        return;
+      }
+
+      // Reveal the controls now that WASM is ready.
+      const controls = document.getElementById("bs-controls");
+      if (controls) {
+        controls.removeAttribute("aria-hidden");
+        controls.removeAttribute("inert");
+      }
+
+      // — Slider elements —
+      const spotEl    = document.getElementById("bs-spot")    as HTMLInputElement;
+      const strikeEl  = document.getElementById("bs-strike")  as HTMLInputElement;
+      const timeEl    = document.getElementById("bs-time")    as HTMLInputElement;
+      const rateEl    = document.getElementById("bs-rate")    as HTMLInputElement;
+      const sigmaEl   = document.getElementById("bs-sigma")   as HTMLInputElement;
+      const typeEl    = document.getElementById("bs-type")    as HTMLSelectElement;
+
+      // — Value label elements —
+      const spotOut   = document.getElementById("bs-spot-out")   as HTMLOutputElement;
+      const strikeOut = document.getElementById("bs-strike-out") as HTMLOutputElement;
+      const timeOut   = document.getElementById("bs-time-out")   as HTMLOutputElement;
+      const rateOut   = document.getElementById("bs-rate-out")   as HTMLOutputElement;
+      const sigmaOut  = document.getElementById("bs-sigma-out")  as HTMLOutputElement;
+
+      // — Readout elements —
+      const priceEl = document.getElementById("bs-price") as HTMLElement;
+      const deltaEl = document.getElementById("bs-delta") as HTMLElement;
+      const gammaEl = document.getElementById("bs-gamma") as HTMLElement;
+      const thetaEl = document.getElementById("bs-theta") as HTMLElement;
+      const vegaEl  = document.getElementById("bs-vega")  as HTMLElement;
+      const rhoEl   = document.getElementById("bs-rho")   as HTMLElement;
+
+      const fmt2 = (n: number) => n.toFixed(4);
+      const fmtPrice = (n: number) => `$${n.toFixed(4)}`;
+
+      function reprice() {
+        const S      = parseFloat(spotEl.value);
+        const K      = parseFloat(strikeEl.value);
+        const T      = parseFloat(timeEl.value);
+        const r      = parseFloat(rateEl.value);
+        const sigma  = parseFloat(sigmaEl.value);
+        const isCall = typeEl.value === "call";
+
+        // Update displayed labels.
+        spotOut.value   = `$${S.toFixed(2)}`;
+        strikeOut.value = `$${K.toFixed(2)}`;
+        timeOut.value   = `${T.toFixed(2)} yr`;
+        rateOut.value   = `${(r * 100).toFixed(1)}%`;
+        sigmaOut.value  = `${(sigma * 100).toFixed(1)}%`;
+
+        // Update ARIA value text for screen readers.
+        spotEl.setAttribute("aria-valuenow",   String(S));
+        spotEl.setAttribute("aria-valuetext",  `Spot price $${S.toFixed(2)}`);
+        strikeEl.setAttribute("aria-valuenow",  String(K));
+        strikeEl.setAttribute("aria-valuetext", `Strike price $${K.toFixed(2)}`);
+        timeEl.setAttribute("aria-valuenow",   String(T));
+        timeEl.setAttribute("aria-valuetext",  `Time to expiry ${T.toFixed(2)} years`);
+        rateEl.setAttribute("aria-valuenow",   String(r));
+        rateEl.setAttribute("aria-valuetext",  `Risk-free rate ${(r * 100).toFixed(1)} percent`);
+        sigmaEl.setAttribute("aria-valuenow",  String(sigma));
+        sigmaEl.setAttribute("aria-valuetext", `Implied volatility ${(sigma * 100).toFixed(1)} percent`);
+
+        // Call the WASM function.
+        if (!wasmModule) return;
+        const result = wasmModule.quote({ S, K, T, r, sigma, is_call: isCall });
+
+        priceEl.textContent = fmtPrice(result.price);
+        deltaEl.textContent = fmt2(result.delta);
+        gammaEl.textContent = fmt2(result.gamma);
+        // Theta per day: show as negative for decay, 4 decimal places.
+        thetaEl.textContent = fmt2(result.theta_per_day);
+        // Vega per 1% vol move.
+        vegaEl.textContent  = fmt2(result.vega / 100);
+        // Rho per 1% rate move.
+        rhoEl.textContent   = fmt2(result.rho / 100);
+      }
+
+      // Wire up all inputs.
+      [spotEl, strikeEl, timeEl, rateEl, sigmaEl, typeEl].forEach((el) => {
+        el.addEventListener("input", reprice);
+      });
+
+      // Prime the display immediately.
+      reprice();
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      const fallback = document.getElementById("bs-no-wasm");
+      if (fallback) fallback.hidden = false;
       return;
     }
 
-    // Reveal the controls now that WASM is ready.
-    const controls = document.getElementById("bs-controls");
-    if (controls) controls.removeAttribute("aria-hidden");
-
-    // — Slider elements —
-    const spotEl    = document.getElementById("bs-spot")    as HTMLInputElement;
-    const strikeEl  = document.getElementById("bs-strike")  as HTMLInputElement;
-    const timeEl    = document.getElementById("bs-time")    as HTMLInputElement;
-    const rateEl    = document.getElementById("bs-rate")    as HTMLInputElement;
-    const sigmaEl   = document.getElementById("bs-sigma")   as HTMLInputElement;
-    const typeEl    = document.getElementById("bs-type")    as HTMLSelectElement;
-
-    // — Value label elements —
-    const spotOut   = document.getElementById("bs-spot-out")   as HTMLOutputElement;
-    const strikeOut = document.getElementById("bs-strike-out") as HTMLOutputElement;
-    const timeOut   = document.getElementById("bs-time-out")   as HTMLOutputElement;
-    const rateOut   = document.getElementById("bs-rate-out")   as HTMLOutputElement;
-    const sigmaOut  = document.getElementById("bs-sigma-out")  as HTMLOutputElement;
-
-    // — Readout elements —
-    const priceEl = document.getElementById("bs-price") as HTMLElement;
-    const deltaEl = document.getElementById("bs-delta") as HTMLElement;
-    const gammaEl = document.getElementById("bs-gamma") as HTMLElement;
-    const thetaEl = document.getElementById("bs-theta") as HTMLElement;
-    const vegaEl  = document.getElementById("bs-vega")  as HTMLElement;
-    const rhoEl   = document.getElementById("bs-rho")   as HTMLElement;
-
-    const fmt2 = (n: number) => n.toFixed(4);
-    const fmtPrice = (n: number) => `$${n.toFixed(4)}`;
-
-    function reprice() {
-      const S      = parseFloat(spotEl.value);
-      const K      = parseFloat(strikeEl.value);
-      const T      = parseFloat(timeEl.value);
-      const r      = parseFloat(rateEl.value);
-      const sigma  = parseFloat(sigmaEl.value);
-      const isCall = typeEl.value === "call";
-
-      // Update displayed labels.
-      spotOut.value   = `$${S.toFixed(2)}`;
-      strikeOut.value = `$${K.toFixed(2)}`;
-      timeOut.value   = `${T.toFixed(2)} yr`;
-      rateOut.value   = `${(r * 100).toFixed(1)}%`;
-      sigmaOut.value  = `${(sigma * 100).toFixed(1)}%`;
-
-      // Update ARIA value text for screen readers.
-      spotEl.setAttribute("aria-valuenow",   String(S));
-      spotEl.setAttribute("aria-valuetext",  `Spot price $${S.toFixed(2)}`);
-      strikeEl.setAttribute("aria-valuenow",  String(K));
-      strikeEl.setAttribute("aria-valuetext", `Strike price $${K.toFixed(2)}`);
-      timeEl.setAttribute("aria-valuenow",   String(T));
-      timeEl.setAttribute("aria-valuetext",  `Time to expiry ${T.toFixed(2)} years`);
-      rateEl.setAttribute("aria-valuenow",   String(r));
-      rateEl.setAttribute("aria-valuetext",  `Risk-free rate ${(r * 100).toFixed(1)} percent`);
-      sigmaEl.setAttribute("aria-valuenow",  String(sigma));
-      sigmaEl.setAttribute("aria-valuetext", `Implied volatility ${(sigma * 100).toFixed(1)} percent`);
-
-      // Call the WASM function.
-      if (!wasmModule) return;
-      const result = wasmModule.quote({ S, K, T, r, sigma, is_call: isCall });
-
-      priceEl.textContent = fmtPrice(result.price);
-      deltaEl.textContent = fmt2(result.delta);
-      gammaEl.textContent = fmt2(result.gamma);
-      // Theta per day: show as negative for decay, 4 decimal places.
-      thetaEl.textContent = fmt2(result.theta_per_day);
-      // Vega per 1% vol move.
-      vegaEl.textContent  = fmt2(result.vega / 100);
-      // Rho per 1% rate move.
-      rhoEl.textContent   = fmt2(result.rho / 100);
-    }
-
-    // Wire up all inputs.
-    [spotEl, strikeEl, timeEl, rateEl, sigmaEl, typeEl].forEach((el) => {
-      el.addEventListener("input", reprice);
-    });
-
-    // Prime the display immediately.
-    reprice();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          void initialize();
+        }
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(demo);
   })();
 </script>
 
@@ -468,7 +513,7 @@
 
   .bs-readout-price .bs-readout-value {
     font-size: 1.0625rem;
-    color: var(--color-signal);
+    color: var(--color-ink);
   }
 
   .bs-demo-footer {
@@ -476,11 +521,10 @@
     font-family: var(--font-evidence);
     font-size: 0.6875rem;
     color: var(--color-ink-soft);
-    opacity: 0.75;
   }
 
   .bs-source-link {
-    color: var(--color-tungsten);
+    color: var(--color-ink);
     text-underline-offset: 2px;
   }
 
@@ -497,6 +541,15 @@
 
     .bs-select {
       background: color-mix(in srgb, var(--color-ink) 80%, var(--color-paper));
+      color: var(--color-paper);
+    }
+
+    .bs-readout-price .bs-readout-value,
+    .bs-source-link {
+      color: var(--color-signal-on-dark);
+    }
+
+    .bs-demo-footer {
       color: var(--color-paper);
     }
   }

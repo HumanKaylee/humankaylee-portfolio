@@ -1,16 +1,10 @@
 import {
 	type PublicationStatus as ContractPublicationStatus,
-	type PortfolioCategory,
-	portfolioCategories,
 	publicationStatuses,
 } from "../lib/contracts/content";
 import { routeInventory } from "./routes";
 
 type RouteId = (typeof routeInventory)[number]["id"];
-
-export const PROJECT_CATEGORIES = portfolioCategories;
-
-export type ProjectCategory = PortfolioCategory;
 
 export const PUBLICATION_STATUSES = publicationStatuses;
 
@@ -20,10 +14,11 @@ export type RouteInventoryEntry = Readonly<{
 	path: string;
 	kind:
 		| "home"
-		| "projects"
-		| "project-detail"
-		| "case-studies"
-		| "case-study-detail"
+		| "work"
+		| "work-detail"
+		| "about"
+		| "notes"
+		| "note-detail"
 		| "notes-build-log"
 		| "resume"
 		| "contact"
@@ -39,13 +34,13 @@ export type RouteInventoryEntry = Readonly<{
 
 const routeKindById = {
 	home: "home",
-	projects: "projects",
-	"project-detail": "project-detail",
-	"case-studies": "case-studies",
-	"case-study-detail": "case-study-detail",
-	"notes-build-log": "notes-build-log",
+	work: "work",
+	"work-detail": "work-detail",
+	about: "about",
 	resume: "resume",
 	contact: "contact",
+	notes: "notes",
+	"note-detail": "note-detail",
 	sitemap: "sitemap",
 	robots: "robots",
 	"fallback-error": "error",
@@ -57,45 +52,17 @@ const routeKindById = {
 const contentSourcesById = {
 	home: [
 		"hero positioning",
-		"featured case-study summaries",
-		"project category highlights",
+		"featured work summaries",
 		"resume summary",
 		"contact CTA",
 	],
-	projects: [
-		"project taxonomy",
-		"project cards",
-		"status labels",
-		"proof links",
-	],
-	"project-detail": [
-		"project metadata",
-		"featured case-study crosslinks",
-		"artifact notes",
-		"publication status",
-	],
-	"case-studies": [
-		"case-study outline summaries",
-		"redaction status labels",
-		"safe artifacts",
-	],
-	"case-study-detail": [
-		"case-study outline",
-		"redaction review source",
-		"safe artifacts",
-		"verification notes",
-	],
-	"notes-build-log": [
-		"build-log entries",
-		"site update notes",
-		"verification summaries",
-	],
-	resume: [
-		"resume summary",
-		"workflow placeholder",
-		"downloadable pdf source status",
-	],
+	work: ["work summaries", "featured evidence", "publication status"],
+	"work-detail": ["work metadata", "safe artifacts", "verification notes"],
+	about: ["resume summary", "current focus", "uses", "reading"],
+	resume: ["resume summary", "downloadable pdf source status"],
 	contact: ["contact CTA", "mailto fallback", "privacy note"],
+	notes: ["technical notes", "publication status"],
+	"note-detail": ["note body", "publication status"],
 	sitemap: ["route inventory", "published content slugs"],
 	robots: ["route inventory", "crawl policy"],
 	"fallback-error": ["fallback navigation", "contact path", "home link"],
@@ -118,9 +85,8 @@ export const ROUTE_INVENTORY: readonly RouteInventoryEntry[] =
 	}));
 
 export type ContentTypeKey =
-	| "caseStudies"
+	| "work"
 	| "notesBuildLog"
-	| "projectCatalog"
 	| "resume"
 	| "siteMetadata"
 	| "now"
@@ -140,57 +106,81 @@ const seoExample = {
 	title: "Example page",
 	description: "A safe public summary.",
 	canonicalPath: "/examples/example-page/",
-	ogImage: "/social/default.svg",
+	ogImage: "/social/default.png",
 };
 
 export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 	Record<ContentTypeKey, ContentValidationExample>
 > = {
-	caseStudies: {
+	work: {
 		requiredFields: [
 			"title",
 			"slug",
-			"category",
-			"audienceFit",
+			"discipline",
+			"year",
+			"placement",
+			"featuredOrder",
+			"lede",
+			"problem",
+			"stakes",
+			"role",
+			"constraints",
+			"architecture",
+			"decisions",
+			"outcome",
+			"lessons",
+			"evidence",
+			"media",
 			"publicationStatus",
 			"redactionStatus",
 			"redactionReview",
-			"summary",
-			"problem",
-			"stakes",
-			"constraints",
-			"architecture",
-			"implementation",
-			"verification",
-			"operations",
-			"outcome",
-			"lessons",
-			"featuredEvidence",
 			"seo",
 		],
 		validExample: {
-			title: "Example case study",
-			slug: "example-case-study",
-			category: "backend",
-			summary: "A safe case-study summary.",
-			audienceFit: ["senior-engineer"],
+			title: "Example Work story",
+			slug: "example-work-story",
+			discipline: "operations",
+			year: 2026,
+			placement: "archive",
+			featuredOrder: 1,
+			lede: "A safe Work summary.",
 			problem: "A bounded engineering problem.",
 			stakes: "The stakes were operational consistency.",
+			role: "System design and verification.",
 			constraints: ["Private details must stay generalized."],
 			architecture: {
 				overview: "A simple static-first architecture.",
 				diagramAlt: "A text-only system diagram.",
 			},
-			implementation: ["Implemented the bounded change."],
-			verification: ["Verified with automated checks."],
-			operations: ["Recorded safe operational notes."],
+			decisions: [
+				{
+					title: "Static delivery",
+					choice: "Render the complete narrative in HTML.",
+					alternatives: ["Require client-side rendering."],
+					tradeoff: "The story remains readable without JavaScript.",
+				},
+			],
 			outcome: "The public story is safe to draft.",
 			lessons: ["Keep evidence useful without leaking private context."],
-			featuredEvidence: {
+			evidence: {
 				label: "Public-safe proof",
-				summary:
-					"A curated evidence hook that stays useful without private details.",
+				summary: "A curated evidence hook without private details.",
+				values: [
+					{
+						label: "Verification",
+						value: "Passed",
+						detail: "The bounded check passed.",
+					},
+				],
 				scope: "Local and PR evidence only.",
+				limits: "Private environment details remain excluded.",
+			},
+			media: {
+				kind: "evidence-flow",
+				width: 1600,
+				height: 1000,
+				alt: "A semantic evidence sequence.",
+				caption: "Public-safe verification sequence.",
 			},
 			publicationStatus: "publish",
 			redactionStatus: "reviewed",
@@ -208,39 +198,9 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			{
 				reason: "missing the publication status flag",
 				entry: {
-					title: "Incomplete case study",
-					slug: "incomplete-case-study",
-					category: "operations",
-				},
-			},
-			{
-				reason: "claims approval without a completed checklist",
-				entry: {
-					title: "Wrong approval",
-					slug: "wrong-approval",
-					category: "operations",
-					summary: "A summary.",
-					audienceFit: ["senior-engineer"],
-					problem: "Problem.",
-					stakes: "Stakes.",
-					constraints: ["Constraint."],
-					architecture: { overview: "Overview.", diagramAlt: "Diagram." },
-					implementation: ["Implementation."],
-					verification: ["Verification."],
-					operations: ["Operations."],
-					outcome: "Outcome.",
-					lessons: ["Lesson."],
-					publicationStatus: "publish",
-					redactionStatus: "approved",
-					redactionReview: {
-						guidePath: "docs/CONTENT_REDACTION_GUIDE.md",
-						reviewer: "phase-1-content-review",
-						reviewedOn: "2026-05-23",
-						checklistStatus: "partial",
-						openItems: ["Checklist incomplete."],
-						notes: "Approval should fail.",
-					},
-					seo: seoExample,
+					title: "Incomplete Work story",
+					slug: "incomplete-work-story",
+					discipline: "operations",
 				},
 			},
 		],
@@ -277,43 +237,6 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			},
 		],
 	},
-	projectCatalog: {
-		requiredFields: [
-			"name",
-			"slug",
-			"category",
-			"summary",
-			"bestFor",
-			"proof",
-			"publicationStatus",
-			"seo",
-		],
-		validExample: {
-			name: "Project atlas example",
-			slug: "project-atlas-example",
-			category: "creative web",
-			summary: "A project summary.",
-			bestFor: ["recruiter"],
-			proof: "A safe proof statement.",
-			publicationStatus: "publish",
-			seo: seoExample,
-		},
-		invalidExamples: [
-			{
-				reason: "uses an unsupported category label",
-				entry: {
-					name: "Atlas with unknown category",
-					slug: "atlas-with-unknown-category",
-					category: "machine-learning",
-					summary: "A project summary.",
-					bestFor: ["recruiter"],
-					proof: "A safe proof statement.",
-					publicationStatus: "publish",
-					seo: seoExample,
-				},
-			},
-		],
-	},
 	resume: {
 		requiredFields: [
 			"title",
@@ -329,14 +252,14 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			"seo",
 		],
 		validExample: {
-			title: "HumanKaylee Resume",
+			title: "Joe Poznanski Resume",
 			slug: "resume",
 			pdfSourcePath: "approved-local-resume-pdf-imported-2026-05-23",
-			pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+			pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 			sourceStatus: "approved-source",
 			workflowState: "complete",
 			pdfStatus: "published",
-			sourceAsset: "apps/web/public/downloads/humankaylee-resume.pdf",
+			sourceAsset: "apps/web/public/downloads/joe-poznanski-resume.pdf",
 			approvalState: "approved",
 			workflowSteps: [
 				{
@@ -357,21 +280,21 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 				},
 			],
 			seo: {
-				title: "HumanKaylee Resume",
+				title: "Joe Poznanski Resume",
 				description:
 					"HTML resume entry point with a downloadable PDF for recruiter review.",
 				canonicalPath: "/resume/",
-				ogImage: "/social/default.svg",
+				ogImage: "/social/default.png",
 			},
 		},
 		invalidExamples: [
 			{
 				reason: "claims a final PDF before source approval",
 				entry: {
-					title: "HumanKaylee Resume",
+					title: "Joe Poznanski Resume",
 					slug: "resume",
 					pdfSourcePath: "pending-approved-resume-source",
-					pdfDownloadPath: "/downloads/humankaylee-resume.pdf",
+					pdfDownloadPath: "/downloads/joe-poznanski-resume.pdf",
 					sourceStatus: "placeholder",
 					workflowState: "complete",
 					pdfStatus: "published",
@@ -397,9 +320,9 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			"seo",
 		],
 		validExample: {
-			siteName: "HumanKaylee Portfolio",
+			siteName: "Joe Poznanski Portfolio",
 			siteDescription: "A systems atelier portfolio.",
-			siteUrl: "https://humankaylee.example",
+			siteUrl: "https://joepoznanski.io",
 			defaultOgImage: "/social/default.png",
 			seo: {
 				...seoExample,
@@ -410,9 +333,9 @@ export const CONTENT_VALIDATION_EXAMPLES: Readonly<
 			{
 				reason: "site URL must be absolute",
 				entry: {
-					siteName: "HumanKaylee Portfolio",
+					siteName: "Joe Poznanski Portfolio",
 					siteDescription: "A systems atelier portfolio.",
-					siteUrl: "humankaylee.example",
+					siteUrl: "joepoznanski.io",
 					defaultOgImage: "/social/default.png",
 					seo: seoExample,
 				},

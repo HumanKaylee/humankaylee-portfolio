@@ -16,8 +16,11 @@ export type RouteInventoryEntry = Readonly<{
 	path: string;
 	owner: RouteOwner;
 	status: RouteStatus;
+	primary: boolean;
 	seo: RouteSeo;
 }>;
+
+const defaultOgImage = "/social/default.png";
 
 export const routeInventory = [
 	{
@@ -26,102 +29,77 @@ export const routeInventory = [
 		path: "/",
 		owner: "page-composition",
 		status: "planned",
+		primary: false,
 		seo: {
-			title: "HumanKaylee portfolio",
+			title: "Joe Poznanski portfolio",
 			description:
-				"A systems-focused portfolio home page that introduces HumanKaylee's work, proof, and contact paths.",
+				"Principal engineer for simulation, controls, and operational software.",
 			canonicalPath: "/",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},
 	{
-		id: "projects",
-		label: "Projects",
-		path: "/projects/",
+		id: "work",
+		label: "Work",
+		path: "/work/",
+		owner: "content",
+		status: "planned",
+		primary: true,
+		seo: {
+			title: "Work | Joe Poznanski",
+			description:
+				"Evidence-backed engineering work across simulation, infrastructure, and automation.",
+			canonicalPath: "/work/",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "work-detail",
+		label: "Work detail",
+		path: "/work/[slug]/",
+		owner: "content",
+		status: "planned",
+		primary: false,
+		seo: {
+			title: "Work detail | Joe Poznanski",
+			description:
+				"A detailed engineering story with public-safe evidence and lessons.",
+			canonicalPath: "/work/[slug]/",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "about",
+		label: "About",
+		path: "/about/",
 		owner: "page-composition",
 		status: "planned",
+		primary: true,
 		seo: {
-			title: "Projects | HumanKaylee portfolio",
+			title: "About | Joe Poznanski",
 			description:
-				"A curated project index with accessible summaries for recruiter and engineer review.",
-			canonicalPath: "/projects/",
-			ogImage: "/social/default.svg",
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "project-detail",
-		label: "Project detail",
-		path: "/projects/[slug]/",
-		owner: "page-composition",
-		status: "planned",
-		seo: {
-			title: "Project detail | HumanKaylee portfolio",
-			description:
-				"A project detail route for deep-dive evidence, implementation notes, and artifacts.",
-			canonicalPath: "/projects/[slug]/",
-			ogImage: "/social/default.svg",
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "case-studies",
-		label: "Case studies",
-		path: "/case-studies/",
-		owner: "content",
-		status: "draft",
-		seo: {
-			title: "Case studies | HumanKaylee portfolio",
-			description:
-				"Flagship case studies with problem, constraints, verification, operations, and lessons.",
-			canonicalPath: "/case-studies/",
-			ogImage: "/social/default.svg",
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "case-study-detail",
-		label: "Case study detail",
-		path: "/case-studies/[slug]/",
-		owner: "content",
-		status: "draft",
-		seo: {
-			title: "Case study detail | HumanKaylee portfolio",
-			description:
-				"A case-study detail route with redacted evidence, implementation notes, and lessons.",
-			canonicalPath: "/case-studies/[slug]/",
-			ogImage: "/social/default.svg",
-			robots: "index,follow",
-		},
-	},
-	{
-		id: "notes-build-log",
-		label: "Notes / build log",
-		path: "/notes/",
-		owner: "content",
-		status: "draft",
-		seo: {
-			title: "Notes and build log | HumanKaylee portfolio",
-			description:
-				"Short engineering notes, build logs, and process write-ups that support the launch story.",
-			canonicalPath: "/notes/",
-			ogImage: "/social/default.svg",
+				"Engineering judgment, current focus, selected tools, and reading.",
+			canonicalPath: "/about/",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},
 	{
 		id: "resume",
-		label: "Resume",
+		label: "Résumé",
 		path: "/resume/",
 		owner: "content",
 		status: "draft",
+		primary: true,
 		seo: {
-			title: "Resume | HumanKaylee portfolio",
+			title: "Résumé | Joe Poznanski",
 			description:
-				"HTML resume and downloadable PDF entry point for recruiter fast-path review.",
+				"Professional experience and a downloadable résumé for Joe Poznanski.",
 			canonicalPath: "/resume/",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},
@@ -131,12 +109,42 @@ export const routeInventory = [
 		path: "/contact/",
 		owner: "page-composition",
 		status: "planned",
+		primary: true,
 		seo: {
-			title: "Contact | HumanKaylee portfolio",
-			description:
-				"A direct contact route with fallback paths for email and form delivery.",
+			title: "Contact | Joe Poznanski",
+			description: "Direct contact paths for Joe Poznanski.",
 			canonicalPath: "/contact/",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "notes",
+		label: "Notes",
+		path: "/notes/",
+		owner: "content",
+		status: "draft",
+		primary: false,
+		seo: {
+			title: "Notes | Joe Poznanski",
+			description: "Technical notes from Joe Poznanski.",
+			canonicalPath: "/notes/",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "note-detail",
+		label: "Note detail",
+		path: "/notes/[slug]/",
+		owner: "content",
+		status: "draft",
+		primary: false,
+		seo: {
+			title: "Note | Joe Poznanski",
+			description: "A technical note from Joe Poznanski.",
+			canonicalPath: "/notes/[slug]/",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},
@@ -146,12 +154,13 @@ export const routeInventory = [
 		path: "/sitemap-index.xml",
 		owner: "page-composition",
 		status: "generated",
+		primary: false,
 		seo: {
-			title: "Sitemap | HumanKaylee portfolio",
+			title: "Sitemap | Joe Poznanski",
 			description:
 				"Machine-readable route index for the public portfolio site.",
 			canonicalPath: "/sitemap-index.xml",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "noindex,nofollow",
 		},
 	},
@@ -161,11 +170,12 @@ export const routeInventory = [
 		path: "/robots.txt",
 		owner: "page-composition",
 		status: "generated",
+		primary: false,
 		seo: {
-			title: "Robots | HumanKaylee portfolio",
+			title: "Robots | Joe Poznanski",
 			description: "Search crawler directives for the public portfolio site.",
 			canonicalPath: "/robots.txt",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "noindex,nofollow",
 		},
 	},
@@ -175,11 +185,12 @@ export const routeInventory = [
 		path: "/404",
 		owner: "page-composition",
 		status: "planned",
+		primary: false,
 		seo: {
-			title: "Page not found | HumanKaylee portfolio",
+			title: "Page not found | Joe Poznanski",
 			description: "Fallback error page for missing routes and stale links.",
 			canonicalPath: "/404",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "noindex,nofollow",
 		},
 	},
@@ -189,12 +200,12 @@ export const routeInventory = [
 		path: "/now/",
 		owner: "content",
 		status: "draft",
+		primary: false,
 		seo: {
-			title: "Now | HumanKaylee portfolio",
-			description:
-				"What HumanKaylee is focused on right now — current projects, working context, and active learning.",
+			title: "Now | Joe Poznanski",
+			description: "What Joe Poznanski is focused on right now.",
 			canonicalPath: "/now/",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},
@@ -204,12 +215,12 @@ export const routeInventory = [
 		path: "/uses/",
 		owner: "content",
 		status: "draft",
+		primary: false,
 		seo: {
-			title: "Uses | HumanKaylee portfolio",
-			description:
-				"Hardware, software, and tooling that HumanKaylee uses day-to-day as a Principal Engineer and systems builder.",
+			title: "Uses | Joe Poznanski",
+			description: "Tools and equipment Joe Poznanski uses day-to-day.",
 			canonicalPath: "/uses/",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},
@@ -219,12 +230,12 @@ export const routeInventory = [
 		path: "/reading/",
 		owner: "content",
 		status: "draft",
+		primary: false,
 		seo: {
-			title: "Reading | HumanKaylee portfolio",
-			description:
-				"Books, papers, posts, and talks that HumanKaylee is reading or has read, with one-sentence takeaways.",
+			title: "Reading | Joe Poznanski",
+			description: "Books, papers, posts, and talks Joe Poznanski is reading.",
 			canonicalPath: "/reading/",
-			ogImage: "/social/default.svg",
+			ogImage: defaultOgImage,
 			robots: "index,follow",
 		},
 	},

@@ -1,6 +1,8 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { isPublicNote } from "../data/public-notes";
+
 type NoteEntry = CollectionEntry<"notes">;
 
 function escapeXml(value: string) {
@@ -20,7 +22,7 @@ export async function GET() {
 	const [site] = await getCollection("site");
 	const siteUrl = site.data.siteUrl.replace(/\/$/, "");
 	const notes = ((await getCollection("notes")) as NoteEntry[])
-		.filter((note: NoteEntry) => note.data.publicationStatus === "publish")
+		.filter(isPublicNote)
 		.sort((left: NoteEntry, right: NoteEntry) =>
 			right.data.publishedAt.localeCompare(left.data.publishedAt),
 		);
@@ -46,9 +48,9 @@ ${categories}
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-<title>HumanKaylee Portfolio Notes</title>
+<title>Joe Poznanski Portfolio Notes</title>
 <link>${siteUrl}/notes/</link>
-<description>Published engineering notes and build-log entries from HumanKaylee.</description>
+<description>Technical notes from Joe Poznanski about systems, tools, and engineering decisions.</description>
 ${items}
 </channel>
 </rss>`;

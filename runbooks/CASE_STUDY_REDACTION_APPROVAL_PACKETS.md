@@ -52,7 +52,7 @@ v1 launch minimum.
 | ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | CLI Fleet Synchronization and MCP Rollout             | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing artifact evidence source for the sanitized rollout set. |
 | Creative Web Systems Atlas Demo                       | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing atlas fallback artifact inspection evidence.            |
-| HumanKaylee Portfolio Build                           | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing production domain evidence for launch claims.           |
+| Joe Poznanski Portfolio Build                         | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing production domain evidence for launch claims.           |
 | Remote Workstation Recovery and Operational Debugging | `publish` / `reviewed` | Checklist answers recorded; missing `openItems` clearance and missing redacted incident summary inspection evidence.          |
 
 ## Non-Approval Evidence Inventory
@@ -73,7 +73,7 @@ material if future scans find it.
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | CLI Fleet Synchronization and MCP Rollout             | In-page sanitized architecture sketch, In-page sanitized verification matrix, In-page sanitized operator checklist. | Pending reviewer inspection of sanitized rollout matrix and Pending reviewer inspection of operator checklist.        |
 | Creative Web Systems Atlas Demo                       | Semantic project atlas fallback, static systems-map poster, and accessibility/performance boundary notes.           | Pending reviewer inspection of atlas fallback evidence and final public route evidence.                               |
-| HumanKaylee Portfolio Build                           | Static-first local verification matrix, optional Rust API boundary, and public-safe launch evidence boundary.       | Pending reviewer inspection of local verification and launch evidence claims plus production-domain evidence.         |
+| Joe Poznanski Portfolio Build                         | Static-first local verification matrix, optional Rust API boundary, and public-safe launch evidence boundary.       | Pending reviewer inspection of local verification and launch evidence claims plus production-domain evidence.         |
 | Remote Workstation Recovery and Operational Debugging | In-page role-labeled diagnostic flow, In-page sanitized verification matrix, and role-labeled prevention notes.     | Pending reviewer inspection of redacted incident summary and Pending reviewer inspection of operator runbook excerpt. |
 
 ## B-014/B-015 Artifact Inspection Handoff Queue
@@ -172,7 +172,7 @@ Missing approval evidence:
 - Reviewer confirmation that no WebGL, R3F, Three.js, or interactive feature is
   claimed as launched unless separately approved.
 
-## HumanKaylee Portfolio Build
+## Joe Poznanski Portfolio Build
 
 Current state: `publicationStatus: publish`, `redactionStatus: approved`.
 
@@ -182,7 +182,7 @@ Redaction safety rationale: this is a self-referential case study about building
 
 | Field | Value |
 | --- | --- |
-| Candidate | HumanKaylee Portfolio Build (`apps/web/src/content/case-studies/humankaylee-portfolio-build.md`) |
+| Candidate | Joe Poznanski Portfolio Build (`apps/web/src/content/case-studies/humankaylee-portfolio-build.md`) |
 | Reviewer | operator-via-orchestrator |
 | Review date | 2026-05-26 |
 | Current publication | `publish` |

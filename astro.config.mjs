@@ -1,6 +1,9 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
+	devToolbar: {
+		enabled: false,
+	},
 	output: "static",
 	srcDir: "./apps/web/src",
 	publicDir: "./apps/web/public",

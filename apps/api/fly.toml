@@ -1,33 +1,40 @@
-app = "humankaylee-portfolio-api"
-primary_region = "iad"  # operator picks region during M2 fire; iad = Ashburn US, fra = Frankfurt
+# fly.toml app configuration file generated for humankaylee-portfolio-api on 2026-07-24T11:32:24-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'humankaylee-portfolio-api'
+primary_region = 'iad'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [env]
-  PORT = "8080"
-  RUST_LOG = "info,humankaylee_api=debug"
-  HK_API_HOST = "0.0.0.0"
-  HK_API_PORT = "8080"
-  HK_API_ALLOWED_ORIGINS = "https://humankaylee.dev,https://*.humankaylee-portfolio.pages.dev"
-  HK_API_CONTACT_DELIVERY_MODE = "store_resend_nightly"
+  HK_API_ALLOWED_ORIGINS = 'https://humankaylee.dev,https://*.humankaylee-portfolio.pages.dev'
+  HK_API_CONTACT_DELIVERY_MODE = 'disabled'
+  HK_API_HOST = '0.0.0.0'
+  HK_API_PORT = '8080'
+  PORT = '8080'
+  RUST_LOG = 'info,humankaylee_api=debug'
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
+  processes = ['app']
 
   [[http_service.checks]]
-    grace_period = "10s"
-    interval = "30s"
-    method = "GET"
-    timeout = "5s"
-    path = "/api/health"
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/api/health'
 
 [[vm]]
-  size = "shared-cpu-1x"
-  memory = "256mb"
+  size = 'shared-cpu-1x'
+  memory = '256mb'
+  cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 256

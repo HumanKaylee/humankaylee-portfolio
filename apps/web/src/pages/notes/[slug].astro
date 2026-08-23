@@ -2,14 +2,14 @@
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
+import { isPublicNote } from "../../data/public-notes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import BlackScholesDemo from "../../components/BlackScholesDemo.astro";
 
 type NoteEntry = CollectionEntry<"notes">;
 
 export async function getStaticPaths() {
 	const notes = ((await getCollection("notes")) as NoteEntry[]).filter(
-		(note: NoteEntry) => note.data.publicationStatus === "publish",
+		isPublicNote,
 	);
 
 	return notes.map((note: NoteEntry) => ({
@@ -46,31 +46,28 @@ const structuredData = {
 ---
 
 <BaseLayout
-	title={`${note.data.seo.title} | HumanKaylee`}
+	title={`${note.data.seo.title} | Joe Poznanski`}
 	description={note.data.seo.description}
 	canonicalPath={note.data.seo.canonicalPath}
 	ogImage={note.data.seo.ogImage}
 	structuredData={structuredData}
 >
 	<section class="page-shell" aria-labelledby="note-title">
-		<article class="paper-panel note-article">
+		<article class="note-article">
 			<header class="page-header">
-				<p class="section-kicker">Build log note</p>
+				<p class="section-kicker">Technical note</p>
 				<h1 id="note-title">{note.data.title}</h1>
 				<p class="page-intro">{note.data.summary}</p>
 				<p class="eyebrow">
 					<time datetime={note.data.publishedAt}>{formattedDate}</time>
 				</p>
-				<ul class="note-tags" aria-label="Note tags">
+				<ul class="notes-tags" aria-label="Note tags">
 					{note.data.tags.map((tag: string) => <li>{tag}</li>)}
 				</ul>
 			</header>
 
 			<div class="note-body">
 				<Content />
-				{note.data.demoComponent === "BlackScholesDemo" && (
-					<BlackScholesDemo />
-				)}
 			</div>
 		</article>
 	</section>
@@ -78,13 +75,41 @@ const structuredData = {
 	<style>
 		.note-article {
 			display: grid;
-			gap: 2rem;
+			gap: var(--space-5);
+			border-block: 1px solid var(--line);
+			border-radius: 0;
+			background: transparent;
+			box-shadow: none;
+			padding-block: clamp(2rem, 5vw, 4rem);
+		}
+
+		.note-article .page-header {
+			display: grid;
+			gap: var(--space-3);
+			max-width: 72rem;
 		}
 
 		.note-body {
 			max-width: 68ch;
 			font-size: clamp(1.08rem, 2vw, 1.25rem);
 			line-height: 1.75;
+		}
+
+		.notes-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--space-1);
+			margin: 0;
+			padding: 0;
+			color: var(--color-muted);
+			font-family: var(--font-evidence);
+			font-size: 0.78rem;
+			list-style: none;
+		}
+
+		.notes-tags li + li::before {
+			margin-inline-end: var(--space-1);
+			content: "·";
 		}
 	</style>
 </BaseLayout>

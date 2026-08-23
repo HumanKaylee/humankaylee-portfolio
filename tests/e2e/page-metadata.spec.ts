@@ -1,56 +1,44 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
-const routeSpecificSocialImageCases = [
+const site = JSON.parse(
+	readFileSync("apps/web/src/content/site/site.json", "utf8"),
+) as { defaultOgImage: string; siteUrl: string };
+const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
+const expectedSocialImage = `${expectedSiteUrl}${site.defaultOgImage}`;
+
+const socialImageRoutes = [
 	{
 		label: "home",
 		path: "/",
-		image: "https://humankaylee.example/social/home.png",
 	},
 	{
-		label: "projects index",
-		path: "/projects/",
-		image: "https://humankaylee.example/social/projects.png",
-	},
-	{
-		label: "case studies index",
-		path: "/case-studies/",
-		image: "https://humankaylee.example/social/case-studies.png",
+		label: "Work index",
+		path: "/work/",
 	},
 	{
 		label: "notes index",
 		path: "/notes/",
-		image: "https://humankaylee.example/social/notes.png",
 	},
 	{
 		label: "contact",
 		path: "/contact/",
-		image: "https://humankaylee.example/social/contact.png",
-	},
-] as const;
-
-const itemSpecificSocialImageCases = [
-	{
-		label: "project detail",
-		path: "/projects/cli-fleet-synchronization-and-mcp-rollout/",
-		image:
-			"https://humankaylee.example/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
 	},
 	{
-		label: "case-study detail",
-		path: "/case-studies/cli-fleet-synchronization-and-mcp-rollout/",
-		image:
-			"https://humankaylee.example/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
+		label: "Work detail",
+		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
+	},
+	{
+		label: "Conformal Work detail",
+		path: "/work/conformal-cooling-channel-generation/",
 	},
 	{
 		label: "note detail",
-		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-		image:
-			"https://humankaylee.example/social/notes/api-offline-resilience.png",
+		path: "/notes/wasm-black-scholes-options-pricer/",
 	},
 	{
 		label: "resume",
 		path: "/resume/",
-		image: "https://humankaylee.example/social/resume.png",
 	},
 ] as const;
 
@@ -62,19 +50,19 @@ test.describe("page metadata @metadata", () => {
 
 		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
 			"href",
-			"https://humankaylee.example/",
+			`${expectedSiteUrl}/`,
 		);
 		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
 			"content",
-			"https://humankaylee.example/",
+			`${expectedSiteUrl}/`,
 		);
 		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 			"content",
-			"https://humankaylee.example/social/home.png",
+			expectedSocialImage,
 		);
 		await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 			"content",
-			"https://humankaylee.example/social/home.png",
+			expectedSocialImage,
 		);
 
 		const structuredData = await page
@@ -86,114 +74,107 @@ test.describe("page metadata @metadata", () => {
 		expect(structuredData.join("\n")).not.toContain("/home/joe");
 	});
 
-	test("serves the default social preview asset", async ({ request }) => {
-		const response = await request.get("/social/default.svg");
-
-		expect(response.status()).toBe(200);
-		expect(response.headers()["content-type"]).toContain("image/svg+xml");
-	});
-
-	test("serves representative item-specific social preview assets", async ({
+	test("serves the configured default social preview asset", async ({
 		request,
 	}) => {
-		for (const socialPath of [
-			"/social/home.png",
-			"/social/projects.png",
-			"/social/case-studies.png",
-			"/social/notes.png",
-			"/social/contact.png",
-			"/social/projects/cli-fleet-synchronization-and-mcp-rollout.png",
-			"/social/case-studies/cli-fleet-synchronization-and-mcp-rollout.png",
-			"/social/notes/api-offline-resilience.png",
-			"/social/resume.png",
-		]) {
-			const response = await request.get(socialPath);
+		const response = await request.get(site.defaultOgImage);
 
-			expect(response.status(), socialPath).toBe(200);
-			expect(response.headers()["content-type"], socialPath).toContain(
-				"image/png",
-			);
-		}
+		expect(response.status()).toBe(200);
+		expect(response.headers()["content-type"]).toContain("image/png");
 	});
 
-	for (const testCase of routeSpecificSocialImageCases) {
-		test(`renders route-specific social images on ${testCase.label}`, async ({
+	for (const testCase of socialImageRoutes) {
+		test(`renders the configured default social image on ${testCase.label}`, async ({
 			page,
 		}) => {
 			await page.goto(testCase.path);
 
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 				"content",
-				testCase.image,
+				expectedSocialImage,
 			);
 			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 				"content",
-				testCase.image,
+				expectedSocialImage,
 			);
 		});
 	}
 
-	for (const testCase of itemSpecificSocialImageCases) {
-		test(`renders item-specific social images on ${testCase.label}`, async ({
-			page,
-		}) => {
-			await page.goto(testCase.path);
-
-			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
-				"content",
-				testCase.image,
-			);
-			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
-				"content",
-				testCase.image,
-			);
-		});
-	}
-
-	test("renders item-specific JSON-LD on project and case-study detail pages", async ({
+	test("renders item-specific CreativeWork JSON-LD on Work detail pages", async ({
 		page,
 	}) => {
-		await page.goto("/projects/cli-fleet-synchronization-and-mcp-rollout/");
+		await page.goto("/work/cli-fleet-synchronization-and-mcp-rollout/");
 
-		let structuredData = await page
+		const structuredData = await page
 			.locator('script[type="application/ld+json"]')
 			.allTextContents();
-		let jsonLdText = structuredData.join("\n");
-
-		expect(jsonLdText).toContain('"@type":"SoftwareSourceCode"');
-		expect(jsonLdText).toContain(
-			'"name":"CLI Fleet Synchronization and MCP Rollout"',
-		);
-		expect(jsonLdText).toContain(
-			'"url":"https://humankaylee.example/projects/cli-fleet-synchronization-and-mcp-rollout/"',
-		);
-		expect(jsonLdText).not.toContain("/home/joe");
-
-		await page.goto("/case-studies/cli-fleet-synchronization-and-mcp-rollout/");
-
-		structuredData = await page
-			.locator('script[type="application/ld+json"]')
-			.allTextContents();
-		jsonLdText = structuredData.join("\n");
+		const jsonLdText = structuredData.join("\n");
 
 		expect(jsonLdText).toContain('"@type":"CreativeWork"');
+		expect(jsonLdText).toContain('"name":"CLI Fleet Synchronization"');
 		expect(jsonLdText).toContain(
-			'"name":"CLI Fleet Synchronization and MCP Rollout"',
+			`"url":"${expectedSiteUrl}/work/cli-fleet-synchronization-and-mcp-rollout/"`,
 		);
-		expect(jsonLdText).toContain(
-			'"url":"https://humankaylee.example/case-studies/cli-fleet-synchronization-and-mcp-rollout/"',
-		);
-		expect(jsonLdText).not.toContain("Complete the final approval checklist");
-		expect(jsonLdText).not.toContain("openItems");
+		expect(jsonLdText).not.toMatch(/redaction|openItems|checklistStatus/i);
 		expect(jsonLdText).not.toContain("/home/joe");
+	});
+
+	test("keeps the Cryogenic Flow canonical, Open Graph, and JSON-LD URLs aligned", async ({
+		page,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/cryo-flow-sim/`;
+
+		await page.goto("/work/cryo-flow-sim/");
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+
+		const jsonLdText = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		).join("\n");
+		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
+		expect(jsonLdText).toContain(
+			'"description":"Principal engineer for simulation, controls, and operational software."',
+		);
+		expect(jsonLdText).not.toMatch(
+			/humankaylee\.dev|\/projects\/|\/case-studies\//i,
+		);
+	});
+
+	test("keeps the Conformal Cooling canonical and CreativeWork JSON-LD aligned", async ({
+		page,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/conformal-cooling-channel-generation/`;
+
+		await page.goto("/work/conformal-cooling-channel-generation/");
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+
+		const jsonLdText = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		).join("\n");
+		expect(jsonLdText).toContain('"@type":"CreativeWork"');
+		expect(jsonLdText).toContain(
+			'"name":"Conformal Cooling Channel Generation"',
+		);
+		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
 	});
 
 	test("renders note-specific BlogPosting JSON-LD on note detail pages", async ({
 		page,
 	}) => {
-		await page.goto(
-			"/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
-		);
+		await page.goto("/notes/wasm-black-scholes-options-pricer/");
 
 		const structuredData = await page
 			.locator('script[type="application/ld+json"]')
@@ -202,12 +183,12 @@ test.describe("page metadata @metadata", () => {
 
 		expect(jsonLdText).toContain('"@type":"BlogPosting"');
 		expect(jsonLdText).toContain(
-			'"headline":"How the portfolio stays useful when the API is offline"',
+			'"headline":"A Black-Scholes options pricer in Rust, compiled to WASM"',
 		);
 		expect(jsonLdText).toContain(
-			'"url":"https://humankaylee.example/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/"',
+			`"url":"${expectedSiteUrl}/notes/wasm-black-scholes-options-pricer/"`,
 		);
-		expect(jsonLdText).toContain('"datePublished":"2026-05-24"');
+		expect(jsonLdText).toContain('"datePublished":"2026-05-26"');
 		expect(jsonLdText).not.toContain("/home/joe");
 	});
 });

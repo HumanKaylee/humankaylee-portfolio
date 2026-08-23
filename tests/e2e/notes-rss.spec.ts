@@ -3,10 +3,22 @@ import { expect, test } from "@playwright/test";
 
 const site = JSON.parse(
 	readFileSync("apps/web/src/content/site/site.json", "utf8"),
-) as { siteUrl: string };
+) as { siteName: string; siteUrl: string };
 const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
 
-const publishedNotes = [
+const blackScholesNote = {
+	title: "A Black-Scholes options pricer in Rust, compiled to WASM",
+	path: "/notes/wasm-black-scholes-options-pricer/",
+	summary:
+		"How a ~150-line Rust crate becomes a live, in-browser options pricer with sub-millisecond Greeks, without a server round-trip.",
+	body: /The Black-Scholes model prices European options/i,
+	dateLabel: "May 26, 2026",
+	datetime: "2026-05-26",
+	pubDate: "Tue, 26 May 2026 00:00:00 GMT",
+	tags: ["rust", "wasm", "options"],
+};
+
+const suppressedNotes = [
 	{
 		title: "How the portfolio stays useful when the API is offline",
 		path: "/notes/how-the-portfolio-stays-useful-when-the-api-is-offline/",
@@ -56,28 +68,34 @@ test.describe("notes and RSS @notes-rss", () => {
 	}) => {
 		await page.goto("/notes/");
 
-		await expect(page.getByRole("heading", { level: 1 })).toContainText(
-			/notes|build log/i,
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+			"Technical notes.",
 		);
 
 		const main = page.locator("main");
-		for (const note of publishedNotes) {
-			const article = main.getByRole("article", {
-				name: new RegExp(note.title, "i"),
-			});
-			await expect(
-				article.getByRole("heading", { name: note.title }),
-			).toBeVisible();
-			await expect(article.getByText(note.summary)).toBeVisible();
-			for (const tag of note.tags) {
-				await expect(article.getByText(tag, { exact: true })).toBeVisible();
-			}
-			await expect(
-				article.getByRole("link", { name: new RegExp(note.title, "i") }),
-			).toHaveAttribute("href", note.path);
-			await expect(article.getByText(note.dateLabel)).toBeVisible();
+		const article = main.getByRole("article", {
+			name: new RegExp(blackScholesNote.title, "i"),
+		});
+		await expect(
+			article.getByRole("heading", { name: blackScholesNote.title }),
+		).toBeVisible();
+		await expect(article.getByText(blackScholesNote.summary)).toBeVisible();
+		for (const tag of blackScholesNote.tags) {
+			await expect(article.getByText(tag, { exact: true })).toBeVisible();
 		}
+		await expect(
+			article.getByRole("link", {
+				name: new RegExp(blackScholesNote.title, "i"),
+			}),
+		).toHaveAttribute("href", blackScholesNote.path);
+		await expect(article.getByText(blackScholesNote.dateLabel)).toBeVisible();
 
+		for (const note of suppressedNotes) {
+			await expect(main).not.toContainText(note.title);
+		}
+		await expect(main).not.toContainText(
+			/build log|portfolio architecture|publication boundaries|Phase 1/i,
+		);
 		await expect(main).not.toContainText(/needs-redaction|defer/i);
 
 		const indexHtml = await main.textContent();
@@ -85,27 +103,57 @@ test.describe("notes and RSS @notes-rss", () => {
 			expect(indexHtml ?? "").not.toMatch(pattern);
 		}
 
-		for (const note of publishedNotes) {
-			await page.goto(note.path);
+		await expect(
+			page.locator(".artifact-grid, .project-card, .paper-panel"),
+		).toHaveCount(0);
+		const quietPresentation = await article.evaluate((element) => {
+			const style = getComputedStyle(element);
+			return {
+				backgroundColor: style.backgroundColor,
+				borderBottomWidth: style.borderBottomWidth,
+				borderRadius: style.borderRadius,
+				boxShadow: style.boxShadow,
+			};
+		});
+		expect(quietPresentation).toEqual({
+			backgroundColor: "rgba(0, 0, 0, 0)",
+			borderBottomWidth: "1px",
+			borderRadius: "0px",
+			boxShadow: "none",
+		});
+	});
 
-			await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-				note.title,
-			);
-			await expect(page.locator("article time")).toHaveAttribute(
-				"datetime",
-				note.datetime,
-			);
-			await expect(page.locator("article")).toContainText(note.summary);
-			await expect(page.locator("article")).toContainText(note.body);
-			for (const tag of note.tags) {
-				await expect(page.locator("article")).toContainText(tag);
-			}
-
-			const articleText = await page.locator("article").textContent();
-			for (const pattern of privateContentPatterns) {
-				expect(articleText ?? "").not.toMatch(pattern);
-			}
+	test("does not generate public routes for suppressed operational notes", async ({
+		page,
+	}) => {
+		for (const note of suppressedNotes) {
+			const response = await page.goto(note.path);
+			expect(response?.status(), note.path).toBe(404);
+			await expect(
+				page.getByRole("heading", { level: 1, name: /404:\s*not found/i }),
+			).toBeVisible();
 		}
+	});
+
+	test("keeps the Black-Scholes note honest about its canonical live tool", async ({
+		page,
+	}) => {
+		await page.goto(blackScholesNote.path);
+		const noteArticle = page.locator("article");
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+			blackScholesNote.title,
+		);
+		await expect(noteArticle).toContainText(blackScholesNote.summary);
+		await expect(noteArticle).toContainText(blackScholesNote.body);
+		await expect(noteArticle).not.toContainText(/build log|adjust .* below/i);
+		await expect(
+			noteArticle.getByRole("link", {
+				name: "Open the live Black-Scholes tool",
+			}),
+		).toHaveAttribute("href", "/work/black-scholes-wasm/");
+		await expect(
+			page.locator(".artifact-grid, .project-card, .paper-panel"),
+		).toHaveCount(0);
 	});
 
 	test("serves a valid published-notes RSS feed", async ({ request }) => {
@@ -118,20 +166,30 @@ test.describe("notes and RSS @notes-rss", () => {
 		expect(xml).toContain('<?xml version="1.0"');
 		expect(xml).toContain('<rss version="2.0">');
 		expect(xml).toContain("<channel>");
-		expect(xml).toContain("<title>HumanKaylee Portfolio Notes</title>");
+		expect(xml).toContain(`<title>${site.siteName} Notes</title>`);
 
-		for (const note of publishedNotes) {
-			expect(xml).toContain(`<title>${note.title}</title>`);
-			expect(xml).toContain(`<link>${expectedSiteUrl}${note.path}</link>`);
-			expect(xml).toContain(`<guid>${expectedSiteUrl}${note.path}</guid>`);
-			expect(xml).toContain(`<pubDate>${note.pubDate}</pubDate>`);
-			expect(xml).toContain(`<description>${note.summary}</description>`);
-			for (const tag of note.tags) {
-				expect(xml).toContain(`<category>${tag}</category>`);
-			}
+		expect(xml).toContain(`<title>${blackScholesNote.title}</title>`);
+		expect(xml).toContain(
+			`<link>${expectedSiteUrl}${blackScholesNote.path}</link>`,
+		);
+		expect(xml).toContain(
+			`<guid>${expectedSiteUrl}${blackScholesNote.path}</guid>`,
+		);
+		expect(xml).toContain(`<pubDate>${blackScholesNote.pubDate}</pubDate>`);
+		expect(xml).toContain(
+			`<description>${blackScholesNote.summary}</description>`,
+		);
+		for (const tag of blackScholesNote.tags) {
+			expect(xml).toContain(`<category>${tag}</category>`);
 		}
 
-		expect(xml).not.toMatch(/needs-redaction|defer/i);
+		for (const note of suppressedNotes) {
+			expect(xml).not.toContain(note.title);
+			expect(xml).not.toContain(`${expectedSiteUrl}${note.path}`);
+			expect(xml).not.toContain(note.summary);
+		}
+
+		expect(xml).not.toMatch(/build[- ]log|needs-redaction|defer/i);
 		for (const pattern of privateContentPatterns) {
 			expect(xml).not.toMatch(pattern);
 		}

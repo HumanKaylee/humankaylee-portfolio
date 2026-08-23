@@ -1,26 +1,193 @@
 ---
-import ContactForm from "../../components/ContactForm.astro";
+import { profile } from "../../data/profile";
 import { routeInventoryById } from "../../data/routes";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const channels = [
+	{
+		label: "Email Joe",
+		detail: profile.email,
+		href: `mailto:${profile.email}`,
+		rel: undefined,
+	},
+	{
+		label: "LinkedIn",
+		detail: "Professional background and conversation",
+		href: profile.linkedin,
+		rel: "me",
+	},
+	{
+		label: "GitHub",
+		detail: "Public code and technical work",
+		href: profile.github,
+		rel: "me",
+	},
+] as const;
 ---
 
 <BaseLayout
-	title="Contact | HumanKaylee"
-	description="API-enhanced contact route with a visible mailto fallback for recruiter and project inquiries."
-	canonicalPath="/contact/"
+	title={routeInventoryById.contact.seo.title}
+	description={routeInventoryById.contact.seo.description}
+	canonicalPath={routeInventoryById.contact.seo.canonicalPath}
 	ogImage={routeInventoryById.contact.seo.ogImage}
 >
-	<section class="page-shell" aria-labelledby="contact-title">
-		<header class="page-header">
-			<p class="section-kicker">Contact</p>
-			<h1 id="contact-title">Contact route with API enhancement and fallback.</h1>
-			<p class="page-intro">
-				Send a concise recruiter, collaborator, or project note. The form
-				enhances through the Rust API when available, while the mailto path
-				remains visible if JavaScript or the backend is unavailable.
+	<div class="page-shell contact-page">
+		<header class="contact-intro" aria-labelledby="contact-title">
+			<p class="section-kicker">Contact / Direct channels</p>
+			<h1 id="contact-title">Let’s talk about the system behind the problem.</h1>
+			<p>
+				I welcome conversations about principal engineering roles, aerospace and
+				simulation, agentic AI systems, developer tooling, and reliability work.
 			</p>
+			<a
+				class="signal-action contact-email"
+				data-touch-target="true"
+				href={`mailto:${profile.email}`}
+			>
+				Email Joe <span aria-hidden="true">→</span>
+			</a>
 		</header>
 
-		<ContactForm />
-	</section>
+		<div class="contact-grid">
+			<section class="contact-guidance" aria-labelledby="useful-context-title">
+				<p class="section-kicker">A useful first note</p>
+				<h2 id="useful-context-title">Useful context to include</h2>
+				<p>
+					Share what you are trying to change, where the system is constrained,
+					who needs to trust the result, and any timeline that shapes the work.
+				</p>
+			</section>
+
+			<section class="contact-channels" aria-labelledby="channels-title">
+				<p class="section-kicker">Choose a channel</p>
+				<h2 id="channels-title">Direct links</h2>
+				<ul>
+					{channels.map((channel) => (
+						<li>
+							<a
+								class="direct-channel-link"
+								data-touch-target="true"
+								href={channel.href}
+								rel={channel.rel}
+							>
+								<span>
+									<strong>{channel.label}</strong>
+									<small>{channel.detail}</small>
+								</span>
+								<span aria-hidden="true">↗</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		</div>
+	</div>
 </BaseLayout>
+
+<style>
+	.contact-page {
+		gap: 0;
+	}
+
+	.contact-page .section-kicker {
+		color: var(--color-muted);
+	}
+
+	.contact-intro {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.65fr);
+		gap: var(--space-4) clamp(2rem, 6vw, 7rem);
+		align-items: end;
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.contact-intro .section-kicker,
+	.contact-intro h1 {
+		grid-column: 1 / -1;
+	}
+
+	.contact-intro h1 {
+		max-width: 13ch;
+	}
+
+	.contact-intro > p:last-of-type {
+		max-width: 54rem;
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.contact-email {
+		justify-self: start;
+	}
+
+	.contact-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+		gap: clamp(2rem, 7vw, 8rem);
+		border-block: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.contact-guidance,
+	.contact-channels {
+		display: grid;
+		align-content: start;
+		gap: var(--space-4);
+	}
+
+	.contact-guidance {
+		max-width: none;
+		border-left: 2px solid var(--color-signal);
+		color: var(--color-ink);
+		padding-left: var(--space-3);
+	}
+
+	.contact-grid h2 {
+		font-size: clamp(2rem, 4vw, 3.75rem);
+	}
+
+	.contact-guidance > p:last-child {
+		max-width: 42rem;
+		color: var(--color-muted);
+		font-size: 1.1rem;
+	}
+
+	.contact-channels ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.direct-channel-link > span:first-child {
+		display: grid;
+		min-width: 0;
+		gap: 0.2rem;
+	}
+
+	.direct-channel-link strong,
+	.direct-channel-link small {
+		overflow-wrap: anywhere;
+	}
+
+	.direct-channel-link strong {
+		font-size: clamp(1.25rem, 2vw, 1.75rem);
+	}
+
+	.direct-channel-link small {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+	}
+
+	@media (max-width: 48rem) {
+		.contact-intro,
+		.contact-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.contact-intro .section-kicker,
+		.contact-intro h1 {
+			grid-column: 1;
+		}
+	}
+</style>
