@@ -1,6 +1,6 @@
 # Privacy And Terms Production Release Design
 
-**Status:** Approved in chat; written review pending
+**Status:** Approved by Joe Poznanski on 2026-08-23
 **Date:** 2026-08-23
 **Production site:** `https://joepoznanski.io/`
 **Source repository:** `HumanKaylee/humankaylee-portfolio`
