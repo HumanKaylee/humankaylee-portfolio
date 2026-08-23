@@ -1,0 +1,183 @@
+---
+import { profile } from "../../data/profile";
+import { routeInventoryById } from "../../data/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const lastUpdated = "2026-08-23";
+const lastUpdatedLabel = new Intl.DateTimeFormat("en-US", {
+	month: "long",
+	day: "numeric",
+	year: "numeric",
+	timeZone: "UTC",
+}).format(new Date(`${lastUpdated}T00:00:00Z`));
+---
+
+<BaseLayout
+	title={routeInventoryById.terms.seo.title}
+	description={routeInventoryById.terms.seo.description}
+	canonicalPath={routeInventoryById.terms.seo.canonicalPath}
+	ogImage={routeInventoryById.terms.seo.ogImage}
+	robots={routeInventoryById.terms.seo.robots}
+>
+	<div class="page-shell legal-page">
+		<header class="legal-intro" aria-labelledby="terms-title">
+			<p class="section-kicker">Terms of Service</p>
+			<h1 id="terms-title">Short terms for a personal site.</h1>
+			<p class="legal-lede">
+				This is the personal portfolio of {profile.name}. It is published by one
+				individual, not a company, and these terms are deliberately brief.
+			</p>
+			<p class="legal-stamp">
+				Last updated: <time datetime={lastUpdated}>{lastUpdatedLabel}</time>
+			</p>
+		</header>
+
+		<div class="legal-body reading-column">
+			<section aria-labelledby="terms-what">
+				<h2 id="terms-what">What this site is</h2>
+				<p>
+					{profile.name} publishes this site to describe his professional work.
+					It is informational. Nothing here is an offer, a contract, or
+					engineering, legal, or financial advice, and case studies describe past
+					work rather than a promise of future results.
+				</p>
+				<p>
+					There are no user accounts, no payments, no subscriptions, and no way
+					to submit content to the site. Reaching out is done through the
+					channels listed on the <a href="/contact/">contact page</a>.
+				</p>
+			</section>
+
+			<section aria-labelledby="terms-asis">
+				<h2 id="terms-asis">Provided as-is</h2>
+				<p>
+					The site and everything on it is provided “as is”, without warranties
+					of any kind, express or implied. {profile.name} does not guarantee that
+					the site will be available, uninterrupted, error-free, or accurate at
+					any given moment, and may change, move, or remove any part of it
+					without notice.
+				</p>
+				<p>
+					To the fullest extent permitted by applicable law, {profile.name} is
+					not liable for any loss or damage arising from use of this site or
+					reliance on its contents.
+				</p>
+			</section>
+
+			<section aria-labelledby="terms-content">
+				<h2 id="terms-content">Content and attribution</h2>
+				<p>
+					The writing, case studies, diagrams, and images on this site are the
+					author's own work and remain his. You are welcome to read it, link to
+					it, and quote a reasonable excerpt with attribution and a link back.
+					Republishing pages wholesale, or presenting this work as your own,
+					is not permitted.
+				</p>
+				<p>
+					Source code published under an explicit open-source licence — for
+					example in the linked <a href={profile.github} rel="me">GitHub</a>
+					repositories — is governed by that licence, not by this page.
+				</p>
+			</section>
+
+			<section aria-labelledby="terms-use">
+				<h2 id="terms-use">Reasonable use</h2>
+				<p>
+					Normal reading, linking, and well-behaved indexing are fine. Please do
+					not run automated crawling that ignores
+					<a href="/robots.txt">robots.txt</a>, hammers the site with request
+					volumes a human could not generate, attempts to break or probe it, or
+					uses it to distribute malware or spam. If a crawler causes problems it
+					may be rate-limited or blocked by the host.
+				</p>
+			</section>
+
+			<section aria-labelledby="terms-links">
+				<h2 id="terms-links">Links to other sites</h2>
+				<p>
+					This site links out to third-party pages such as LinkedIn, GitHub, and
+					referenced articles. Those sites have their own terms and privacy
+					practices, and {profile.name} does not control them or take
+					responsibility for their content.
+				</p>
+			</section>
+
+			<section aria-labelledby="terms-changes">
+				<h2 id="terms-changes">Changes to these terms</h2>
+				<p>
+					These terms may be updated as the site changes. The revision date at
+					the top of this page reflects the most recent update, and continued use
+					of the site after a change means the current version applies.
+				</p>
+			</section>
+
+			<section aria-labelledby="terms-contact">
+				<h2 id="terms-contact">Questions</h2>
+				<p>
+					Questions about these terms go through the
+					<a href="/contact/">contact page</a>, which lists the current direct
+					channels. The related <a href="/privacy/">privacy policy</a> covers
+					what this site does and does not collect.
+				</p>
+			</section>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.legal-page {
+		gap: 0;
+	}
+
+	.legal-page .section-kicker {
+		color: var(--color-muted);
+	}
+
+	.legal-intro {
+		display: grid;
+		gap: var(--space-3);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.legal-intro h1 {
+		max-width: 18ch;
+		font-size: clamp(2.5rem, 6vw, 5rem);
+	}
+
+	.legal-lede {
+		max-width: var(--reading-max);
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.legal-stamp {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.legal-body {
+		display: grid;
+		gap: var(--space-5);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.legal-body section {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.legal-body h2 {
+		border-left: 2px solid var(--color-signal);
+		padding-left: var(--space-2);
+		font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+		line-height: 1.15;
+	}
+
+	.legal-body p {
+		color: var(--color-ink);
+	}
+</style>

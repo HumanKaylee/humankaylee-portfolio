@@ -239,6 +239,38 @@ export const routeInventory = [
 			robots: "index,follow",
 		},
 	},
+	{
+		id: "privacy",
+		label: "Privacy",
+		path: "/privacy/",
+		owner: "page-composition",
+		status: "planned",
+		primary: false,
+		seo: {
+			title: "Privacy Policy | Joe Poznanski",
+			description:
+				"What this site collects, and how the personal Google integration handles the operator's own account data.",
+			canonicalPath: "/privacy/",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
+	{
+		id: "terms",
+		label: "Terms",
+		path: "/terms/",
+		owner: "page-composition",
+		status: "planned",
+		primary: false,
+		seo: {
+			title: "Terms of Service | Joe Poznanski",
+			description:
+				"The terms that apply to this personal portfolio site, provided as-is.",
+			canonicalPath: "/terms/",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
 ] as const satisfies readonly RouteInventoryEntry[];
 
 export const routeInventoryById = Object.fromEntries(

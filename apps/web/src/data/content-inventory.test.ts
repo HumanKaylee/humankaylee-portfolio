@@ -13,6 +13,7 @@ import {
 	PUBLICATION_STATUSES,
 	ROUTE_INVENTORY,
 } from "./content-inventory";
+import { routeInventoryById } from "./routes";
 
 describe("phase 1 content inventory", () => {
 	it("keeps the publication statuses limited to the launch workflow", () => {
@@ -39,6 +40,8 @@ describe("phase 1 content inventory", () => {
 			"/now/",
 			"/uses/",
 			"/reading/",
+			"/privacy/",
+			"/terms/",
 		]);
 		expect(ROUTE_INVENTORY.map((entry) => entry.kind)).not.toEqual(
 			expect.arrayContaining([
@@ -48,6 +51,32 @@ describe("phase 1 content inventory", () => {
 				"case-study-detail",
 			]),
 		);
+	});
+
+	it("publishes indexable privacy and terms routes for external policy references", () => {
+		const byPath = Object.fromEntries(
+			ROUTE_INVENTORY.map((entry) => [entry.path, entry]),
+		);
+
+		expect(byPath["/privacy/"]?.kind).toBe("privacy");
+		expect(byPath["/terms/"]?.kind).toBe("terms");
+
+		for (const path of ["/privacy/", "/terms/"]) {
+			expect(byPath[path]?.requiredSeoFields).toEqual([
+				"title",
+				"description",
+				"canonicalPath",
+				"ogImage",
+			]);
+		}
+
+		// A consent-screen reviewer must be able to fetch and index these.
+		for (const id of ["privacy", "terms"] as const) {
+			expect(routeInventoryById[id].seo.robots).toBe("index,follow");
+			expect(routeInventoryById[id].seo.canonicalPath).toBe(
+				routeInventoryById[id].path,
+			);
+		}
 	});
 
 	it("parses valid examples and rejects invalid examples with the real schemas", () => {

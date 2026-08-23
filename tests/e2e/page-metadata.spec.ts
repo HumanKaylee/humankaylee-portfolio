@@ -40,6 +40,19 @@ const socialImageRoutes = [
 		label: "resume",
 		path: "/resume/",
 	},
+	{
+		label: "privacy",
+		path: "/privacy/",
+	},
+	{
+		label: "terms",
+		path: "/terms/",
+	},
+] as const;
+
+const legalRoutes = [
+	{ path: "/privacy/", title: "Privacy Policy | Joe Poznanski" },
+	{ path: "/terms/", title: "Terms of Service | Joe Poznanski" },
 ] as const;
 
 test.describe("page metadata @metadata", () => {
@@ -99,6 +112,33 @@ test.describe("page metadata @metadata", () => {
 			);
 		});
 	}
+
+	test("@legal renders indexable route-specific metadata for both policies", async ({
+		page,
+	}) => {
+		for (const legalRoute of legalRoutes) {
+			const url = `${expectedSiteUrl}${legalRoute.path}`;
+
+			await page.goto(legalRoute.path);
+			await expect(page).toHaveTitle(legalRoute.title);
+			await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+				"href",
+				url,
+			);
+			await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+				"content",
+				url,
+			);
+			await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+				"content",
+				/\S/,
+			);
+			await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+				"content",
+				"index,follow",
+			);
+		}
+	});
 
 	test("renders item-specific CreativeWork JSON-LD on Work detail pages", async ({
 		page,

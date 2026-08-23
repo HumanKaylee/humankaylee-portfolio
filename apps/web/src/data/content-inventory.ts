@@ -27,7 +27,9 @@ export type RouteInventoryEntry = Readonly<{
 		| "error"
 		| "now"
 		| "uses"
-		| "reading";
+		| "reading"
+		| "privacy"
+		| "terms";
 	contentSources: readonly string[];
 	requiredSeoFields: readonly string[];
 }>;
@@ -47,6 +49,8 @@ const routeKindById = {
 	now: "now",
 	uses: "uses",
 	reading: "reading",
+	privacy: "privacy",
+	terms: "terms",
 } satisfies Readonly<Record<RouteId, RouteInventoryEntry["kind"]>>;
 
 const contentSourcesById = {
@@ -69,6 +73,13 @@ const contentSourcesById = {
 	now: ["current focus items", "now entry date", "entry summary"],
 	uses: ["hardware list", "software list", "tooling philosophy"],
 	reading: ["reading items by kind", "status badges", "takeaways"],
+	privacy: [
+		"site data-collection behavior",
+		"personal Google integration scope",
+		"retention and deletion",
+		"contact path",
+	],
+	terms: ["site usage terms", "content ownership", "contact path"],
 } satisfies Readonly<Record<RouteId, readonly string[]>>;
 
 export const ROUTE_INVENTORY: readonly RouteInventoryEntry[] =

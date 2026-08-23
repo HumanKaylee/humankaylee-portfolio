@@ -1,6 +1,9 @@
 ---
 import type { profile as profileData } from "../data/profile";
-import type { secondaryNavigation } from "../data/site-navigation";
+import {
+	legalNavigation,
+	type secondaryNavigation,
+} from "../data/site-navigation";
 
 type Props = {
 	nav: typeof secondaryNavigation;
@@ -31,6 +34,16 @@ const { nav, profile } = Astro.props;
 			<a data-touch-target="true" href={profile.github}>GitHub</a>
 			<a data-touch-target="true" href={profile.linkedin}>LinkedIn</a>
 			<a data-touch-target="true" href={`mailto:${profile.email}`}>Email</a>
+		</nav>
+		<p class="section-kicker">Legal</p>
+		<nav class="footer-legal" aria-label="Site policies">
+			{
+				legalNavigation.map((item) => (
+					<a data-touch-target="true" href={item.href}>
+						{item.label}
+					</a>
+				))
+			}
 		</nav>
 	</div>
 </footer>

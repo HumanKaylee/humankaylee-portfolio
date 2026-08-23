@@ -52,6 +52,16 @@ const implementedRoutes = [
 		heading: /Let’s talk about the system behind the problem/i,
 		marker: /josephpoznanski@gmail\.com/i,
 	},
+	{
+		path: "/privacy/",
+		heading: /What this site and the personal Google tool process/i,
+		marker: /Cloudflare Web Analytics/i,
+	},
+	{
+		path: "/terms/",
+		heading: /Short terms for a personal site/i,
+		marker: /Provided as-is/i,
+	},
 ];
 
 test.describe("Signal / Proof route coverage @quality", () => {
@@ -86,6 +96,47 @@ test.describe("Signal / Proof route coverage @quality", () => {
 		await expect(
 			page.getByRole("link", { name: /CLI Fleet Synchronization/i }).first(),
 		).toHaveAttribute("href", workDetail);
+	});
+
+	test("@legal exposes both policies through the footer and sitemap", async ({
+		page,
+		request,
+	}) => {
+		await page.goto("/");
+		const footer = page.locator("footer");
+
+		await expect(footer.getByRole("link", { name: "Privacy" })).toHaveAttribute(
+			"href",
+			"/privacy/",
+		);
+		await expect(footer.getByRole("link", { name: "Terms" })).toHaveAttribute(
+			"href",
+			"/terms/",
+		);
+
+		const sitemapResponse = await request.get("/sitemap-index.xml");
+		expect(sitemapResponse.status()).toBe(200);
+		const sitemap = await sitemapResponse.text();
+
+		for (const url of [
+			"https://joepoznanski.io/privacy/",
+			"https://joepoznanski.io/terms/",
+		]) {
+			expect(sitemap.split(url)).toHaveLength(2);
+		}
+	});
+
+	test("@legal renders the approved Privacy disclosures without contradicted claims", async ({
+		page,
+	}) => {
+		await page.goto("/privacy/");
+		const main = page.locator("main");
+
+		await expect(main).toContainText("Cloudflare Web Analytics");
+		await expect(main).toContainText("compose and send messages");
+		await expect(main).not.toContainText(
+			/collects nothing|cannot send mail|readable only by his own account/i,
+		);
 	});
 
 	for (const retiredPath of [

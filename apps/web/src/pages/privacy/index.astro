@@ -1,0 +1,350 @@
+---
+import { profile } from "../../data/profile";
+import { routeInventoryById } from "../../data/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const lastUpdated = "2026-08-23";
+const lastUpdatedLabel = new Intl.DateTimeFormat("en-US", {
+	month: "long",
+	day: "numeric",
+	year: "numeric",
+	timeZone: "UTC",
+}).format(new Date(`${lastUpdated}T00:00:00Z`));
+
+const googlePermissionsUrl = "https://myaccount.google.com/permissions";
+---
+
+<BaseLayout
+	title={routeInventoryById.privacy.seo.title}
+	description={routeInventoryById.privacy.seo.description}
+	canonicalPath={routeInventoryById.privacy.seo.canonicalPath}
+	ogImage={routeInventoryById.privacy.seo.ogImage}
+	robots={routeInventoryById.privacy.seo.robots}
+>
+	<div class="page-shell legal-page">
+		<header class="legal-intro" aria-labelledby="privacy-title">
+			<p class="section-kicker">Privacy Policy</p>
+			<h1 id="privacy-title">What this site and the personal Google tool process.</h1>
+			<p class="legal-lede">
+				Short version: this static portfolio has no account, contact form, comment
+				system, or first-party visitor database. Cloudflare serves and protects the
+				site, runs cookie-free Web Analytics, and decodes the published email address.
+				The second half of this page covers a separate personal tool that connects to
+				the operator's own Google account.
+			</p>
+			<p class="legal-stamp">
+				Last updated: <time datetime={lastUpdated}>{lastUpdatedLabel}</time>
+			</p>
+		</header>
+
+		<div class="legal-body reading-column">
+			<section aria-labelledby="privacy-who">
+				<h2 id="privacy-who">Who runs this site</h2>
+				<p>
+					This site is run by {profile.name}, an individual working as a{" "}
+					{profile.role.toLowerCase()} in {profile.location}. It is a personal
+					portfolio. There is no company behind it, no staff, and no third-party
+					marketing operation.
+				</p>
+				<p>
+					For any privacy question, correction, or deletion request, use the
+					<a href="/contact/">contact page</a>. It lists the current direct
+					channels, and it is the right route for anything on this page.
+				</p>
+			</section>
+
+			<section aria-labelledby="privacy-site">
+				<h2 id="privacy-site">What this website and its host process</h2>
+				<p class="legal-callout">
+					This site does not ask visitors to create an account or submit personal
+					information through the site itself.
+				</p>
+				<p>Concretely, as the site is currently built and deployed:</p>
+				<ul>
+					<li>The Astro pages are pre-rendered static files.</li>
+					<li>
+						There is no contact form, login, account, comment system, advertising
+						pixel, or first-party visitor database.
+					</li>
+					<li>
+						The site's own code does not write cookies, <code>localStorage</code>, or
+						<code>sessionStorage</code>.
+					</li>
+					<li>
+						Contact happens through direct email or the linked social profiles, on the
+						visitor's initiative.
+					</li>
+				</ul>
+				<p>
+					Cloudflare processes request metadata such as IP address, requested URL,
+					and user-agent to deliver and protect the site.
+				</p>
+				<p>
+					Cloudflare Web Analytics adds a cookie-free performance beacon. Cloudflare
+					says those metrics do not use cookies or localStorage. The service records
+					performance timing and aggregate dimensions such as page path, referrer
+					host, country, device type, browser, and operating system. Cloudflare
+					controls that processing and its retention under Cloudflare's current
+					documentation and privacy terms. See
+					<a
+						href="https://developers.cloudflare.com/web-analytics/about/"
+						rel="noopener noreferrer"
+					>the Web Analytics overview</a>,
+					<a
+						href="https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/"
+						rel="noopener noreferrer"
+					>data origin and collection</a>,
+					<a
+						href="https://developers.cloudflare.com/web-analytics/data-metrics/dimensions/"
+						rel="noopener noreferrer"
+					>dimensions</a>, and
+					<a
+						href="https://developers.cloudflare.com/web-analytics/data-metrics/core-web-vitals/"
+						rel="noopener noreferrer"
+					>Core Web Vitals</a>.
+				</p>
+				<p>
+					Cloudflare's email-obfuscation script decodes published email addresses in
+					the browser.
+				</p>
+				<p>
+					If you email the address published on the contact page, that message
+					sits in an ordinary mailbox and is used only to read and reply to what
+					you sent.
+				</p>
+			</section>
+
+			<section class="legal-section-flagged" aria-labelledby="privacy-google">
+				<p class="section-kicker">Separate from the website</p>
+				<h2 id="privacy-google">Google account access</h2>
+				<p>
+					This section does not describe the website. It describes a separate,
+					private piece of automation that {profile.name} runs for himself, and
+					it is published here because Google requires a reachable privacy
+					policy for any application that requests Google account access.
+				</p>
+				<p>
+					The tool is single-user personal software. {profile.name} authorises
+					his <strong>own</strong> Google account and is the only person who
+					uses it. It is not offered to other users, and it does not request,
+					receive, or process any other person's Google data.
+				</p>
+
+				<h3>What it asks for and why</h3>
+				<p>
+					The application requests exactly two scopes, and no others:
+				</p>
+				<dl class="legal-scopes">
+					<dt><code>https://www.googleapis.com/auth/calendar</code></dt>
+					<dd>
+						The granted scope can view, edit, share and permanently delete calendars
+						the account can access. The personal workflow uses it to inspect and
+						manage the operator's own events.
+					</dd>
+					<dt><code>https://www.googleapis.com/auth/gmail.modify</code></dt>
+					<dd>
+						The granted scope can read, compose and send messages; apply and remove
+						labels; archive messages; move messages to Trash; and restore messages
+						from Trash. It does not allow immediate permanent deletion that bypasses
+						Trash.
+					</dd>
+				</dl>
+				<p>
+					The broader <code>https://mail.google.com/</code> scope is deliberately
+					<strong>not</strong> requested. That broader scope is required for immediate
+					permanent deletion.
+				</p>
+
+				<h3>How that data is handled</h3>
+				<ul>
+					<li>
+						The operator uses retrieved data for his own calendar and mail tasks.
+					</li>
+					<li>
+						The operator does not sell it or use it for advertising.
+					</li>
+					<li>
+						The specific content needed for a requested task may be transmitted to
+						the AI API that executes the task.
+					</li>
+					<li>
+						That provider processes the transmitted content under its current service
+						terms and retention settings.
+					</li>
+					<li>
+						Google's verification guidance treats the Calendar scope as sensitive and
+						<code>gmail.modify</code> as restricted, even when the personal workflow
+						uses a narrower subset.
+					</li>
+				</ul>
+				<p>
+					Access tokens are stored on hardware the operator controls. They can be
+					revoked through Google Account permissions.
+				</p>
+
+				<h3>Revoking access</h3>
+				<p>
+					Because the only authorising account is the operator's own, he can
+					withdraw this application's access at any time, without asking anyone,
+					at
+					<a href={googlePermissionsUrl} rel="noopener noreferrer">
+						{googlePermissionsUrl}
+					</a>. Revocation stops future Google API access.
+				</p>
+			</section>
+
+			<section aria-labelledby="privacy-retention">
+				<h2 id="privacy-retention">Retention and deletion</h2>
+				<p>
+					Cloudflare controls retention of request and analytics data under its
+					current documentation and privacy terms.
+				</p>
+				<p>
+					Ordinary direct-email correspondence remains in the mailbox until the
+					operator manages it. The personal Google automation accesses calendar and
+					mail data to perform the requested task; revocation stops future Google API
+					access.
+				</p>
+			</section>
+
+			<section aria-labelledby="privacy-children">
+				<h2 id="privacy-children">Children</h2>
+				<p>
+					This is a professional portfolio aimed at an adult audience. It does not
+					ask visitors to submit personal information through the site itself.
+				</p>
+			</section>
+
+			<section aria-labelledby="privacy-changes">
+				<h2 id="privacy-changes">Changes to this policy</h2>
+				<p>
+					If the site or the personal Google integration changes in a way that
+					affects any of the statements above, this page is updated and the
+					revision date at the top changes with it. This page describes how
+					things actually work today; it does not describe intentions.
+				</p>
+			</section>
+
+			<section aria-labelledby="privacy-contact">
+				<h2 id="privacy-contact">Contact</h2>
+				<p>
+					Questions about this policy go through the <a href="/contact/">contact
+					page</a>. The <a href="/terms/">terms of service</a> cover the rest.
+				</p>
+			</section>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.legal-page {
+		gap: 0;
+	}
+
+	.legal-page .section-kicker {
+		color: var(--color-muted);
+	}
+
+	.legal-intro {
+		display: grid;
+		gap: var(--space-3);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.legal-intro h1 {
+		max-width: 18ch;
+		font-size: clamp(2.5rem, 6vw, 5rem);
+	}
+
+	.legal-lede {
+		max-width: var(--reading-max);
+		color: var(--color-muted);
+		font-size: clamp(1.1rem, 2vw, 1.4rem);
+	}
+
+	.legal-stamp {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.legal-body {
+		display: grid;
+		gap: var(--space-5);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-5);
+	}
+
+	.legal-body section {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.legal-body h2 {
+		border-left: 2px solid var(--color-signal);
+		padding-left: var(--space-2);
+		font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+		line-height: 1.15;
+	}
+
+	.legal-body h3 {
+		margin-block-start: var(--space-2);
+		font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+		line-height: 1.2;
+	}
+
+	.legal-body p {
+		color: var(--color-ink);
+	}
+
+	.legal-body ul {
+		display: grid;
+		gap: 0.5rem;
+		margin: 0;
+		padding-left: 1.25rem;
+		color: var(--color-ink);
+	}
+
+	.legal-scopes {
+		display: grid;
+		gap: 0.35rem;
+		margin: 0;
+		border-left: 1px solid var(--line);
+		padding-left: var(--space-3);
+	}
+
+	.legal-scopes dt {
+		font-weight: 700;
+	}
+
+	.legal-scopes dd {
+		margin: 0 0 var(--space-2);
+		color: var(--color-muted);
+	}
+
+	.legal-body code {
+		font-family: var(--font-evidence);
+		font-size: 0.85em;
+		overflow-wrap: anywhere;
+	}
+
+	.legal-callout {
+		border-left: 2px solid var(--color-ink);
+		background: var(--color-media);
+		padding: var(--space-2) var(--space-3);
+		font-size: 1.1rem;
+		font-weight: 650;
+	}
+
+	.legal-section-flagged {
+		border: 1px solid var(--line);
+		padding: var(--space-4);
+	}
+
+	.legal-section-flagged h2 {
+		border-left: 0;
+		padding-left: 0;
+	}
+</style>

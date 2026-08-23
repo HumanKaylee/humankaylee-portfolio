@@ -11,3 +11,8 @@ export const secondaryNavigation = [
 	{ label: "Uses", href: "/uses/" },
 	{ label: "Reading", href: "/reading/" },
 ] as const;
+
+export const legalNavigation = [
+	{ label: "Privacy", href: "/privacy/" },
+	{ label: "Terms", href: "/terms/" },
+] as const;
