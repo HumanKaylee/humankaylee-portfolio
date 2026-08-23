@@ -1,0 +1,1 @@
+{"task":"T-29","name":"M2 update runbooks/DEPLOYMENT.md","status":"completed","timestamp":"2026-05-26T17:32:11Z","notes":"Added Backend Deploy section with 3-path matrix, one-liner per host, D-03/D-04 decision table, env var checklist, timing estimates"}

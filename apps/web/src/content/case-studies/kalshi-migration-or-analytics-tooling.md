@@ -1,0 +1,68 @@
+---
+title: "Kalshi Migration or Analytics Tooling"
+slug: "kalshi-migration-or-analytics-tooling"
+category: "backend"
+summary: "A deferred backend and analytics candidate that may be useful later if a redacted abstraction can be proven."
+audienceFit:
+  - "senior-engineer"
+problem: "The underlying work may be strong, but the current publication boundary is not public-safe for a trustworthy portfolio narrative."
+stakes: "Financial or account-linked work needs a stricter publication standard than a generic engineering example."
+constraints:
+  - "Cannot reveal private financial data or customer information."
+  - "Cannot expose private repository names or internal paths."
+  - "Must not weaken trust by overspecifying an unsafe story."
+architecture:
+  overview: "The public outline remains broad until a safe abstraction of the migration or analytics system passes a later review."
+  diagramAlt: "A deferred backend analytics outline with no private data included."
+implementation:
+  - "Keep the draft in reserve until a later redaction review can make it public-safe."
+verification:
+  - "Any evidence must be summarized and stripped of private operational details."
+operations:
+  - "The operational story is better left out than published badly."
+outcome: "Deferred status protects the portfolio from overclaiming while keeping the candidate visible for later review."
+lessons:
+  - "If a case study needs too much explanation to become safe, defer rather than dilute it."
+featuredEvidence:
+  label: "Publication safety finding"
+  summary: "Candidate remains deferred until a safe abstraction removes financial, account, repository, and private path detail."
+  scope: "Blocked redaction evidence only; not rendered as a public case-study route."
+links:
+  artifacts:
+    - "redaction review pending"
+publicationStatus: "defer"
+redactionStatus: "blocked"
+issueTrace:
+  backlogId: "B-018"
+  githubIssue: 24
+  parentIssue: 3
+  closureRule: "Keep #24 open until Joe Poznanski records a publication decision and any synthetic proof pack passes review."
+redactionReview:
+  guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
+  reviewer: "phase-1-content-review"
+  reviewedOn: "2026-05-23"
+  checklistStatus: "partial"
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "not-applicable"
+    logsSummarizedOrSanitized: "not-applicable"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "not-applicable"
+    securitySensitiveProceduresRemoved: "yes"
+  openItems:
+    - "Prove a safe abstraction without private financial, account, repository, or path details."
+  notes: "Candidate is deferred because the current public boundary is not public-safe."
+seo:
+  title: "Kalshi Migration or Analytics Tooling"
+  description: "A deferred backend case-study candidate that requires stricter publication review."
+  canonicalPath: "/case-studies/kalshi-migration-or-analytics-tooling/"
+  ogImage: "/social/default.png"
+---
+
+# Kalshi Migration Or Analytics Tooling
+
+This deferred candidate is intentionally not published as a public case-study route. It remains blocked until Joe Poznanski records a publication decision and a synthetic abstraction removes private financial, account, repository, and path details.
+
+The current source record is decision support only. Do not promote screenshots, diagrams, proof packs, or implementation claims from this candidate until the publication-safety review in `runbooks/PUBLICATION_SAFETY_DECISIONS.md` is complete.

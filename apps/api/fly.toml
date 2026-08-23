@@ -1,0 +1,40 @@
+# fly.toml app configuration file generated for humankaylee-portfolio-api on 2026-07-24T11:32:24-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'humankaylee-portfolio-api'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  HK_API_ALLOWED_ORIGINS = 'https://humankaylee.dev,https://*.humankaylee-portfolio.pages.dev'
+  HK_API_CONTACT_DELIVERY_MODE = 'disabled'
+  HK_API_HOST = '0.0.0.0'
+  HK_API_PORT = '8080'
+  PORT = '8080'
+  RUST_LOG = 'info,humankaylee_api=debug'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/api/health'
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256

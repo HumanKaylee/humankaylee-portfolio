@@ -1,0 +1,186 @@
+name: Phase 0 CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: phase-0-ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.2
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install social preview generator dependency
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y ffmpeg
+
+      - name: Verify preflight exists
+        run: test -s runbooks/PREFLIGHT.md
+
+      - name: Run frontend lint
+        run: pnpm lint
+
+      - name: Run frontend typecheck
+        run: pnpm typecheck
+
+      - name: Run frontend unit tests
+        run: pnpm test
+
+      - name: Run frontend dependency audit
+        run: pnpm audit:frontend
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      - name: Run keyboard navigation gate
+        run: pnpm test:e2e -- --grep "@keyboard"
+
+      - name: Run accessibility gate
+        run: pnpm test:e2e -- --grep "@accessibility"
+
+      - name: Run security headers gate
+        run: pnpm test:e2e -- --grep "@security"
+
+      - name: Run API outage resilience gate
+        run: pnpm test:e2e -- --grep "@api-down"
+
+      - name: Run static no-API gate
+        run: pnpm test:e2e -- --grep "@static-runtime"
+
+      - name: Run journey smoke gate
+        run: pnpm test:e2e -- --grep "@journey"
+
+      - name: Run static quality matrix gate
+        run: pnpm test:e2e -- --grep "@quality"
+
+      - name: Run responsive browser/device gate
+        run: pnpm test:e2e -- --grep "@responsive" --browser=all
+
+      - name: Run frontend end-to-end tests
+        run: pnpm test:e2e
+
+      - name: Run visual regression gate
+        run: pnpm test:visual
+
+      - name: Build frontend
+        run: pnpm build
+
+      - name: Run bundle budget gate
+        run: pnpm bundle:budget
+
+      - name: Run local Lighthouse check
+        run: pnpm lighthouse:local
+
+  wasm-build:
+    name: WASM build (blackscholes)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --locked
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.33.2
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build WASM bundle
+        run: pnpm wasm:build
+
+      - name: Assert WASM binary exists
+        run: test -f apps/web/public/wasm/blackscholes/blackscholes_wasm_bg.wasm
+
+      - name: Assert WASM JS glue exists
+        run: test -f apps/web/public/wasm/blackscholes/blackscholes_wasm.js
+
+      - name: Assert WASM binary is below size ceiling (100 KB)
+        run: |
+          SIZE=$(stat -c %s apps/web/public/wasm/blackscholes/blackscholes_wasm_bg.wasm)
+          echo "WASM binary size: ${SIZE} bytes"
+          test "$SIZE" -lt 102400
+
+  backend:
+    name: Rust verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path apps/api/Cargo.toml --check
+
+      - name: Run Rust clippy
+        run: cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
+
+      # M2-pre-prep (commit 8ee258d) removed the legacy `shuttle` Cargo feature.
+      # Shuttle is no longer an active deploy target; the binary previously
+      # built behind --features shuttle has been deleted. Re-introducing this
+      # check would require restoring shuttle-axum + shuttle-runtime deps,
+      # which is contrary to the "Shuttle is legacy compatibility only" plan
+      # in runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md.
+
+      - name: Run Rust tests
+        run: cargo test --manifest-path apps/api/Cargo.toml
+
+      - name: Install cargo-audit
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+
+      - name: Run Rust dependency audit
+        run: cargo audit --file apps/api/Cargo.lock

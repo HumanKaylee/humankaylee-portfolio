@@ -1,0 +1,93 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type NowEntry = CollectionEntry<"now">;
+type NowItem = NowEntry["data"]["items"][number];
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+	month: "long",
+	day: "numeric",
+	year: "numeric",
+	timeZone: "UTC",
+});
+
+const allEntries = (await getCollection("now")) as NowEntry[];
+const sorted = allEntries.sort((a: NowEntry, b: NowEntry) =>
+	b.data.date.localeCompare(a.data.date),
+);
+const entry = sorted[0] as NowEntry | undefined;
+const items = entry?.data.items ?? ([] as NowItem[]);
+const { Content } = entry ? await render(entry) : { Content: null };
+---
+
+<BaseLayout
+	title="Now | Joe Poznanski"
+	description="What Joe Poznanski is focused on right now: current projects, reading, and working context."
+	canonicalPath="/now/"
+	ogImage="/social/default.png"
+>
+	{
+		entry ? (
+			<section class="page-shell" aria-labelledby="now-title">
+				<header class="page-header">
+					<p class="section-kicker">Now</p>
+					<h1 id="now-title">{entry.data.title}</h1>
+					<p class="page-intro">{entry.data.summary}</p>
+				</header>
+
+				<div class="artifact-grid now-grid">
+					{items.map((item: NowItem, index: number) => (
+						<article
+							class:list={[
+								"project-card",
+								"now-focus-card",
+								index === 0 && "now-focus-card-primary",
+							]}
+						>
+							<h2 class="project-name">{item.label}</h2>
+							<p class="body-copy">{item.note}</p>
+						</article>
+					))}
+				</div>
+
+				{Content && (
+					<section class="now-body now-notes" aria-labelledby="now-notes-title">
+						<h2 id="now-notes-title">Working notes</h2>
+						<Content />
+					</section>
+				)}
+
+				<footer class="now-footer">
+					<p class="section-kicker">
+						Last updated:{" "}
+						<time datetime={entry.data.date}>
+							{dateFormatter.format(
+								new Date(`${entry.data.date}T00:00:00Z`),
+							)}
+						</time>
+					</p>
+					<p class="body-copy">
+						This is a{" "}
+						<a href="https://nownownow.com/about" rel="noopener noreferrer">
+							/now page
+						</a>
+						. The idea comes from Derek Sivers: a single snapshot of what I am
+						actually working on, updated when things change rather than when there
+						is something to announce.
+					</p>
+				</footer>
+			</section>
+		) : (
+			<section class="page-shell" aria-labelledby="now-title">
+				<header class="page-header">
+					<p class="section-kicker">Now</p>
+					<h1 id="now-title">Nothing here yet.</h1>
+					<p class="page-intro">Check back soon.</p>
+				</header>
+			</section>
+		)
+	}
+</BaseLayout>

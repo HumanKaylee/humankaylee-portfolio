@@ -1,0 +1,101 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type UsesEntry = CollectionEntry<"uses">;
+type UsesSection = UsesEntry["data"]["sections"][number];
+type UsesItem = UsesSection["items"][number];
+
+const allEntries = (await getCollection("uses")) as UsesEntry[];
+const sorted = allEntries.sort((a: UsesEntry, b: UsesEntry) =>
+	b.data.lastReviewed.localeCompare(a.data.lastReviewed),
+);
+const entry = sorted[0] as UsesEntry | undefined;
+const sections = entry?.data.sections ?? ([] as UsesSection[]);
+const { Content } = entry ? await render(entry) : { Content: null };
+
+function sectionIdFor(label: string) {
+	return `uses-section-${label.toLowerCase().replace(/\s+/g, "-")}`;
+}
+---
+
+<BaseLayout
+	title="Uses | Joe Poznanski"
+	description="Hardware, software, and tooling that Joe Poznanski uses day-to-day as a Principal Engineer and systems builder."
+	canonicalPath="/uses/"
+	ogImage="/social/default.png"
+>
+	{
+		entry ? (
+			<section class="page-shell" aria-labelledby="uses-title">
+				<header class="page-header">
+					<p class="section-kicker">Uses</p>
+					<h1 id="uses-title">{entry.data.title}</h1>
+					<p class="page-intro">
+						Last reviewed:{" "}
+						<time datetime={entry.data.lastReviewed}>
+							{entry.data.lastReviewed}
+						</time>
+					</p>
+				</header>
+				<nav class="section-jump-nav" aria-label="Uses sections">
+					{sections.map((section: UsesSection) => (
+						<a data-touch-target="true" href={`#${sectionIdFor(section.label)}`}>
+							{section.label}
+						</a>
+					))}
+				</nav>
+
+				{
+					sections.map((section: UsesSection, sectionIndex: number) => {
+						const sectionId = sectionIdFor(section.label);
+
+						return (
+							<section class="uses-section" aria-labelledby={sectionId}>
+								<div class="uses-section-heading">
+									<h2 id={sectionId} class="section-heading">
+										{section.label}
+									</h2>
+									<p class="uses-section-meta">
+										{section.items.length} {section.items.length === 1 ? "item" : "items"}
+									</p>
+								</div>
+								<dl class="uses-list">
+									{section.items.map((item: UsesItem, itemIndex: number) => (
+										<div
+											class:list={[
+												"uses-list-item",
+												sectionIndex === 0 &&
+													itemIndex === 0 &&
+													"uses-list-item-featured",
+											]}
+										>
+											<dt class="uses-item-name">{item.name}</dt>
+											<dd class="uses-item-why body-copy">{item.why}</dd>
+										</div>
+									))}
+								</dl>
+							</section>
+						);
+					})
+				}
+
+				{Content && (
+					<div class="uses-body">
+						<Content />
+					</div>
+				)}
+			</section>
+		) : (
+			<section class="page-shell" aria-labelledby="uses-title">
+				<header class="page-header">
+					<p class="section-kicker">Uses</p>
+					<h1 id="uses-title">Nothing here yet.</h1>
+					<p class="page-intro">Check back soon.</p>
+				</header>
+			</section>
+		)
+	}
+</BaseLayout>

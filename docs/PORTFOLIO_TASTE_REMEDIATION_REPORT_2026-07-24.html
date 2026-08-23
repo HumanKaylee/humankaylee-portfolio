@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio Taste &amp; Security Remediation Report — 2026-07-24</title>
+  <style>
+    :root {
+      --ink: #14110c;
+      --paper: #f6efdf;
+      --warm: #d37c25;
+      --pine: #174047;
+      --green: #4d8b67;
+      --muted: #71695d;
+      --line: #d8cab3;
+      --panel: #fffaf0;
+      --danger: #9d3b2f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 0%, rgba(23, 64, 71, .18), transparent 25rem),
+        linear-gradient(135deg, #f4ead7, #eee2ce);
+      font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    .wrap { width: min(1120px, calc(100% - 2rem)); margin: 0 auto; }
+    header {
+      padding: 4.8rem 0 3.1rem;
+      color: var(--paper);
+      background: linear-gradient(130deg, #1f1810 0%, #16110d 48%, #173e45 100%);
+    }
+    .eyebrow { margin: 0 0 .75rem; color: #f2a156; font-size: .75rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; line-height: 1; }
+    h1 { max-width: 15ch; margin: 0; font-size: clamp(2.5rem, 6.5vw, 5.2rem); letter-spacing: -.055em; }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.65rem, 3vw, 2.4rem); letter-spacing: -.035em; }
+    h3 { margin: 0; font-size: 1.2rem; }
+    .lede { max-width: 65ch; margin: 1.2rem 0 0; color: rgba(246, 239, 223, .78); font-size: 1.1rem; }
+    main { padding: 2rem 0 4rem; }
+    section { margin: 2rem 0; }
+    .status-grid, .two-col { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card, .callout { border: 1px solid var(--line); border-radius: 1.1rem; background: rgba(255, 250, 240, .82); padding: 1.25rem; box-shadow: 0 10px 32px rgba(50, 36, 18, .06); }
+    .card p, .callout p { margin: .55rem 0 0; }
+    .status { display: inline-block; margin-bottom: .65rem; border-radius: 999px; padding: .25rem .55rem; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .pass { background: #d9ecdc; color: #17502e; }
+    .open { background: #f8e4bf; color: #804200; }
+    .block { background: #f2d9d4; color: var(--danger); }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; border: 1px solid var(--line); border-radius: 1rem; background: var(--panel); }
+    th, td { padding: .9rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eee0c7; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    code { overflow-wrap: anywhere; border-radius: .3rem; background: #eee4d2; padding: .1rem .3rem; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .9em; }
+    ul { margin: .5rem 0 0; padding-left: 1.2rem; }
+    li + li { margin-top: .45rem; }
+    .callout { border-left: 5px solid var(--warm); }
+    .quiet { color: var(--muted); }
+    a { color: #075b68; font-weight: 700; }
+    footer { padding: 2rem 0 3.5rem; color: #eee3d0; background: #17120d; }
+    footer p { margin: 0; }
+    @media (max-width: 760px) {
+      header { padding: 3.4rem 0 2.5rem; }
+      .status-grid, .two-col { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; white-space: normal; }
+      th, td { min-width: 12rem; }
+    }
+    @media print {
+      body { background: #fff; font-size: 10pt; }
+      header, footer { color: #111; background: #fff; }
+      .card, .callout, table { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">Local evidence · 24 July 2026</p>
+      <h1>Portfolio taste &amp; security remediation.</h1>
+      <p class="lede">A targeted, evidence-backed evolution of Joe Poznanski’s systems-atelier portfolio: visual hierarchy first, security hardening where configuration was unsafe, and no production launch or data-handling decision made on the user’s behalf.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="status-grid" aria-label="Completion status">
+      <article class="card"><span class="status pass">Completed</span><h3>Taste workflow</h3><p>Audited and pinned upstream Taste guidance; installed safe Codex and Claude entry points plus a portfolio-specific review workflow.</p></article>
+      <article class="card"><span class="status pass">Locally verified</span><h3>Site remediation</h3><p>Hierarchy, CTA emphasis, static fallback noise, responsive navigation, JSON-LD serialization, CSP, and Fly contact mode were corrected.</p></article>
+      <article class="card"><span class="status block">Not production cleared</span><h3>Release boundary</h3><p>No deploy was performed. API hosting/region decisions, contact-retention approval, dependency remediation, and launch evidence remain open.</p></article>
+    </section>
+
+    <section>
+      <h2>What changed</h2>
+      <table>
+        <thead><tr><th>Area</th><th>Finding</th><th>Completed change</th></tr></thead>
+        <tbody>
+          <tr><td>First-fold hierarchy</td><td>The shared display type could span seven lines and bury useful proof/actions below the first desktop viewport.</td><td>Reduced the global H1 scale, widened its measure, and added a responsive hierarchy assertion.</td></tr>
+          <tr><td>CTA priority</td><td>Three equal hero cards diluted the recruiter path.</td><td>Made the recruiter/resume route visually primary while retaining engineer and contact paths.</td></tr>
+          <tr><td>Mobile navigation</td><td>Seven controls could break into three visual rows at 390px.</td><td>Implemented a full-width, natural-reading-order four-column grid that resolves into two predictable rows without horizontal overflow.</td></tr>
+          <tr><td>Static messaging</td><td>A persistent fallback note repeated reassurance on every JavaScript-capable page.</td><td>Removed the repeated banner; the purposeful <code>&lt;noscript&gt;</code> notice and content-level static fallback remain.</td></tr>
+          <tr><td>Security configuration</td><td>Fly selected an API-invalid contact mode; CSP did not allow the configured API origin; JSON-LD used raw serialized HTML.</td><td>Set contact delivery to <code>disabled</code>, narrowly allowlisted the configured API origin in <code>connect-src</code>, and escaped <code>&lt;</code> in JSON-LD.</td></tr>
+          <tr><td>Visual assurance</td><td>Windows had no approved visual baselines and one no-WebGL fallback baseline was absent.</td><td>Visually reviewed current Windows renders, generated the platform baselines, and re-ran the comparison successfully.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="two-col">
+      <article class="callout">
+        <h2>Taste supply-chain review</h2>
+        <p>The upstream <a href="https://github.com/Leonxlnx/taste-skill">Taste skill</a> was reviewed at commit <code>e988add20dab0fa97d7a76781c48961c8184288e</code>. Its core content is documentation; no dependency, hook, executable, workflow, or exfiltration behavior was adopted. The installed normalized content hash is <code>AA194351B246B8B4799099D4ED7B033D29EAB6E6E3D58D8D2172978BE7B3EC89</code>.</p>
+        <ul><li>Installed pin: <code>~/.codex/skills/taste-skill</code></li><li>Claude pin: <code>~/.claude/skills/taste-skill</code></li><li>New safe local workflow: <code>portfolio-taste-review</code></li><li>New Claude command: <code>/taste-review</code></li></ul>
+      </article>
+      <article class="callout">
+        <h2>Design read</h2>
+        <p><strong>Reading this as:</strong> a developer portfolio for recruiters and senior engineers, with a precise editorial systems-atelier language.</p>
+        <ul><li>Design variance: 6 / 10</li><li>Motion intensity: 3 / 10</li><li>Visual density: 5 / 10</li><li>Approach: targeted evolution, not a template replacement</li></ul>
+        <p class="quiet">The existing expressive type and warm black / paper / oxidized-blue palette remain intentional. The work focused on hierarchy and clarity, not decorative novelty or new remote assets.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Verification evidence</h2>
+      <table>
+        <thead><tr><th>Gate</th><th>Result</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>pnpm test:e2e</code></td><td><span class="status pass">136 passed</span> 16 skipped</td><td>Includes keyboard, accessibility, CSP/header, reduced-motion, no-JavaScript, no-WebGL, responsive, metadata, contact fallback, and route resilience coverage.</td></tr>
+          <tr><td><code>pnpm test:visual</code></td><td><span class="status pass">14 passed</span></td><td>Refreshed reviewed Windows visual-regression baselines, then re-ran comparison cleanly.</td></tr>
+          <tr><td>Taste capture suite</td><td><span class="status pass">17 passed</span></td><td>15 full-page desktop/mobile captures across home, projects, resume, contact, now, uses, reading, and a project detail; hierarchy assertion also passes.</td></tr>
+          <tr><td><code>pnpm test</code></td><td><span class="status pass">127 passed</span></td><td>27 Vitest checks and 102 Node contracts passed; 3 contracts intentionally skipped.</td></tr>
+          <tr><td><code>pnpm typecheck</code> / <code>pnpm build</code></td><td><span class="status pass">Passed</span></td><td>0 type errors (10 upstream deprecation hints); 22 static pages built.</td></tr>
+          <tr><td><code>pnpm bundle:budget</code></td><td><span class="status pass">Passed</span></td><td>All route critical-JavaScript budgets remained within policy.</td></tr>
+          <tr><td>Rust API checks</td><td><span class="status pass">Passed</span></td><td><code>cargo fmt --check</code>, Clippy with warnings denied, and 37 tests (9 unit + 28 integration) passed; one doc test intentionally ignored.</td></tr>
+          <tr><td><code>pnpm lint</code></td><td><span class="status open">89 errors</span></td><td>Pre-existing broad formatting/style backlog across the dirty worktree. It was not mechanically normalized during a targeted functionality/design change.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Remaining risks &amp; recommended next moves</h2>
+      <ol>
+        <li><strong>Dependency remediation (priority 0):</strong> a current frontend audit reports 37 advisories (1 critical, 14 high, 17 moderate, 5 low). Land a small, pinned upgrade series with the same full V&amp;V matrix; do not use an unreviewed mass auto-fix.</li>
+        <li><strong>Bounded abuse controls (priority 1):</strong> replace the in-memory, attacker-influenced rate-limit map with an edge/trusted-client-IP control and a bounded TTL store before accepting public contact traffic.</li>
+        <li><strong>Rust rendering chain (priority 1):</strong> <code>cargo audit</code> currently allows three transitive advisories through <code>usvg/resvg</code>: unmaintained <code>rustybuzz</code>, unmaintained <code>ttf-parser</code>, and an unsound <code>memmap2</code> advisory. Upgrade or isolate the renderer in a separately reviewed change.</li>
+        <li><strong>Release decisions (blocking):</strong> resolve the external API host and region choices, contact-storage/retention/deletion policy, production headers (including HSTS after a stable domain), and deployment evidence. These decisions were intentionally not inferred.</li>
+        <li><strong>Baseline hygiene (priority 2):</strong> choose a declared visual-test OS or retain reviewed OS-specific snapshots; clean the 89 formatting diagnostics in a dedicated low-risk formatting PR.</li>
+      </ol>
+    </section>
+
+    <section class="callout">
+      <h2>Supporting documents</h2>
+      <p><a href="PORTFOLIO_TASTE_GAP_ANALYSIS_2026-07-24.md">Gap analysis</a> · <a href="PORTFOLIO_TASTE_IMPLEMENTATION_TEST_PLAN_2026-07-24.md">Implementation and test plan</a> · <a href="../test-results/taste-audit-clean/home-desktop.png">Desktop evidence capture</a> · <a href="../test-results/taste-audit-polished/home-mobile.png">Mobile evidence capture</a></p>
+    </section>
+  </main>
+
+  <footer><div class="wrap"><p>Local remediation report. Completion of local checks is not evidence of production readiness or authorization to deploy.</p></div></footer>
+</body>
+</html>

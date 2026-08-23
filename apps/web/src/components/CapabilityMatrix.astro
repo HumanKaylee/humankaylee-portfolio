@@ -1,0 +1,128 @@
+---
+import type { CapabilityProof } from "../data/capability-proof";
+
+type Props = {
+	records: readonly CapabilityProof[];
+};
+
+const { records } = Astro.props;
+---
+
+<section class="capability-matrix" aria-labelledby="capability-proof-title">
+	<header class="capability-matrix__header">
+		<p class="section-kicker">Capability to proof</p>
+		<h2 id="capability-proof-title">The claim and the evidence stay together.</h2>
+		<p>
+			Each capability points to a case study or résumé record that makes the
+			boundary concrete.
+		</p>
+	</header>
+	<ol class="capability-matrix__list">
+		{
+			records.map((record, index) => (
+				<li data-capability-proof>
+					<article>
+						<p class="capability-matrix__number">
+							{String(index + 1).padStart(2, "0")}
+						</p>
+						<div class="capability-matrix__copy">
+							<h3>
+								<a data-touch-target="true" href={record.href}>
+									{record.capability}
+								</a>
+							</h3>
+							<p>{record.summary}</p>
+						</div>
+						<p class="capability-matrix__evidence">
+							<strong>Evidence</strong>
+							<span>{record.evidence}</span>
+						</p>
+					</article>
+				</li>
+			))
+		}
+	</ol>
+</section>
+
+<style>
+	.capability-matrix {
+		display: grid;
+		gap: var(--space-5);
+		padding-block: var(--space-6);
+	}
+
+	.capability-matrix__header {
+		display: grid;
+		grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr) minmax(16rem, 0.55fr);
+		gap: var(--space-4);
+		align-items: start;
+	}
+
+	.capability-matrix__header .section-kicker,
+	.capability-matrix__header > p:last-child,
+	.capability-matrix__number {
+		color: var(--color-muted);
+	}
+
+	.capability-matrix__header h2 {
+		font-size: clamp(2rem, 4.5vw, 4.5rem);
+	}
+
+	.capability-matrix__list {
+		margin: 0;
+		border-bottom: 1px solid var(--line);
+		padding: 0;
+		list-style: none;
+	}
+
+	.capability-matrix__list li {
+		border-top: 1px solid var(--line);
+	}
+
+	.capability-matrix__list article {
+		display: grid;
+		grid-template-columns: minmax(3rem, 0.16fr) minmax(14rem, 0.64fr) minmax(18rem, 1.2fr);
+		gap: var(--space-4);
+		align-items: start;
+		padding-block: var(--space-4);
+	}
+
+	.capability-matrix__number,
+	.capability-matrix__evidence strong {
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.capability-matrix__copy,
+	.capability-matrix__evidence {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.capability-matrix__copy h3 {
+		font-size: clamp(1.3rem, 2.4vw, 2rem);
+	}
+
+	.capability-matrix__copy > p,
+	.capability-matrix__evidence span {
+		color: var(--color-muted);
+	}
+
+	.capability-matrix__evidence {
+		border-left: 0.25rem solid var(--color-signal);
+		padding-left: var(--space-3);
+	}
+
+	@media (width <= 64rem) {
+		.capability-matrix__header,
+		.capability-matrix__list article {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.capability-matrix__number {
+			margin-bottom: calc(-1 * var(--space-2));
+		}
+	}
+</style>

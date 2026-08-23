@@ -1,0 +1,106 @@
+---
+import { getCollection } from "astro:content";
+
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { profile } from "../data/profile";
+import {
+	primaryNavigation,
+	secondaryNavigation,
+} from "../data/site-navigation";
+import "../styles/global.css";
+
+type Props = {
+	title: string;
+	description: string;
+	canonicalPath?: string;
+	ogImage?: string;
+	structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
+	bodyClass?: string;
+};
+
+function absoluteUrl(siteUrl: string, pathOrUrl: string) {
+	if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
+		return pathOrUrl;
+	}
+
+	const path = pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`;
+	return `${siteUrl.replace(/\/$/, "")}${path}`;
+}
+
+const [site] = await getCollection("site");
+const {
+	title,
+	description,
+	canonicalPath = "/",
+	ogImage,
+	structuredData: pageStructuredData = [],
+	bodyClass,
+} = Astro.props;
+const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+const canonicalUrl = absoluteUrl(siteUrl, canonicalPath);
+const socialImageUrl = absoluteUrl(
+	siteUrl,
+	ogImage ?? site.data.defaultOgImage,
+);
+const baseStructuredData = [
+	{
+		"@context": "https://schema.org",
+		"@type": "Person",
+		name: "Joe Poznanski",
+		url: siteUrl,
+		description: site.data.siteDescription,
+	},
+	{
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		name: site.data.siteName,
+		url: siteUrl,
+		description: site.data.siteDescription,
+	},
+];
+const extraStructuredData = Array.isArray(pageStructuredData)
+	? pageStructuredData
+	: [pageStructuredData];
+const structuredData = [...baseStructuredData, ...extraStructuredData];
+const structuredDataJson = JSON.stringify(structuredData).replace(
+	/</g,
+	"\\u003c",
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalUrl} />
+		<meta property="og:site_name" content={site.data.siteName} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={socialImageUrl} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={socialImageUrl} />
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={structuredDataJson}
+		/>
+	</head>
+	<body class={bodyClass} data-enhancement="static-first">
+		<a class="skip-link" href="#main">Skip to content</a>
+		<SiteHeader nav={primaryNavigation} profile={profile} />
+		<main id="main" class="site-main" tabindex="-1">
+			<slot />
+		</main>
+		<SiteFooter nav={secondaryNavigation} profile={profile} />
+	</body>
+</html>

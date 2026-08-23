@@ -1,12 +1,12 @@
 # HumanKaylee Portfolio Implementation and Test Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for swarm execution, or `superpowers:executing-plans` for single-session execution. Steps use checkbox syntax for tracking, and every task must respect the path ownership boundaries in this plan.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` for swarm execution, or `superpowers:executing-plans` for single-session execution. Swarm execution is opt-in: use it when work spans multiple ownership lanes or needs reviewed parallel-safe split work; keep single-lane docs/contract fixes in single-session execution unless the Coordinator identifies a real parallelization benefit. Steps use checkbox syntax for tracking, and every task must respect the path ownership boundaries in this plan.
 
 **Goal:** Build, test, and launch a static-first, visually distinctive `HumanKaylee` portfolio that proves engineering depth within 30 seconds while preserving performance, accessibility, privacy, and reliable static fallbacks.
 
 **Architecture:** Use Astro as the static-first shell with TypeScript, content collections, MDX case studies, and selective React islands for interactive sections. Use a Rust Axum API only for visible backend proof: health, cached project metadata, contact, and optional privacy-safe events. The static portfolio must remain useful when JavaScript, WebGL, motion, or the Rust API are unavailable.
 
-**Tech Stack:** Astro, TypeScript, React islands, Three.js or React Three Fiber for one progressive 3D experience, GSAP ScrollTrigger only where scroll choreography needs it, Rust Axum, Tokio, tower-http, tracing, SQLx only if persistence is needed, Playwright, Lighthouse, Axe, Cloudflare Pages, Shuttle Community with Fly.io or Railway fallback.
+**Tech Stack:** Astro, TypeScript, React islands, Three.js or React Three Fiber for one progressive 3D experience, GSAP ScrollTrigger only where scroll choreography needs it, Rust Axum, Tokio, tower-http, tracing, SQLx only if persistence is needed, Playwright, Lighthouse, Axe, Cloudflare Pages, Fly.io, Railway, or another approved host as the approved current-host comparison set for #64, with Cloudflare Workers/Pages Functions or Hetzner as alternatives if the API shape changes or higher ops are acceptable. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 
 ---
 
@@ -14,28 +14,186 @@
 
 Read these before executing any phase:
 
+- `AGENTS.md`: repository-local agent instructions, current source order, hosting boundary, agent workflow, and launch-readiness guardrails.
 - `docs/PRD.md`: product requirements, success metrics, journeys, feature requirements, launch definition, open decisions.
 - `docs/RESEARCH.md`: recommended stack, visual concept, hosting recommendations, content strategy, risk controls.
+- `docs/IMPLEMENTATION_AND_TEST_PLAN.md`: this execution contract, path ownership boundaries, swarm protocol, phase gates, and final verification commands.
+- `docs/ARCHITECTURE.md`: static-first frontend architecture, Rust API boundaries, hosting options, failure isolation, and launch criteria.
+- `docs/ROADMAP.md`: phase sequencing, current implementation status, and blocked production milestones.
+- `docs/BACKLOG.md`: backlog item definitions, issue mapping, acceptance criteria, and agent sizing metadata.
+- `docs/CONTENT_STRATEGY.md`: current content model, route inventory, schema names, and public-safe messaging boundaries.
+- `docs/CONTENT_REDACTION_GUIDE.md`: publication safety checklist for case studies, projects, artifacts, logs, screenshots, and links.
+- `docs/PRIVACY.md`: implemented privacy posture for contact handling, optional events, logging, and visitor data boundaries.
+- `docs/OPERATIONS.md`: local, preview, production, deployment, incident, rollback, and maintenance runbooks.
+- `docs/GITHUB_SYNC.md`: GitHub issue bridge, Project board state, live issue status, and sync commands.
+- `runbooks/LAUNCH_EVIDENCE.md`: current local/PR evidence, production blockers, and evidence boundaries.
 - `README.md`: repository status and working decision.
 
 If this plan conflicts with `docs/PRD.md` or `docs/RESEARCH.md`, pause and ask for a planning update before changing code.
 
+## Current Repo State / Issue Overlay
+
+Current goal continuations must treat completed or local-evidence items as guard-check targets, not duplicate implementation tasks.
+
+This section is a resume overlay for execution guidance, not standalone live
+evidence: re-run the listed verifiers before acting on issue, PR, CI, Project,
+or launch status.
+
+- Phase 0 through Phase 6 have substantial local and PR evidence in the current PR branch; use the guard commands and live issue verifier before reopening or reimplementing those slices.
+- Phase 7 and Phase 8 contain planning, runbook, local-readiness, and issue-sync evidence only; production deploy, provider, DNS/TLS, API health, contact handling, rollback, production Lighthouse, and redaction approval gates remain unresolved.
+- Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external evidence gates prove otherwise.
+- When provider/domain/auth/contact/redaction blockers are unresolved, stop deployment or launch work at the documented pause conditions and continue only non-blocked local-readiness, docs-sync, guardrail, and verification-hardening work.
+- Downloaded resume recheck evidence is recorded in `runbooks/LAUNCH_EVIDENCE.md`; do not duplicate resume import work unless a later approved source replacement is recorded.
+- Do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence.
+- Treat embedded evidence snapshots as historical unless a live verifier or fresh command output proves they match the current checkout.
+- This point-in-time overlay may trail the checked-out head after guardrail-only docs commits. Live verifiers are authoritative for current PR, CI, issue, and Project state.
+- Do not rewrite this overlay only to chase the checked-out commit after a docs-only guardrail update. Update it only when the guidance or blocker state materially changes future execution.
+- Active status source precedence: fresh verifier output is authoritative for live GitHub, PR, CI, and Project state. The Current Repo State / Issue Overlay, `docs/BACKLOG.md`, `docs/GITHUB_SYNC.md`, and launch runbooks provide execution guidance after live verification. The detailed Phase 7, Phase 8, and Phase 9 sections below are retained as historical implementation contracts. Do not infer active remaining work from old unchecked boxes when the overlay, backlog, GitHub sync, or launch evidence records a newer local/PR guard result or blocker. External launch blockers remain the only current blockers to production launch.
+- Before resuming new feature work, run `git status --short --branch`,
+  `gh pr view 6 --repo HumanKaylee/humankaylee-portfolio --json state,isDraft,headRefOid,mergeStateStatus,statusCheckRollup`,
+  `HK_VERIFY_GITHUB_LIVE=1 node --test scripts/github-live-issue-sync.test.mjs`,
+  and `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`.
+- Current live recheck snapshot captured at 2026-05-25T17:45:51-04:00 found
+  PR #6 open/non-draft at `97e49c1fcdbdfa9328d563846c571c147d44f82f`,
+  `mergeStateStatus: CLEAN`, PR #6 tracked on Project #1 with status
+  `In Progress`, and Phase 0 CI run `26420545976` successful for
+  Frontend verification job `77774225153` and Rust verification job
+  `77774225138`.
+  Keep `HK_VERIFY_LAUNCH_EVIDENCE_LIVE=1 node --test scripts/launch-evidence-live-pr-ci-verifier.test.mjs`
+  as the authoritative current-head PR/CI check for future continuations.
+- Latest non-blocked guardrail slice before the proof-surface refresh:
+  active PR Project tracking guardrails in `AGENTS.md`, the installed
+  `humankaylee-portfolio` Codex and agents skill mirrors,
+  `scripts/agent-instructions-contract.test.mjs`, and `docs/CHANGELOG.md`,
+  committed as `4bc6674586fa66c76ba673006cdf1192d6230774`. Treat the B-051 bundle-budget,
+  case-study approval-evidence, Project-sync recovery, visual-CI-triage,
+  preflight evidence, B-068 deployment sync guardrails, Phase 7
+  evidence-authority checks, GitHub Project item verification hardening, the
+  deployment-summary rule that provider-specific commands, migration procedures,
+  and rollback steps remain reference-only, and the skill-mirror rule that
+  fresh verifier output stays authoritative over embedded skill snapshots,
+  including Project #1 item/field checks in
+  `scripts/github-live-issue-sync.test.mjs` as guard evidence only; do not
+  reimplement them when PR CI and the focused contracts are green.
+- Latest completed local proof-surface polish slice: public proof surfaces on
+  home and projects are guarded against visible scaffold, placeholder, or
+  future-promise wording; the static shell, telemetry strip, systems-map hero,
+  project atlas, and Creative Web Systems Atlas Demo proof copy now use
+  additive progressive-enhancement language. This slice was committed as
+  `b992f7300eca35b571836376e62a8e5b0cbff004`, then the no-WebGL fallback
+  snapshot was updated as
+  `0094a2b99470d3b7dbbabb2630b2c309a217de2b`. Treat this as Phase 4
+  copy/quality polish only, not as production launch evidence or case-study
+  approval.
+- Latest GitHub permission recheck snapshot captured at
+  2026-05-25T17:45:51-04:00: the local `gh` token has `repo`,
+  full-control `project`, and `workflow` scopes; private repo access reports `ADMIN`;
+  `GH_PROMPT_DISABLED=1 gh project view 1 --owner HumanKaylee --format json`
+  succeeds for private Project #1 with id `PVT_kwHOB69SNc4BYuyc`, 19 fields,
+  and 16 items. Project #1 permissions and item sync are healthy. Project #1 lists/views with 19 fields and 16 total items (15 open
+  issue bridge items plus PR #6); `GH_PROMPT_DISABLED=1 gh project field-list 1 --owner
+  HumanKaylee --format json` reports `Status` options `Todo`, `In Progress`,
+  and `Done`; GraphQL reports Project #1 `viewerCanUpdate: true`; PR #6 has
+  Project item `PVTI_lAHOB69SNc4BYuyczgtwPwg` with status `In Progress`; PR #6 is tracked as a
+  Project item with status `In Progress`; and
+  all 15 open live-bridge issues report Project item status `Todo`.
+  The safe write proof from 2026-05-25T17:26:34-04:00 re-applied PR #6 status
+  `In Progress` with no permission error at head
+  `b9d0ece31ed64b47b4322a91c2271ce461c59f3c`; Phase 0 CI run `26420081492`
+  passed Frontend verification job `77772849305` and Rust verification job
+  `77772849309`. The 2026-05-25T17:45:51-04:00 permission recheck was
+  intentionally read-only.
+  PR #6 is open, non-draft, clean, and at head
+  `97e49c1fcdbdfa9328d563846c571c147d44f82f`; Phase 0 CI run `26420545976`
+  passed Frontend verification job `77774225153` and Rust verification job
+  `77774225138`. A read-only GraphQL recheck reports Project #1
+  `viewerCanUpdate: true`, and PR #6 Project item
+  `PVTI_lAHOB69SNc4BYuyczgtwPwg` remains `In Progress`.
+  GitHub Project permissions are no longer a current blocker. Treat future Project
+  work as maintenance for newly opened or relabeled issues and active PR
+  tracking, not as launch readiness or as a current launch blocker.
+- Latest provider-auth local preflight slice:
+  `pnpm phase7:provider-preflight -- --summary test-results/phase-7-provider-preflight.json`
+  using `scripts/phase-7-provider-preflight.mjs` captured at
+  2026-05-25T21:09:30.342Z records `local/preflight` evidence by checking
+  provider CLI presence and environment variable names only. Provider preflight reports the repo-managed `wrangler` dev dependency
+  present for Cloudflare Pages local readiness, while `fly` and `railway` remain missing, no
+  provider/API env names are present, and deployment, DNS/TLS, rollback,
+  production smoke, contact handling, and case-study approval work stay blocked
+  until real provider targets and owner decisions exist. Only environment
+  variable names and command presence are recorded; secret values, provider
+  account IDs, URLs, contact payloads, and raw provider logs are not captured.
+- Latest contact-handling local decision-template slice:
+  `pnpm phase7:contact-decision -- --mode defer --dry-run` records
+  `local/decision-template` fields for #64/#69 owner approval, selected mode,
+  retention, backup, rotation, deletion, store/provider, production smoke,
+  rollback or disable plan, blocked issues, and privacy redaction. This helper
+  cannot approve contact handling, capture production smoke, close #64/#69, or
+  replace the blocked production contact row.
+- Latest launch-readiness local audit guardrail:
+  `pnpm phase7:launch-audit -- --summary test-results/phase-7-launch-readiness-audit.json`
+  records `local/readiness-audit` evidence only. It reports
+  `status: "blocked"`, `launchReady: false`, and `canCloseIssues: false` while
+  frontend/API deploy, final domain, contact handling, rollback, production
+  Lighthouse, and redaction approvals remain unresolved. This helper cannot
+  deploy, approve redaction, approve contact handling, replace production rows,
+  close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove launch readiness.
+- Latest case-study redaction-readiness slice: `pnpm redaction:readiness`
+  captured at `2026-05-25T19:22:49.138Z` records
+  `local/redaction-readiness` evidence only. The generated ignored summary at
+  `test-results/case-study-redaction-readiness.json` reports `0` approved
+  publish candidates out of `4` required, four publish candidates that still
+  have `reviewed` redaction status, `partial` checklist status, open-item
+  counts, and missing `approvalEvidence`, plus deferred/blocked #24/#25
+  candidates. This is reviewer handoff evidence only; it cannot approve case
+  studies, clear open items, close #20/#21/#24/#25, or count toward launch.
+- What remains is external launch and approval work: complete redaction
+  approvals for at least four launch case studies; record HumanKaylee
+  publication-safety decisions for #24 and #25; deploy the frontend for #63;
+  deploy the Rust API for #64; configure DNS/TLS/canonical production metadata
+  for #65; approve contact handling or a mailto-only launch exception; capture
+  rollback evidence, production Lighthouse, production route/API/contact smoke,
+  and the full B-063 final launch checklist for #69; keep #70 through #74
+  planning-only until B-063 launch evidence exists.
+- The next goal run should not spend its first slice on Project auth unless a
+  live verifier regresses. Prioritize one of these remaining external gates
+  instead: content/redaction approval evidence for #20/#21/#24/#25,
+  Cloudflare Pages frontend deploy evidence for #63, approved Rust API hosting
+  and contact-handling evidence for #64, domain/DNS/TLS metadata evidence for
+  #65, or the B-063 production smoke/Lighthouse/rollback checklist for #69.
+- If a next goal run resumes before those external blockers are resolved, it
+  should first re-run the live checks above, run `pnpm phase7:launch-audit`
+  before any readiness or issue-closure claim, confirm GitHub Project checks do
+  not regress, then choose only a small
+  non-blocked docs-sync, guardrail, or verification-hardening slice with
+  explicit contract evidence. Do not invent deployment, redaction, contact, or
+  production evidence.
+- Local laptop and `rog-strix-joe` operational checks are outside this
+  portfolio repo. Do not reboot either machine from this goal. Current local
+  laptop power policy evidence shows suspend/hibernate/DPMS disabled, but a
+  live unplug reproduction is still needed if the blank-screen symptom returns.
+  Current `rog-strix-joe` evidence shows autologon configured and the console
+  user active, but the last reboot showed one Winlogon `1326` authentication
+  failure; reset the Windows autologon credential tuple locally before any
+  reboot validation.
+
 ## Ready-To-Use Codex Goal Objective
 
 ```text
-/goal Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Work phase-by-phase in order, respect the path ownership boundaries, keep static content usable without JavaScript/WebGL/API availability, and stop only when every phase acceptance criterion and final launch verification command in the plan passes or a listed pause condition is reached.
+/goal Continue the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md using the current repo state. First read AGENTS.md and the Source of Truth docs listed in the plan, then run the current-state preflight/live verifiers named in the Current Repo State / Issue Overlay. Treat the 2026-05-25T17:45:51-04:00 Project recheck as evidence that GitHub Project permissions are healthy unless a live verifier regresses; do not spend the first slice on Project auth recovery. Do not reboot or restart any machine, service, process manager, or remote host. Do not revert or overwrite other agents' work. Treat local, PR, CI, docs, Project, and issue-sync evidence as non-launch-readiness evidence only. Run `pnpm phase7:launch-audit -- --summary test-results/phase-7-launch-readiness-audit.json` before any launch-readiness or issue-closure claim. Do not claim launch readiness unless runbooks/LAUNCH_EVIDENCE.md blocked production rows are replaced with real production or owner-approved production-equivalent provider-preview evidence and runbooks/FINAL_LAUNCH_CHECKLIST.md requirements are satisfied. Keep #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 open unless the live verifier and documented external gates truly prove closure: redaction/human signoff for #20/#21/#24/#25, provider deploy evidence for #63/#64, final domain DNS/TLS/canonical metadata for #65, production smoke/Lighthouse/contact/rollback/redaction evidence for #69, and B-063 plus HumanKaylee approval dependencies for #70-#74. If external provider/domain/contact/redaction blockers remain unresolved, choose exactly one small non-blocked local-readiness, docs-sync, guardrail, or verification-hardening slice with exact contract evidence; otherwise prioritize one external launch gate. Preserve static-first behavior without JavaScript/WebGL/API availability, preserve "reviewed is not approved", and stop when the selected slice is verified or a documented pause condition is reached.
 ```
 
 ## Optional Claude Code Execution Prompt
 
 ```text
-Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Execute phases in order, use a fresh task context for each ownership lane, verify with the exact commands listed in the plan, and stop only when all final launch checks pass or a pause condition is reached.
+Implement the HumanKaylee portfolio from /home/joe/humankaylee-portfolio/docs/IMPLEMENTATION_AND_TEST_PLAN.md. Execute phases in order, use a fresh task context for each ownership lane, verify with the exact commands listed in the plan, stop deployment or launch work at the documented pause conditions when provider/domain/auth/contact/redaction blockers are unresolved, continue only non-blocked local-readiness/docs-sync/guardrail/verification-hardening work in that state, do not close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74 from local-only, PR-only, or docs-only evidence, and stop only when all final launch checks pass or a pause condition is reached.
 ```
 
 ## Execution Rules
 
-- Do not start implementation until the executor has read `docs/PRD.md`, `docs/RESEARCH.md`, and this plan.
+- Do not start implementation until the executor has read every file in the Source of Truth list.
 - Start with a read-only preflight that records local tool versions, GitHub auth status, available package managers, Rust version, Node version, and current repository remotes in `runbooks/PREFLIGHT.md`.
+- Preflight evidence must include sanitized command output for `date`, `git status --short --branch`, `git remote -v`, `node --version`, `corepack --version`, `pnpm --version`, `rustc --version`, `cargo --version`, `gh auth status`, `git --version`, and `codex --version`. Omit tokens, private paths, hostnames, and secrets; record missing Project scopes separately from repository readiness.
 - Do not let two agents edit the same file or directory ownership lane at the same time.
 - Do not treat visual polish as a substitute for case-study substance.
 - Do not put secrets, private keys, API tokens, private email provider credentials, or unredacted sensitive project details in the repo.
@@ -72,6 +230,7 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
+pnpm bundle:budget
 pnpm preview
 pnpm lighthouse:local
 cargo fmt --manifest-path apps/api/Cargo.toml --check
@@ -87,6 +246,10 @@ Expected command meanings:
 - `pnpm test`: run frontend unit/component tests.
 - `pnpm test:e2e`: run Playwright smoke, accessibility, no-JS, reduced-motion, and contact fallback checks.
 - `pnpm build`: build the static frontend.
+- `pnpm bundle:budget`: fail when generated routes exceed the critical JavaScript budget after a build.
+- `node scripts/bundle-budget.mjs --dry-run`: print the B-051 route source,
+  ignored script types, budget limit, and summary path without requiring
+  `dist/` or writing summary artifacts.
 - `pnpm preview`: serve the built frontend locally for manual and Lighthouse checks.
 - `pnpm lighthouse:local`: run Lighthouse against local preview routes with the PRD thresholds.
 - `cargo fmt`: enforce Rust formatting.
@@ -100,29 +263,37 @@ Pause if a selected tool cannot support this command contract on Linux Mint 22.3
 
 Only the listed owner may modify a path during a swarm task. If a task needs another path, it must request a handoff.
 
-| Owner | Owns | Must Not Edit |
-| --- | --- | --- |
-| Coordinator | Phase sequencing, issue splitting, final merge review, `docs/`, shared contracts | Product code unless resolving integration conflicts |
-| Foundation Agent | `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `astro.config.*`, `tsconfig*.json`, `playwright.config.*`, `vitest.config.*`, root `justfile`, root `.gitignore` | Feature components, content, Rust handlers |
-| CI and Deploy Agent | `.github/workflows/`, `infra/`, deployment config, `runbooks/` | Frontend components, content bodies, Rust route logic |
-| Visual System Agent | `apps/web/src/styles/`, `apps/web/src/layouts/`, `apps/web/src/components/chrome/`, fonts and base visual assets under `apps/web/public/` | Page route files, content collections, API code |
-| Page Composition Agent | `apps/web/src/pages/`, page-level integration wrappers, sitemap and robots route generation | Low-level visual components, atlas internals, Rust API |
-| Content Agent | `apps/web/src/content/`, `apps/web/src/data/`, redacted case-study media under `apps/web/public/content/`, resume source assets | Page shell, 3D components, backend |
-| Project Atlas Agent | `apps/web/src/components/atlas/`, `apps/web/src/lib/project-model/`, atlas tests | Home page route, content bodies, backend |
-| Motion and 3D Agent | `apps/web/src/components/hero/`, `apps/web/src/lib/motion/`, `apps/web/src/lib/webgl/`, 3D assets under `apps/web/public/interactive/` | Case-study content, backend, CI |
-| Contact UX Agent | `apps/web/src/components/contact/`, `apps/web/src/lib/contact-client/`, contact page tests | Rust contact route internals, unrelated pages |
-| Backend Agent | `apps/api/`, backend Dockerfile, backend Shuttle config | Frontend code except documented API contract fixtures |
-| QA Agent | `tests/e2e/`, `tests/fixtures/`, Lighthouse config, accessibility reports | Product implementation except tiny test IDs requested through handoff |
+| Owner                  | Owns                                                                                                                                                                                                                                                                | Must Not Edit                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Coordinator            | Phase sequencing, issue splitting, final merge review, `docs/`, shared contracts                                                                                                                                                                                    | Product code unless resolving integration conflicts                   |
+| Foundation Agent       | `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `astro.config.*`, `tsconfig*.json`, `playwright.config.*`, `vitest.config.*`, root `.gitignore`                                                                                                            | Feature components, content, Rust handlers                            |
+| CI and Deploy Agent    | `.github/workflows/`, deployment config, `runbooks/`, `runbooks/DEPLOYMENT.md`, `runbooks/LAUNCH_EVIDENCE.md`                                                                                                                                                       | Frontend components, content bodies, Rust route logic                 |
+| Visual System Agent    | `apps/web/src/styles/`, `apps/web/src/layouts/BaseLayout.astro`, `apps/web/src/components/SiteHeader.astro`, `apps/web/src/components/SiteFooter.astro`, `apps/web/src/components/BuildTelemetryStrip.astro`, fonts and base visual assets under `apps/web/public/` | Page route files, content collections, API code                       |
+| Page Composition Agent | `apps/web/src/pages/`, page-level integration wrappers, sitemap, robots, RSS, and metadata route generation                                                                                                                                                         | Low-level visual components, atlas internals, Rust API                |
+| Content Agent          | `apps/web/src/content/`, `apps/web/src/data/`, resume source assets under `apps/web/public/downloads/`, public social images under `apps/web/public/social/`                                                                                                        | Page shell, 3D components, backend                                    |
+| Project Atlas Agent    | `apps/web/src/components/ProjectAtlas.astro`, `apps/web/src/components/ProjectCard.astro`, `apps/web/src/components/AudienceChips.astro`, project atlas tests                                                                                                       | Home page route, content bodies, backend                              |
+| Motion and 3D Agent    | `apps/web/src/components/SystemsMapHero.astro`, `apps/web/src/components/EvidenceDrawer.astro`, `apps/web/public/scripts/project-constellation.mjs`                                                                                                                 | Case-study content, backend, CI                                       |
+| Contact UX Agent       | `apps/web/src/components/ContactForm.astro`, contact page tests                                                                                                                                                                                                     | Rust contact route internals, unrelated pages                         |
+| Backend Agent          | `apps/api/`, backend Dockerfile, backend Shuttle config                                                                                                                                                                                                             | Frontend code except documented API contract fixtures                 |
+| QA Agent               | `tests/e2e/`, `tests/fixtures/`, Lighthouse config, accessibility reports                                                                                                                                                                                           | Product implementation except tiny test IDs requested through handoff |
 
 Shared contract files must be edited by one owner only:
 
-- `apps/web/src/lib/contracts/api.ts`: Foundation Agent creates and owns shared API response types.
-- `apps/web/src/lib/contracts/content.ts`: Foundation Agent creates and owns content-facing shared types.
+- `apps/web/src/lib/contracts/`: Foundation Agent creates and owns shared API and content-facing response types.
+
+Top-level shared Astro components are file-owned as listed above. If an agent
+needs a component owned by another lane, pause that slice and hand it back to the
+coordinator instead of broad-editing `apps/web/src/components/`.
+
 - `docs/CONTENT_REDACTION_GUIDE.md`: Coordinator creates if needed; Content Agent may propose changes through review.
 - `runbooks/DEPLOYMENT.md`: CI and Deploy Agent owns after Phase 8 starts.
 
 ## Non-Colliding Swarm Protocol
 
+- Swarm execution is opt-in for tasks that span multiple ownership lanes or
+  need reviewed parallel-safe split work; single-lane docs/contract fixes should
+  stay with one owner in single-session execution unless the Coordinator records
+  a concrete parallelization benefit.
 - Use one branch or worktree per owner lane.
 - Each task request must include exact owned paths, phase number, acceptance checks, and forbidden paths.
 - Small agents should receive one phase task, one owner lane, and no more than 6 source files.
@@ -136,14 +307,14 @@ Shared contract files must be edited by one owner only:
 
 The Coordinator should use this matrix to increase execution speed while avoiding collisions.
 
-| Wave | Can Run In Parallel | Must Wait For | Integration Gate |
-| --- | --- | --- | --- |
-| 0A | Foundation Agent scaffolds `apps/web`; Backend Agent scaffolds `apps/api`; QA Agent scaffolds Playwright; CI Agent drafts CI | None | Command contract passes locally |
-| 1A | Content Agent defines schemas and safe draft content; Visual System Agent creates tokens/layout primitives; Backend Agent expands health route tests | Phase 0 command contract | `pnpm typecheck`, `pnpm build`, `cargo test` |
-| 2A | Page Composition Agent builds static routes; Content Agent drafts case studies; QA Agent writes no-JS/static-shell tests | Content schemas and layout primitives | Static shell tests pass |
-| 3A | Project Atlas Agent builds HTML atlas; Motion/3D Agent builds isolated hero enhancement; Backend Agent implements projects/contact/events routes | Static routes and API contracts | Atlas fallback, backend tests, and bundle budget pass |
-| 4A | Contact UX Agent integrates API fallback; CI Agent adds deployment runbooks; QA Agent adds Lighthouse/Axe/security checks | Stable static pages and backend route contracts | Full local verification command set |
-| 5A | Deployment Agent handles frontend host; Backend Agent handles API host; Coordinator builds evidence matrix | Final domain, secrets, case-study approvals | Production smoke checks pass |
+| Wave | Can Run In Parallel                                                                                                                                  | Must Wait For                                   | Integration Gate                                      |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------- |
+| 0A   | Foundation Agent scaffolds `apps/web`; Backend Agent scaffolds `apps/api`; QA Agent scaffolds Playwright; CI Agent drafts CI                         | None                                            | Command contract passes locally                       |
+| 1A   | Content Agent defines schemas and safe draft content; Visual System Agent creates tokens/layout primitives; Backend Agent expands health route tests | Phase 0 command contract                        | `pnpm typecheck`, `pnpm build`, `cargo test`          |
+| 2A   | Page Composition Agent builds static routes; Content Agent drafts case studies; QA Agent writes no-JS/static-shell tests                             | Content schemas and layout primitives           | Static shell tests pass                               |
+| 3A   | Project Atlas Agent builds HTML atlas; Motion/3D Agent builds isolated hero enhancement; Backend Agent implements projects/contact/events routes     | Static routes and API contracts                 | Atlas fallback, backend tests, and bundle budget pass |
+| 4A   | Contact UX Agent integrates API fallback; CI Agent adds deployment runbooks; QA Agent adds Lighthouse/Axe/security checks                            | Stable static pages and backend route contracts | Full local verification command set                   |
+| 5A   | Deployment Agent handles frontend host; Backend Agent handles API host; Coordinator builds evidence matrix                                           | Final domain, secrets, case-study approvals     | Production smoke checks pass                          |
 
 If two agents both need a shared contract file, stop one agent and let the Coordinator make a single contract edit before both resume.
 
@@ -168,18 +339,18 @@ Small-model work is safe for scaffolding, content normalization, metadata additi
 
 Use the smallest model that can safely complete the task without cross-lane reasoning.
 
-| Task Type | Recommended Model Size | Safe For Smaller Models | Requires Larger Model |
-| --- | --- | --- | --- |
-| Markdown copyediting, redaction pass, metadata normalization | Small | Yes, with source excerpts and exact path | If sensitive publishing judgment is ambiguous |
-| Static Astro page layout from existing components | Small to medium | Yes, if component APIs are stable | If page also changes design system or routing |
-| CSS tokens, typography, simple responsive tweaks | Small to medium | Yes, with screenshots or exact acceptance criteria | If visual direction is being invented |
-| Content collection schema and data modeling | Medium | Only after schema is specified | If schema affects routing, SEO, and generated pages |
-| Playwright smoke tests and no-JS tests | Medium | Yes, if routes and selectors already exist | If debugging hydration or browser-specific failures |
-| Rust route tests and simple handlers | Medium | Yes, if contracts are fixed | If rate limiting, CORS, tracing, or deployment failures interact |
-| Project atlas keyboard accessibility | Medium to large | Not recommended for smallest models | Required if Canvas/WebGL and HTML fallback diverge |
-| WebGL/R3F hero and performance debugging | Large | No | Always use larger model or human review |
-| Security/privacy review | Large | No | Always use larger model or human review |
-| Deployment debugging across Cloudflare/Shuttle/Fly/Railway | Large | No | Always use larger model or human review |
+| Task Type                                                    | Recommended Model Size | Safe For Smaller Models                            | Requires Larger Model                                            |
+| ------------------------------------------------------------ | ---------------------- | -------------------------------------------------- | ---------------------------------------------------------------- |
+| Markdown copyediting, redaction pass, metadata normalization | Small                  | Yes, with source excerpts and exact path           | If sensitive publishing judgment is ambiguous                    |
+| Static Astro page layout from existing components            | Small to medium        | Yes, if component APIs are stable                  | If page also changes design system or routing                    |
+| CSS tokens, typography, simple responsive tweaks             | Small to medium        | Yes, with screenshots or exact acceptance criteria | If visual direction is being invented                            |
+| Content collection schema and data modeling                  | Medium                 | Only after schema is specified                     | If schema affects routing, SEO, and generated pages              |
+| Playwright smoke tests and no-JS tests                       | Medium                 | Yes, if routes and selectors already exist         | If debugging hydration or browser-specific failures              |
+| Rust route tests and simple handlers                         | Medium                 | Yes, if contracts are fixed                        | If rate limiting, CORS, tracing, or deployment failures interact |
+| Project atlas keyboard accessibility                         | Medium to large        | Not recommended for smallest models                | Required if Canvas/WebGL and HTML fallback diverge               |
+| WebGL/R3F hero and performance debugging                     | Large                  | No                                                 | Always use larger model or human review                          |
+| Security/privacy review                                      | Large                  | No                                                 | Always use larger model or human review                          |
+| Deployment debugging across Cloudflare/Shuttle/Fly/Railway   | Large                  | No                                                 | Always use larger model or human review                          |
 
 Small-model prompt pattern:
 
@@ -269,7 +440,7 @@ cargo test --manifest-path apps/api/Cargo.toml
 - [ ] Mark each candidate case study as `publish`, `needs-redaction`, or `defer`.
 - [ ] Create initial project category taxonomy: AI, automation, infrastructure, backend, creative web, operations.
 - [ ] Define required SEO fields for each page and content type.
-- [ ] Define resume data fields and PDF source workflow.
+- [ ] Define resume data fields and PDF source workflow. Final resume PDF source is resolved locally; production `/resume/` and PDF-link smoke evidence remains blocked until a frontend deployment target exists.
 
 **Acceptance Criteria:**
 
@@ -290,7 +461,7 @@ pnpm build
 **Pause Conditions:**
 
 - Fewer than 4 safe case studies can be published.
-- Resume source content or PDF source is unavailable.
+- Resume source content or approved PDF source is unavailable in a future replacement workflow.
 - A case study requires sensitive details that cannot be redacted without losing credibility.
 
 ## Phase 2: Static Shell, Visual System, and Accessibility Baseline
@@ -426,6 +597,7 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm test:e2e -- --grep "@atlas"
+pnpm test:e2e -- --grep "static systems map hero"
 pnpm test:e2e -- --grep "@reduced-motion"
 pnpm build
 pnpm lighthouse:local
@@ -436,6 +608,20 @@ pnpm lighthouse:local
 - 3D payload prevents Lighthouse Performance >= 90 on production-equivalent preview.
 - Keyboard or screen-reader access diverges from the visual atlas.
 - Smooth scrolling or pinned animation breaks native browser behavior.
+
+### Phase 4 Implementation Contract Snapshot
+
+- Local PR evidence in place today: `B-031` art-directed page surfaces (`@visual-surfaces`), `B-032` static systems-map hero fallback (`static systems map hero`), `B-033` accessible project atlas fallback (`@atlas`), `B-034` desktop-gated SVG/HTML project constellation with lazy focus helper (`@constellation`), `B-035` purposeful motion (`@motion`), `B-036` route continuity (`@route-continuity`), `B-037` visual-regression coverage (`pnpm test:visual`).
+- Keep launch status explicit: Phase 4 has local guard coverage, but it does not remove the separate provider, domain, redaction, production smoke, rollback, or contact-storage launch blockers.
+- Do not claim Three.js, R3F, or WebGL is shipping; the current constellation is a lightweight SVG/HTML progressive enhancement with a lazy focus helper.
+- Active guard commands for phase 4 status checks:
+  - `pnpm test:e2e -- --grep "@visual-surfaces"`
+  - `pnpm test:e2e -- --grep "static systems map hero"`
+  - `pnpm test:e2e -- --grep "@atlas"`
+  - `pnpm test:e2e -- --grep "@constellation"`
+  - `pnpm test:e2e -- --grep "@motion"`
+  - `pnpm test:e2e -- --grep "@route-continuity"`
+  - `pnpm test:visual`
 
 ## Phase 5: Rust Axum Backend
 
@@ -458,7 +644,7 @@ pnpm lighthouse:local
 - [ ] Implement gated `POST /api/events` for privacy-safe events only when explicitly enabled.
 - [ ] Add tower-http CORS restricted to configured origins, trace layer, compression for text/JSON responses, request body limits for write routes, and timeout layers for all public routes.
 - [ ] Add integration tests for success, validation failure, rate limit, CORS denial, disabled-events behavior, and health response shape.
-- [ ] Add Dockerfile and Shuttle deployment config.
+- [ ] Add Dockerfile and keep feature-gated Shuttle legacy compatibility config only.
 
 **Acceptance Criteria:**
 
@@ -468,6 +654,7 @@ pnpm lighthouse:local
 - Events are disabled by default.
 - Backend logs are structured and do not contain secrets or full private message bodies.
 - API downtime does not block static frontend builds.
+- Shuttle remains legacy compatibility only. Do not use Shuttle as a new production API host.
 
 **Verification Commands:**
 
@@ -475,6 +662,8 @@ pnpm lighthouse:local
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
+sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api
 cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api
 xh :8787/api/health
 ```
@@ -494,7 +683,36 @@ Expected `xh :8787/api/health` result shape:
 - Contact delivery provider is not chosen and local storage mode is not acceptable.
 - Provider credentials would need to be committed to the repo.
 - Rate limiting cannot be implemented without adding unapproved infrastructure.
-- Shuttle deployment constraints conflict with the API design.
+- Shuttle legacy compatibility checks conflict with the API design.
+
+### Phase 5 Implementation Contract Snapshot
+
+- Local PR evidence in place today: `B-038` has structured JSON tracing startup
+  initialization for standalone and Shuttle entrypoints; `B-039` health remains
+  tested; `B-040` now uses an injectable cached project metadata provider with
+  error and slow-refresh stale-cache fallback tests; `B-041`, `B-044`, `B-045`,
+  `B-046`, and `B-047` have local route, middleware, deploy-path, and frontend
+  fallback coverage.
+- Keep launch status explicit: Phase 5 has local API and container evidence,
+  but it does not remove the separate provider, domain, production secret,
+  persistent contact storage, production smoke, rollback, or case-study
+  redaction blockers.
+- Current partial follow-ups: `B-042` contact abuse controls are in-memory and
+  now default to normalized sender identity rather than spoofable forwarded
+  headers until a trusted proxy boundary exists; `B-043` JSONL storage works
+  through an injectable delivery adapter seam with fake success/failure coverage,
+  but production contact handling remains blocked until retention, backup,
+  rotation, deletion, and store/provider decisions are approved.
+- Active guard commands for phase 5 status checks:
+  - `cargo fmt --manifest-path apps/api/Cargo.toml --check`
+  - `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`
+  - `cargo test --manifest-path apps/api/Cargo.toml`
+  - `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle`
+  - `cargo audit --file apps/api/Cargo.lock`
+  - `sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api`
+  - `cargo run --manifest-path apps/api/Cargo.toml --bin humankaylee-api`
+  - `xh --check-status --body GET http://127.0.0.1:8787/api/health`
+  - `xh --check-status --body GET http://127.0.0.1:8787/api/projects/live`
 
 ## Phase 6: Frontend and Backend Integration
 
@@ -585,13 +803,13 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
-pnpm preview
+pnpm bundle:budget
 pnpm lighthouse:local
 pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
 cargo test --manifest-path apps/api/Cargo.toml
-cargo audit --manifest-path apps/api/Cargo.toml
+cargo audit --file apps/api/Cargo.lock
 ```
 
 **Pause Conditions:**
@@ -616,8 +834,10 @@ cargo audit --manifest-path apps/api/Cargo.toml
 **Tasks:**
 
 - [ ] Create Cloudflare Pages deployment instructions for frontend.
-- [ ] Create Shuttle Community deployment instructions for Rust API.
-- [ ] Document Fly.io or Railway fallback for the API if Shuttle reliability is insufficient.
+- [ ] Record that Shuttle is not a viable new launch target and keep any Shuttle
+      binary checks as legacy compatibility only.
+- [ ] Create Fly.io and Railway deployment instructions for the Rust API, plus
+      Cloudflare/Hetzner alternatives if the API shape or ops model changes.
 - [ ] Add production environment variable matrix with secret names, not secret values.
 - [ ] Add custom domain, DNS, TLS, cache, and rollback runbook.
 - [ ] Add health check and smoke check commands for deployed frontend and API.
@@ -641,16 +861,17 @@ pnpm test:e2e
 pnpm build
 pnpm lighthouse:local
 cargo test --manifest-path apps/api/Cargo.toml
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
 xh https://<production-api-domain>/api/health
 xh https://<production-frontend-domain>/
 ```
 
-Provider CLI commands must be confirmed during this phase because provider CLIs change over time. The runbook must record the exact working commands and CLI versions used for Cloudflare Pages and Shuttle.
+Provider CLI commands must be confirmed during this phase because provider CLIs change over time. The runbook must record the exact working commands and CLI versions used for Cloudflare Pages plus the selected API host. Shuttle is not a viable new launch target; see https://docs.shuttle.dev/docs/shuttle-shutdown. Shuttle remains legacy compatibility only. Do not use Shuttle as a new production API host.
 
 **Pause Conditions:**
 
 - Final domain name is not selected.
-- Cloudflare or Shuttle account access is unavailable.
+- Cloudflare or selected API host account access is unavailable.
 - Provider CLI syntax or pricing changed materially from the research assumptions.
 - Production health checks cannot be reached from outside the local network.
 
@@ -688,13 +909,15 @@ pnpm typecheck
 pnpm test
 pnpm test:e2e
 pnpm build
-pnpm preview
+pnpm bundle:budget
 pnpm lighthouse:local
 pnpm audit --audit-level moderate
 cargo fmt --manifest-path apps/api/Cargo.toml --check
 cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings
+cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle
 cargo test --manifest-path apps/api/Cargo.toml
-cargo audit --manifest-path apps/api/Cargo.toml
+cargo audit --file apps/api/Cargo.lock
+sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api
 ```
 
 **Final Production Verification Commands:**
@@ -712,22 +935,25 @@ Replace `<production-frontend-domain>` and `<production-api-domain>` only after 
 
 ## Cross-Phase Test Matrix
 
-| Requirement | Test Type | Command | Owner |
-| --- | --- | --- | --- |
-| Core pages build static HTML | Build | `pnpm build` | Page Composition Agent |
-| JavaScript-disabled content remains useful | E2E | `pnpm test:e2e -- --grep "@noscript"` | QA Agent |
-| Reduced motion is respected | E2E | `pnpm test:e2e -- --grep "@reduced-motion"` | QA Agent |
-| Keyboard navigation works | E2E | `pnpm test:e2e -- --grep "@keyboard"` | QA Agent |
-| Accessibility meets baseline | E2E/Axe | `pnpm test:e2e -- --grep "@accessibility"` | QA Agent |
-| Lighthouse thresholds pass | Lighthouse | `pnpm lighthouse:local` | QA Agent |
-| Content schema is valid | Unit | `pnpm test -- --run content` | Content Agent |
-| Project atlas fallback works | E2E | `pnpm test:e2e -- --grep "@atlas"` | Project Atlas Agent |
-| Contact success and fallback work | E2E | `pnpm test:e2e -- --grep "@contact"` | Contact UX Agent |
-| API-down mode preserves site usefulness | E2E | `pnpm test:e2e -- --grep "@api-down"` | Contact UX Agent |
-| Rust API route behavior is tested | Rust tests | `cargo test --manifest-path apps/api/Cargo.toml` | Backend Agent |
-| Rust code is warning-free | Rust lint | `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings` | Backend Agent |
-| Frontend dependencies have no moderate runtime audit failures | Audit | `pnpm audit --audit-level moderate` | QA Agent |
-| Rust dependencies have no known runtime advisory blocker | Audit | `cargo audit --manifest-path apps/api/Cargo.toml` | QA Agent |
+| Requirement                                                   | Test Type  | Command                                                                                            | Owner                  |
+| ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- | ---------------------- |
+| Core pages build static HTML                                  | Build      | `pnpm build`                                                                                       | Page Composition Agent |
+| JavaScript-disabled content remains useful                    | E2E        | `pnpm test:e2e -- --grep "@noscript"`                                                              | QA Agent               |
+| Reduced motion is respected                                   | E2E        | `pnpm test:e2e -- --grep "@reduced-motion"`                                                        | QA Agent               |
+| Keyboard navigation works                                     | E2E        | `pnpm test:e2e -- --grep "@keyboard"`                                                              | QA Agent               |
+| Accessibility meets baseline                                  | E2E/Axe    | `pnpm test:e2e -- --grep "@accessibility"`                                                         | QA Agent               |
+| Lighthouse thresholds pass                                    | Lighthouse | `pnpm lighthouse:local`                                                                            | QA Agent               |
+| Critical JavaScript stays within budget                       | Bundle     | `pnpm build && pnpm bundle:budget`                                                                 | QA Agent               |
+| Content schema is valid                                       | Unit       | `pnpm test -- --run content`                                                                       | Content Agent          |
+| Project atlas fallback works                                  | E2E        | `pnpm test:e2e -- --grep "@atlas"`                                                                 | Project Atlas Agent    |
+| Contact success and fallback work                             | E2E        | `pnpm test:e2e -- --grep "@contact"`                                                               | Contact UX Agent       |
+| API-down mode preserves site usefulness                       | E2E        | `pnpm test:e2e -- --grep "@api-down"`                                                              | Contact UX Agent       |
+| Rust API route behavior is tested                             | Rust tests | `cargo test --manifest-path apps/api/Cargo.toml`                                                   | Backend Agent          |
+| Rust code is warning-free                                     | Rust lint  | `cargo clippy --manifest-path apps/api/Cargo.toml --all-targets -- -D warnings`                    | Backend Agent          |
+| Shuttle API binary builds                                     | Rust check | `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle` | Backend Agent          |
+| API container image builds                                    | Container  | `sudo podman build -t humankaylee-api:local-check -f apps/api/Dockerfile apps/api`                 | Backend Agent          |
+| Frontend dependencies have no moderate runtime audit failures | Audit      | `pnpm audit --audit-level moderate`                                                                | QA Agent               |
+| Rust dependencies have no known runtime advisory blocker      | Audit      | `cargo audit --file apps/api/Cargo.lock`                                                           | QA Agent               |
 
 ## Risk Controls
 
@@ -779,7 +1005,7 @@ Pause implementation and ask for direction if any condition occurs:
 - The single product objective changes.
 - Final domain name is required for deployment and has not been chosen.
 - Fewer than 4 publishable case studies remain after redaction review.
-- Resume PDF source is missing or unapproved.
+- Approved resume PDF source is missing in a future replacement workflow, or production `/resume/` smoke evidence is required and no frontend target exists.
 - Contact provider is not chosen and mailto fallback is not acceptable for launch.
 - A required provider account, token, or domain setting is unavailable.
 - Tooling cannot satisfy the command contract on the target environment.

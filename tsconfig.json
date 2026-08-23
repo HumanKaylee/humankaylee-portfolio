@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"strict": true,
+		"skipLibCheck": true,
+		"noEmit": true,
+		"types": ["node", "vitest/globals"]
+	},
+	"include": [
+		"apps/web/src/**/*",
+		"tests/**/*.ts",
+		"astro.config.mjs",
+		"vitest.config.ts",
+		"playwright.config.ts",
+		"playwright.visual.config.ts"
+	],
+	"exclude": ["dist", "node_modules"]
+}

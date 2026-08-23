@@ -56,11 +56,15 @@ External systems:
 
 - GitHub for source repositories, project metadata, and CI triggers.
 - Cloudflare Pages for the recommended static frontend host.
-- Shuttle Community for the recommended launch Rust API host.
-- Fly.io, Railway, Render, Hetzner, or Cloudflare Workers as fallback or
-  evolution paths.
+- Fly.io, Railway, or another approved host as the approved current-host
+  comparison set for #64, pending provider/project/domain evidence.
+- Cloudflare Workers/Pages Functions as an edge rewrite option, and Hetzner as a
+  higher-ops VPS fallback.
+- Shuttle is not a viable new launch target as of the 2026-05-24 official-source
+  snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown
 - Email or message delivery provider for contact submissions.
-- Optional privacy-safe analytics sink.
+- Optional privacy-safe events route. The current repository does not ship an
+  analytics provider, event sink, or retention policy for enabled events.
 - Browser clients across desktop, mobile, low-power devices, reduced-motion
   environments, and no-WebGL environments.
 
@@ -87,7 +91,7 @@ Rust Axum API
   | Optional integrations
   +--> GitHub metadata cache
   +--> Contact delivery/storage
-  +--> Privacy-safe events store
+  +--> Privacy-safe event validation and abuse control
   +--> Logs/traces/metrics backend
 ```
 
@@ -476,14 +480,18 @@ Rules:
 
 Frontend: Cloudflare Pages.
 
-Backend: Shuttle Community.
+Backend: Fly.io or Railway candidate, with final host still blocked.
 
 Reasons:
 
 - Cloudflare Pages is a strong fit for static Astro output, private GitHub repo
   deploys, custom domains, TLS, and CDN delivery.
-- Shuttle is Rust-native, low-friction, and appropriate for a small launch API.
-- The frontend remains useful even if Shuttle is unavailable or later replaced.
+- Fly.io, Railway, or another approved host keeps the current Axum API shape
+  deployable without a runtime rewrite.
+- Shuttle is not a viable new launch target; keep the feature-gated Shuttle
+  binary only as legacy compatibility until removed or replaced.
+- The frontend remains useful even if the selected API host is unavailable or
+  later replaced.
 
 ### 9.2 Fallback and Evolution Options
 
@@ -503,7 +511,8 @@ Cloudflare Pages plus Railway:
 
 - Good developer experience for simple app deploys.
 - Can be more expensive under always-on workloads.
-- Useful as a fallback when Shuttle limitations become painful.
+- Useful when Railway's cost and operational model fit better than Fly.io or a
+  self-managed VPS.
 
 Render:
 
@@ -516,6 +525,8 @@ Hetzner VPS:
 - Strong low-cost control path for static files plus Rust behind Caddy.
 - Requires patching, monitoring, firewalling, backups, and incident ownership.
 - Better as an advanced ops proof or fallback, not the lowest-friction launch.
+- B-068 comparisons must record the official source URL and snapshot date for
+  each candidate before any future host-retention recommendation is drafted.
 
 Home self-hosting plus Cloudflare Tunnel:
 
@@ -569,6 +580,8 @@ Frontend observability:
 
 - Build metadata embedded in HTML or a small static endpoint.
 - Privacy-safe analytics only if enabled and documented.
+- The current repository does not ship an analytics provider, event sink, or
+  retention policy for enabled events.
 - Client-side error collection is optional and must be privacy reviewed.
 - Lighthouse reports for release quality.
 - Cloudflare Pages deployment history for frontend rollout status.
@@ -669,7 +682,8 @@ Content security:
    a resume CTA.
 2. Frontend checks whether analytics are enabled.
 3. Frontend sends a minimal event to `POST /api/events`.
-4. API validates schema and stores or forwards only approved fields.
+4. API validates schema and applies hashed in-memory abuse control without
+   retaining raw event payloads.
 5. Failures are ignored by the UI.
 
 ## 15. API Contract Principles
@@ -788,7 +802,7 @@ Operational principle:
 - Final resume PDF source content.
 - Which existing projects are safe to publish in detail.
 - Whether the AI assistant remains a v2 demo.
-- Whether launch uses Shuttle Community or starts on Fly.io/Railway.
+- Whether launch uses Fly.io, Railway, or another current API host.
 - Whether contact submissions should be email-only or stored in a database.
 - Whether analytics are disabled at launch or implemented with the Rust API.
 

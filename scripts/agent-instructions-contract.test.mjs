@@ -1,0 +1,257 @@
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { test } from "node:test";
+
+const AGENTS_PATH = "AGENTS.md";
+const LOCAL_PORTFOLIO_SKILL_PATHS = [
+	"/home/joe/.codex/skills/humankaylee-portfolio/SKILL.md",
+	"/home/joe/.agents/skills/humankaylee-portfolio/SKILL.md",
+];
+const REVIEWED_LAUNCH_BOUNDARY =
+	"`reviewed` is never launch-eligible; the launch-eligible case-study count stays `0` until real human approval evidence exists.";
+
+function readRequiredFile(path) {
+	assert.ok(existsSync(path), `missing required file: ${path}`);
+
+	const content = readFileSync(path, "utf8");
+	assert.ok(content.trim().length > 0, `empty required file: ${path}`);
+	return content;
+}
+
+function expectContains(
+	content,
+	needle,
+	label = needle,
+	subject = "AGENTS.md",
+) {
+	const normalizedContent = content.replace(/\s+/g, " ");
+	const normalizedNeedle = needle.replace(/\s+/g, " ");
+	assert.ok(
+		normalizedContent.includes(normalizedNeedle),
+		`expected ${subject} to include ${label}`,
+	);
+}
+
+function existingLocalSkillMirrors() {
+	return LOCAL_PORTFOLIO_SKILL_PATHS.filter((path) => existsSync(path));
+}
+
+function section(content, heading) {
+	const headingLine = `## ${heading}`;
+	const lines = content.split("\n");
+	const startIndex = lines.findIndex((line) => line === headingLine);
+	assert.notEqual(
+		startIndex,
+		-1,
+		`expected AGENTS.md to include ${heading} section`,
+	);
+
+	const endIndex = lines.findIndex(
+		(line, index) => index > startIndex && line.startsWith("## "),
+	);
+	return lines
+		.slice(startIndex + 1, endIndex === -1 ? undefined : endIndex)
+		.join("\n");
+}
+
+function bulletStarting(sectionContent, prefix) {
+	const lines = sectionContent.split("\n");
+	const startIndex = lines.findIndex((line) => line.startsWith(`- ${prefix}`));
+	assert.notEqual(
+		startIndex,
+		-1,
+		`expected section to include ${prefix} bullet`,
+	);
+
+	const bulletLines = [lines[startIndex]];
+	for (const line of lines.slice(startIndex + 1)) {
+		if (line.startsWith("- ")) {
+			break;
+		}
+
+		if (line.startsWith("  ")) {
+			bulletLines.push(line);
+		}
+	}
+
+	return bulletLines.join("\n");
+}
+
+function expectCurrentHostingTarget(agents) {
+	const buildDirection = section(agents, "Build Direction");
+	const hostingTarget = bulletStarting(buildDirection, "Hosting target:");
+
+	assert.ok(
+		!/\bShuttle\b/i.test(hostingTarget),
+		"Hosting target bullet must not list Shuttle as an active API host",
+	);
+
+	expectContains(hostingTarget, "Cloudflare Pages frontend");
+	expectContains(hostingTarget, "Fly.io, Railway, or another approved host");
+	expectContains(hostingTarget, "approved current-host comparison set for #64");
+	assert.ok(
+		!hostingTarget.includes("current normal Axum API candidates"),
+		"Hosting target bullet must not use stale current-normal provider wording",
+	);
+}
+
+test("repository agent instructions use current hosting and launch-blocker guidance", () => {
+	const agents = readRequiredFile(AGENTS_PATH);
+
+	expectCurrentHostingTarget(agents);
+	expectContains(agents, "docs/CONTENT_STRATEGY.md");
+	expectContains(agents, "docs/CONTENT_REDACTION_GUIDE.md");
+	expectContains(agents, "docs/PRIVACY.md");
+	expectContains(agents, "Shuttle is not a viable new launch target");
+	expectContains(agents, "https://docs.shuttle.dev/docs/shuttle-shutdown");
+	expectContains(agents, "Do not use Shuttle for a new production launch");
+	expectContains(agents, "not launch-ready");
+	expectContains(agents, "production frontend/API targets");
+	expectContains(agents, "redaction approvals");
+	expectContains(agents, "pnpm redaction:readiness");
+	expectContains(agents, "local/redaction-readiness");
+	expectContains(
+		agents,
+		"Use the generated summary as reviewer handoff input only; it cannot approve case studies, clear open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.",
+	);
+	expectContains(agents, "pnpm phase7:provider-preflight");
+	expectContains(
+		agents,
+		"The repo-managed `wrangler` dev dependency proves local Cloudflare Pages CLI availability only; it cannot authenticate provider projects, run deployment, change DNS/TLS, capture production smoke, close #63/#64/#65/#69, or replace blocked production rows.",
+	);
+	expectContains(agents, "pnpm phase7:contact-decision");
+	expectContains(agents, "local/decision-template");
+	expectContains(
+		agents,
+		"Use the template only to shape owner approval, retention, backup, rotation, deletion, store/provider, smoke, rollback/disable, and privacy fields; it cannot approve contact handling, capture production smoke, close #64/#69, or replace the blocked production contact row.",
+	);
+	expectContains(agents, "pnpm phase7:launch-audit");
+	expectContains(agents, "local/readiness-audit");
+	expectContains(
+		agents,
+		"It summarizes unresolved external launch gates only; it cannot deploy, approve redaction, approve contact handling, replace production rows, close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove launch readiness.",
+	);
+	expectContains(agents, REVIEWED_LAUNCH_BOUNDARY);
+	expectContains(
+		agents,
+		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
+	);
+
+	assert.ok(
+		!agents.includes("Shuttle Rust API initially"),
+		"AGENTS.md must not direct new agents toward Shuttle as the initial API host",
+	);
+	assert.ok(
+		!agents.includes("keep Fly.io/Railway fallback documented"),
+		"AGENTS.md must not describe current API candidates as mere fallback documentation",
+	);
+});
+
+test("repository agent instructions surface GitHub Project board guardrails", () => {
+	const agents = readRequiredFile(AGENTS_PATH);
+
+	expectContains(agents, "## GitHub And Project Work");
+	expectContains(
+		agents,
+		"Read `docs/GITHUB_SYNC.md` before changing issues, labels, milestones, or GitHub Project state.",
+	);
+	expectContains(
+		agents,
+		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks.",
+	);
+	expectContains(
+		agents,
+		"Do not run `gh auth refresh` from unattended automation.",
+	);
+	expectContains(
+		agents,
+		"Project board recovery requires every open issue in the live issue bridge to have a Project item or a documented skip reason.",
+	);
+	expectContains(
+		agents,
+		"Issue sync evidence is not launch readiness, production deployment evidence, post-launch feature approval, assistant-build approval, or Project board recovery.",
+	);
+	expectContains(
+		agents,
+		"Active pull requests that need portfolio execution visibility must be tracked on Project #1; PR #6 is the current active implementation PR and should keep a Project item until it is merged or closed.",
+	);
+	expectContains(
+		agents,
+		"Project item tracking for active PRs is triage evidence only, not launch readiness or issue-closure evidence.",
+	);
+});
+
+test("repository agent instructions reject Shuttle as the active hosting target even with legacy warning text", () => {
+	const agents = readRequiredFile(AGENTS_PATH);
+	const staleAgents = agents.replace(
+		/- Hosting target:[\s\S]*?(?=\n- Shuttle is not a viable new launch target)/,
+		[
+			"- Hosting target: Cloudflare Pages frontend plus Shuttle as the first",
+			"  Rust API host, with Fly.io or Railway documented as fallback options.",
+		].join("\n"),
+	);
+
+	assert.throws(
+		() => expectCurrentHostingTarget(staleAgents),
+		/Shuttle as an active API host/,
+	);
+});
+
+test("installed portfolio skill mirrors preserve local launch guardrails", (t) => {
+	const mirrorPaths = existingLocalSkillMirrors();
+	if (mirrorPaths.length === 0) {
+		t.skip("local portfolio skill mirrors are not installed on this runner");
+		return;
+	}
+
+	const mirrorContents = mirrorPaths.map((path) => ({
+		path,
+		content: readRequiredFile(path),
+	}));
+
+	if (mirrorContents.length > 1) {
+		const [firstMirror, ...remainingMirrors] = mirrorContents;
+		for (const mirror of remainingMirrors) {
+			assert.equal(
+				mirror.content,
+				firstMirror.content,
+				`${mirror.path} should match ${firstMirror.path}`,
+			);
+		}
+	}
+
+	const requiredSkillGuardrails = [
+		"Guard installed skill mirrors with `node --test scripts/agent-instructions-contract.test.mjs` after changing portfolio agent instructions.",
+		"Do not reboot `rog-strix-joe` or the local laptop as part of portfolio work.",
+		"GitHub Project #1 exists at `https://github.com/users/HumanKaylee/projects/1`",
+		"every currently open live-bridge issue has a Project item with phase, priority, type, area, agent size, status, and blocker fields",
+		"PR #6 is tracked on Project #1 as the current active implementation PR; keep active PR Project items current until each PR is merged or closed.",
+		"Project item tracking for active PRs is triage evidence only, not launch readiness or issue-closure evidence.",
+		"Use `GH_PROMPT_DISABLED=1 gh project list --owner HumanKaylee --format json` for Project discovery checks; do not run `gh auth refresh` from unattended automation unless Project scopes regress.",
+		"Future Project sync is not current until every open issue in the live issue bridge has a Project item or a documented skip reason.",
+		"Fresh verifier output is authoritative for live GitHub, PR, CI, issue, and Project state; embedded skill snapshots and the Current Repo State / Issue Overlay are execution guidance only after live verification.",
+		"Do not rewrite snapshots only to chase the checked-out commit after guardrail-only docs commits; update snapshots only when guidance or blocker state materially changes future execution.",
+		"Do not close launch blocker issues from local-only, PR-only, or docs-only evidence; production frontend/API targets, DNS/TLS, contact handling, rollback evidence, production Lighthouse, and redaction approvals remain required before launch readiness.",
+		"Blocked/deferred case-study candidates must not count toward the four-case-study launch minimum.",
+		"B-037 visual regression snapshots are implementation evidence only, not production launch evidence",
+		'Project constellation import failure is a handled progressive-enhancement fallback: `document.body.dataset.constellationReady === "module-error"` while the static atlas remains usable.',
+		"Contact store config must fail fast when `HK_API_CONTACT_DELIVERY_MODE=store` lacks `HK_API_CONTACT_STORE_PATH`.",
+		"Blocked/deferred case-study candidates should use explicit unpublished body boundaries, not generic placeholder body copy.",
+		"Content/redaction docs must not use approval-adjacent wording unless directly negated.",
+		"`pnpm redaction:readiness` records local/redaction-readiness reviewer handoff evidence only; it cannot approve case studies, clear open items, close #20/#21/#24/#25, or count `reviewed` work toward launch.",
+		"`pnpm phase7:evidence-template` is a local/readiness helper for shaping future provider-neutral evidence rows only; it cannot select providers, run deployment commands, change DNS/TLS, run production smoke, replace blocked production rows, or close #63/#64/#65/#69.",
+		"`pnpm phase7:provider-preflight` records local/preflight provider CLI and environment-name availability only; the repo-managed `wrangler` dev dependency proves local Cloudflare Pages CLI availability, not provider authentication, deployment, DNS/TLS, production smoke, or issue closure.",
+		"`pnpm phase7:contact-decision` is a local/decision-template helper for shaping the #64/#69 contact handling decision only; it cannot approve contact handling, capture production smoke, close #64/#69, or replace the blocked production contact row.",
+		"`pnpm phase7:launch-audit` records local/readiness-audit blocker summary evidence only; it cannot deploy, approve redaction, approve contact handling, replace production rows, close #20/#21/#24/#25/#63/#64/#65/#69/#70-#74, or prove launch readiness.",
+		"Swarm execution is opt-in for tasks that span multiple ownership lanes or need reviewed parallel-safe split work",
+		"single-lane docs/contract fixes should stay with one owner in single-session execution unless the Coordinator records a concrete parallelization benefit",
+		"B-067/#73 publication requires B-063 launch evidence and approved public-safe content before any note or postmortem is published, added to RSS, or used for issue closure.",
+		REVIEWED_LAUNCH_BOUNDARY,
+	];
+
+	for (const mirror of mirrorContents) {
+		for (const guardrail of requiredSkillGuardrails) {
+			expectContains(mirror.content, guardrail, guardrail, mirror.path);
+		}
+	}
+});

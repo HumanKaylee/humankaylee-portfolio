@@ -1,0 +1,7 @@
+{
+  "task": "W12-05-cryo-stage2-spec",
+  "milestone": "M9",
+  "created_at": "2026-05-26T17:29:07Z",
+  "status": "done",
+  "outcome": "Authored docs/CRYO_STAGE_2_SPEC.md — ~2200-word spec for the cryo-flow-sim interactive WASM embed. Covers WASM-client-side recommendation, architecture summary, proposed file tree, API surface, performance budget, visitor controls, accessibility, build pipeline, tests, decision log, effort estimate, and out-of-scope items. Cross-referenced cryo-flow-sim-showcase/docs/roadmap.md Phase 6, contracts.md, and architecture.md. Implementation deferred to post-launch v1.3+."
+}

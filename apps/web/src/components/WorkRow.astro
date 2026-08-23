@@ -1,0 +1,81 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+	project: CollectionEntry<"work">;
+	index: number;
+};
+
+const { project, index } = Astro.props;
+---
+
+<article class="work-row">
+	<div class="work-row__meta">
+		<span>{String(index + 1).padStart(2, "0")}</span>
+		<span>{project.data.discipline}</span>
+		<span>{project.data.year}</span>
+	</div>
+	<h3>
+		<a
+			id={`stage-trigger-${project.data.slug}`}
+			data-stage-trigger={project.data.slug}
+			data-touch-target="true"
+			href={`/work/${project.data.slug}/`}
+		>
+			{project.data.title}
+		</a>
+	</h3>
+	<p>{project.data.lede}</p>
+	<p class="work-row__evidence">
+		<strong>{project.data.evidence.label}</strong>
+		<span>{project.data.evidence.summary}</span>
+	</p>
+</article>
+
+<style>
+	.work-row {
+		display: grid;
+		gap: var(--space-3);
+		padding-block: var(--space-4);
+	}
+
+	.work-row__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-4);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.7rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.work-row h3 {
+		font-size: clamp(1.65rem, 3.3vw, 3rem);
+	}
+
+	.work-row h3 a {
+		justify-content: flex-start;
+		text-decoration-thickness: 0.06em;
+	}
+
+	.work-row > p {
+		max-width: 48rem;
+		color: var(--color-muted);
+	}
+
+	.work-row__evidence {
+		display: grid;
+		gap: 0.25rem;
+		border-left: 0.25rem solid var(--color-signal);
+		padding-left: var(--space-3);
+		font-size: 0.82rem;
+	}
+
+	.work-row__evidence strong {
+		color: var(--color-ink);
+		font-family: var(--font-evidence);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+</style>

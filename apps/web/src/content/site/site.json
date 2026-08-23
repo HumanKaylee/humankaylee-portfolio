@@ -1,0 +1,12 @@
+{
+	"siteName": "Joe Poznanski Portfolio",
+	"siteDescription": "Principal engineer for simulation, controls, and operational software.",
+	"siteUrl": "https://joepoznanski.io",
+	"defaultOgImage": "/social/default.png",
+	"seo": {
+		"title": "Joe Poznanski Portfolio",
+		"description": "Principal engineer for simulation, controls, and operational software.",
+		"canonicalPath": "/",
+		"ogImage": "/social/default.png"
+	}
+}

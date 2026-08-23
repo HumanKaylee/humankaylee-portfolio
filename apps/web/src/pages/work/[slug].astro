@@ -1,0 +1,351 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import BlackScholesDemo from "../../components/BlackScholesDemo.astro";
+import CaseStudyMediaGallery from "../../components/CaseStudyMediaGallery.astro";
+import CaseStudySection from "../../components/CaseStudySection.astro";
+import EvidenceStrip from "../../components/EvidenceStrip.astro";
+import MediaFrame from "../../components/MediaFrame.astro";
+import NextWork from "../../components/NextWork.astro";
+import ReadingProgress from "../../components/ReadingProgress.astro";
+import WorkEvidenceFlow from "../../components/WorkEvidenceFlow.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import type { WorkEntryData } from "../../lib/contracts/work";
+
+type WorkEntry = CollectionEntry<"work">;
+type WorkDecision = WorkEntryData["decisions"][number];
+
+export async function getStaticPaths() {
+	const publishedWork = ((await getCollection("work")) as WorkEntry[])
+		.filter((entry) => entry.data.publicationStatus === "publish")
+		.sort((left, right) => left.data.featuredOrder - right.data.featuredOrder);
+
+	return publishedWork.map((work, index) => ({
+		params: { slug: work.data.slug },
+		props: {
+			work,
+			nextWork: publishedWork[(index + 1) % publishedWork.length],
+			projectNumber: index + 1,
+		},
+	}));
+}
+
+type Props = {
+	work: WorkEntry;
+	nextWork: WorkEntry;
+	projectNumber: number;
+};
+
+const { work, nextWork, projectNumber } = Astro.props as Props;
+const { data } = work;
+const canonicalUrl = `https://joepoznanski.io/work/${data.slug}/`;
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "CreativeWork",
+	name: data.title,
+	description: data.lede,
+	url: canonicalUrl,
+	genre: data.discipline,
+	dateCreated: String(data.year),
+	creator: {
+		"@type": "Person",
+		name: "Joe Poznanski",
+	},
+	about: data.problem,
+};
+---
+
+<BaseLayout
+	title={data.seo.title}
+	description={data.seo.description}
+	canonicalPath={`/work/${data.slug}/`}
+	ogImage={data.seo.ogImage}
+	structuredData={structuredData}
+>
+	<ReadingProgress />
+	<article class="work-detail" aria-labelledby="work-title">
+		<header class="work-detail__header">
+			<p class="work-detail__meta">
+				<span>{String(projectNumber).padStart(2, "0")}</span>
+				<span>{data.discipline}</span>
+				<span>{data.year}</span>
+			</p>
+			<h1 id="work-title">{data.title}</h1>
+			<p class="work-detail__lede">{data.lede}</p>
+			<p class="work-detail__outcome">{data.outcome}</p>
+		</header>
+
+		<div class="work-detail__media">
+			<MediaFrame media={data.media} playback={data.media.kind === "video"}>
+				<WorkEvidenceFlow work={work} />
+			</MediaFrame>
+		</div>
+
+		<dl class="work-glance" aria-label={`${data.title} at a glance`}>
+			<div>
+				<dt>Role</dt>
+				<dd>{data.role}</dd>
+			</div>
+			<div>
+				<dt>System boundary</dt>
+				<dd>{data.architecture.overview}</dd>
+			</div>
+			<div>
+				<dt>Primary constraint</dt>
+				<dd>{data.constraints[0]}</dd>
+			</div>
+			<div>
+				<dt>Strongest evidence</dt>
+				<dd>{data.evidence.summary}</dd>
+			</div>
+		</dl>
+
+		<CaseStudySection id="situation" title="The situation">
+			<p>{data.problem}</p>
+			<p>{data.stakes}</p>
+		</CaseStudySection>
+
+		<CaseStudySection id="constraints" title="Constraints">
+			<ul>
+				{data.constraints.map((constraint: string) => <li>{constraint}</li>)}
+			</ul>
+		</CaseStudySection>
+
+		<CaseStudySection id="responsibility" title="My responsibility">
+			<p>{data.role}</p>
+		</CaseStudySection>
+
+		<CaseStudySection id="system" title="The system">
+			<p>{data.architecture.overview}</p>
+			<p class="diagram-description">
+				<strong>Architecture description</strong>
+				<span>{data.architecture.diagramAlt}</span>
+			</p>
+		</CaseStudySection>
+
+		<CaseStudySection id="decisions" title="Critical decisions" wide>
+			<div class="decision-list">
+				{
+					data.decisions.map((decision: WorkDecision, index: number) => (
+						<article>
+							<p>{String(index + 1).padStart(2, "0")}</p>
+							<h3>{decision.title}</h3>
+							<dl>
+								<div>
+									<dt>Choice</dt>
+									<dd>{decision.choice}</dd>
+								</div>
+								<div>
+									<dt>Alternatives considered</dt>
+									<dd>
+										<ul>
+							{decision.alternatives.map((alternative: string) => (
+												<li>{alternative}</li>
+											))}
+										</ul>
+									</dd>
+								</div>
+								<div>
+									<dt>Tradeoff</dt>
+									<dd>{decision.tradeoff}</dd>
+								</div>
+							</dl>
+						</article>
+					))
+				}
+			</div>
+		</CaseStudySection>
+
+		<CaseStudySection id="proof" title="Proof" wide>
+			<p class="proof-summary">
+				<strong>{data.evidence.label}</strong>
+				<span>{data.evidence.summary}</span>
+			</p>
+			<EvidenceStrip
+				items={data.evidence.values}
+				label={`${data.title} verified evidence`}
+			/>
+			<dl class="proof-boundary">
+				<div>
+					<dt>Evidence boundary</dt>
+					<dd>{data.evidence.scope}</dd>
+				</div>
+				<div>
+					<dt>Known limits</dt>
+					<dd>{data.evidence.limits}</dd>
+				</div>
+			</dl>
+		</CaseStudySection>
+
+		<CaseStudyMediaGallery items={data.evidenceMedia} />
+
+		<CaseStudySection id="reflection" title="Reflection">
+			<p>{data.outcome}</p>
+			<ul>
+				{data.lessons.map((lesson: string) => <li>{lesson}</li>)}
+			</ul>
+		</CaseStudySection>
+
+		{
+			data.demoComponent === "BlackScholesDemo" ? (
+				<section class="work-demo" aria-label="Interactive technical demonstration">
+					<BlackScholesDemo />
+				</section>
+			) : null
+		}
+
+		<NextWork
+			title={nextWork.data.title}
+			slug={nextWork.data.slug}
+			discipline={nextWork.data.discipline}
+		/>
+	</article>
+</BaseLayout>
+
+<style>
+	.work-detail {
+		display: grid;
+		min-width: 0;
+		gap: 0;
+	}
+
+	.work-detail__header {
+		display: grid;
+		max-width: 80rem;
+		gap: var(--space-4);
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	.work-detail__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-4);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.work-detail__lede {
+		max-width: 52rem;
+		font-size: clamp(1.2rem, 2.3vw, 1.75rem);
+	}
+
+	.work-detail__outcome {
+		max-width: 58rem;
+		border-left: 0.35rem solid var(--color-signal);
+		padding-left: var(--space-4);
+		color: var(--color-muted);
+	}
+
+	.work-detail__media {
+		margin-bottom: var(--space-5);
+	}
+
+	.work-glance {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		margin: 0;
+		border-block: 1px solid var(--line);
+	}
+
+	.work-glance div {
+		display: grid;
+		gap: var(--space-2);
+		padding: var(--space-4);
+	}
+
+	.work-glance div + div {
+		border-left: 1px solid var(--line);
+	}
+
+	.work-glance dt,
+	.decision-list dt,
+	.proof-boundary dt {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.68rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.work-glance dd,
+	.decision-list dd,
+	.proof-boundary dd {
+		margin: 0;
+	}
+
+	.diagram-description,
+	.proof-summary {
+		display: grid;
+		gap: var(--space-2);
+		border-left: 0.3rem solid var(--color-signal);
+		padding-left: var(--space-3);
+	}
+
+	.decision-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-4);
+	}
+
+	.decision-list article {
+		display: grid;
+		gap: var(--space-3);
+		border-top: 1px solid var(--line);
+		padding-top: var(--space-3);
+	}
+
+	.decision-list article > p {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+	}
+
+	.decision-list dl,
+	.proof-boundary {
+		display: grid;
+		gap: var(--space-3);
+		margin: 0;
+	}
+
+	.decision-list dl > div,
+	.proof-boundary > div {
+		display: grid;
+		gap: var(--space-1);
+	}
+
+	.work-demo {
+		padding-block: var(--space-5) var(--space-6);
+	}
+
+	@media (max-width: 64rem) {
+		.work-glance {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.work-glance div:nth-child(3) {
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+
+		.work-glance div:nth-child(4) {
+			border-top: 1px solid var(--line);
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.work-glance,
+		.decision-list {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.work-glance div + div,
+		.work-glance div:nth-child(4) {
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+	}
+</style>

@@ -182,13 +182,27 @@ Acceptance criteria:
 - Register includes final domain name.
 - Register includes final resume PDF source.
 - Register includes public-safe case-study approvals.
-- Register includes Shuttle versus Fly.io/Railway API host decision.
+- Register includes current API host decision after Shuttle shutdown.
 - Register includes AI assistant v1 versus v2 decision.
 - Each decision has impact, latest acceptable resolution phase, and owner.
 
+Current evidence:
+
+- Final resume PDF source is resolved locally: `sha256sum` and `cmp -s`
+  confirmed the downloaded source PDF and committed public asset are
+  byte-identical with SHA-256
+  `3a6f35bf0f565fb9bbf2009665b40ae7a556dd39ff99e0d04043cab8a4c5f477`.
+- This does not clear the Phase 7 production `/resume/` route or PDF-link smoke
+  evidence, which remains blocked until a frontend deployment target exists.
+
 Verification evidence:
 
-- Register reviewed before Phase 7 launch work begins.
+- `runbooks/LAUNCH_BLOCKERS_REGISTER.md` records remaining unresolved launch
+  decisions plus the resolved local resume-source decision, with impact, latest
+  acceptable resolution phase, owner, status, and next evidence for each blocker
+  without claiming launch readiness.
+- `node --test scripts/launch-blockers-register-contract.test.mjs`
+  verifies the register and its launch evidence cross-links.
 
 ## Phase 1: Repository and Frontend Foundation
 
@@ -402,8 +416,10 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Redaction checklist complete.
 - Case study passes content schema validation.
+- Approval packet records the non-approval evidence inventory, counts-only
+  mechanical scan note, checklist answers recorded, and required artifact
+  inspection before `redactionStatus` can change from `reviewed` to `approved`.
 
 ### B-015: Draft case study: remote workstation recovery and operational debugging
 
@@ -426,8 +442,10 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Redaction checklist complete.
 - Case study passes content schema validation.
+- Approval packet records the non-approval evidence inventory, counts-only
+  mechanical scan note, checklist answers recorded, and required artifact
+  inspection before `redactionStatus` can change from `reviewed` to `approved`.
 
 ### B-016: Draft case study: HumanKaylee portfolio build
 
@@ -451,6 +469,9 @@ Verification evidence:
 
 - Case study passes content schema validation.
 - Content links back to public docs and safe implementation artifacts.
+- Local route and quality-gate coverage verifies the public-safe body, static
+  architecture, optional Rust API boundary, agent-assisted workflow, and launch
+  evidence boundary while keeping redaction status `reviewed`.
 
 ### B-017: Draft case study: creative web demo
 
@@ -473,6 +494,10 @@ Verification evidence:
 
 - Draft content validates.
 - Demo scope is approved before implementation begins.
+- Local route and quality-gate coverage verifies the public-safe body,
+  semantic project atlas fallback marker, no-JS readability, reduced-motion
+  behavior, accessibility scan, private-content scan, and explicit boundary
+  that B-017 approves content plus fallback evidence only.
 
 ### B-018: Evaluate Kalshi or analytics tooling publication safety
 
@@ -494,7 +519,12 @@ Acceptance criteria:
 
 Verification evidence:
 
-- User decision recorded before any public page is created from this material.
+- `runbooks/PUBLICATION_SAFETY_DECISIONS.md` records public-safe,
+  redacted-only, excluded, risk, recommendation, owner, and user-decision status
+  for this candidate without approving publication, and defines a synthetic
+  proof pack review gate.
+- `node --test scripts/publication-safety-decisions-contract.test.mjs`
+  verifies the decision-support record and blocked publication status.
 
 ### B-019: Evaluate YouTube AI video pipeline publication safety
 
@@ -516,7 +546,12 @@ Acceptance criteria:
 
 Verification evidence:
 
-- User decision recorded before publication.
+- `runbooks/PUBLICATION_SAFETY_DECISIONS.md` records public-safe,
+  redacted-only, excluded, risk, recommendation, owner, and user-decision status
+  for this candidate without approving publication, and defines a synthetic
+  proof pack review gate.
+- `node --test scripts/publication-safety-decisions-contract.test.mjs`
+  verifies the decision-support record and blocked publication status.
 
 ### B-020: Build resume content source
 
@@ -789,7 +824,11 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Visual review on home, project index, and case-study pages.
+- Local `@visual-surfaces` Playwright coverage verifies home, project index,
+  case-study detail, resume, and contact surfaces use deliberate Systems
+  Atelier treatments without mobile horizontal overflow.
+- Local regression coverage verifies static shell, atlas, case-study,
+  reduced-motion, and no-JavaScript behavior after the surface pass.
 
 ### B-032: Implement static hero poster and fallback
 
@@ -811,6 +850,8 @@ Acceptance criteria:
 Verification evidence:
 
 - Network throttling screenshot showing readable hero before enhanced assets.
+- Playwright `static systems map hero` coverage proves the home page exposes a
+  no-JS systems-map poster with project links before any WebGL enhancement.
 
 ### B-033: Implement accessible project atlas fallback
 
@@ -849,16 +890,18 @@ Acceptance criteria:
 
 - Projects cluster by AI, automation, infrastructure, backend, creative web, and
   operations.
-- Selecting a node opens or focuses an artifact card with title, summary, impact,
-  and links.
-- Enhanced scene is lazy-loaded.
+- Selecting a node opens or focuses an artifact card with title, summary,
+  proof/impact evidence, and links.
+- Enhanced helper or heavier future scene is lazy-loaded.
 - Scene failure falls back to the accessible atlas.
 - Interaction does not block first content paint.
 
 Verification evidence:
 
 - Desktop recording of constellation interaction.
-- Bundle analysis showing lazy-loaded enhanced scene.
+- `pnpm test:e2e -- --grep "@constellation"` for desktop interaction and
+  mobile skip coverage.
+- Bundle analysis showing the enhanced helper or heavier future scene stays lazy-loaded.
 
 ### B-035: Add purposeful scroll and reveal motion
 
@@ -1126,6 +1169,10 @@ Verification evidence:
 
 - Container build succeeds.
 - Shuttle local or deploy dry-run succeeds when credentials are available.
+- `cargo check --manifest-path apps/api/Cargo.toml --features shuttle --bin humankaylee-api-shuttle`
+  proves the committed Shuttle entrypoint compiles without provider credentials.
+- `apps/api/Dockerfile` is the fallback container build contract for Fly.io,
+  Railway, or another container host.
 
 ### B-047: Integrate frontend with API fallbacks
 
@@ -1176,6 +1223,9 @@ Verification evidence:
 
 - Accessibility checklist with page-by-page results.
 - Automated accessibility scan output if tooling is available.
+- `runbooks/ACCESSIBILITY_AUDIT.md` records the current page-by-page checklist.
+- `pnpm test:e2e -- --grep "@accessibility"` and `pnpm test:e2e -- --grep "@keyboard"` preserve the automated accessibility and keyboard evidence.
+- `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs` preserves the dedicated artifact contract.
 
 ### B-049: Add reduced-motion and no-WebGL QA pass
 
@@ -1198,6 +1248,10 @@ Verification evidence:
 
 - Reduced-motion screenshots or recording.
 - No-WebGL fallback screenshot.
+- `runbooks/MOTION_AND_WEBGL_FALLBACK_QA.md` records the current reduced-motion and no-WebGL fallback artifact evidence.
+- `pnpm test:e2e -- --grep "@reduced-motion|@motion|@constellation"` covers reduced-motion, motion choreography, and atlas fallback behavior.
+- `pnpm test:visual` preserves the reduced-motion screenshot baseline under `tests/e2e/visual-regression.spec.ts-snapshots/`.
+- `node --test scripts/accessibility-and-fallback-qa-contract.test.mjs` preserves the dedicated artifact contract.
 
 ### B-050: Add Lighthouse production-like checks
 
@@ -1242,7 +1296,13 @@ Acceptance criteria:
 
 Verification evidence:
 
+- `node scripts/bundle-budget.mjs --dry-run` prints the B-051 route source,
+  ignored non-executable script types, 8 KiB route budget, and summary path
+  without requiring build artifacts.
 - Bundle analysis output.
+- `pnpm build && pnpm bundle:budget` writes
+  `test-results/bundle-budget-summary.json` and fails if executable route
+  scripts exceed the budget.
 - Budget review note.
 
 ### B-052: Add Playwright journey smoke tests
@@ -1266,6 +1326,9 @@ Acceptance criteria:
 Verification evidence:
 
 - Playwright CI summary or trace.
+- Explicit `pnpm test:e2e -- --grep "@keyboard"` and
+  `pnpm test:e2e -- --grep "@accessibility"` launch gates run independently of
+  the umbrella E2E suite.
 
 ### B-053: Add security headers and dependency audit
 
@@ -1287,7 +1350,8 @@ Acceptance criteria:
 
 Verification evidence:
 
-- Header inspection output.
+- `pnpm test:e2e -- --grep "@security"` output for local route headers.
+- Static host header config review for `apps/web/public/_headers`.
 - Audit output or documented exceptions.
 
 ### B-054: Add privacy documentation
@@ -1311,6 +1375,13 @@ Acceptance criteria:
 Verification evidence:
 
 - Privacy doc reviewed against implemented contact/events behavior.
+- `docs/PRIVACY.md` now documents the current contact form fields, contact
+  purpose, API-disabled fallback, store-mode JSONL behavior, transient
+  in-memory rate-limit key, disabled-by-default events, missing analytics
+  provider, retention posture, and privacy contact path.
+- `scripts/privacy-doc-contract.test.mjs` verifies the privacy documentation
+  stays indexed from the README, covers B-054 expectations, avoids unsupported
+  legal or deletion promises, and does not expose private local details.
 
 ### B-055: Add cross-browser and responsive QA pass
 
@@ -1332,6 +1403,15 @@ Acceptance criteria:
 Verification evidence:
 
 - QA matrix with screenshots or notes.
+- `runbooks/CROSS_BROWSER_RESPONSIVE_QA.md` documents the Chromium, Firefox,
+  WebKit, mobile, tablet, desktop, LinkedIn in-app mobile approximation, and
+  issue-triage contract for B-055.
+- `tests/e2e/responsive-cross-browser.spec.ts` covers first-load readability,
+  primary recruiter paths, notes/build-log readability, and horizontal overflow
+  across the launch route set.
+- `scripts/responsive-qa-contract.test.mjs` verifies the B-055 runbook, E2E
+  spec, CI gate, launch evidence row, and browser installation command stay
+  aligned.
 
 ### B-056: Add API outage resilience test
 
@@ -1353,8 +1433,31 @@ Acceptance criteria:
 Verification evidence:
 
 - API-down smoke-test output or manual test note.
+- `pnpm test:e2e -- --grep "@api-down"` covers aborted API requests across
+  home, projects, one case-study route, resume, notes, and contact, plus
+  sanitized contact outage fallback behavior.
 
 ## Phase 7: Deployment, Operations, and Launch
+
+Phase 7 local readiness guard:
+
+- Pre-provider local readiness contract:
+  `local-readiness only; production remains blocked`.
+- `scripts/phase-7-local-readiness-contract.test.mjs` verifies the safe local
+  frontend, API, metadata, and evidence commands that can run before provider
+  accounts, domains, production secrets, or rollback targets exist.
+- `scripts/phase-7-provider-preflight.mjs` provides a provider auth and target
+  preflight that records CLI presence and environment variable names only; it is
+  safe to run before provider credentials exist and does not deploy, change DNS,
+  run production smoke, or clear launch blockers.
+- The provider preflight now detects the repo-managed `wrangler` dev dependency
+  for Cloudflare Pages local readiness; `fly` and `railway` remain missing
+  unless a later selected API host needs them.
+- The contract is progress evidence only; #63, #64, #65, and #69 stay open
+  until real provider, domain, production smoke, rollback, contact, Lighthouse,
+  four approved case studies, and redaction approval evidence exists.
+- Phase 7 issue traceability maps #63, #64, #65, and #69 to their controlling
+  launch-blocker decisions and replacement evidence rows.
 
 ### B-057: Configure Cloudflare Pages frontend deployment
 
@@ -1376,6 +1479,10 @@ Acceptance criteria:
 Verification evidence:
 
 - Successful preview or production deploy log.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the frontend
+  provider/project/domain inputs that are still missing before #63 can close,
+  while `scripts/phase-7-deployment-decision-packets-contract.test.mjs` keeps
+  that packet blocked and non-launch-ready.
 
 ### B-058: Deploy Rust API to selected host
 
@@ -1385,11 +1492,11 @@ Depends on: B-046, B-005
 
 Scope:
 
-- Deploy API to Shuttle Community or chosen fallback host.
+- Deploy API to Fly.io, Railway, or another approved host.
 
 Acceptance criteria:
 
-- Health endpoint is reachable from public internet or approved preview network.
+- Health endpoint is reachable from public internet or owner-approved production-equivalent provider preview network.
 - Required secrets are configured server-side.
 - API origin is added to frontend config.
 - CORS allows production frontend and blocks unapproved origins.
@@ -1398,6 +1505,12 @@ Verification evidence:
 
 - Public or preview `GET /api/health` response.
 - CORS smoke-check output.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the API provider,
+  origin, secret storage, contact handling, CORS, health, and rollback inputs
+  still required before #64 can close.
+- `pnpm phase7:contact-decision -- --mode defer --dry-run` records only a
+  local/decision-template shape for the contact handling decision; it cannot
+  approve contact handling or close #64/#69.
 
 ### B-059: Configure production domain and canonical URLs
 
@@ -1421,6 +1534,15 @@ Verification evidence:
 
 - DNS/TLS check.
 - Metadata inspection on production domain.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the domain, DNS,
+  TLS, canonical URL, sitemap, and Open Graph evidence still required before
+  #65 can close.
+- Phase 7 metadata readiness verifies RSS uses shared site metadata with the
+  sitemap, robots, canonical URL, and Open Graph path; this is local readiness
+  only and does not close #65 until final domain, DNS/TLS, and production
+  metadata smoke evidence exist.
+- `scripts/phase-7-metadata-readiness-contract.test.mjs` guards the shared
+  metadata source and preserves the B-059 production blocker boundary.
 
 ### B-060: Write local development and deployment README
 
@@ -1445,6 +1567,10 @@ Acceptance criteria:
 Verification evidence:
 
 - Fresh-agent or clean-checkout dry run follows README through build/test.
+- `scripts/readme-contract.test.mjs` verifies README coverage for frontend and
+  backend local development, environment variable names without secrets, local
+  quality gates, frontend and backend deployment pointers, recovery commands,
+  and launch-blocker language.
 
 ### B-061: Write content update and redaction runbook
 
@@ -1467,6 +1593,19 @@ Acceptance criteria:
 Verification evidence:
 
 - Runbook used to add or review one existing content item.
+- `runbooks/CONTENT_UPDATE_AND_REDACTION.md` now documents project,
+  case-study, note/build-log, resume, and site metadata update paths; preserves
+  the approved-only launch gate; and uses Creative Web Systems Atlas Demo as a
+  reviewed-but-not-approved example.
+- `scripts/content-runbook-contract.test.mjs` verifies the runbook covers the
+  required workflows, schema field names, redaction guide/status links, privacy
+  rule, review example, and verification commands.
+- `runbooks/CASE_STUDY_REDACTION_APPROVAL_PACKETS.md` gives each current launch
+  candidate an approval packet template and missing-evidence list without
+  marking any candidate launch-approved.
+- `scripts/redaction-approval-packets-contract.test.mjs` verifies approval
+  packet coverage, required guide checklist mapping, and the current
+  zero-approved launch state.
 
 ### B-062: Write rollback and incident runbook
 
@@ -1489,6 +1628,11 @@ Acceptance criteria:
 Verification evidence:
 
 - Rollback rehearsal note or dry-run evidence.
+- `scripts/rollback-runbook-contract.test.mjs` verifies rollback and incident
+  runbook coverage for frontend rollback, API rollback or disablement, contact
+  endpoint outage fallback, DNS/custom-domain issues, recovery verification,
+  and honest blocked status for production rollback evidence until real targets
+  exist.
 
 ### B-063: Complete launch checklist
 
@@ -1505,7 +1649,7 @@ Acceptance criteria:
 - Home is live.
 - Projects are live.
 - At least four case studies are live and redacted.
-- Resume HTML and PDF are live.
+- Resume route and PDF production smoke evidence exists.
 - Notes/build-log is live.
 - Contact path works.
 - Rust API health is live.
@@ -1517,6 +1661,25 @@ Verification evidence:
 
 - Final launch checklist with links to production pages, CI run, Lighthouse
   reports, API health, and runbooks.
+- `runbooks/FINAL_LAUNCH_CHECKLIST.md` records current B-063 acceptance status
+  with explicit blocker rows for production pages, API health, production
+  Lighthouse, contact production handling, rollback evidence, and case-study
+  redaction approvals.
+- `scripts/final-launch-checklist-contract.test.mjs` verifies the checklist and
+  launch evidence keep not-launch-ready status explicit until real production
+  targets and approval evidence exist.
+- `runbooks/PHASE_7_DEPLOYMENT_DECISION_PACKETS.md` records the remaining
+  provider, domain, API, contact, Lighthouse, rollback, and redaction evidence
+  required before #69 can close, while
+  `scripts/phase-7-deployment-decision-packets-contract.test.mjs` prevents this
+  prep packet from being treated as launch approval.
+- `scripts/phase-7-local-readiness-contract.test.mjs` protects the
+  pre-provider local readiness boundary so local build, Lighthouse, e2e, Rust
+  API, metadata, and contract evidence cannot be mistaken for production launch
+  evidence.
+- `scripts/phase-7-blocker-traceability-contract.test.mjs` verifies Phase 7
+  issue traceability maps #63, #64, #65, and #69 to their controlling
+  launch-blocker decisions and replacement evidence rows.
 
 ## Phase 8: Post-Launch Enhancements
 
@@ -1541,16 +1704,24 @@ Acceptance criteria:
 Verification evidence:
 
 - Decision note approved before implementation.
+- `docs/ASSISTANT_SCOPE_DECISION.md` records draft decision support only,
+  recommends deferring assistant implementation until B-063 launch evidence and
+  HumanKaylee approval exist, and does not authorize B-065.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the pre-launch decision inputs
+  and keeps #70 blocked until B-063 launch evidence exists.
+- `scripts/post-launch-feature-prep-contract.test.mjs` verifies the prep record
+  does not authorize assistant work before approval.
 
 ### B-065: Add portfolio assistant prototype
 
 Labels: `priority:p2`, `type:feature`, `area:backend`, `area:frontend`, `area:privacy`, `phase:8-post-launch`
 
-Depends on: B-064
+Depends on: B-064, B-063
 
 Scope:
 
-- Build only if B-064 recommends implementation.
+- Build only if B-063 launch evidence exists and #70/B-064 has a
+  HumanKaylee-approved outcome of `build`.
 
 Acceptance criteria:
 
@@ -1564,6 +1735,10 @@ Verification evidence:
 
 - Prompt/content tests.
 - Disabled-mode smoke test.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the do-not-build gate, public
+  content boundary, disabled-mode expectation, and abuse/cost control inputs
+  while #71 remains blocked until B-063 launch evidence exists and #70/B-064
+  has a HumanKaylee-approved outcome of `build`.
 
 ### B-066: Add richer public status or metadata page
 
@@ -1580,10 +1755,18 @@ Acceptance criteria:
 - Status page shows safe public uptime or project metadata.
 - API failure has static fallback.
 - No private deployment details are exposed.
+- Public release labels or build versions are used instead of raw private commit
+  SHAs, deployment IDs, provider account names, or non-generic environment
+  labels unless explicitly approved for public evidence.
 
 Verification evidence:
 
 - API-up and API-down status page checks.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the safe pre-launch contract for
+  `/api/health`, `/api/projects/live`, static fallback copy, and no private
+  deployment details before any status page is built.
+- `scripts/post-launch-feature-prep-contract.test.mjs` verifies the contract
+  remains planning-only and blocked by B-063.
 
 ### B-067: Add additional notes and postmortems
 
@@ -1604,6 +1787,9 @@ Acceptance criteria:
 Verification evidence:
 
 - Feed and notes index review.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records that pre-launch work is limited
+  to draft outlines and that publishing still requires redaction review,
+  RSS/index verification, and launch completion.
 
 ### B-068: Evaluate API hosting migration
 
@@ -1613,19 +1799,33 @@ Depends on: B-058, B-063
 
 Scope:
 
-- Decide whether to stay on Shuttle Community or migrate to Fly.io, Railway,
-  Hetzner, or another host.
+- After B-058 and B-063 evidence exists, compare the actual launch API host
+  against Fly.io, Railway, Hetzner, Cloudflare, or another host.
 
 Acceptance criteria:
 
 - Compares uptime, cost, deploy complexity, custom domain support, observability,
   and rollback.
-- Recommends stay or migrate.
-- If migration is recommended, defines migration steps and rollback.
+- Produces a keep-or-move recommendation only after selected-host and launch
+  evidence exists.
+- If a future host change is recommended, defines provider-move and rollback
+  procedures.
+- Re-checks official provider docs before any future recommendation.
+- Does not choose a provider, perform DNS cutover, run migration commands,
+  configure env/secrets, or write rollback steps before B-058/B-063 evidence and
+  HumanKaylee approval.
 
 Verification evidence:
 
 - Hosting decision note.
+- `runbooks/POST_LAUNCH_FEATURE_PREP.md` records the pre-launch hosting decision
+  inputs for Shuttle, Fly.io, Railway, Cloudflare, and Hetzner while #74 remains
+  blocked by B-058 and B-063 production evidence.
+- The pre-launch comparison matrix records official provider source URLs and a
+  source snapshot date for each candidate without ranking candidates or
+  authorizing host changes.
+- `scripts/post-launch-feature-prep-contract.test.mjs` verifies the matrix is
+  decision support only, not a migration authorization.
 
 ## Launch-Critical Issue Set
 
@@ -1651,8 +1851,11 @@ Parallel-safe groups after dependencies are met:
 
 Known launch blockers:
 
+- `runbooks/LAUNCH_BLOCKERS_REGISTER.md` is the source register for unresolved
+  launch decisions and their owners/statuses.
 - Final domain name is required for production canonical URLs and DNS.
-- Final resume PDF source is required for launch.
+- Final resume PDF source is resolved locally, but production `/resume/` and
+  PDF-link smoke evidence is still required for launch.
 - At least four case studies must be approved as public-safe.
 - API host must be selected before production API deployment.
 - Contact delivery provider or storage approach must be chosen before public

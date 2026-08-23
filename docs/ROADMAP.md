@@ -32,8 +32,9 @@ built, tested, deployed, and documented with mature engineering practices.
   typed environment config, route tests, and deployment documentation.
 - Host the frontend on Cloudflare Pages for launch unless a later decision
   explicitly chooses another static host.
-- Start the Rust API on Shuttle Community unless reliability requirements push
-  launch to Fly.io, Railway, or another host.
+- Start the Rust API on a current Axum-capable host. Shuttle is not a viable new
+  launch target as of https://docs.shuttle.dev/docs/shuttle-shutdown; Fly.io and
+  Railway are the current normal PaaS candidates.
 - Keep static portfolio content fully useful if JavaScript, WebGL, or the API is
   unavailable.
 - Publish 4 to 6 flagship case studies before launch.
@@ -63,8 +64,9 @@ Execution rules:
 - If WebGL, animation, backend, or analytics work threatens performance,
   accessibility, or recruiter clarity, preserve the simpler static path first.
 - Pause and ask for direction when an open decision blocks irreversible work:
-  final domain, final resume source, public-safe case-study selection, API host,
-  or AI assistant launch scope.
+  final domain, production resume smoke target, public-safe case-study
+  selection, API host, or AI assistant launch scope. Final resume PDF source is resolved locally; production `/resume/` and PDF-link smoke evidence is still
+  required for launch.
 
 ## Release Strategy
 
@@ -99,8 +101,10 @@ Key deliverables:
 Dependencies:
 
 - Source docs already exist.
-- Requires user input for final resume content, domain, and public-safe project
-  set before launch, but implementation can begin with safe draft content.
+- Requires user input for domain and public-safe project set before launch, but
+  implementation can begin with safe draft content. The approved local resume
+  PDF source is already present; production resume route/PDF smoke remains a
+  launch gate.
 
 Exit criteria:
 
@@ -158,7 +162,8 @@ Key deliverables:
 
 - Finalized positioning statement for first viewport.
 - Recruiter and engineer fast-path content blocks.
-- Resume PDF source, HTML resume route, and print-friendly styling.
+- Approved local resume PDF source, HTML resume route, downloadable PDF link,
+  and print-friendly styling.
 - 4 to 6 selected flagship case studies drafted with the PRD case-study
   structure.
 - Each case study includes summary, problem, constraints, architecture, build
@@ -175,8 +180,8 @@ Exit criteria:
 
 - At least four case studies are publication-ready or explicitly marked blocked
   by redaction/user review.
-- Resume route and PDF link exist, even if the final PDF source remains an open
-  decision.
+- Resume route and PDF link exist from the approved local PDF source, while
+  production `/resume/` and PDF-link smoke evidence is still required.
 - The home page can explain HumanKaylee's value without relying on 3D, motion, or
   API data.
 
@@ -253,10 +258,14 @@ Exit criteria:
 
 Evidence:
 
+- Local visual-surface Playwright coverage verifies the art-directed home,
+  project index, case-study detail, resume, and contact surfaces. This is
+  implementation evidence, not a production-launch claim.
 - Desktop recording of the signature interaction.
 - Reduced-motion recording or screenshots.
 - Bundle analysis showing heavy assets are lazy-loaded.
 - Lighthouse or equivalent performance pass on representative pages.
+- Current PR status: B-031/032/033/034/035/036/037 have local guard coverage above. `B-034` is represented by a desktop-gated SVG/HTML constellation with a lazy focus helper, not by a WebGL/R3F shipping claim.
 
 ## Phase 5: Rust Backend and API-Backed Features
 
@@ -295,6 +304,16 @@ Evidence:
 - Local API smoke-test output.
 - Deployed health endpoint response.
 - API-down frontend fallback screenshot.
+- Current PR status: B-038/039/040/041/044/045/046/047 have local guard
+  coverage, including structured JSON startup telemetry, health response shape,
+  stale-safe cached project metadata, disabled-by-default events, configured CORS
+  and middleware, Shuttle/container build paths, and frontend API fallback
+  behavior.
+- Current production blockers: B-042 remains local in-memory abuse-control
+  evidence, now avoiding untrusted forwarded headers by default. B-043 remains blocked for production.
+  Persistent contact storage or a delivery provider still needs approved
+  retention, backup, rotation, deletion, and operational handling decisions.
+  B-043 now has a tested delivery adapter seam for local backend coverage only.
 
 ## Phase 6: Quality, Security, Accessibility, and Performance Hardening
 
@@ -338,7 +357,7 @@ procedures.
 Key deliverables:
 
 - Cloudflare Pages deployment for the frontend.
-- Rust API deployment to Shuttle or chosen fallback host.
+- Rust API deployment to Fly.io, Railway, or another approved host.
 - Custom domain instructions and final production environment settings.
 - README and runbook covering local dev, build, deployment, rollback, content
   updates, and redaction policy.
@@ -347,7 +366,8 @@ Key deliverables:
 
 Dependencies:
 
-- Open decisions resolved: domain, resume source, case-study approvals, API host.
+- Open decisions resolved: domain, production resume smoke target, case-study
+  approvals, API host.
 - Phase 6 quality gates.
 
 Exit criteria:
@@ -379,8 +399,12 @@ Candidates:
 - Additional creative web demo as a standalone case study.
 - Public status page or richer live project metadata.
 - More notes/build-log entries.
-- Advanced self-hosting or Fly.io migration if API uptime needs exceed Shuttle
-  Community's fit.
+- Advanced self-hosting or API host migration if uptime, cost, or operations
+  needs exceed the chosen launch host's fit.
+
+Pre-launch prep for these candidates lives in
+`runbooks/POST_LAUNCH_FEATURE_PREP.md` and is pre-launch planning only. It does
+not authorize implementation, post-launch feature approval, or launch readiness.
 
 Entry criteria:
 
@@ -396,7 +420,8 @@ Entry criteria:
 4. Contact fallback before Rust contact endpoint.
 5. Backend tests and abuse controls before public contact endpoint launch.
 6. Accessibility and performance hardening before production launch.
-7. Domain, resume source, case-study approvals, and API host before final launch.
+7. Domain, production resume smoke evidence, case-study approvals, and a
+   current API host before final launch.
 
 ## Definition of Ready for Implementation Issues
 

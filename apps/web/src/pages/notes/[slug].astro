@@ -1,0 +1,115 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+import { isPublicNote } from "../../data/public-notes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type NoteEntry = CollectionEntry<"notes">;
+
+export async function getStaticPaths() {
+	const notes = ((await getCollection("notes")) as NoteEntry[]).filter(
+		isPublicNote,
+	);
+
+	return notes.map((note: NoteEntry) => ({
+		params: { slug: note.data.slug },
+		props: { note },
+	}));
+}
+
+type Props = {
+	note: NoteEntry;
+};
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+const [site] = await getCollection("site");
+const siteUrl = site.data.siteUrl.replace(/\/$/, "");
+const canonicalUrl = `${siteUrl}${note.data.seo.canonicalPath}`;
+const publishedAt = new Date(`${note.data.publishedAt}T00:00:00Z`);
+const formattedDate = new Intl.DateTimeFormat("en-US", {
+	month: "long",
+	day: "numeric",
+	year: "numeric",
+	timeZone: "UTC",
+}).format(publishedAt);
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: note.data.title,
+	description: note.data.summary,
+	url: canonicalUrl,
+	datePublished: note.data.publishedAt,
+	keywords: note.data.tags,
+};
+---
+
+<BaseLayout
+	title={`${note.data.seo.title} | Joe Poznanski`}
+	description={note.data.seo.description}
+	canonicalPath={note.data.seo.canonicalPath}
+	ogImage={note.data.seo.ogImage}
+	structuredData={structuredData}
+>
+	<section class="page-shell" aria-labelledby="note-title">
+		<article class="note-article">
+			<header class="page-header">
+				<p class="section-kicker">Technical note</p>
+				<h1 id="note-title">{note.data.title}</h1>
+				<p class="page-intro">{note.data.summary}</p>
+				<p class="eyebrow">
+					<time datetime={note.data.publishedAt}>{formattedDate}</time>
+				</p>
+				<ul class="notes-tags" aria-label="Note tags">
+					{note.data.tags.map((tag: string) => <li>{tag}</li>)}
+				</ul>
+			</header>
+
+			<div class="note-body">
+				<Content />
+			</div>
+		</article>
+	</section>
+
+	<style>
+		.note-article {
+			display: grid;
+			gap: var(--space-5);
+			border-block: 1px solid var(--line);
+			border-radius: 0;
+			background: transparent;
+			box-shadow: none;
+			padding-block: clamp(2rem, 5vw, 4rem);
+		}
+
+		.note-article .page-header {
+			display: grid;
+			gap: var(--space-3);
+			max-width: 72rem;
+		}
+
+		.note-body {
+			max-width: 68ch;
+			font-size: clamp(1.08rem, 2vw, 1.25rem);
+			line-height: 1.75;
+		}
+
+		.notes-tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--space-1);
+			margin: 0;
+			padding: 0;
+			color: var(--color-muted);
+			font-family: var(--font-evidence);
+			font-size: 0.78rem;
+			list-style: none;
+		}
+
+		.notes-tags li + li::before {
+			margin-inline-end: var(--space-1);
+			content: "·";
+		}
+	</style>
+</BaseLayout>

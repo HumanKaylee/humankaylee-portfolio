@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const releases = [
+	{
+		date: "2026-08-15",
+		title: "Evidence-led portfolio evolution",
+		changes: [
+			"Moved canonical metadata to joepoznanski.io and strengthened deep-route navigation.",
+			"Added career proof, visual interface evidence, and structured project-detail pages.",
+			"Refined mobile hierarchy, long-page wayfinding, footer actions, and direct email contact.",
+			"Refreshed current Now and Reading framing while preserving the static-first baseline.",
+		],
+	},
+	{
+		date: "2026-07-25",
+		title: "Hierarchy and readability pass",
+		changes: [
+			"Reduced repeated card weight and clarified featured content across core routes.",
+			"Simplified the project atlas and expanded the on-page resume.",
+			"Improved current navigation state, responsive rhythm, and content density.",
+		],
+	},
+];
+---
+
+<BaseLayout
+	title="Site Changelog | Joe Poznanski"
+	description="A concise record of meaningful portfolio design, content, accessibility, and delivery changes."
+	canonicalPath="/changelog/"
+	ogImage="/social/default.png"
+>
+	<section class="page-shell changelog-page" aria-labelledby="changelog-title">
+		<header class="page-header">
+			<p class="section-kicker">Changelog</p>
+			<h1 id="changelog-title">The portfolio is a maintained system.</h1>
+			<p class="page-intro">
+				Meaningful changes to hierarchy, evidence, accessibility, and delivery are
+				recorded here. Minor copy edits and dependency noise are omitted.
+			</p>
+		</header>
+
+		<ol class="changelog-list">
+			{releases.map((release) => (
+				<li>
+					<article class="case-study-section">
+						<time datetime={release.date}>{release.date}</time>
+						<h2>{release.title}</h2>
+						<ul>{release.changes.map((change) => <li>{change}</li>)}</ul>
+					</article>
+				</li>
+			))}
+		</ol>
+	</section>
+</BaseLayout>

@@ -1,0 +1,1 @@
+{"task":"T-24","name":"M2 Dockerfile improve","status":"completed","timestamp":"2026-05-26T17:32:11Z","notes":"Multi-stage build with cargo fetch cache layer; non-root humankaylee user; curl healthcheck; port 8080; RUST_LOG=info; debian:bookworm-slim runtime"}

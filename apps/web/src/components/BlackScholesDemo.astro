@@ -1,0 +1,556 @@
+---
+/**
+ * BlackScholesDemo — Astro island that loads the Rust→WASM Black-Scholes pricer.
+ *
+ * Uses an IntersectionObserver so the WASM binary only loads when the demo
+ * scrolls into view, keeping the initial page weight unaffected.
+ *
+ * Accessibility guarantees:
+ *  - Every slider has an associated <label> and live aria-valuetext.
+ *  - The readout section is an aria-live="polite" region.
+ *  - Keyboard arrow keys move sliders (native browser behaviour).
+ *  - A static fallback is shown when WebAssembly is unavailable.
+ */
+---
+
+<section
+  class="bs-demo"
+  data-black-scholes-demo
+  aria-labelledby="bs-demo-title"
+>
+  <header class="bs-demo-header">
+    <h2 id="bs-demo-title" class="bs-demo-heading">
+      Black-Scholes live pricer
+    </h2>
+    <p class="bs-demo-subheading">
+      Rust compiled to WebAssembly: adjust the sliders to reprice in real time.
+    </p>
+  </header>
+
+  <noscript>
+    <p class="bs-fallback">
+      Live WASM demo requires JavaScript. The pricer is a Rust crate compiled
+      to WebAssembly (~27 KB gzipped) and executed entirely in your browser.
+    </p>
+  </noscript>
+
+  <div class="bs-fallback bs-wasm-fallback" id="bs-no-wasm" hidden>
+    Live WASM demo requires a modern browser with WebAssembly support.
+  </div>
+
+  <div class="bs-controls" id="bs-controls" aria-hidden="true" inert>
+    <div class="bs-sliders">
+
+      <div class="bs-field">
+        <label for="bs-spot" class="bs-label">
+          <span class="bs-label-text">S: Spot price</span>
+          <output class="bs-label-value" id="bs-spot-out" for="bs-spot">$100</output>
+        </label>
+        <input
+          type="range"
+          id="bs-spot"
+          name="bs-spot"
+          min="50"
+          max="200"
+          step="0.5"
+          value="100"
+          class="bs-slider"
+          aria-valuemin="50"
+          aria-valuemax="200"
+          aria-valuenow="100"
+          aria-valuetext="Spot price $100"
+        />
+      </div>
+
+      <div class="bs-field">
+        <label for="bs-strike" class="bs-label">
+          <span class="bs-label-text">K: Strike price</span>
+          <output class="bs-label-value" id="bs-strike-out" for="bs-strike">$100</output>
+        </label>
+        <input
+          type="range"
+          id="bs-strike"
+          name="bs-strike"
+          min="50"
+          max="200"
+          step="0.5"
+          value="100"
+          class="bs-slider"
+          aria-valuemin="50"
+          aria-valuemax="200"
+          aria-valuenow="100"
+          aria-valuetext="Strike price $100"
+        />
+      </div>
+
+      <div class="bs-field">
+        <label for="bs-time" class="bs-label">
+          <span class="bs-label-text">T: Time to expiry</span>
+          <output class="bs-label-value" id="bs-time-out" for="bs-time">1.00 yr</output>
+        </label>
+        <input
+          type="range"
+          id="bs-time"
+          name="bs-time"
+          min="0.01"
+          max="2.0"
+          step="0.01"
+          value="1.0"
+          class="bs-slider"
+          aria-valuemin="0.01"
+          aria-valuemax="2"
+          aria-valuenow="1"
+          aria-valuetext="Time to expiry 1.00 years"
+        />
+      </div>
+
+      <div class="bs-field">
+        <label for="bs-rate" class="bs-label">
+          <span class="bs-label-text">r: Risk-free rate</span>
+          <output class="bs-label-value" id="bs-rate-out" for="bs-rate">5.0%</output>
+        </label>
+        <input
+          type="range"
+          id="bs-rate"
+          name="bs-rate"
+          min="0"
+          max="0.1"
+          step="0.001"
+          value="0.05"
+          class="bs-slider"
+          aria-valuemin="0"
+          aria-valuemax="0.1"
+          aria-valuenow="0.05"
+          aria-valuetext="Risk-free rate 5.0%"
+        />
+      </div>
+
+      <div class="bs-field">
+        <label for="bs-sigma" class="bs-label">
+          <span class="bs-label-text">σ: Implied volatility</span>
+          <output class="bs-label-value" id="bs-sigma-out" for="bs-sigma">20.0%</output>
+        </label>
+        <input
+          type="range"
+          id="bs-sigma"
+          name="bs-sigma"
+          min="0.05"
+          max="1.0"
+          step="0.005"
+          value="0.20"
+          class="bs-slider"
+          aria-valuemin="0.05"
+          aria-valuemax="1"
+          aria-valuenow="0.20"
+          aria-valuetext="Implied volatility 20.0%"
+        />
+      </div>
+
+      <div class="bs-field bs-field-select">
+        <label for="bs-type" class="bs-label">
+          <span class="bs-label-text">Option type</span>
+        </label>
+        <select id="bs-type" name="bs-type" class="bs-select" aria-label="Call or put">
+          <option value="call" selected>Call</option>
+          <option value="put">Put</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div
+      class="bs-readout"
+      id="bs-readout"
+      role="status"
+      aria-live="polite"
+      aria-label="Option pricing results"
+      aria-atomic="true"
+    >
+      <div class="bs-readout-row bs-readout-price">
+        <span class="bs-readout-label">Price</span>
+        <span class="bs-readout-value" id="bs-price">-</span>
+      </div>
+      <div class="bs-readout-row">
+        <span class="bs-readout-label">Δ Delta</span>
+        <span class="bs-readout-value" id="bs-delta">-</span>
+      </div>
+      <div class="bs-readout-row">
+        <span class="bs-readout-label">Γ Gamma</span>
+        <span class="bs-readout-value" id="bs-gamma">-</span>
+      </div>
+      <div class="bs-readout-row">
+        <span class="bs-readout-label">Θ Theta / day</span>
+        <span class="bs-readout-value" id="bs-theta">-</span>
+      </div>
+      <div class="bs-readout-row">
+        <span class="bs-readout-label">Vega / 1%σ</span>
+        <span class="bs-readout-value" id="bs-vega">-</span>
+      </div>
+      <div class="bs-readout-row">
+        <span class="bs-readout-label">Ρ Rho / 1%r</span>
+        <span class="bs-readout-value" id="bs-rho">-</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bs-demo-footer">
+    Powered by Rust → WASM (~27 KB gzipped) ·
+    <a
+      href="https://github.com/humankaylee/humankaylee-portfolio"
+      rel="noopener noreferrer"
+      target="_blank"
+      class="bs-source-link"
+    >source</a>
+    · Black-Scholes formula per Abramowitz &amp; Stegun 26.2.17
+  </footer>
+</section>
+
+<script
+  is:inline
+>
+  window.__loadBlackScholesWasm = () =>
+    import("/wasm/blackscholes/blackscholes_wasm.js");
+</script>
+
+<script>
+  (async () => {
+    const demo = document.querySelector<HTMLElement>("[data-black-scholes-demo]");
+    if (!demo) {
+      return;
+    }
+
+    type WasmQuoteResult = { price: number; delta: number; gamma: number; theta_per_day: number; vega: number; rho: number };
+    type WasmModule = { default: () => Promise<void>; quote: (input: object) => WasmQuoteResult };
+    type WasmLoaderWindow = Window & { __loadBlackScholesWasm?: () => Promise<WasmModule> };
+    let started = false;
+
+    async function initialize() {
+      if (started) return;
+      started = true;
+
+      // Graceful fallback: surface a message and bail if WASM is unavailable.
+      if (typeof WebAssembly === "undefined") {
+        const fallback = document.getElementById("bs-no-wasm");
+        if (fallback) fallback.hidden = false;
+        return;
+      }
+
+      let wasmModule: WasmModule | null = null;
+
+      try {
+        // Dynamic import of the wasm-pack JS glue, then init the WASM binary.
+        // Both are served as static assets from /public/wasm/blackscholes/.
+        // The inline loader above preserves the native public URL rather than
+        // asking Vite to transform a file that must be served as-is.
+        const loadWasm = (window as WasmLoaderWindow).__loadBlackScholesWasm;
+        if (!loadWasm) throw new Error("WASM loader is unavailable.");
+        const mod = await loadWasm();
+        await mod.default();
+        wasmModule = mod;
+      } catch (err) {
+        const fallback = document.getElementById("bs-no-wasm");
+        if (fallback) {
+          fallback.hidden = false;
+          fallback.textContent =
+            "Could not load WASM pricer. Check network connectivity and try again.";
+        }
+        console.warn("[BlackScholesDemo] WASM load failed:", err);
+        return;
+      }
+
+      // Reveal the controls now that WASM is ready.
+      const controls = document.getElementById("bs-controls");
+      if (controls) {
+        controls.removeAttribute("aria-hidden");
+        controls.removeAttribute("inert");
+      }
+
+      // — Slider elements —
+      const spotEl    = document.getElementById("bs-spot")    as HTMLInputElement;
+      const strikeEl  = document.getElementById("bs-strike")  as HTMLInputElement;
+      const timeEl    = document.getElementById("bs-time")    as HTMLInputElement;
+      const rateEl    = document.getElementById("bs-rate")    as HTMLInputElement;
+      const sigmaEl   = document.getElementById("bs-sigma")   as HTMLInputElement;
+      const typeEl    = document.getElementById("bs-type")    as HTMLSelectElement;
+
+      // — Value label elements —
+      const spotOut   = document.getElementById("bs-spot-out")   as HTMLOutputElement;
+      const strikeOut = document.getElementById("bs-strike-out") as HTMLOutputElement;
+      const timeOut   = document.getElementById("bs-time-out")   as HTMLOutputElement;
+      const rateOut   = document.getElementById("bs-rate-out")   as HTMLOutputElement;
+      const sigmaOut  = document.getElementById("bs-sigma-out")  as HTMLOutputElement;
+
+      // — Readout elements —
+      const priceEl = document.getElementById("bs-price") as HTMLElement;
+      const deltaEl = document.getElementById("bs-delta") as HTMLElement;
+      const gammaEl = document.getElementById("bs-gamma") as HTMLElement;
+      const thetaEl = document.getElementById("bs-theta") as HTMLElement;
+      const vegaEl  = document.getElementById("bs-vega")  as HTMLElement;
+      const rhoEl   = document.getElementById("bs-rho")   as HTMLElement;
+
+      const fmt2 = (n: number) => n.toFixed(4);
+      const fmtPrice = (n: number) => `$${n.toFixed(4)}`;
+
+      function reprice() {
+        const S      = parseFloat(spotEl.value);
+        const K      = parseFloat(strikeEl.value);
+        const T      = parseFloat(timeEl.value);
+        const r      = parseFloat(rateEl.value);
+        const sigma  = parseFloat(sigmaEl.value);
+        const isCall = typeEl.value === "call";
+
+        // Update displayed labels.
+        spotOut.value   = `$${S.toFixed(2)}`;
+        strikeOut.value = `$${K.toFixed(2)}`;
+        timeOut.value   = `${T.toFixed(2)} yr`;
+        rateOut.value   = `${(r * 100).toFixed(1)}%`;
+        sigmaOut.value  = `${(sigma * 100).toFixed(1)}%`;
+
+        // Update ARIA value text for screen readers.
+        spotEl.setAttribute("aria-valuenow",   String(S));
+        spotEl.setAttribute("aria-valuetext",  `Spot price $${S.toFixed(2)}`);
+        strikeEl.setAttribute("aria-valuenow",  String(K));
+        strikeEl.setAttribute("aria-valuetext", `Strike price $${K.toFixed(2)}`);
+        timeEl.setAttribute("aria-valuenow",   String(T));
+        timeEl.setAttribute("aria-valuetext",  `Time to expiry ${T.toFixed(2)} years`);
+        rateEl.setAttribute("aria-valuenow",   String(r));
+        rateEl.setAttribute("aria-valuetext",  `Risk-free rate ${(r * 100).toFixed(1)} percent`);
+        sigmaEl.setAttribute("aria-valuenow",  String(sigma));
+        sigmaEl.setAttribute("aria-valuetext", `Implied volatility ${(sigma * 100).toFixed(1)} percent`);
+
+        // Call the WASM function.
+        if (!wasmModule) return;
+        const result = wasmModule.quote({ S, K, T, r, sigma, is_call: isCall });
+
+        priceEl.textContent = fmtPrice(result.price);
+        deltaEl.textContent = fmt2(result.delta);
+        gammaEl.textContent = fmt2(result.gamma);
+        // Theta per day: show as negative for decay, 4 decimal places.
+        thetaEl.textContent = fmt2(result.theta_per_day);
+        // Vega per 1% vol move.
+        vegaEl.textContent  = fmt2(result.vega / 100);
+        // Rho per 1% rate move.
+        rhoEl.textContent   = fmt2(result.rho / 100);
+      }
+
+      // Wire up all inputs.
+      [spotEl, strikeEl, timeEl, rateEl, sigmaEl, typeEl].forEach((el) => {
+        el.addEventListener("input", reprice);
+      });
+
+      // Prime the display immediately.
+      reprice();
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      const fallback = document.getElementById("bs-no-wasm");
+      if (fallback) fallback.hidden = false;
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          void initialize();
+        }
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(demo);
+  })();
+</script>
+
+<style>
+  .bs-demo {
+    background: var(--color-paper-raised);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    padding: var(--space-5) var(--space-4);
+    margin-block: var(--space-5);
+    max-width: 680px;
+  }
+
+  .bs-demo-header {
+    margin-block-end: var(--space-4);
+  }
+
+  .bs-demo-heading {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0 0 var(--space-2);
+  }
+
+  .bs-demo-subheading {
+    font-family: var(--font-label);
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+
+  .bs-fallback {
+    font-family: var(--font-label);
+    font-size: 0.875rem;
+    color: var(--color-ink-soft);
+    padding: var(--space-3);
+    border: 1px dashed var(--color-line);
+    border-radius: 0.5rem;
+  }
+
+  .bs-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 540px) {
+    .bs-controls {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .bs-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .bs-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .bs-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-evidence);
+    font-size: 0.75rem;
+    color: var(--color-ink-soft);
+    cursor: default;
+  }
+
+  .bs-label-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bs-label-value {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink);
+    font-weight: 700;
+    white-space: nowrap;
+    margin-inline-start: var(--space-2);
+  }
+
+  .bs-slider {
+    width: 100%;
+    accent-color: var(--color-tungsten);
+    cursor: pointer;
+  }
+
+  .bs-field-select {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .bs-select {
+    font-family: var(--font-evidence);
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.25rem;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .bs-readout {
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 180px;
+  }
+
+  .bs-readout-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-evidence);
+    font-size: 0.8125rem;
+  }
+
+  .bs-readout-price {
+    padding-block-end: var(--space-2);
+    border-block-end: 1px solid var(--color-line);
+    margin-block-end: var(--space-1);
+  }
+
+  .bs-readout-label {
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+  }
+
+  .bs-readout-value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+
+  .bs-readout-price .bs-readout-value {
+    font-size: 1.0625rem;
+    color: var(--color-ink);
+  }
+
+  .bs-demo-footer {
+    margin-block-start: var(--space-4);
+    font-family: var(--font-evidence);
+    font-size: 0.6875rem;
+    color: var(--color-ink-soft);
+  }
+
+  .bs-source-link {
+    color: var(--color-ink);
+    text-underline-offset: 2px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .bs-demo {
+      background: color-mix(in srgb, var(--color-ink) 92%, var(--color-paper));
+      border-color: rgba(255 255 255 / 0.12);
+    }
+
+    .bs-readout {
+      background: color-mix(in srgb, var(--color-ink) 80%, var(--color-paper));
+      border-color: rgba(255 255 255 / 0.10);
+    }
+
+    .bs-select {
+      background: color-mix(in srgb, var(--color-ink) 80%, var(--color-paper));
+      color: var(--color-paper);
+    }
+
+    .bs-readout-price .bs-readout-value,
+    .bs-source-link {
+      color: var(--color-signal-on-dark);
+    }
+
+    .bs-demo-footer {
+      color: var(--color-paper);
+    }
+  }
+</style>

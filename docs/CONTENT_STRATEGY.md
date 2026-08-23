@@ -5,7 +5,7 @@ Sources: `docs/RESEARCH.md`, `docs/PRD.md`
 
 ## Strategy Summary
 
-The portfolio should make the strongest work understandable quickly, then reward deeper inspection with architecture, evidence, testing, operations notes, and lessons learned. The content should feel like a working systems lab: polished enough for recruiters, specific enough for senior engineers, and safe enough to publish.
+The portfolio should make the strongest work understandable quickly, then reward deeper inspection with architecture, evidence, testing, operations notes, and lessons learned. The content should feel like a working systems lab: polished enough for recruiters, specific enough for senior engineers, and explicit about redaction boundaries.
 
 Launch content should prioritize 4 to 6 flagship case studies over a large gallery of shallow project cards. Each case study should explain what changed because of the work, how it was built, how it was verified, and what was learned.
 
@@ -60,7 +60,7 @@ Every flagship case study must include:
 - `title`: Clear, specific project name.
 - `slug`: Stable, readable URL slug.
 - `summary`: 2 to 4 sentence plain-English overview.
-- `audience_fit`: Recruiter, senior engineer, collaborator, or multiple.
+- `audienceFit`: Recruiter, senior engineer, collaborator, or multiple.
 - `problem`: What was broken, missing, slow, risky, or valuable.
 - `stakes`: Why it mattered.
 - `constraints`: Time, access, security, tooling, reliability, data, or environment limits.
@@ -70,8 +70,16 @@ Every flagship case study must include:
 - `operations`: Deployment, recovery, observability, rollback, or maintenance notes.
 - `outcome`: What changed because of the work.
 - `lessons`: What the project taught.
+- `featuredEvidence`: One primary artifact that best proves the story.
 - `links`: Repo, demo, screenshots, docs, or redacted artifacts where safe.
-- `redaction_status`: Draft, reviewed, approved, or blocked.
+- `publicationStatus`: Publish, needs-redaction, or defer.
+- `redactionReview`: Reviewer notes, checklist status, reviewed date, and open items.
+- `approvalEvidence`: Required only for `redactionStatus: "approved"`; records
+  human signoff, linked-artifact inspection, and production or owner-approved
+  production-equivalent provider preview evidence.
+- `issueTrace`: Optional trace to the open issue or blocking decision that shaped the work.
+- `redactionStatus`: Draft, reviewed, approved, or blocked.
+- `seo`: Page title, description, canonical path, and Open Graph image.
 
 ## Case Study Template
 
@@ -80,15 +88,41 @@ Every flagship case study must include:
 title: ""
 slug: ""
 category: ""
-status: "draft"
-audience_fit:
+publicationStatus: "defer"
+audienceFit:
   - "recruiter"
   - "senior-engineer"
 summary: ""
-hero_artifact: ""
-repo_url: ""
-demo_url: ""
-redaction_status: "draft"
+featuredEvidence:
+  label: ""
+  summary: ""
+  scope: ""
+links:
+  repo: ""
+  demo: ""
+  docs: ""
+  screenshots:
+    - ""
+  artifacts:
+    - ""
+redactionStatus: "draft"
+redactionReview:
+  guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
+  reviewer: ""
+  reviewedOn: ""
+  checklistStatus: "not-started"
+  openItems: []
+  notes: ""
+issueTrace:
+  backlogId: "B-000"
+  githubIssue: 1
+  parentIssue: 1
+  closureRule: ""
+seo:
+  title: ""
+  description: ""
+  canonicalPath: "/case-studies/example/"
+  ogImage: "/social/case-studies/example.png"
 ---
 
 # Title
@@ -131,7 +165,7 @@ Capture what should be repeated, avoided, or investigated next time.
 
 ## Artifacts
 
-Link to safe demos, repositories, diagrams, screenshots, docs, or redacted evidence.
+Link to safe demos, repositories, diagrams, screenshots, docs, or redacted evidence through `links` and `featuredEvidence`.
 ```
 
 ## Short Project Card Template
@@ -146,21 +180,28 @@ One-sentence outcome.
 - Category: AI, automation, infrastructure, backend, creative web, or operations.
 - Proof: Demo, repo, diagram, runbook excerpt, metric, or screenshot.
 - Best for: Recruiters, senior engineers, collaborators, or clients.
-- Status: Published, draft, private, or redacted.
+- Publication status: `publish`, `needs-redaction`, or `defer`.
 ```
 
 ## Launch Case Study Candidates
 
 Select from real work in `/home/joe`, prior runbooks, and GitHub repositories. Publish only after redaction review.
 
-| Candidate | Primary proof | Notes |
-| --- | --- | --- |
-| CLI fleet synchronization and MCP rollout | Multi-host inventory, rollout, verification matrix | Strong agentic workflow and operations proof |
-| Remote workstation recovery and operational debugging | Diagnosis, recovery, runbook excerpts | Strong debugging and systems reliability proof |
-| Kalshi migration or analytics tooling | Data workflow, migration, analytics decisions | Publish only if data and account details are safe |
-| YouTube AI video pipeline | Automation, AI workflow, media pipeline | Publish only if credentials, private channels, and generated assets are safe |
-| HumanKaylee portfolio build | Static frontend, Rust API, visual system, CI, deployment | Strong meta case study after launch |
-| Creative web demo | 3D, motion, performance, accessibility | Useful visual proof if backed by technical explanation |
+| Candidate                                             | Primary proof                                            | Notes                                                                        |
+| ----------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| CLI fleet synchronization and MCP rollout             | Multi-host inventory, rollout, verification matrix       | Strong agentic workflow and operations proof                                 |
+| Remote workstation recovery and operational debugging | Diagnosis, recovery, runbook excerpts                    | Strong debugging and systems reliability proof                               |
+| Kalshi migration or analytics tooling                 | Data workflow, migration, analytics decisions            | Publish only if data and account details are safe                            |
+| YouTube AI video pipeline                             | Automation, AI workflow, media pipeline                  | Publish only if credentials, private channels, and generated assets are safe |
+| HumanKaylee portfolio build                           | Static frontend, Rust API, visual system, CI, deployment | Strong meta case study after launch                                          |
+| Creative web demo                                     | 3D, motion, performance, accessibility                   | Useful visual proof if backed by technical explanation                       |
+
+`runbooks/PUBLICATION_SAFETY_DECISIONS.md` is the current decision-support
+record only for the Kalshi/analytics and YouTube AI pipeline candidates. It
+records safe/redacted/excluded material, recommendations, owner, and pending
+user-decision state without approving publication. A synthetic proof pack is not
+publication approval and does not replace the Content Redaction Guide launch
+gate.
 
 ## Redaction Rules
 
@@ -206,7 +247,7 @@ Before publishing, verify:
 - Logs are summarized or sanitized.
 - Repo links are public and intentional.
 - Claims are supported by safe evidence.
-- The case study has `redaction_status: "approved"` only after review.
+- The case study has `redactionStatus: "approved"` only after review.
 
 ## Launch Content Requirements
 
@@ -279,7 +320,15 @@ Each launch case study must include:
 3. Run the redaction checklist.
 4. Replace sensitive details with generalized labels.
 5. Confirm every claim has safe supporting evidence.
-6. Mark `redaction_status` as `reviewed`.
-7. Perform final review in page context.
-8. Mark `redaction_status` as `approved`.
-9. Publish only after the case study remains understandable without private context.
+6. Mark `redactionStatus` as `reviewed`.
+7. Preserve `redactionStatus` as `reviewed` until open items are cleared, linked artifacts are inspected, human signoff is recorded, and any required production or owner-approved production-equivalent provider preview evidence exists.
+8. Add `approvalEvidence` only when human signoff, linked-artifact inspection, and production or owner-approved production-equivalent provider preview evidence are ready to be recorded for an approved case study.
+9. Mark `redactionStatus` as `approved` only after those gates are complete.
+10. Publish only after the case study remains understandable without private context.
+
+## Launch Eligibility
+
+Launch eligibility requires all four conditions: `publicationStatus: "publish"`, `redactionStatus: "approved"`, an understandable public story, and an artifact checklist pass.
+
+`reviewed` is never launch-eligible; the launch-eligible case-study count stays
+`0` until real human approval evidence exists.

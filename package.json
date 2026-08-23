@@ -1,0 +1,53 @@
+{
+	"name": "humankaylee-portfolio",
+	"private": true,
+	"packageManager": "pnpm@10.33.2",
+	"scripts": {
+		"dev": "astro dev --host 127.0.0.1 --port 4321",
+		"lint": "biome check astro.config.mjs package.json pnpm-workspace.yaml tsconfig.json vitest.config.ts playwright.config.ts playwright.visual.config.ts apps/web/src tests/e2e tests/fixtures scripts",
+		"format": "biome format --write astro.config.mjs package.json pnpm-workspace.yaml tsconfig.json vitest.config.ts playwright.config.ts playwright.visual.config.ts apps/web/src tests/e2e tests/fixtures scripts",
+		"check": "pnpm typecheck",
+		"typecheck": "astro check && tsc -p tsconfig.json --noEmit",
+		"test": "vitest run && node --test scripts/*.test.mjs",
+		"test:e2e": "node scripts/playwright-with-pnpm-args.mjs",
+		"test:visual": "pnpm exec playwright test --config=playwright.visual.config.ts --grep \"@visual-regression\"",
+		"test:visual:update": "pnpm exec playwright test --config=playwright.visual.config.ts --grep \"@visual-regression\" --update-snapshots",
+		"build": "astro build",
+		"preview": "astro preview --host 127.0.0.1",
+		"bundle:budget": "node scripts/bundle-budget.mjs",
+		"lighthouse:local": "pnpm build && node scripts/lighthouse-local.mjs",
+		"phase7:provider-preflight": "node scripts/phase-7-provider-preflight.mjs",
+		"phase7:evidence-template": "node scripts/phase-7-evidence-template.mjs",
+		"phase7:contact-decision": "node scripts/phase-7-contact-decision-template.mjs",
+		"phase7:launch-audit": "node scripts/phase-7-launch-readiness-audit.mjs",
+		"redaction:readiness": "node scripts/case-study-redaction-readiness.mjs",
+		"audit:frontend": "pnpm audit --audit-level moderate",
+		"audit:backend": "cargo audit --file apps/api/Cargo.lock",
+		"audit": "pnpm audit:frontend && pnpm audit:backend",
+		"wasm:build": "node scripts/build-wasm-blackscholes.mjs",
+		"wasm:check": "node scripts/build-wasm-blackscholes.mjs && ls -lh apps/web/public/wasm/blackscholes/"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.10",
+		"@axe-core/playwright": "^4.11.3",
+		"@biomejs/biome": "^1.9.4",
+		"@fontsource-variable/archivo": "5.3.0",
+		"@fontsource/jetbrains-mono": "^5.2.8",
+		"@playwright/test": "^1.60.0",
+		"@types/node": "^24.10.1",
+		"astro": "^7.2.2",
+		"lighthouse": "^13.4.1",
+		"start-server-and-test": "^3.0.12",
+		"typescript": "^5.9.3",
+		"vitest": "^4.1.10",
+		"wrangler": "^4.123.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"fast-uri": "3.1.5",
+			"sharp": "0.35.2",
+			"svgo": "4.0.2",
+			"yaml": "2.9.0"
+		}
+	}
+}

@@ -1,0 +1,1 @@
+{"task":"T-22","name":"M2 localhost smoke","status":"completed","timestamp":"2026-05-26T17:32:11Z","notes":"cargo build --release 41.91s; /api/health 200 ok; /api/projects/live 200 array; /api/contact {} 400 validation. Full results in test-results/m2-localhost-smoke.json"}

@@ -1,0 +1,154 @@
+---
+import type {
+	WorkEvidenceMedia,
+	WorkResponsiveSource,
+} from "../lib/contracts/work";
+
+type Props = {
+	items?: WorkEvidenceMedia[];
+	title?: string;
+};
+
+const { items = [], title = "Evidence gallery" } = Astro.props;
+const sourceSet = (sources: WorkResponsiveSource[]) =>
+	sources
+		.slice()
+		.sort((left, right) => left.width - right.width)
+		.map((source) => `${source.src} ${source.width}w`)
+		.join(", ");
+---
+
+{
+	items.length > 0 ? (
+		<section
+			class="case-study-media-gallery"
+			aria-labelledby="case-study-media-gallery-title"
+			data-case-study-media-gallery
+		>
+			<header>
+				<p class="section-kicker">Captured evidence</p>
+				<h2 id="case-study-media-gallery-title">{title}</h2>
+			</header>
+			<div class="case-study-media-gallery__grid">
+				{items.map((item) => (
+					<figure data-evidence-media-kind={item.kind}>
+						{item.kind === "image" ? (
+							<picture>
+								<source
+									type="image/webp"
+									srcset={sourceSet(item.responsiveSources)}
+									sizes="(max-width: 48rem) 100vw, 50vw"
+								/>
+								<img
+									src={item.src}
+									width={item.width}
+									height={item.height}
+									alt={item.alt}
+									loading="lazy"
+									decoding="async"
+								/>
+							</picture>
+						) : (
+							<>
+								<video
+									controls
+									preload="none"
+									poster={item.poster}
+									width={item.width}
+									height={item.height}
+									aria-label={item.alt}
+								>
+									<source src={item.src} type="video/mp4" />
+								</video>
+								<a
+									class="case-study-media-gallery__fallback"
+									data-touch-target="true"
+									href={item.src}
+								>
+									Open the evidence video
+								</a>
+							</>
+						)}
+						<figcaption>{item.caption}</figcaption>
+					</figure>
+				))}
+			</div>
+		</section>
+	) : null
+}
+
+<style>
+	.case-study-media-gallery {
+		display: grid;
+		gap: var(--space-4);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.case-study-media-gallery header {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.case-study-media-gallery .section-kicker {
+		color: var(--color-muted);
+		font-size: 0.72rem;
+	}
+
+	.case-study-media-gallery h2 {
+		font-size: clamp(1.8rem, 3.6vw, 3.5rem);
+	}
+
+	.case-study-media-gallery__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--space-4);
+	}
+
+	.case-study-media-gallery figure {
+		display: grid;
+		min-width: 0;
+		margin: 0;
+		overflow: hidden;
+		border: 1px solid var(--line);
+		border-radius: var(--radius-media);
+		background: var(--color-media);
+	}
+
+	.case-study-media-gallery picture,
+	.case-study-media-gallery img,
+	.case-study-media-gallery video {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.case-study-media-gallery img,
+	.case-study-media-gallery video {
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
+	.case-study-media-gallery figcaption {
+		border-top: 1px solid var(--line);
+		padding: var(--space-2) var(--space-3);
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.75rem;
+		line-height: 1.5;
+	}
+
+	.case-study-media-gallery__fallback {
+		display: inline-flex;
+		min-height: 44px;
+		align-items: center;
+		padding-inline: var(--space-3);
+		font-weight: 700;
+	}
+
+	@media (min-width: 64rem) {
+		.case-study-media-gallery__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+</style>

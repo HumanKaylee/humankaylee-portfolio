@@ -1,0 +1,26 @@
+---
+type Props = {
+	audiences: readonly string[];
+	label: string;
+};
+
+const { audiences, label } = Astro.props;
+const formatAudience = (audience: string) =>
+	audience
+		.split("-")
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.join(" ");
+---
+
+<div class="audience-chips" role="group" aria-label={label}>
+	<span class="audience-chips-label">Best for</span>
+	<ul>
+		{
+			audiences.map((audience) => (
+				<li>
+					<span>{formatAudience(audience)}</span>
+				</li>
+			))
+		}
+	</ul>
+</div>

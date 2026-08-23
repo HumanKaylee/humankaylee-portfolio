@@ -2,20 +2,24 @@
 Thumbs.db
 
 node_modules/
+.pnpm-store/
+.worktrees/
+.superpowers/sdd/
 dist/
 .astro/
 .vercel/
 .netlify/
 .wrangler/
+.shuttle/
 
 target/
-Cargo.lock
+!apps/api/Cargo.lock
 
 .env
 .env.*
 !.env.example
+Secrets*.toml
 
 coverage/
 playwright-report/
 test-results/
-

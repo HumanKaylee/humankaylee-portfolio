@@ -1,0 +1,22 @@
+# Cloudflare Pages _redirects
+#
+# Astro builds static per-route HTML files, so a SPA wildcard fallback is NOT
+# needed. Each canonical route (/, /work, /resume, /contact, etc.) has its own
+# index.html in dist/.
+#
+# Format: <source>  <destination>  <status>
+
+/projects  /work/  301
+/projects/  /work/  301
+/projects/creative-web-systems-atlas-demo  /work/  301
+/projects/creative-web-systems-atlas-demo/  /work/  301
+/projects/humankaylee-portfolio-build  /work/  301
+/projects/humankaylee-portfolio-build/  /work/  301
+/projects/*  /work/:splat  301
+/case-studies  /work/  301
+/case-studies/  /work/  301
+/case-studies/creative-web-systems-atlas-demo  /work/  301
+/case-studies/creative-web-systems-atlas-demo/  /work/  301
+/case-studies/humankaylee-portfolio-build  /work/  301
+/case-studies/humankaylee-portfolio-build/  /work/  301
+/case-studies/*  /work/:splat  301

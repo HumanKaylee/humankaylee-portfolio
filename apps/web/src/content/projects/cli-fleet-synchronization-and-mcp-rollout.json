@@ -1,0 +1,18 @@
+{
+	"name": "CLI Fleet Synchronization and MCP Rollout",
+	"slug": "cli-fleet-synchronization-and-mcp-rollout",
+	"category": "operations",
+	"summary": "Standardized multi-machine CLI setup with inventory, rollout, and verification evidence.",
+	"bestFor": ["senior-engineer", "collaborator"],
+	"proof": "Sanitized rollout matrix and target-by-target verification model.",
+	"links": {
+		"docs": "/case-studies/cli-fleet-synchronization-and-mcp-rollout/"
+	},
+	"publicationStatus": "publish",
+	"seo": {
+		"title": "CLI Fleet Synchronization and MCP Rollout",
+		"description": "A project summary for CLI fleet synchronization and MCP rollout evidence.",
+		"canonicalPath": "/projects/cli-fleet-synchronization-and-mcp-rollout/",
+		"ogImage": "/social/default.png"
+	}
+}

@@ -1,0 +1,40 @@
+---
+import type { profile as profileData } from "../data/profile";
+import type { primaryNavigation } from "../data/site-navigation";
+
+type Props = {
+	nav: typeof primaryNavigation;
+	profile: typeof profileData;
+};
+
+const { nav, profile } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+function isCurrentRoute(href: string) {
+	if (href === "/") {
+		return currentPath === href;
+	}
+
+	return currentPath === href.slice(0, -1) || currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+	<a class="brand-lockup" href="/" aria-label="Joe Poznanski home">
+		<span class="brand-title">{profile.name}</span>
+		<span class="brand-subtitle">Systems Atelier</span>
+	</a>
+	<nav class="primary-nav" aria-label="Primary navigation">
+		{
+			nav.map((item) => (
+				<a
+					aria-current={isCurrentRoute(item.href) ? "page" : undefined}
+					data-touch-target="true"
+					href={item.href}
+				>
+					{item.label}
+				</a>
+			))
+		}
+	</nav>
+</header>

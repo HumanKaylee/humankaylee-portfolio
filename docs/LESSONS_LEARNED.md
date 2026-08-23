@@ -39,7 +39,7 @@ The initial content candidates include local runbooks, operational debugging, ag
 
 ### Hosting should optimize reliability and cost
 
-Cloudflare Pages is the recommended frontend baseline because it supports fast static delivery and private repository deploys. Shuttle Community is a good initial Rust API host, with Fly.io, Railway, or a VPS as fallback options if reliability, uptime, or control become more important.
+Cloudflare Pages is the recommended frontend baseline because it supports fast static delivery and private repository deploys. Shuttle is not a viable new launch target as of the 2026-05-24 official-source snapshot: https://docs.shuttle.dev/docs/shuttle-shutdown. Fly.io, Railway, or another approved host are the approved current-host comparison set for #64, with Cloudflare Workers/Pages Functions requiring a runtime rewrite and a VPS remaining the higher-ops fallback.
 
 ### The launch bar includes operations and documentation
 
@@ -57,16 +57,181 @@ Launch is not just visual completion. The PRD requires deployable frontend and b
 - Make backend failure non-blocking for the portfolio.
 - Make privacy-safe redaction a required review step for every published artifact.
 
+## Implementation Lessons
+
+### Parallel lanes need explicit test ownership
+
+Phase 3 route work split cleanly when each worker owned a route family and its own e2e spec: notes/RSS, case-study routes, and metadata/crawler artifacts. Shared preview-server tests should run sequentially during final integration because Playwright's fixed port can collide when multiple agents run e2e checks at the same time.
+
+### Route scaffolding can advance before redaction approval
+
+Case-study pages can safely render reviewed public-safe outlines without marking them launch-approved. The content model should keep `publicationStatus` separate from `redactionStatus` so route infrastructure, navigation, metadata, and no-JS behavior can mature while the final evidence checklist remains a hard launch gate.
+
+### Dev-server markup is not a privacy evidence source
+
+Astro's development server injects source-file attributes, local paths, font module URLs, and dev-toolbar scripts into `page.content()`. Privacy tests should scan generated build artifacts or user-visible text plus public link/meta attributes, not raw dev-server HTML.
+
+### The atlas fallback is the durable contract
+
+The project atlas should start as keyboard-reachable HTML with category filters and stable links. WebGL or scroll-linked motion can enhance that model later, but the static atlas is the accessibility, no-JS, and reduced-motion source of truth.
+
+### API enhancement copy must preserve static route markers
+
+The contact page can evolve from a static placeholder to an API-enhanced form, but shared route-quality tests still rely on visible static-first markers such as "mailto fallback." Preserve those public markers when replacing placeholder copy so no-JS, reduced-motion, and route-coverage contracts continue to validate the actual user fallback.
+
+### A hardened contact API is not production delivery by itself
+
+The Rust route can validate, reject honeypots, enforce request-size limits, rate-limit repeat submissions, apply CORS, and return structured errors, but production enablement still needs durable delivery or storage. Until then, the mailto fallback remains the reliable contact path and the enhanced API should stay disabled outside controlled integration checks.
+
+### Store mode needs an explicit persistence contract
+
+Accepting contact messages without a configured store path creates false confidence. `store` mode should fail safely until `HK_API_CONTACT_STORE_PATH` points at an approved persistent location, and launch evidence should separately record retention, backup, rotation, and deletion decisions.
+
+### Replace blocker tests when the blocker is removed
+
+The route-coverage suite correctly encoded project detail pages as a 404 blocker while they did not exist. Once static project detail pages shipped, the integration work had to replace that stale negative test with positive detail-route coverage and update project-card links to the new static routes.
+
+### Deployment runbooks must mirror implemented environment names
+
+Provider docs often use generic variables, but this API currently reads `HK_API_*` names. Runbooks should name the variables the binary actually parses, otherwise a deployment can appear configured while the process silently falls back to defaults.
+
+### Privacy docs should describe current defaults, not launch intent
+
+The privacy writeup needs to say exactly what ships now: static pages, a resume PDF asset, a contact route with validation plus mailto fallback, and events disabled by default. If a provider or storage path does not exist yet, the doc should say so plainly instead of implying a retention or analytics story that is not implemented.
+
+### Privacy claims need process-level precision
+
+Even implementation summaries can overclaim retention if they compress behavior
+too aggressively. The contact rate limiter uses a temporary in-process abuse
+key to evaluate an hourly window, but it does not run a background expiry job.
+The privacy contract should pin that distinction so future docs do not imply a
+deletion workflow that the API does not implement.
+
+### Spoofable network headers are not abuse-control boundaries
+
+Forwarded IP headers are only useful after the deployment has an explicit
+trusted proxy boundary. Until then, contact rate limiting should use a stable
+sender-derived key and tests should prove spoofed `x-forwarded-for` or
+`x-real-ip` headers do not bypass the hourly window.
+
+### Contact delivery needs an adapter seam before provider selection
+
+JSONL storage is useful local evidence, but production delivery should not be
+hard-wired to one persistence choice before retention, backup, rotation, and
+deletion decisions exist. A fakeable delivery adapter keeps backend behavior
+testable while preserving the production blocker.
+
+### Launch evidence must separate PR checks from production readiness
+
+Passing PR CI is useful evidence, but it is not a production launch signal by itself. The launch runbook should keep PR checks, local final verification, production smoke checks, provider deployment IDs, rollback targets, redaction approvals, and contact-delivery status in separate rows so blocked or not-run production work cannot be mistaken for launch readiness.
+
+### Deployment binaries should preserve local operability
+
+The API should keep its standalone Axum binary for local smoke tests and
+container fallback while adding provider-specific entrypoints behind feature
+flags. The Shuttle binary can reuse the same router and `HK_API_*` parser
+without binding its own listener, which keeps deployment proof from changing the
+local development contract.
+
+### Container proof needs start and stop evidence
+
+Building a Docker image is not enough for deployment readiness. A portfolio API
+container also needs a health smoke check and a clean stop path, because PID 1
+signal behavior can otherwise hide until Fly.io, Railway, or another container
+host tries to terminate the service.
+
+### Reviewed content is not launch-approved content
+
+Case-study route scaffolding can use reviewed outlines, but the redaction guide
+keeps `reviewed` separate from `approved`. A partial review, placeholder body,
+or sanitized label is useful progress, not launch evidence; approval needs a
+completed checklist plus public-safe artifacts for each case study.
+
+### Operations stories should publish reasoning, not access procedure
+
+The remote workstation recovery case study is strongest when it shows the
+diagnostic order: reachability, role-local state, session inventory, viewer
+behavior, smallest recovery action, and verification. The public body should
+keep role labels and summarized evidence while omitting private hostnames,
+access paths, raw logs, exact command sequences, and account-specific details.
+
+### Static spectacle can still be semantic
+
+The first visual upgrade does not need WebGL to improve the portfolio. A
+static systems-map poster can deliver the signature "atelier" moment, link to
+real project routes, and remain visible in no-JS contexts while the heavier
+constellation stays optional.
+
+### Visual polish needs executable surface contracts
+
+Art direction is easier to preserve when it has measurable, non-pixel-perfect
+checks. The `@visual-surfaces` gate verifies deliberate surface treatments,
+mobile overflow safety, and touch-target floors across representative routes
+without turning design review into brittle screenshot diffs.
+
+### Case-study bodies must be rendered, not just stored
+
+Frontmatter-driven sections are useful for consistent evidence drawers, but the
+long-form case-study narrative needs Markdown body rendering. Otherwise
+placeholder replacement can look complete in source while the public page still
+lacks the deeper architecture, verification, and operator-checklist story.
+
+### Meta case studies still need evidence boundaries
+
+The portfolio-build story is safer than private operations work, but it can
+still overclaim if local tests are presented as production proof. Keep local,
+PR, and production evidence in separate lanes, and leave redaction at
+`reviewed` until real provider/domain/rollback artifacts exist.
+
+### Creative demos need scope gates before spectacle
+
+The creative web systems atlas story can raise the visual bar without implying
+that WebGL is already implemented. Treat the semantic atlas fallback and static
+systems-map poster as the current proof, then require a separate scope approval
+before building any heavier interactive layer.
+
+### Content runbooks need executable contracts
+
+Redaction guidance is easy to weaken accidentally when it lives only as prose.
+The content update runbook now has a Node contract test that pins the approved
+only launch gate, schema field names, privacy rule, and verification commands
+so future copy or content changes cannot silently soften the publication
+workflow.
+
+### QA tags should match launch gates
+
+The plan's cross-phase matrix named keyboard and accessibility checks, but CI
+only had a broad E2E job. Tagging existing Playwright coverage with
+`@keyboard` and `@accessibility` gives operators precise commands and gives CI a
+clearer failure signal without weakening the umbrella test run.
+
+### Static security headers need dual enforcement
+
+Static-host header files are the production contract, but local verification
+needs a response-level mechanism too. Mirroring the same policy through Astro
+middleware lets Playwright catch missing Content Security Policy, frame denial,
+MIME sniffing, referrer, cross-origin, and permissions headers before provider
+deployment exists.
+
+### API outage UX must sanitize backend details
+
+Static-first fallback is not enough if an enhanced form echoes raw backend
+errors when the API fails. API-down tests should assert both route usability and
+absence of operational details such as stack traces, internal errors, and local
+paths while preserving user-actionable fallback copy. If future non-400 errors
+become user-actionable, add explicit safe messages instead of passing raw API
+text through.
+
 ## Risks To Revisit During Implementation
 
-| Risk | Control |
-| --- | --- |
+| Risk                                                    | Control                                                                   |
+| ------------------------------------------------------- | ------------------------------------------------------------------------- |
 | The site looks impressive but does not prove capability | Write the flagship case studies before over-investing in ornamental pages |
-| 3D or animation harms performance | Lazy-load heavy scenes, provide poster fallbacks, and keep text in HTML |
-| Recruiters miss the strongest story | Keep resume, top skills, top projects, and contact visible early |
-| Published artifacts expose sensitive details | Run a redaction checklist before any case study ships |
-| Rust API adds avoidable downtime | Keep core content static and document API fallback behavior |
-| Content scope becomes too broad | Launch with 4 strong case studies instead of many shallow entries |
+| 3D or animation harms performance                       | Lazy-load heavy scenes, provide poster fallbacks, and keep text in HTML   |
+| Recruiters miss the strongest story                     | Keep resume, top skills, top projects, and contact visible early          |
+| Published artifacts expose sensitive details            | Run a redaction checklist before any case study ships                     |
+| Rust API adds avoidable downtime                        | Keep core content static and document API fallback behavior               |
+| Content scope becomes too broad                         | Launch with 4 strong case studies instead of many shallow entries         |
 
 ## Open Review Questions
 
@@ -74,4 +239,4 @@ Launch is not just visual completion. The PRD requires deployable frontend and b
 - Which project should be the primary recruiter-facing proof point?
 - Which project should be the deepest senior-engineer proof point?
 - Should an AI assistant remain v2 until the core case studies are strong?
-- Is Shuttle Community acceptable for launch, or should the API start on a more reliable paid host?
+- Which current API host should launch the Rust API now that Shuttle is not a viable new launch target?

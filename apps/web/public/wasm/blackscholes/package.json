@@ -1,0 +1,17 @@
+{
+  "name": "blackscholes-wasm",
+  "type": "module",
+  "description": "Black-Scholes options pricer compiled to WASM for the humankaylee portfolio demo island",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "blackscholes_wasm_bg.wasm",
+    "blackscholes_wasm.js",
+    "blackscholes_wasm.d.ts"
+  ],
+  "main": "blackscholes_wasm.js",
+  "types": "blackscholes_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

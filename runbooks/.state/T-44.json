@@ -1,0 +1,7 @@
+{
+  "task": "T-44",
+  "milestone": "M5",
+  "created_at": "2026-05-26T17:00:00Z",
+  "status": "done",
+  "outcome": "Copied cryo-flow-sim Stage 1 MP4 (13,157,234 bytes) to apps/web/public/media/cryo-flow-sim-stage1.mp4. Copied overview-dashboard.png (1086774 bytes) to apps/web/public/media/cryo-flow-sim-stage1-poster.png. Created apps/web/public/media/.gitattributes. Created scripts/copy-cryo-flow-sim-assets.mjs."
+}

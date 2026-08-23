@@ -1,0 +1,7 @@
+{
+  "task": "T-19",
+  "description": "Append M1 evidence rows to runbooks/LAUNCH_EVIDENCE.md",
+  "status": "completed",
+  "completedAt": "2026-05-26T18:01:00Z",
+  "output": "Appended M1-START and M1-PAUSED-OPERATOR rows with operator checklist and partial verification results."
+}

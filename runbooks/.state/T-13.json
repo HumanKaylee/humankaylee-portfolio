@@ -1,0 +1,7 @@
+{
+  "task": "T-13",
+  "description": "Fix content-collections.test.ts to reflect M5 cryo-flow-sim addition",
+  "status": "completed",
+  "completedAt": "2026-05-26T17:52:00Z",
+  "output": "Updated test to expect 7 case study files (was 6) and 5 publish entries (was 4). Removed assertion that publish entries must not have redactionStatus: approved (M5 approved 3 entries). 27/27 vitest tests pass."
+}
