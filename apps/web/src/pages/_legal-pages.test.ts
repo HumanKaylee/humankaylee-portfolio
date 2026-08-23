@@ -28,9 +28,7 @@ describe("legal page factual contracts", () => {
 	it("states the provider-granted Google capabilities and avoids unsupported promises", () => {
 		expect(privacySource).toContain("compose and send messages");
 		expect(privacySource).toContain("restore messages from Trash");
-		expect(privacySource).toContain(
-			"share and permanently delete calendars",
-		);
+		expect(privacySource).toContain("share and permanently delete calendars");
 		expect(privacySource).toContain(
 			"immediate permanent deletion that bypasses Trash",
 		);
