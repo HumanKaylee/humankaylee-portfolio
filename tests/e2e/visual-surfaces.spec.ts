@@ -10,6 +10,8 @@ const releaseRoutes = [
 	"/about/",
 	"/resume/",
 	"/contact/",
+	"/privacy/",
+	"/terms/",
 	"/notes/",
 ] as const;
 
