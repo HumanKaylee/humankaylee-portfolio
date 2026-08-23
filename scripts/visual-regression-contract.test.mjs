@@ -12,6 +12,8 @@ const files = {
 	tsconfig: "tsconfig.json",
 };
 
+const snapshotDirectory = "tests/e2e/visual-regression.spec.ts-snapshots";
+
 const expectedVisualRoutes = [
 	["home", "/"],
 	["work", "/work/"],
@@ -136,4 +138,24 @@ test("B-037 runbook and executable visual matrix cover every current Signal / Pr
 		runbook,
 		/Project index|representative case study|API-offline|telemetry panel|how-the-portfolio-stays-useful/i,
 	);
+});
+
+test("B-037 visual route matrix has paired Linux and Windows baselines at every viewport", () => {
+	const visualSpec = readRequiredFile(files.visualSpec);
+	const missingBaselines = [];
+
+	for (const [label] of visualSpecRoutes(visualSpec)) {
+		for (const viewport of ["desktop", "mobile"]) {
+			for (const platform of ["linux", "win32"]) {
+				const snapshot = `${snapshotDirectory}/${label}-${viewport}-${platform}.png`;
+				if (!existsSync(snapshot)) {
+					missingBaselines.push(
+						`${platform} ${label} ${viewport}: ${snapshot}`,
+					);
+				}
+			}
+		}
+	}
+
+	assert.deepEqual(missingBaselines, [], "missing visual baselines");
 });
