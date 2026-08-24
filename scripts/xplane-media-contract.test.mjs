@@ -9,6 +9,7 @@ import {
 	readdirSync,
 	rmSync,
 	statSync,
+	symlinkSync,
 	writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -19,6 +20,7 @@ import {
 	SOURCE_FILE_SHA256,
 	assertNonOverlappingRoots,
 	assertPinnedFileHashes,
+	assertSafeOutputTarget,
 	assertSafePublicMetadata,
 	buildOutputAtomically,
 } from "./build-xplane-fov-media.mjs";
@@ -118,6 +120,153 @@ test("source hash pins cover the exact 24-file supplied inventory", () => {
 	);
 });
 
+test("atomic build preserves an unrelated destination without invoking its producer", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-unowned-output-"),
+	);
+	try {
+		const outputRoot = path.join(fixtureParent, "public-media");
+		mkdirSync(outputRoot);
+		const sentinel = Buffer.from("unrelated-user-file-sentinel");
+		writeFileSync(path.join(outputRoot, "unrelated-user-file.txt"), sentinel);
+		let producerCalled = false;
+
+		assert.throws(
+			() =>
+				buildOutputAtomically(outputRoot, () => {
+					producerCalled = true;
+				}),
+			/unsafe output target/i,
+		);
+		assert.equal(producerCalled, false);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "unrelated-user-file.txt")),
+			sentinel,
+		);
+		assert.deepEqual(readdirSync(outputRoot), ["unrelated-user-file.txt"]);
+		assert.deepEqual(readdirSync(fixtureParent), ["public-media"]);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("atomic build rechecks the destination before promotion", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-output-insertion-"),
+	);
+	try {
+		const outputRoot = path.join(fixtureParent, "public-media");
+		mkdirSync(outputRoot);
+		const oldManifest = Buffer.from("pre-existing-owned-manifest");
+		const insertedSentinel = Buffer.from("inserted-user-file-sentinel");
+		writeFileSync(path.join(outputRoot, "capture-manifest.json"), oldManifest);
+
+		assert.throws(
+			() =>
+				buildOutputAtomically(outputRoot, (stageRoot) => {
+					writeFileSync(
+						path.join(stageRoot, "capture-manifest.json"),
+						"new-output",
+					);
+					writeFileSync(
+						path.join(outputRoot, "unrelated-user-file.txt"),
+						insertedSentinel,
+					);
+				}),
+			/unsafe output target/i,
+		);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "capture-manifest.json")),
+			oldManifest,
+		);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "unrelated-user-file.txt")),
+			insertedSentinel,
+		);
+		assert.deepEqual(readdirSync(outputRoot).sort(), [
+			"capture-manifest.json",
+			"unrelated-user-file.txt",
+		]);
+		assert.deepEqual(readdirSync(fixtureParent), ["public-media"]);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("output target guard allows absent, empty, partial, and complete owned inventories", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-owned-output-"),
+	);
+	try {
+		const outputRoot = path.join(fixtureParent, "public-media");
+		assert.doesNotThrow(() => assertSafeOutputTarget(outputRoot));
+
+		mkdirSync(outputRoot);
+		assert.doesNotThrow(() => assertSafeOutputTarget(outputRoot));
+
+		writeFileSync(path.join(outputRoot, "capture-manifest.json"), "partial");
+		assert.doesNotThrow(() => assertSafeOutputTarget(outputRoot));
+
+		for (const filename of EXPECTED) {
+			writeFileSync(path.join(outputRoot, filename), filename);
+		}
+		assert.doesNotThrow(() => assertSafeOutputTarget(outputRoot));
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("output target guard rejects filesystem roots and non-directory targets", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-output-shape-"),
+	);
+	try {
+		assert.throws(
+			() => assertSafeOutputTarget(path.parse(fixtureParent).root),
+			/filesystem root/i,
+		);
+
+		const outputFile = path.join(fixtureParent, "not-a-directory");
+		writeFileSync(outputFile, "sentinel");
+		assert.throws(
+			() => assertSafeOutputTarget(outputFile),
+			/output target must be a directory/i,
+		);
+		assert.equal(readFileSync(outputFile, "utf8"), "sentinel");
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("output target guard rejects non-regular and symbolic-link entries", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-output-entry-"),
+	);
+	try {
+		const directoryRoot = path.join(fixtureParent, "directory-entry");
+		mkdirSync(directoryRoot);
+		mkdirSync(path.join(directoryRoot, "capture-manifest.json"));
+		assert.throws(
+			() => assertSafeOutputTarget(directoryRoot),
+			/regular files/i,
+		);
+
+		const linkRoot = path.join(fixtureParent, "link-entry");
+		mkdirSync(linkRoot);
+		const linkTarget = path.join(fixtureParent, "link-target");
+		mkdirSync(linkTarget);
+		writeFileSync(path.join(linkTarget, "sentinel.txt"), "outside-sentinel");
+		symlinkSync(linkTarget, path.join(linkRoot, "fov50-p0-h0.mp4"), "junction");
+		assert.throws(() => assertSafeOutputTarget(linkRoot), /regular files/i);
+		assert.equal(
+			readFileSync(path.join(linkTarget, "sentinel.txt"), "utf8"),
+			"outside-sentinel",
+		);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
 test("failed media production preserves the destination and removes staging residue", () => {
 	const fixtureParent = mkdtempSync(
 		path.join(tmpdir(), "xplane-atomic-output-"),
@@ -145,6 +294,61 @@ test("failed media production preserves the destination and removes staging resi
 		);
 		assert.deepEqual(readdirSync(outputRoot), ["capture-manifest.json"]);
 		assert.deepEqual(readdirSync(fixtureParent), ["public-media"]);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("a source change during production prevents output promotion", () => {
+	const fixtureParent = mkdtempSync(path.join(tmpdir(), "xplane-source-race-"));
+	try {
+		const sourceRoot = path.join(fixtureParent, "source");
+		mkdirSync(sourceRoot);
+		writeFileSync(path.join(sourceRoot, "alpha.txt"), "alpha");
+		const expectedHashes = {
+			"alpha.txt":
+				"8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+		};
+		assert.doesNotThrow(() =>
+			assertPinnedFileHashes(sourceRoot, expectedHashes),
+		);
+
+		const outputRoot = path.join(fixtureParent, "public-media");
+		mkdirSync(outputRoot);
+		const sentinelManifest = Buffer.from("pre-existing-source-race-sentinel");
+		writeFileSync(
+			path.join(outputRoot, "capture-manifest.json"),
+			sentinelManifest,
+		);
+		let producerCalled = false;
+
+		assert.throws(
+			() =>
+				buildOutputAtomically(
+					outputRoot,
+					(stageRoot) => {
+						producerCalled = true;
+						writeFileSync(
+							path.join(stageRoot, "capture-manifest.json"),
+							"new-output",
+						);
+						writeFileSync(path.join(sourceRoot, "alpha.txt"), "changed");
+					},
+					() => {},
+					() => assertPinnedFileHashes(sourceRoot, expectedHashes),
+				),
+			/source content hash mismatch/i,
+		);
+		assert.equal(producerCalled, true);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "capture-manifest.json")),
+			sentinelManifest,
+		);
+		assert.deepEqual(readdirSync(outputRoot), ["capture-manifest.json"]);
+		assert.deepEqual(readdirSync(fixtureParent).sort(), [
+			"public-media",
+			"source",
+		]);
 	} finally {
 		rmSync(fixtureParent, { force: true, recursive: true });
 	}

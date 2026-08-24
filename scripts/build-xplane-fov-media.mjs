@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
 	existsSync,
+	lstatSync,
 	mkdirSync,
 	mkdtempSync,
 	readFileSync,
@@ -51,6 +52,11 @@ const PUBLISHED_FILENAMES = [
 	"fov110-m5-h0.mp4",
 	"fov110-m5-h0-poster.webp",
 ].sort();
+
+const OWNED_OUTPUT_FILENAMES = new Set([
+	"capture-manifest.json",
+	...PUBLISHED_FILENAMES,
+]);
 
 export const SOURCE_FILE_SHA256 = Object.freeze({
 	"fov110_m5_h0/composite.mp4":
@@ -514,12 +520,38 @@ function validateStagedOutput(stageRoot) {
 	}
 }
 
+export function assertSafeOutputTarget(outputRoot) {
+	const resolvedOutput = path.resolve(outputRoot);
+	if (resolvedOutput === path.parse(resolvedOutput).root) {
+		throw new Error("Refusing filesystem root as X-Plane output target");
+	}
+	if (!existsSync(resolvedOutput)) {
+		return;
+	}
+
+	const outputStatus = lstatSync(resolvedOutput);
+	if (outputStatus.isSymbolicLink() || !outputStatus.isDirectory()) {
+		throw new Error("X-Plane output target must be a directory");
+	}
+	for (const entry of readdirSync(resolvedOutput, { withFileTypes: true })) {
+		if (!OWNED_OUTPUT_FILENAMES.has(entry.name)) {
+			throw new Error("Unsafe output target inventory");
+		}
+		const entryStatus = lstatSync(path.join(resolvedOutput, entry.name));
+		if (entryStatus.isSymbolicLink() || !entryStatus.isFile()) {
+			throw new Error("X-Plane output target entries must be regular files");
+		}
+	}
+}
+
 export function buildOutputAtomically(
 	outputRoot,
 	producer,
 	validate = () => {},
+	beforePromotion = () => {},
 ) {
 	const resolvedOutput = path.resolve(outputRoot);
+	assertSafeOutputTarget(resolvedOutput);
 	mkdirSync(path.dirname(resolvedOutput), { recursive: true });
 	let stageRoot = createManagedSibling(resolvedOutput, "stage");
 	let backupRoot;
@@ -528,7 +560,9 @@ export function buildOutputAtomically(
 	try {
 		producer(stageRoot);
 		validate(stageRoot);
+		beforePromotion();
 		if (!existsSync(resolvedOutput)) {
+			assertSafeOutputTarget(resolvedOutput);
 			renameSync(stageRoot, resolvedOutput);
 			stageRoot = undefined;
 			return;
@@ -536,6 +570,7 @@ export function buildOutputAtomically(
 
 		backupRoot = createManagedSibling(resolvedOutput, "backup");
 		removeManagedSibling(resolvedOutput, backupRoot, "backup");
+		assertSafeOutputTarget(resolvedOutput);
 		renameSync(resolvedOutput, backupRoot);
 		try {
 			renameSync(stageRoot, resolvedOutput);
@@ -613,6 +648,7 @@ function main() {
 		outputRoot,
 		(stageRoot) => produceMedia(sourceRoot, stageRoot),
 		validateStagedOutput,
+		() => assertSourceContract(sourceRoot),
 	);
 }
 
