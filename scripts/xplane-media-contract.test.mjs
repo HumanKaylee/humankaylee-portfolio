@@ -193,6 +193,130 @@ test("atomic build rechecks the destination before promotion", () => {
 	}
 });
 
+test("atomic build restores an unsafe backup before stage promotion", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-post-rename-validation-"),
+	);
+	try {
+		const outputRoot = path.join(fixtureParent, "public-media");
+		mkdirSync(outputRoot);
+		const oldManifest = Buffer.from("post-rename-old-manifest");
+		const insertedSentinel = Buffer.from("post-guard-inserted-sentinel");
+		writeFileSync(path.join(outputRoot, "capture-manifest.json"), oldManifest);
+		let boundaryHookCalled = false;
+
+		assert.throws(
+			() =>
+				buildOutputAtomically(
+					outputRoot,
+					(stageRoot) => {
+						writeFileSync(
+							path.join(stageRoot, "capture-manifest.json"),
+							"new-output",
+						);
+					},
+					() => {},
+					() => {},
+					{
+						beforeDestinationMove({ outputRoot: boundaryOutputRoot }) {
+							boundaryHookCalled = true;
+							assert.equal(boundaryOutputRoot, outputRoot);
+							writeFileSync(
+								path.join(outputRoot, "unrelated-user-file.txt"),
+								insertedSentinel,
+							);
+						},
+					},
+				),
+			/unsafe output target/i,
+		);
+		assert.equal(boundaryHookCalled, true);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "capture-manifest.json")),
+			oldManifest,
+		);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "unrelated-user-file.txt")),
+			insertedSentinel,
+		);
+		assert.deepEqual(readdirSync(outputRoot).sort(), [
+			"capture-manifest.json",
+			"unrelated-user-file.txt",
+		]);
+		assert.deepEqual(readdirSync(fixtureParent), ["public-media"]);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("backup cleanup preserves unexpected data at an identified recovery path", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-backup-recovery-"),
+	);
+	try {
+		const outputRoot = path.join(fixtureParent, "public-media");
+		mkdirSync(outputRoot);
+		const oldManifest = Buffer.from("cleanup-old-manifest");
+		const newManifest = Buffer.from("cleanup-new-manifest");
+		const insertedSentinel = Buffer.from("pre-cleanup-inserted-sentinel");
+		writeFileSync(path.join(outputRoot, "capture-manifest.json"), oldManifest);
+		let recoveryPath;
+		let caughtError;
+
+		try {
+			buildOutputAtomically(
+				outputRoot,
+				(stageRoot) => {
+					writeFileSync(
+						path.join(stageRoot, "capture-manifest.json"),
+						newManifest,
+					);
+				},
+				() => {},
+				() => {},
+				{
+					beforeBackupCleanup({ backupRoot }) {
+						recoveryPath = backupRoot;
+						writeFileSync(
+							path.join(backupRoot, "unrelated-user-file.txt"),
+							insertedSentinel,
+						);
+					},
+				},
+			);
+		} catch (error) {
+			caughtError = error;
+		}
+
+		assert.ok(caughtError instanceof Error);
+		assert.ok(recoveryPath);
+		assert.match(caughtError.message, /backup preserved/i);
+		assert.ok(caughtError.message.includes(recoveryPath));
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "capture-manifest.json")),
+			newManifest,
+		);
+		assert.deepEqual(
+			readFileSync(path.join(recoveryPath, "capture-manifest.json")),
+			oldManifest,
+		);
+		assert.deepEqual(
+			readFileSync(path.join(recoveryPath, "unrelated-user-file.txt")),
+			insertedSentinel,
+		);
+		assert.deepEqual(readdirSync(recoveryPath).sort(), [
+			"capture-manifest.json",
+			"unrelated-user-file.txt",
+		]);
+		assert.deepEqual(readdirSync(fixtureParent).sort(), [
+			path.basename(recoveryPath),
+			"public-media",
+		]);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
 test("output target guard allows absent, empty, partial, and complete owned inventories", () => {
 	const fixtureParent = mkdtempSync(
 		path.join(tmpdir(), "xplane-owned-output-"),

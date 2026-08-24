@@ -9,7 +9,9 @@ import {
 	readdirSync,
 	renameSync,
 	rmSync,
+	rmdirSync,
 	statSync,
+	unlinkSync,
 	writeFileSync,
 } from "node:fs";
 import path from "node:path";
@@ -500,6 +502,42 @@ function removeManagedSibling(outputRoot, candidate, purpose) {
 	rmSync(candidate, { force: true, recursive: true });
 }
 
+function removeOwnedPriorOutputBackup(outputRoot, backupRoot) {
+	try {
+		assertManagedSibling(outputRoot, backupRoot, "backup");
+		const entries = readdirSync(backupRoot, { withFileTypes: true });
+		for (const entry of entries) {
+			const entryStatus = lstatSync(path.join(backupRoot, entry.name));
+			if (
+				!OWNED_OUTPUT_FILENAMES.has(entry.name) ||
+				entryStatus.isSymbolicLink() ||
+				!entryStatus.isFile()
+			) {
+				throw new Error("Unexpected entry in prior output backup");
+			}
+		}
+
+		for (const entry of entries) {
+			const entryPath = path.join(backupRoot, entry.name);
+			const entryStatus = lstatSync(entryPath);
+			if (entryStatus.isSymbolicLink() || !entryStatus.isFile()) {
+				throw new Error(
+					"Prior output backup entry is no longer a regular file",
+				);
+			}
+			unlinkSync(entryPath);
+		}
+		if (readdirSync(backupRoot).length > 0) {
+			throw new Error("Unexpected entry appeared during backup cleanup");
+		}
+		rmdirSync(backupRoot);
+	} catch (error) {
+		throw new Error(`Prior X-Plane output backup preserved at ${backupRoot}`, {
+			cause: error,
+		});
+	}
+}
+
 function validateStagedOutput(stageRoot) {
 	assertExpectedInventory(
 		stageRoot,
@@ -549,13 +587,14 @@ export function buildOutputAtomically(
 	producer,
 	validate = () => {},
 	beforePromotion = () => {},
+	hooks = {},
 ) {
 	const resolvedOutput = path.resolve(outputRoot);
 	assertSafeOutputTarget(resolvedOutput);
 	mkdirSync(path.dirname(resolvedOutput), { recursive: true });
 	let stageRoot = createManagedSibling(resolvedOutput, "stage");
 	let backupRoot;
-	let preserveBackup = false;
+	let backupHoldsPriorOutput = false;
 
 	try {
 		producer(stageRoot);
@@ -571,16 +610,36 @@ export function buildOutputAtomically(
 		backupRoot = createManagedSibling(resolvedOutput, "backup");
 		removeManagedSibling(resolvedOutput, backupRoot, "backup");
 		assertSafeOutputTarget(resolvedOutput);
+		hooks.beforeDestinationMove?.({
+			outputRoot: resolvedOutput,
+			backupRoot,
+		});
 		renameSync(resolvedOutput, backupRoot);
+		backupHoldsPriorOutput = true;
+		try {
+			assertSafeOutputTarget(backupRoot);
+		} catch (validationError) {
+			try {
+				renameSync(backupRoot, resolvedOutput);
+				backupHoldsPriorOutput = false;
+				backupRoot = undefined;
+			} catch (rollbackError) {
+				throw new AggregateError(
+					[validationError, rollbackError],
+					`Output backup validation and rollback failed; prior output is preserved at ${backupRoot}`,
+				);
+			}
+			throw validationError;
+		}
 		try {
 			renameSync(stageRoot, resolvedOutput);
 			stageRoot = undefined;
 		} catch (promotionError) {
 			try {
 				renameSync(backupRoot, resolvedOutput);
+				backupHoldsPriorOutput = false;
 				backupRoot = undefined;
 			} catch (rollbackError) {
-				preserveBackup = true;
 				throw new AggregateError(
 					[promotionError, rollbackError],
 					`Output promotion and rollback failed; prior output is preserved at ${backupRoot}`,
@@ -589,13 +648,18 @@ export function buildOutputAtomically(
 			throw promotionError;
 		}
 
-		removeManagedSibling(resolvedOutput, backupRoot, "backup");
+		hooks.beforeBackupCleanup?.({
+			outputRoot: resolvedOutput,
+			backupRoot,
+		});
+		removeOwnedPriorOutputBackup(resolvedOutput, backupRoot);
+		backupHoldsPriorOutput = false;
 		backupRoot = undefined;
 	} finally {
 		if (stageRoot && existsSync(stageRoot)) {
 			removeManagedSibling(resolvedOutput, stageRoot, "stage");
 		}
-		if (backupRoot && !preserveBackup && existsSync(backupRoot)) {
+		if (backupRoot && !backupHoldsPriorOutput && existsSync(backupRoot)) {
 			removeManagedSibling(resolvedOutput, backupRoot, "backup");
 		}
 	}
