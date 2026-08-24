@@ -1827,6 +1827,20 @@ Verification evidence:
 - `scripts/post-launch-feature-prep-contract.test.mjs` verifies the matrix is
   decision support only, not a migration authorization.
 
+### B-069: Publish X-Plane FOV study and homepage clarity corrections
+
+Priority: P0
+
+Depends on: B-063
+
+- Publish the sanitized X-Plane Work entry on Home, Work, sitemap, and its canonical detail route.
+- Preserve two flagship, two supporting, and two archive entries with Cryogenic Flow as hero.
+- Remove visitor-facing `unexpected clamp events` copy.
+- Explain Conformal Cooling's injection-mold use case and metal-additive-manufacturing boundary without unsupported performance claims.
+- Replace the confusing cavity/channel visual with a reviewed render from real retained meshes.
+- Pass media, private-content, accessibility, responsive, no-JavaScript, reduced-motion, browser, build, Rust, CI, preview, and production gates.
+- Retain the previous Cloudflare production deployment as rollback.
+
 ## Launch-Critical Issue Set
 
 Minimum launch path:

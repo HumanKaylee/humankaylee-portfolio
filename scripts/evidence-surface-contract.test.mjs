@@ -11,7 +11,11 @@ const files = {
 	projectStage: "apps/web/src/components/ProjectStage.astro",
 	workDetail: "apps/web/src/pages/work/[slug].astro",
 	workEvidenceFlow: "apps/web/src/components/WorkEvidenceFlow.astro",
+	changelog: "docs/CHANGELOG.md",
+	launchEvidence: "runbooks/LAUNCH_EVIDENCE.md",
 };
+
+const xplaneTitle = "X-Plane Cabin Camera FOV Trade Study";
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -19,6 +23,87 @@ function readRequiredFile(path) {
 	assert.ok(content.trim().length > 0, `empty required file: ${path}`);
 	return content;
 }
+
+function extractHeadingSection(content, heading) {
+	const start = content.indexOf(`${heading}\n`);
+	assert.notEqual(start, -1, `missing heading: ${heading}`);
+	const afterHeading = content.slice(start + heading.length + 1);
+	const nextHeading = afterHeading.search(/^## /m);
+	return nextHeading === -1 ? afterHeading : afterHeading.slice(0, nextHeading);
+}
+
+function extractTableRow(content, firstCell) {
+	const row = content
+		.split(/\r?\n/)
+		.find((line) => line.startsWith(`| ${firstCell} `));
+	assert.ok(row, `missing table row for ${firstCell}`);
+	return row;
+}
+
+test("Unreleased notes and launch evidence keep X-Plane pre-release", () => {
+	const changelog = extractHeadingSection(
+		readRequiredFile(files.changelog),
+		"## [Unreleased]",
+	);
+	const launchEvidence = extractHeadingSection(
+		readRequiredFile(files.launchEvidence),
+		"## X-Plane and Conformal pre-release evidence — 2026-08-24",
+	);
+	const changelogEntry = changelog
+		.split(/\n(?=- )/)
+		.find((entry) => entry.includes(xplaneTitle));
+	assert.ok(changelogEntry, "missing X-Plane Unreleased changelog entry");
+	const normalizedChangelogEntry = changelogEntry.replace(/\s+/g, " ");
+	for (const expected of [
+		"homepage and Conformal Cooling copy",
+		"crawler semantics",
+		"intrinsic media ratios",
+		"direct original-image inspection",
+		"real retained meshes",
+	]) {
+		assert.ok(
+			normalizedChangelogEntry.includes(expected),
+			`X-Plane changelog entry must include ${expected}`,
+		);
+	}
+	assert.doesNotMatch(
+		normalizedChangelogEntry,
+		/\b(?:live|deployed|production|approved)\b/i,
+		"Unreleased X-Plane entry must not claim release or approval",
+	);
+
+	const xplaneLocal = extractTableRow(
+		launchEvidence,
+		"X-Plane sanitized media",
+	);
+	assert.match(xplaneLocal, /14 passed/);
+	assert.match(
+		xplaneLocal,
+		/0a00b99bacbf1c0612bdf873ce2e4bea9387b83425e2315603fcbc30c02eeff6/,
+	);
+	assert.match(xplaneLocal, /local\/PR/);
+
+	const conformalLocal = extractTableRow(
+		launchEvidence,
+		"Conformal real-geometry rerender",
+	);
+	assert.match(conformalLocal, /a51b70ae524e13ef56d79bb07a83462256d361f9/);
+	assert.match(
+		conformalLocal,
+		/BE308C4C7300123A9EE433DB0733EFDA310D11AF53BB08993D8C6798747E9C39/i,
+	);
+	assert.match(conformalLocal, /local\/PR/);
+
+	for (const pendingArea of [
+		"X-Plane production-equivalent preview",
+		"X-Plane production release",
+	]) {
+		const row = extractTableRow(launchEvidence, pendingArea);
+		assert.match(row, /\| Pending \|/);
+		assert.doesNotMatch(row, /\| (?:Passed|Complete|Live) \|/i);
+		assert.match(row, /No deployment ID, URL, CI run, or rollback ID recorded/);
+	}
+});
 
 test("Signal / Proof surfaces bind claims to ProofGallery, CapabilityMatrix, EvidenceStrip, and real media", () => {
 	const home = readRequiredFile(files.home);

@@ -1,8 +1,8 @@
 # Case Study Redaction Approval Packets
 
-Date: 2026-05-24
+Date: 2026-08-24
 Status: review-only launch-blocking evidence index; no launch approval; no issue closure.
-Scope: launch-candidate case-study approval evidence
+Scope: launch-candidate case-study and Work approval evidence
 
 ## Purpose
 
@@ -269,6 +269,45 @@ Required checklist mapping:
 | Repo/demo links verified | publicLinksVerified | not-applicable | No external links; assets are committed locally |
 | Claims have safe evidence | claimsHaveSafeEvidence | yes | All metric claims (92 tests, thresholds, MP4 spec) traceable to stage1-artifact-report.md |
 | Security-sensitive procedures removed | securitySensitiveProceduresRemoved | yes | No auth, credential rotation, or security-sensitive procedures described |
+
+## X-Plane Cabin Camera FOV Trade Study
+
+This is a Work-record packet, separate from the case-study launch-minimum
+matrix. Joe supplied the archive on 2026-08-23; it is recorded as
+user-supplied. He authorized the design and publication direction on
+2026-08-24. That design and publication authorization is not
+production-equivalent preview evidence or final artifact approval.
+
+| Field | Value |
+| --- | --- |
+| Candidate | X-Plane Cabin Camera FOV Trade Study (`xplane-cabin-camera-fov-trade-study`) |
+| Current publication | `publish` |
+| Current redaction | `reviewed` |
+| Reviewer / review date | operator / 2026-08-24 |
+| Public omissions | Raw source manifests, the program identifier, the private source path, and the `LM5`, `LM6`, `LM7`, and `LM8` camera-token families are omitted or masked. |
+| Visual inspection | The comparison images and representative video frames were inspected at original resolution; the four-view layout, generic labels, masks, and configuration order remained readable. |
+| Open redaction items | None |
+| Open launch items | Production-equivalent preview evidence and final approval only. |
+| Known evidence limit | `replay harness source not supplied`; this is a study limit, not an open redaction item. |
+| Approval boundary | Keep `redactionStatus: reviewed`; design and publication authorization is not production-equivalent preview evidence. |
+
+The following public inventory was recomputed from the committed sanitized
+manifest and asset bytes. The public `capture-manifest.json` is a derivative
+manifest; the raw source manifests remain omitted.
+
+| Public filename | SHA-256 |
+| --- | --- |
+| capture-manifest.json | `0a00b99bacbf1c0612bdf873ce2e4bea9387b83425e2315603fcbc30c02eeff6` |
+| comparison-bank-120-1440.webp | `8a3ae7d9880fb4b8a49e1f00b63e01d013fbc92fbc641e5a2c0c8c9de6a831aa` |
+| comparison-bank-120-640.webp | `740c52d3024c407c438c70f3232579798dd7fa37348c31b95010b4ea339b00f1` |
+| comparison-bank-120-960.webp | `41774e412e84b34876cef732ee436870a8d5d2dda62f5fdb30bd1758436b9367` |
+| comparison-bank-180-1440.webp | `45d58c7facfee9f4f73d3b19fe5203e5d73481516231e7d9487f4e63288ac2f1` |
+| comparison-bank-180-640.webp | `094101fce63b881b3004308b8f5607e96b188dfa97c7b0403e89777c5f75743d` |
+| comparison-bank-180-960.webp | `6b3350e3599ebd6c48a808811aad05d33d573faa39584a6b878fed7cadcade28` |
+| fov110-m5-h0-poster.webp | `4fe5d3f5bbe8dbe5f21ceced1c9ed4140b75562e936850ffe78e040b9e6029b5` |
+| fov110-m5-h0.mp4 | `2a404bcd3e86655601701ac0f7c81d7c377c6978a0fc4b85fa874ec35e23efea` |
+| fov50-p0-h0-poster.webp | `c6f844f4904183cddd490e4a1c683cc005f4c36f8a0665ad22e7fc76c3dcbc57` |
+| fov50-p0-h0.mp4 | `f58f8308ac7d47a2c5f55826ee0b8ef57952f39333c8f167a46dbdb98a9b681f` |
 
 ## Deferred Or Blocked Candidates
 

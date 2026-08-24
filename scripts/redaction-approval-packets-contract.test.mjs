@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { test } from "node:test";
 
 const files = {
@@ -16,7 +18,13 @@ const files = {
 	remoteRecoveryCaseStudy:
 		"apps/web/src/content/case-studies/remote-workstation-recovery-and-operational-debugging.md",
 	status: "runbooks/CONTENT_REDACTION_STATUS.md",
+	xplaneManifest: "apps/web/public/media/xplane-fov/capture-manifest.json",
+	xplaneMediaDir: "apps/web/public/media/xplane-fov",
 };
+
+const xplaneTitle = "X-Plane Cabin Camera FOV Trade Study";
+const xplaneSlug = "xplane-cabin-camera-fov-trade-study";
+const xplaneReplayLimit = "replay harness source not supplied";
 
 const checklistMappings = [
 	[
@@ -97,6 +105,110 @@ function readRequiredFile(path) {
 function normalize(content) {
 	return content.replace(/\s+/g, " ");
 }
+
+function sha256(path) {
+	return createHash("sha256").update(readFileSync(path)).digest("hex");
+}
+
+function extractHeadingSection(content, heading) {
+	const start = content.indexOf(`${heading}\n`);
+	assert.notEqual(start, -1, `missing heading: ${heading}`);
+	const afterHeading = content.slice(start + heading.length + 1);
+	const nextHeading = afterHeading.search(/^## /m);
+	return nextHeading === -1 ? afterHeading : afterHeading.slice(0, nextHeading);
+}
+
+function extractTableRow(content, firstCell) {
+	const row = content
+		.split(/\r?\n/)
+		.find((line) => line.startsWith(`| ${firstCell} `));
+	assert.ok(row, `missing table row for ${firstCell}`);
+	return row;
+}
+
+function expectXPlaneReleaseBoundary(packetSection, statusSection) {
+	const statusCells = extractTableRow(statusSection, xplaneTitle)
+		.split("|")
+		.slice(1, -1)
+		.map((cell) => cell.trim());
+	assert.match(packetSection, /Current redaction \| `reviewed`/);
+	assert.doesNotMatch(packetSection, /Current redaction \| `approved`/);
+	assert.match(packetSection, /Open redaction items \| None/);
+	assert.match(
+		packetSection,
+		/production-equivalent preview evidence and final approval/i,
+	);
+	assert.match(packetSection, new RegExp(xplaneReplayLimit, "i"));
+	assert.deepEqual(statusCells.slice(0, 4), [
+		xplaneTitle,
+		`\`${xplaneSlug}\``,
+		"`publish`",
+		"`reviewed`",
+	]);
+}
+
+test("X-Plane packet matches committed public media and stays preview-pending", () => {
+	const packet = readRequiredFile(files.packet);
+	const status = readRequiredFile(files.status);
+	const packetSection = extractHeadingSection(packet, `## ${xplaneTitle}`);
+	const statusSection = extractHeadingSection(
+		status,
+		"## Work Redaction Matrix",
+	);
+	const manifest = JSON.parse(readRequiredFile(files.xplaneManifest));
+
+	expectXPlaneReleaseBoundary(packetSection, statusSection);
+	expectContains(packetSection, xplaneSlug, "X-Plane slug");
+	expectContains(packetSection, "Joe supplied the archive", "archive owner");
+	expectContains(packetSection, "user-supplied", "archive source kind");
+	expectContains(
+		packetSection,
+		"authorized the design and publication direction on 2026-08-24",
+		"dated publication authorization",
+	);
+	for (const omitted of [
+		"raw source manifests",
+		"program identifier",
+		"private source path",
+		"LM5",
+		"LM6",
+		"LM7",
+		"LM8",
+	]) {
+		expectContains(packetSection, omitted, `omitted ${omitted}`);
+	}
+	expectContains(
+		packetSection,
+		"comparison images and representative video frames",
+		"comparison and video visual inspection",
+	);
+	expectContains(
+		packetSection,
+		"design and publication authorization is not production-equivalent preview evidence",
+		"authorization versus preview boundary",
+	);
+
+	const manifestRow = extractTableRow(packetSection, "capture-manifest.json");
+	assert.ok(
+		manifestRow.includes(sha256(files.xplaneManifest)),
+		"packet manifest row must contain the committed manifest hash",
+	);
+	assert.equal(manifest.publishedAssets.length, 10);
+	for (const asset of manifest.publishedAssets) {
+		const assetPath = join(files.xplaneMediaDir, asset.filename);
+		const actualHash = sha256(assetPath);
+		assert.equal(
+			asset.sha256,
+			actualHash,
+			`${asset.filename} manifest hash must match committed bytes`,
+		);
+		const packetRow = extractTableRow(packetSection, asset.filename);
+		assert.ok(
+			packetRow.includes(actualHash),
+			`packet row must contain computed hash for ${asset.filename}`,
+		);
+	}
+});
 
 function expectContains(content, needle, label = needle) {
 	assert.ok(

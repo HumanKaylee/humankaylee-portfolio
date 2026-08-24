@@ -5,8 +5,20 @@ import { test } from "node:test";
 const runbookPath = "runbooks/CONTENT_UPDATE_AND_REDACTION.md";
 const contentStrategyPath = "docs/CONTENT_STRATEGY.md";
 const contentRedactionGuidePath = "docs/CONTENT_REDACTION_GUIDE.md";
+const backlogPath = "docs/BACKLOG.md";
 const reviewedLaunchBoundary =
 	"`reviewed` is never launch-eligible; the launch-eligible case-study count stays `0` until real human approval evidence exists.";
+const xplaneBacklogTitle =
+	"### B-069: Publish X-Plane FOV study and homepage clarity corrections";
+const xplaneAcceptanceCriteria = [
+	"Publish the sanitized X-Plane Work entry on Home, Work, sitemap, and its canonical detail route.",
+	"Preserve two flagship, two supporting, and two archive entries with Cryogenic Flow as hero.",
+	"Remove visitor-facing `unexpected clamp events` copy.",
+	"Explain Conformal Cooling's injection-mold use case and metal-additive-manufacturing boundary without unsupported performance claims.",
+	"Replace the confusing cavity/channel visual with a reviewed render from real retained meshes.",
+	"Pass media, private-content, accessibility, responsive, no-JavaScript, reduced-motion, browser, build, Rust, CI, preview, and production gates.",
+	"Retain the previous Cloudflare production deployment as rollback.",
+];
 
 function readRunbook() {
 	assert.ok(existsSync(runbookPath), `missing runbook: ${runbookPath}`);
@@ -41,6 +53,14 @@ function readContentRedactionGuide() {
 		content.trim().length > 0,
 		`empty content redaction guide: ${contentRedactionGuidePath}`,
 	);
+	return content;
+}
+
+function readBacklog() {
+	assert.ok(existsSync(backlogPath), `missing backlog: ${backlogPath}`);
+
+	const content = readFileSync(backlogPath, "utf8");
+	assert.ok(content.trim().length > 0, `empty backlog: ${backlogPath}`);
 	return content;
 }
 
@@ -98,6 +118,30 @@ function extractFrontmatter(template) {
 	assert.ok(match, "case study template must start with frontmatter");
 	return match[1];
 }
+
+function extractHeadingSection(content, heading) {
+	const start = content.indexOf(`${heading}\n`);
+	assert.notEqual(start, -1, `missing heading: ${heading}`);
+	const afterHeading = content.slice(start + heading.length + 1);
+	const nextHeading = afterHeading.search(/^#{1,3} /m);
+	return nextHeading === -1 ? afterHeading : afterHeading.slice(0, nextHeading);
+}
+
+test("B-069 preserves the complete X-Plane release contract", () => {
+	const section = extractHeadingSection(readBacklog(), xplaneBacklogTitle);
+
+	assert.match(section, /^Priority: P0$/m);
+	assert.match(section, /^Depends on: B-063$/m);
+	const acceptanceBullets = section
+		.split(/\r?\n/)
+		.filter((line) => line.startsWith("- "))
+		.map((line) => line.slice(2));
+	assert.deepEqual(
+		acceptanceBullets,
+		xplaneAcceptanceCriteria,
+		"B-069 must keep exactly the seven approved acceptance criteria",
+	);
+});
 
 test("content update and redaction runbook covers the required workflow", () => {
 	const content = readRunbook();

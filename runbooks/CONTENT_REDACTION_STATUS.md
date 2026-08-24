@@ -1,7 +1,7 @@
 # Content Redaction Status
 
-Date: 2026-05-24
-Branch: `goal/portfolio-implementation`
+Date: 2026-08-24
+Branch: `feat/xplane-fov-portfolio`
 Status: review-only launch-blocking evidence index; no launch approval; no issue closure.
 
 ## Scope
@@ -52,6 +52,15 @@ Guide launch gate.
 | Kalshi Migration or Analytics Tooling                 | `defer`            | `blocked`        | Deferred candidate; finance/account-linked work still needs a synthetic or heavily generalized public boundary before v1 consideration.                                                                    | Keep out of v1 unless a reviewer validates a synthetic or heavily generalized abstraction with no private financial, account, repository, path, or operational details.                                         |
 | Remote Workstation Recovery and Operational Debugging | `publish`          | `reviewed`       | Generalized body confirmed public-safe: role-labeled diagnostic flow, sanitized verification matrix, and prevention checklist recorded. Checklist answers complete; openItems clearance and artifact inspection pending.                          | review recorded checklist answers, inspect linked artifacts, keep hostnames and recovery details generalized before changing status to `approved`.                                                              |
 | YouTube AI Video Pipeline                             | `needs-redaction`  | `blocked`        | Blocked candidate; the draft says private channel details, account identifiers, and private-asset workflow edges still need removal.                                                                       | Keep blocked until a public-safe proof narrative, synthetic examples, and sanitized artifact pack are reviewed and approved.                                                                                    |
+
+## Work Redaction Matrix
+
+The Work collection uses the same public-safety gate. This record is separate
+from the case-study launch-minimum count above.
+
+| Candidate | Slug | Publication status | Redaction status | Current evidence | Approval next action |
+| --- | --- | --- | --- | --- | --- |
+| X-Plane Cabin Camera FOV Trade Study | `xplane-cabin-camera-fov-trade-study` | `publish` | `reviewed` | Joe supplied the archive and authorized the design and publication direction on 2026-08-24. The sanitized manifest, comparisons, posters, and representative video frames were hash-checked and visually inspected; the redaction checklist is complete with no open redaction items. `replay harness source not supplied` remains a known evidence limit, not a redaction item. | Keep `reviewed`; only production-equivalent preview evidence and final approval remain open launch items before any change to `approved`. |
 
 ## GitHub Issue Traceability
 
