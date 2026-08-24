@@ -6,6 +6,38 @@ const site = JSON.parse(
 ) as { defaultOgImage: string; siteUrl: string };
 const expectedSiteUrl = site.siteUrl.replace(/\/$/, "");
 const expectedSocialImage = `${expectedSiteUrl}${site.defaultOgImage}`;
+const expectedPersonId = "https://joepoznanski.io/#person";
+const expectedKnowsAbout = [
+	"Flight simulation",
+	"Aerospace simulation",
+	"Controls software",
+	"Telemetry systems",
+	"Rust",
+	"C++",
+	"Hardware-in-the-loop testing",
+	"Injection molding",
+	"Conformal cooling",
+	"Metal additive manufacturing",
+	"Distributed systems",
+	"Operational software",
+] as const;
+const expectedSameAs = [
+	"https://www.linkedin.com/in/joe-poznanski",
+	"https://github.com/HumanKaylee",
+] as const;
+
+function collectJsonLdRecords(value: unknown): Record<string, unknown>[] {
+	if (Array.isArray(value)) {
+		return value.flatMap(collectJsonLdRecords);
+	}
+
+	if (value === null || typeof value !== "object") {
+		return [];
+	}
+
+	const record = value as Record<string, unknown>;
+	return [record, ...Object.values(record).flatMap(collectJsonLdRecords)];
+}
 
 const socialImageRoutes = [
 	{
@@ -90,28 +122,40 @@ test.describe("page metadata @metadata", () => {
 			"@type": "Person",
 			name: "Joe Poznanski",
 			jobTitle: "Principal Software Engineer",
-			sameAs: [
-				"https://www.linkedin.com/in/joe-poznanski",
-				"https://github.com/HumanKaylee",
-			],
+			sameAs: expectedSameAs,
 		});
-		expect(person.knowsAbout).toEqual([
-			"Flight simulation",
-			"Aerospace simulation",
-			"Controls software",
-			"Telemetry systems",
-			"Rust",
-			"C++",
-			"Hardware-in-the-loop testing",
-			"Injection molding",
-			"Conformal cooling",
-			"Metal additive manufacturing",
-			"Distributed systems",
-			"Operational software",
-		]);
+		expect(person.knowsAbout).toEqual(expectedKnowsAbout);
 		expect(JSON.stringify(person)).not.toMatch(/josephpoznanski@gmail\.com/i);
 		expect(structuredData.join("\n")).toContain('"@type":"WebSite"');
 		expect(structuredData.join("\n")).not.toContain("/home/joe");
+	});
+
+	test("renders one complete Person and links a Work creator to its canonical ID", async ({
+		page,
+	}) => {
+		await page.goto("/work/cli-fleet-synchronization-and-mcp-rollout/");
+
+		const documents = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		).map((source) => JSON.parse(source));
+		const records = collectJsonLdRecords(documents);
+		const people = records.filter((record) => record["@type"] === "Person");
+		const creativeWorks = records.filter(
+			(record) => record["@type"] === "CreativeWork",
+		);
+
+		expect(people).toHaveLength(1);
+		expect(people[0]).toMatchObject({
+			"@id": expectedPersonId,
+			"@type": "Person",
+			name: "Joe Poznanski",
+			jobTitle: "Principal Software Engineer",
+			knowsAbout: expectedKnowsAbout,
+			sameAs: expectedSameAs,
+		});
+		expect(people[0]).not.toHaveProperty("email");
+		expect(creativeWorks).toHaveLength(1);
+		expect(creativeWorks[0].creator).toEqual({ "@id": expectedPersonId });
 	});
 
 	test("describes Home and Work with matching simulation and manufacturing scope", async ({

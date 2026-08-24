@@ -10,6 +10,7 @@ import MediaFrame from "../../components/MediaFrame.astro";
 import NextWork from "../../components/NextWork.astro";
 import ReadingProgress from "../../components/ReadingProgress.astro";
 import WorkEvidenceFlow from "../../components/WorkEvidenceFlow.astro";
+import { profile } from "../../data/profile";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import type { WorkEntryData } from "../../lib/contracts/work";
 
@@ -49,8 +50,7 @@ const structuredData = {
 	genre: data.discipline,
 	dateCreated: String(data.year),
 	creator: {
-		"@type": "Person",
-		name: "Joe Poznanski",
+		"@id": profile.schemaId,
 	},
 	about: data.problem,
 };

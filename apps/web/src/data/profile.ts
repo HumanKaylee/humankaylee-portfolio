@@ -1,5 +1,6 @@
 export const profile = {
 	name: "Joe Poznanski",
+	schemaId: "https://joepoznanski.io/#person",
 	role: "Principal Software Engineer",
 	location: "Titusville, Florida, USA",
 	email: "josephpoznanski@gmail.com",
