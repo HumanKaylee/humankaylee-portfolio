@@ -31,6 +31,13 @@ const xplaneReviewedSha = "6df39168df3d1374e9e31058b6b7e160a867bcbc";
 const xplaneFirstPreviewId = "1c92ba32-fb78-435b-a229-7dfeb8592579";
 const xplaneFirstPreviewUrl =
 	"https://1c92ba32.humankaylee-portfolio.pages.dev";
+const xplaneProductionSha = "8ecf79100f58a7459305c445eb0794867ae4c0c9";
+const xplaneProductionId = "bdc88d5f-054f-47e6-b961-e23a1235d62e";
+const xplaneProductionOrigin = "https://joepoznanski.io";
+const xplaneProductionDate = "2026-08-24";
+const xplaneRollbackId = "f7a08ad2-16f7-430c-a245-cd600e3d65a9";
+const xplaneRange110 = "bytes 0-1023/5179542";
+const xplaneRange50 = "bytes 0-1023/5626106";
 
 const checklistMappings = [
 	[
@@ -143,7 +150,11 @@ function expectXPlaneReleaseBoundary(
 		.map((cell) => cell.trim());
 	assert.match(packetSection, /Current redaction \| `approved`/);
 	assert.match(packetSection, /Open redaction items \| None/);
-	assert.match(packetSection, /Open launch items \| Production release only/i);
+	assert.match(
+		packetSection,
+		/Open launch items \| None for this scoped X-Plane frontend release/i,
+	);
+	assert.doesNotMatch(packetSection, /Production release only/i);
 	assert.match(packetSection, new RegExp(xplaneReplayLimit, "i"));
 	assert.deepEqual(statusCells.slice(0, 4), [
 		xplaneTitle,
@@ -162,10 +173,52 @@ function expectXPlaneReleaseBoundary(
 				`X-Plane approval evidence must include ${expected}`,
 			);
 		}
+	}
+	for (const evidenceSurface of [packetSection, statusSection]) {
+		for (const expected of [
+			xplaneProductionSha,
+			xplaneProductionId,
+			xplaneProductionOrigin,
+			xplaneProductionDate,
+			xplaneRange110,
+			xplaneRange50,
+			xplaneRollbackId,
+		]) {
+			assert.ok(
+				evidenceSurface.includes(expected),
+				`X-Plane production evidence must include ${expected}`,
+			);
+		}
+		assert.match(evidenceSurface, /\b206\b/);
+		assert.match(
+			evidenceSurface,
+			/direct custom-domain videos.*seek.*resume/is,
+		);
+		assert.match(evidenceSurface, /post-deploy matrix passed/i);
+		assert.match(evidenceSurface, /rollback.*listed.*200/is);
+		assert.match(
+			evidenceSurface,
+			/B-063.*production API.*production contact.*global launch.*remain open/is,
+		);
 		assert.doesNotMatch(
 			evidenceSurface,
-			/\b(?:is|now) live\b|\blive on\b|\bproduction (?:deployment|release) (?:passed|complete|verified)\b/i,
-			"preview approval evidence must not claim a production release",
+			/(?:global|platform) launch (?:is )?complete|entire platform (?:is )?(?:live|launched)|all production work (?:is )?complete|B-063 (?:is )?(?:complete|closed)/i,
+			"scoped frontend evidence must not claim broader launch completion",
+		);
+		const withoutOwnerViewBoundary = evidenceSurface.replace(
+			/does not claim (?:that )?Joe personally viewed[^.\n|]*/gi,
+			"",
+		);
+		assert.doesNotMatch(
+			withoutOwnerViewBoundary,
+			/Joe (?:personally )?(?:viewed|reviewed).*?(?:preview|live|production)/i,
+			"release evidence must not claim Joe personally viewed preview or live evidence",
+		);
+	}
+	for (const unexpected of [xplaneProductionSha, xplaneProductionId]) {
+		assert.ok(
+			!workContent.includes(unexpected),
+			"Work frontmatter keeps first-preview approval evidence without a circular production identifier",
 		);
 	}
 	assert.match(workContent, /^redactionStatus: "approved"$/m);
@@ -255,11 +308,13 @@ test("X-Plane packet matches committed public media and exact approved preview e
 	}
 });
 
-test("X-Plane approval boundary rejects missing evidence, a wrong SHA, and false production wording", () => {
+test("X-Plane approval boundary rejects stale or false scoped-production evidence", () => {
 	const validPacket = [
 		"| Current redaction | `approved` |",
 		"| Open redaction items | None |",
-		"| Open launch items | Production release only. |",
+		"| Open launch items | None for this scoped X-Plane frontend release. B-063, production API, production contact, and broader global launch work remain open. |",
+		`| Production verification | Scoped frontend production verified on ${xplaneProductionDate} at ${xplaneProductionOrigin}, source ${xplaneProductionSha}, deployment ${xplaneProductionId}. Production 206 Content-Range checks passed at ${xplaneRange110} and ${xplaneRange50}; direct custom-domain videos play, seek to 5 seconds, and resume. The post-deploy matrix passed. Rollback ${xplaneRollbackId} remains listed and returned 200. |`,
+		"| Approval boundary | This does not claim Joe personally viewed the provider preview or live production evidence. |",
 		xplaneReplayLimit,
 		xplaneReviewedSha,
 		xplaneFirstPreviewId,
@@ -268,7 +323,7 @@ test("X-Plane approval boundary rejects missing evidence, a wrong SHA, and false
 	].join("\n");
 	const validStatus = [
 		"## Work Redaction Matrix",
-		`| ${xplaneTitle} | \`${xplaneSlug}\` | \`publish\` | \`approved\` | ${xplaneReviewedSha} ${xplaneFirstPreviewId} ${xplaneFirstPreviewUrl} | release gate |`,
+		`| ${xplaneTitle} | \`${xplaneSlug}\` | \`publish\` | \`approved\` | ${xplaneReviewedSha} ${xplaneFirstPreviewId} ${xplaneFirstPreviewUrl}; scoped frontend production verified on ${xplaneProductionDate} at ${xplaneProductionOrigin}, source ${xplaneProductionSha}, deployment ${xplaneProductionId}. Production 206 Content-Range checks passed at ${xplaneRange110} and ${xplaneRange50}; direct custom-domain videos play, seek, and resume; post-deploy matrix passed; rollback ${xplaneRollbackId} remains listed and returned 200. This does not claim Joe personally viewed preview or live production evidence. | None for this scoped X-Plane frontend release. B-063, production API, production contact, and broader global launch work remain open. |`,
 	].join("\n");
 	const validWork = [
 		'redactionStatus: "approved"',
@@ -304,11 +359,89 @@ test("X-Plane approval boundary rejects missing evidence, a wrong SHA, and false
 	assert.throws(
 		() =>
 			expectXPlaneReleaseBoundary(
-				`${validPacket}\nnow live on production`,
+				validPacket.replace(
+					"None for this scoped X-Plane frontend release",
+					"Production release only",
+				),
 				validStatus,
 				validWork,
 			),
-		/production release/,
+		/None for this scoped|Production release only/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket.replace("Production 206", "Production transport"),
+				validStatus.replace("Production 206", "Production transport"),
+				validWork,
+			),
+		/206/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket.replace(
+					"direct custom-domain videos play, seek to 5 seconds, and resume",
+					"direct custom-domain videos play only",
+				),
+				validStatus,
+				validWork,
+			),
+		/direct custom-domain videos/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket.replace(xplaneProductionSha, "0".repeat(40)),
+				validStatus,
+				validWork,
+			),
+		/X-Plane production evidence/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket,
+				validStatus.replace(xplaneProductionId, "wrong-deployment"),
+				validWork,
+			),
+		/X-Plane production evidence/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket.replace(
+					`Rollback ${xplaneRollbackId} remains listed and returned 200`,
+					"No production deployments or rollback targets exist",
+				),
+				validStatus,
+				validWork,
+			),
+		/X-Plane production evidence|rollback.*listed.*200/i,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket.replace(
+					"B-063, production API, production contact, and broader global launch work remain open",
+					"B-063 is complete; production API, production contact, and global platform launch are complete",
+				),
+				validStatus,
+				validWork,
+			),
+		/remain open|broader launch completion/i,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket.replace(
+					"does not claim Joe personally viewed",
+					"Joe personally viewed",
+				),
+				validStatus,
+				validWork,
+			),
+		/personally viewed/i,
 	);
 });
 

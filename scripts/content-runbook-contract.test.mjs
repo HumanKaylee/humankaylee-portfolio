@@ -19,6 +19,10 @@ const xplaneAcceptanceCriteria = [
 	"Pass media, private-content, accessibility, responsive, no-JavaScript, reduced-motion, browser, build, Rust, CI, preview, and production gates.",
 	"Retain the previous Cloudflare production deployment as rollback.",
 ];
+const xplaneCompletionRecord =
+	"Completed: 2026-08-24 — scoped X-Plane frontend release verified.";
+const xplaneRelatedOpenWork =
+	"Related open work: B-063 remains open for the broader final-launch checklist, production API, production contact handling, and global platform launch work; it is not a dependency for this completed scoped frontend release. No issue closure is claimed.";
 
 function readRunbook() {
 	assert.ok(existsSync(runbookPath), `missing runbook: ${runbookPath}`);
@@ -127,11 +131,21 @@ function extractHeadingSection(content, heading) {
 	return nextHeading === -1 ? afterHeading : afterHeading.slice(0, nextHeading);
 }
 
-test("B-069 preserves the complete X-Plane release contract", () => {
-	const section = extractHeadingSection(readBacklog(), xplaneBacklogTitle);
-
+function expectXPlaneBacklogSection(section) {
 	assert.match(section, /^Priority: P0$/m);
-	assert.match(section, /^Depends on: B-063$/m);
+	assert.ok(
+		contentIncludesNormalized(section, xplaneCompletionRecord),
+		"B-069 must record the verified 2026-08-24 scoped frontend completion",
+	);
+	assert.ok(
+		contentIncludesNormalized(section, xplaneRelatedOpenWork),
+		"B-069 must preserve the explicit broader B-063/API/contact/global boundary",
+	);
+	assert.doesNotMatch(
+		section,
+		/^Depends on: B-063$/m,
+		"B-063 is related broader work, not a dependency of the completed frontend slice",
+	);
 	const acceptanceBullets = section
 		.split(/\r?\n/)
 		.filter((line) => line.startsWith("- "))
@@ -140,6 +154,34 @@ test("B-069 preserves the complete X-Plane release contract", () => {
 		acceptanceBullets,
 		xplaneAcceptanceCriteria,
 		"B-069 must keep exactly the seven approved acceptance criteria",
+	);
+}
+
+test("B-069 records completed scoped frontend production while broader launch work remains open", () => {
+	const section = extractHeadingSection(readBacklog(), xplaneBacklogTitle);
+
+	expectXPlaneBacklogSection(section);
+});
+
+test("B-069 boundary rejects the obsolete dependency and false broader completion", () => {
+	const validSection = [
+		"Priority: P0",
+		xplaneCompletionRecord,
+		xplaneRelatedOpenWork,
+		...xplaneAcceptanceCriteria.map((criterion) => `- ${criterion}`),
+	].join("\n\n");
+
+	expectXPlaneBacklogSection(validSection);
+	assert.throws(
+		() => expectXPlaneBacklogSection(`${validSection}\n\nDepends on: B-063`),
+		/not a dependency/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneBacklogSection(
+				validSection.replace("B-063 remains open", "B-063 is complete"),
+			),
+		/B-063\/API\/contact\/global boundary/,
 	);
 });
 

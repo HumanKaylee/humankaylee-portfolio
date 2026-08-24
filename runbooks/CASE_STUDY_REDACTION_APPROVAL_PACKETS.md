@@ -289,10 +289,11 @@ recorded separately below.
 | Visual inspection | The comparison images and representative video frames were inspected at original resolution; the four-view layout, generic labels, masks, and configuration order remained readable. |
 | Artifact inspection | Task 2 original-resolution inspection covered both comparison images, both posters, representative frames from both videos, and the exact manifest-to-byte hashes; result: passed. |
 | Preview evidence | Agent/browser inspected `https://1c92ba32.humankaylee-portfolio.pages.dev` (deployment `1c92ba32-fb78-435b-a229-7dfeb8592579`, source `6df39168df3d1374e9e31058b6b7e160a867bcbc`) on 2026-08-24. Routes, headers, full-byte media hashes, direct playback, no-JavaScript, reduced motion, responsive layout, privacy scans, and all eight visual captures passed. Cloudflare `pages.dev` direct range and seek are unsupported and returned full-body 200 responses; a Chromium Blob made from the exact fetched bytes proves artifact seekability only, not provider-host streaming. |
+| Production verification | Scoped X-Plane frontend production was verified on 2026-08-24 at `https://joepoznanski.io`, source `8ecf79100f58a7459305c445eb0794867ae4c0c9`, deployment `bdc88d5f-054f-47e6-b961-e23a1235d62e`. Production `206`/`Content-Range` checks passed at `bytes 0-1023/5179542` and `bytes 0-1023/5626106`, exactly 1,024 bytes each. Both direct custom-domain videos played, completed a seek to 5 seconds, remained near the target after 750 ms, and resumed without reset. The post-deploy matrix passed. Rollback `f7a08ad2-16f7-430c-a245-cd600e3d65a9` remains listed and returned 200. |
 | Open redaction items | None |
-| Open launch items | Production release only. |
+| Open launch items | None for this scoped X-Plane frontend release. B-063, production API, production contact, and broader global launch work remain open. |
 | Known evidence limit | `replay harness source not supplied`; this is a study limit, not an open redaction item. |
-| Approval boundary | `redactionStatus: approved` records conditional owner authorization, artifact inspection, and exact provider-preview evidence. It does not claim Joe personally viewed the provider preview or that the public-site release has occurred. |
+| Approval boundary | `redactionStatus: approved` records conditional owner authorization, artifact inspection, exact provider-preview evidence, and the verified scoped frontend production release. It does not claim Joe personally viewed the provider preview or live production evidence, close B-063 or any issue, or claim global platform launch completion. |
 
 The following public inventory was recomputed from the committed sanitized
 manifest and asset bytes. The public `capture-manifest.json` is a derivative

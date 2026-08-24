@@ -1831,7 +1831,9 @@ Verification evidence:
 
 Priority: P0
 
-Depends on: B-063
+Completed: 2026-08-24 — scoped X-Plane frontend release verified.
+
+Related open work: B-063 remains open for the broader final-launch checklist, production API, production contact handling, and global platform launch work; it is not a dependency for this completed scoped frontend release. No issue closure is claimed.
 
 - Publish the sanitized X-Plane Work entry on Home, Work, sitemap, and its canonical detail route.
 - Preserve two flagship, two supporting, and two archive entries with Cryogenic Flow as hero.
