@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "kind": "user-supplied archive",
+    "suppliedOn": "2026-08-23",
+    "sanitizedDerivatives": true
+  },
+  "configurations": [
+    {
+      "id": "fov50-p0-h0",
+      "horizontalFovDegrees": 50,
+      "pitchOffsetDegrees": 0
+    },
+    {
+      "id": "fov110-m5-h0",
+      "horizontalFovDegrees": 110,
+      "pitchOffsetDegrees": -5
+    }
+  ],
+  "evidence": {
+    "camerasPerComposite": 4,
+    "documentedDurationSeconds": 250,
+    "documentedFrameRate": "2/1",
+    "replayHarnessIncluded": false,
+    "physicalCameraEvidence": false
+  },
+  "publishedAssets": [
+    {
+      "filename": "comparison-bank-120-1440.webp",
+      "sizeBytes": 83540,
+      "sha256": "8a3ae7d9880fb4b8a49e1f00b63e01d013fbc92fbc641e5a2c0c8c9de6a831aa",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 800
+    },
+    {
+      "filename": "comparison-bank-120-640.webp",
+      "sizeBytes": 23716,
+      "sha256": "740c52d3024c407c438c70f3232579798dd7fa37348c31b95010b4ea339b00f1",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 356
+    },
+    {
+      "filename": "comparison-bank-120-960.webp",
+      "sizeBytes": 44504,
+      "sha256": "41774e412e84b34876cef732ee436870a8d5d2dda62f5fdb30bd1758436b9367",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 534
+    },
+    {
+      "filename": "comparison-bank-180-1440.webp",
+      "sizeBytes": 82786,
+      "sha256": "45d58c7facfee9f4f73d3b19fe5203e5d73481516231e7d9487f4e63288ac2f1",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 800
+    },
+    {
+      "filename": "comparison-bank-180-640.webp",
+      "sizeBytes": 21982,
+      "sha256": "094101fce63b881b3004308b8f5607e96b188dfa97c7b0403e89777c5f75743d",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 640,
+      "height": 356
+    },
+    {
+      "filename": "comparison-bank-180-960.webp",
+      "sizeBytes": 41804,
+      "sha256": "6b3350e3599ebd6c48a808811aad05d33d573faa39584a6b878fed7cadcade28",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 960,
+      "height": 534
+    },
+    {
+      "filename": "fov110-m5-h0-poster.webp",
+      "sizeBytes": 46798,
+      "sha256": "4fe5d3f5bbe8dbe5f21ceced1c9ed4140b75562e936850ffe78e040b9e6029b5",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 400
+    },
+    {
+      "filename": "fov110-m5-h0.mp4",
+      "sizeBytes": 5179542,
+      "sha256": "2a404bcd3e86655601701ac0f7c81d7c377c6978a0fc4b85fa874ec35e23efea",
+      "mediaType": "video",
+      "codec": "h264",
+      "width": 1440,
+      "height": 400,
+      "frameRate": "2/1",
+      "pixelFormat": "yuv420p",
+      "durationSeconds": 250,
+      "audioStreams": 0
+    },
+    {
+      "filename": "fov50-p0-h0-poster.webp",
+      "sizeBytes": 37288,
+      "sha256": "c6f844f4904183cddd490e4a1c683cc005f4c36f8a0665ad22e7fc76c3dcbc57",
+      "mediaType": "image",
+      "codec": "webp",
+      "width": 1440,
+      "height": 400
+    },
+    {
+      "filename": "fov50-p0-h0.mp4",
+      "sizeBytes": 5626106,
+      "sha256": "f58f8308ac7d47a2c5f55826ee0b8ef57952f39333c8f167a46dbdb98a9b681f",
+      "mediaType": "video",
+      "codec": "h264",
+      "width": 1440,
+      "height": 400,
+      "frameRate": "2/1",
+      "pixelFormat": "yuv420p",
+      "durationSeconds": 250,
+      "audioStreams": 0
+    }
+  ]
+}
