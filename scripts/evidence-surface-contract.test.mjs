@@ -16,6 +16,10 @@ const files = {
 };
 
 const xplaneTitle = "X-Plane Cabin Camera FOV Trade Study";
+const xplaneReviewedSha = "6df39168df3d1374e9e31058b6b7e160a867bcbc";
+const xplaneFirstPreviewId = "1c92ba32-fb78-435b-a229-7dfeb8592579";
+const xplaneFirstPreviewUrl =
+	"https://1c92ba32.humankaylee-portfolio.pages.dev";
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -40,7 +44,56 @@ function extractTableRow(content, firstCell) {
 	return row;
 }
 
-test("Unreleased notes and launch evidence keep X-Plane pre-release", () => {
+function expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow) {
+	const normalizedChangelogEntry = changelogEntry.replace(/\s+/g, " ");
+	for (const expected of [
+		"owner-authorized",
+		xplaneReviewedSha,
+		xplaneFirstPreviewId,
+		xplaneFirstPreviewUrl,
+		"agent/browser verified",
+	]) {
+		assert.ok(
+			normalizedChangelogEntry.toLowerCase().includes(expected.toLowerCase()),
+			`X-Plane changelog entry must include ${expected}`,
+		);
+	}
+	assert.doesNotMatch(
+		normalizedChangelogEntry,
+		/\b(?:live|production)\b/i,
+		"Unreleased X-Plane entry must not claim a live or production release",
+	);
+
+	for (const expected of [
+		xplaneReviewedSha,
+		xplaneFirstPreviewId,
+		xplaneFirstPreviewUrl,
+		"32769663529",
+		"f7a08ad2-16f7-430c-a245-cd600e3d65a9",
+		"full-body 200",
+		"direct playback",
+		"Blob",
+		"artifact seekability only",
+	]) {
+		assert.ok(
+			previewRow.includes(expected),
+			`X-Plane preview row must include ${expected}`,
+		);
+	}
+	assert.match(previewRow, /\| Passed \|/);
+	assert.match(previewRow, /pages\.dev.*range.*seek.*unsupported/i);
+	assert.doesNotMatch(
+		previewRow,
+		/\| (?:Complete|Live) \||\b(?:is|now) live\b/i,
+	);
+	assert.match(releaseRow, /\| Pending \|/);
+	assert.match(
+		releaseRow,
+		/No deployment ID, URL, CI run, or rollback ID recorded/,
+	);
+}
+
+test("Unreleased notes and launch evidence record the exact approved X-Plane preview without claiming production", () => {
 	const changelog = extractHeadingSection(
 		readRequiredFile(files.changelog),
 		"## [Unreleased]",
@@ -66,11 +119,6 @@ test("Unreleased notes and launch evidence keep X-Plane pre-release", () => {
 			`X-Plane changelog entry must include ${expected}`,
 		);
 	}
-	assert.doesNotMatch(
-		normalizedChangelogEntry,
-		/\b(?:live|deployed|production|approved)\b/i,
-		"Unreleased X-Plane entry must not claim release or approval",
-	);
 
 	const xplaneLocal = extractTableRow(
 		launchEvidence,
@@ -94,15 +142,63 @@ test("Unreleased notes and launch evidence keep X-Plane pre-release", () => {
 	);
 	assert.match(conformalLocal, /local\/PR/);
 
-	for (const pendingArea of [
+	const previewRow = extractTableRow(
+		launchEvidence,
 		"X-Plane production-equivalent preview",
+	);
+	const releaseRow = extractTableRow(
+		launchEvidence,
 		"X-Plane production release",
-	]) {
-		const row = extractTableRow(launchEvidence, pendingArea);
-		assert.match(row, /\| Pending \|/);
-		assert.doesNotMatch(row, /\| (?:Passed|Complete|Live) \|/i);
-		assert.match(row, /No deployment ID, URL, CI run, or rollback ID recorded/);
-	}
+	);
+	expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow);
+});
+
+test("X-Plane preview approval evidence rejects missing evidence, a wrong SHA, and false production wording", () => {
+	const validChangelog = [
+		`owner-authorized ${xplaneReviewedSha}`,
+		xplaneFirstPreviewId,
+		xplaneFirstPreviewUrl,
+		"agent/browser verified",
+	].join(" ");
+	const validPreviewRow = [
+		"| X-Plane production-equivalent preview | command | target | Passed |",
+		xplaneReviewedSha,
+		xplaneFirstPreviewId,
+		xplaneFirstPreviewUrl,
+		"32769663529",
+		"f7a08ad2-16f7-430c-a245-cd600e3d65a9",
+		"pages.dev direct range and seek unsupported; full-body 200 hashes and direct playback passed; Blob proves artifact seekability only |",
+	].join(" ");
+	const validReleaseRow =
+		"| X-Plane production release | Not run | Public site | Pending | Pending | Pending | No deployment ID, URL, CI run, or rollback ID recorded. | next |";
+
+	assert.throws(
+		() =>
+			expectXPlanePreviewApproval(
+				validChangelog,
+				validPreviewRow.replace(xplaneFirstPreviewId, ""),
+				validReleaseRow,
+			),
+		/X-Plane preview row must include/,
+	);
+	assert.throws(
+		() =>
+			expectXPlanePreviewApproval(
+				validChangelog,
+				validPreviewRow.replace(xplaneReviewedSha, "0".repeat(40)),
+				validReleaseRow,
+			),
+		/X-Plane preview row must include/,
+	);
+	assert.throws(
+		() =>
+			expectXPlanePreviewApproval(
+				`${validChangelog} now live in production`,
+				validPreviewRow,
+				validReleaseRow,
+			),
+		/live or production release/,
+	);
 });
 
 test("Signal / Proof surfaces bind claims to ProofGallery, CapabilityMatrix, EvidenceStrip, and real media", () => {

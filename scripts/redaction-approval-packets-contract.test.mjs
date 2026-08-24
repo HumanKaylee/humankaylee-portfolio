@@ -20,11 +20,17 @@ const files = {
 	status: "runbooks/CONTENT_REDACTION_STATUS.md",
 	xplaneManifest: "apps/web/public/media/xplane-fov/capture-manifest.json",
 	xplaneMediaDir: "apps/web/public/media/xplane-fov",
+	xplaneWork:
+		"apps/web/src/content/work/xplane-cabin-camera-fov-trade-study.md",
 };
 
 const xplaneTitle = "X-Plane Cabin Camera FOV Trade Study";
 const xplaneSlug = "xplane-cabin-camera-fov-trade-study";
 const xplaneReplayLimit = "replay harness source not supplied";
+const xplaneReviewedSha = "6df39168df3d1374e9e31058b6b7e160a867bcbc";
+const xplaneFirstPreviewId = "1c92ba32-fb78-435b-a229-7dfeb8592579";
+const xplaneFirstPreviewUrl =
+	"https://1c92ba32.humankaylee-portfolio.pages.dev";
 
 const checklistMappings = [
 	[
@@ -126,30 +132,69 @@ function extractTableRow(content, firstCell) {
 	return row;
 }
 
-function expectXPlaneReleaseBoundary(packetSection, statusSection) {
+function expectXPlaneReleaseBoundary(
+	packetSection,
+	statusSection,
+	workContent,
+) {
 	const statusCells = extractTableRow(statusSection, xplaneTitle)
 		.split("|")
 		.slice(1, -1)
 		.map((cell) => cell.trim());
-	assert.match(packetSection, /Current redaction \| `reviewed`/);
-	assert.doesNotMatch(packetSection, /Current redaction \| `approved`/);
+	assert.match(packetSection, /Current redaction \| `approved`/);
 	assert.match(packetSection, /Open redaction items \| None/);
-	assert.match(
-		packetSection,
-		/production-equivalent preview evidence and final approval/i,
-	);
+	assert.match(packetSection, /Open launch items \| Production release only/i);
 	assert.match(packetSection, new RegExp(xplaneReplayLimit, "i"));
 	assert.deepEqual(statusCells.slice(0, 4), [
 		xplaneTitle,
 		`\`${xplaneSlug}\``,
 		"`publish`",
-		"`reviewed`",
+		"`approved`",
 	]);
+	for (const evidenceSurface of [packetSection, statusSection, workContent]) {
+		for (const expected of [
+			xplaneReviewedSha,
+			xplaneFirstPreviewId,
+			xplaneFirstPreviewUrl,
+		]) {
+			assert.ok(
+				evidenceSurface.includes(expected),
+				`X-Plane approval evidence must include ${expected}`,
+			);
+		}
+		assert.doesNotMatch(
+			evidenceSurface,
+			/\b(?:is|now) live\b|\blive on\b|\bproduction (?:deployment|release) (?:passed|complete|verified)\b/i,
+			"preview approval evidence must not claim a production release",
+		);
+	}
+	assert.match(workContent, /^redactionStatus: "approved"$/m);
+	assert.match(workContent, /^approvalEvidence:$/m);
+	assert.match(workContent, /^ {2}humanSignoff:$/m);
+	assert.match(workContent, /^ {2}artifactInspection:$/m);
+	assert.match(workContent, /^ {2}productionOrPreviewEvidence:$/m);
+	assert.match(
+		workContent,
+		/Joe authorized publication on 2026-08-24 once every release gate passes/i,
+	);
+	assert.match(
+		workContent,
+		/does not claim he personally viewed the provider preview/i,
+	);
+	assert.match(
+		workContent,
+		/Task 2.*original resolution.*both comparison images.*both posters.*representative frames from both videos.*manifest hashes/i,
+	);
+	assert.match(packetSection, /agent\/browser inspected/i);
+	assert.match(packetSection, /full-body 200/i);
+	assert.match(packetSection, /Blob.*artifact seekability only/i);
+	assert.match(packetSection, /pages\.dev.*range.*seek.*unsupported/i);
 }
 
-test("X-Plane packet matches committed public media and stays preview-pending", () => {
+test("X-Plane packet matches committed public media and exact approved preview evidence", () => {
 	const packet = readRequiredFile(files.packet);
 	const status = readRequiredFile(files.status);
+	const workContent = readRequiredFile(files.xplaneWork);
 	const packetSection = extractHeadingSection(packet, `## ${xplaneTitle}`);
 	const statusSection = extractHeadingSection(
 		status,
@@ -157,14 +202,14 @@ test("X-Plane packet matches committed public media and stays preview-pending", 
 	);
 	const manifest = JSON.parse(readRequiredFile(files.xplaneManifest));
 
-	expectXPlaneReleaseBoundary(packetSection, statusSection);
+	expectXPlaneReleaseBoundary(packetSection, statusSection, workContent);
 	expectContains(packetSection, xplaneSlug, "X-Plane slug");
 	expectContains(packetSection, "Joe supplied the archive", "archive owner");
 	expectContains(packetSection, "user-supplied", "archive source kind");
 	expectContains(
 		packetSection,
-		"authorized the design and publication direction on 2026-08-24",
-		"dated publication authorization",
+		"authorized publication on 2026-08-24 once every release gate passes",
+		"conditional dated publication authorization",
 	);
 	for (const omitted of [
 		"raw source manifests",
@@ -184,8 +229,8 @@ test("X-Plane packet matches committed public media and stays preview-pending", 
 	);
 	expectContains(
 		packetSection,
-		"design and publication authorization is not production-equivalent preview evidence",
-		"authorization versus preview boundary",
+		"does not claim Joe personally viewed the provider preview",
+		"authorization versus agent inspection boundary",
 	);
 
 	const manifestRow = extractTableRow(packetSection, "capture-manifest.json");
@@ -208,6 +253,63 @@ test("X-Plane packet matches committed public media and stays preview-pending", 
 			`packet row must contain computed hash for ${asset.filename}`,
 		);
 	}
+});
+
+test("X-Plane approval boundary rejects missing evidence, a wrong SHA, and false production wording", () => {
+	const validPacket = [
+		"| Current redaction | `approved` |",
+		"| Open redaction items | None |",
+		"| Open launch items | Production release only. |",
+		xplaneReplayLimit,
+		xplaneReviewedSha,
+		xplaneFirstPreviewId,
+		xplaneFirstPreviewUrl,
+		"agent/browser inspected; full-body 200; pages.dev direct range and seek unsupported; Blob proves artifact seekability only",
+	].join("\n");
+	const validStatus = [
+		"## Work Redaction Matrix",
+		`| ${xplaneTitle} | \`${xplaneSlug}\` | \`publish\` | \`approved\` | ${xplaneReviewedSha} ${xplaneFirstPreviewId} ${xplaneFirstPreviewUrl} | release gate |`,
+	].join("\n");
+	const validWork = [
+		'redactionStatus: "approved"',
+		"approvalEvidence:",
+		"  humanSignoff:",
+		'    notes: "Joe authorized publication on 2026-08-24 once every release gate passes; this records authorization and does not claim he personally viewed the provider preview."',
+		"  artifactInspection:",
+		'    notes: "Task 2 at original resolution covered both comparison images, both posters, representative frames from both videos, and manifest hashes."',
+		"  productionOrPreviewEvidence:",
+		xplaneReviewedSha,
+		xplaneFirstPreviewId,
+		xplaneFirstPreviewUrl,
+	].join("\n");
+
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket,
+				validStatus,
+				validWork.replace("approvalEvidence:\n", ""),
+			),
+		/approvalEvidence/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				validPacket,
+				validStatus,
+				validWork.replace(xplaneReviewedSha, "0".repeat(40)),
+			),
+		/X-Plane approval evidence/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneReleaseBoundary(
+				`${validPacket}\nnow live on production`,
+				validStatus,
+				validWork,
+			),
+		/production release/,
+	);
 });
 
 function expectContains(content, needle, label = needle) {
@@ -718,10 +820,13 @@ test("case-study redaction approval packets preserve not-approved launch state",
 		"The two blocked/deferred candidates must not count toward the four-case-study launch minimum.",
 		"blocked/deferred candidates do not satisfy launch minimum",
 	);
-	assert.doesNotMatch(
-		status,
-		/\|\s*[^|]+\s*\|\s*`publish`\s*\|\s*`approved`\s*\|/,
-		"no publish candidate should be approved in the status matrix yet",
+	const approvedPublishRows = status
+		.split(/\r?\n/)
+		.filter((line) => /\|\s*`publish`\s*\|\s*`approved`\s*\|/.test(line));
+	assert.deepEqual(
+		approvedPublishRows.map((row) => row.split("|")[1].trim()),
+		[xplaneTitle],
+		"only the separately counted X-Plane Work record may be approved",
 	);
 	expectContains(
 		finalChecklist,

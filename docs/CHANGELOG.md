@@ -8,12 +8,16 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
 
 ### Added
 
-- Added the reviewed **X-Plane Cabin Camera FOV Trade Study** Work route and
+- Added the owner-authorized **X-Plane Cabin Camera FOV Trade Study** Work route and
   sanitized comparisons; refined homepage and Conformal Cooling copy; unified
   crawler semantics around one canonical Person record; corrected intrinsic
   media ratios; added direct original-image inspection; and replaced the
   Conformal cavity/channel evidence with a centerline-style render from real
-  retained meshes. Preview and release gates remain pending.
+  retained meshes. Agent/browser verified reviewed source
+  `6df39168df3d1374e9e31058b6b7e160a867bcbc` on isolated preview deployment
+  `1c92ba32-fb78-435b-a229-7dfeb8592579` at
+  `https://1c92ba32.humankaylee-portfolio.pages.dev`; the public-site release
+  gate remains pending.
 
 - **v1.1-partial (M7): Runtime OG image endpoint + Sentry error tracking.**
   Added `/api/og?title=...&subtitle=...` endpoint that renders a 1200×630 PNG

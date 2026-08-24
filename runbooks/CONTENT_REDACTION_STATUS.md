@@ -60,7 +60,7 @@ from the case-study launch-minimum count above.
 
 | Candidate | Slug | Publication status | Redaction status | Current evidence | Approval next action |
 | --- | --- | --- | --- | --- | --- |
-| X-Plane Cabin Camera FOV Trade Study | `xplane-cabin-camera-fov-trade-study` | `publish` | `reviewed` | Joe supplied the archive and authorized the design and publication direction on 2026-08-24. The sanitized manifest, comparisons, posters, and representative video frames were hash-checked and visually inspected; the redaction checklist is complete with no open redaction items. `replay harness source not supplied` remains a known evidence limit, not a redaction item. | Keep `reviewed`; only production-equivalent preview evidence and final approval remain open launch items before any change to `approved`. |
+| X-Plane Cabin Camera FOV Trade Study | `xplane-cabin-camera-fov-trade-study` | `publish` | `approved` | Joe authorized publication on 2026-08-24 once every release gate passes; this does not claim he personally viewed the preview. Task 2 original-resolution artifact inspection passed. Agent/browser preview inspection passed at `https://1c92ba32.humankaylee-portfolio.pages.dev`, deployment `1c92ba32-fb78-435b-a229-7dfeb8592579`, source `6df39168df3d1374e9e31058b6b7e160a867bcbc`. Full-byte hashes and direct playback passed; `pages.dev` direct range/seek is unsupported, while exact-byte Blob seeking proves artifact seekability only. `replay harness source not supplied` remains a known evidence limit, not a redaction item. | Production release remains gated on exact-SHA CI, custom-domain `206`/`Content-Range` for both X-Plane MP4s, direct custom-domain seeking, and the complete post-deploy verification matrix. |
 
 ## GitHub Issue Traceability
 

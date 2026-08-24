@@ -99,7 +99,7 @@ evidenceMedia:
     alt: "Full 250-second four-camera X-Plane composite for the 110-degree negative-pitch configuration."
     caption: "110-degree horizontal FOV with a negative 5-degree pitch offset, encoded at two frames per second for inspection."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
@@ -116,6 +116,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-08-24"
+    decision: "approved"
+    notes: "Joe authorized publication on 2026-08-24 once every release gate passes; this records authorization and does not claim he personally viewed the provider preview."
+  artifactInspection:
+    source: "Task 2 sanitized X-Plane public artifact set and capture-manifest.json"
+    inspectedOn: "2026-08-24"
+    result: "passed"
+    notes: "Task 2 original resolution inspection covered both comparison images, both posters, representative frames from both videos, and manifest hashes; the sanitized public artifacts passed."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://1c92ba32.humankaylee-portfolio.pages.dev; deployment 1c92ba32-fb78-435b-a229-7dfeb8592579; source 6df39168df3d1374e9e31058b6b7e160a867bcbc"
+    capturedOn: "2026-08-24"
+    result: "passed"
+    notes: "Agent/browser inspection passed route, header, full-byte hash, direct playback, no-JavaScript, reduced-motion, responsive, privacy, and visual gates. Cloudflare pages.dev direct range and seek are unsupported; exact-byte Chromium Blob seeking proves artifact seekability only. This preview evidence does not claim a public-site release."
 seo:
   title: "X-Plane Cabin Camera FOV Trade Study | Joe Poznanski"
   description: "A documented X-Plane replay comparing four cabin camera views across 50-degree and 110-degree configurations at matching flight moments."

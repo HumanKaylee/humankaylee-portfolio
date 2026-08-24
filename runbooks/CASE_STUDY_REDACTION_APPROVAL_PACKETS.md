@@ -274,22 +274,25 @@ Required checklist mapping:
 
 This is a Work-record packet, separate from the case-study launch-minimum
 matrix. Joe supplied the archive on 2026-08-23; it is recorded as
-user-supplied. He authorized the design and publication direction on
-2026-08-24. That design and publication authorization is not
-production-equivalent preview evidence or final artifact approval.
+user-supplied. Joe authorized publication on 2026-08-24 once every release
+gate passes. This records conditional authorization and does not claim Joe
+personally viewed the provider preview; the agent/browser inspection is
+recorded separately below.
 
 | Field | Value |
 | --- | --- |
 | Candidate | X-Plane Cabin Camera FOV Trade Study (`xplane-cabin-camera-fov-trade-study`) |
 | Current publication | `publish` |
-| Current redaction | `reviewed` |
-| Reviewer / review date | operator / 2026-08-24 |
+| Current redaction | `approved` |
+| Reviewer / review date | Joe Poznanski authorization / 2026-08-24; agent/browser preview inspection / 2026-08-24 |
 | Public omissions | Raw source manifests, the program identifier, the private source path, and the `LM5`, `LM6`, `LM7`, and `LM8` camera-token families are omitted or masked. |
 | Visual inspection | The comparison images and representative video frames were inspected at original resolution; the four-view layout, generic labels, masks, and configuration order remained readable. |
+| Artifact inspection | Task 2 original-resolution inspection covered both comparison images, both posters, representative frames from both videos, and the exact manifest-to-byte hashes; result: passed. |
+| Preview evidence | Agent/browser inspected `https://1c92ba32.humankaylee-portfolio.pages.dev` (deployment `1c92ba32-fb78-435b-a229-7dfeb8592579`, source `6df39168df3d1374e9e31058b6b7e160a867bcbc`) on 2026-08-24. Routes, headers, full-byte media hashes, direct playback, no-JavaScript, reduced motion, responsive layout, privacy scans, and all eight visual captures passed. Cloudflare `pages.dev` direct range and seek are unsupported and returned full-body 200 responses; a Chromium Blob made from the exact fetched bytes proves artifact seekability only, not provider-host streaming. |
 | Open redaction items | None |
-| Open launch items | Production-equivalent preview evidence and final approval only. |
+| Open launch items | Production release only. |
 | Known evidence limit | `replay harness source not supplied`; this is a study limit, not an open redaction item. |
-| Approval boundary | Keep `redactionStatus: reviewed`; design and publication authorization is not production-equivalent preview evidence. |
+| Approval boundary | `redactionStatus: approved` records conditional owner authorization, artifact inspection, and exact provider-preview evidence. It does not claim Joe personally viewed the provider preview or that the public-site release has occurred. |
 
 The following public inventory was recomputed from the committed sanitized
 manifest and asset bytes. The public `capture-manifest.json` is a derivative
