@@ -7,10 +7,13 @@ Status: not launch-ready. This file records current evidence and blockers only.
 ## Scope
 
 This runbook is the snapshot-aware launch evidence index for future goal
-execution. It does not certify production readiness. Production verification is
-blocked until the frontend domain, API domain, provider projects, provider auth,
-required secrets or environment variables, contact handling, rollback targets,
-and redaction approvals are selected, configured, approved, or recorded.
+execution. It records a verified X-Plane frontend production release on the
+custom domain, including a retained frontend rollback target. It does not
+certify B-063 or a broader platform launch: production API hosting, API/contact
+configuration, contact handling, and API rollback evidence remain open. The
+broader B-063 scope still covers contact handling, rollback targets, and
+redaction approvals; the verified frontend rollback below satisfies only the
+frontend portion of that boundary.
 
 Do not replace blocked rows with production evidence until real target URLs,
 deployment IDs, command outputs, and artifacts exist.
@@ -237,39 +240,45 @@ handling, rollback, Lighthouse, or B-063 final launch checklist status.
 | Rollback evidence                         | Provider deployment list and rollback target capture                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Production frontend and API providers                                                                                            | 2026-05-23T15:14:05-04:00 | Blocked / not run. No production deployments or rollback targets exist.                                                                                                                                                                                                                                                                                                                                                                                                                    | None.                                                                                                                                                                                                                                                         | After provider deployment, capture deployment IDs and rollback procedure output for frontend and API.                                                                                                                               | No rollback target exists yet; future evidence must redact provider account IDs, private deployment metadata, private logs, secrets, and tokens before capture.    |
 | Launch blockers register                  | `node --test scripts/launch-blockers-register-contract.test.mjs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | B-005 decision register                                                                                                          | 2026-05-24T06:08:50-04:00 | Register artifact tracks remaining unresolved launch decisions while recording that the resume-source row is resolved local evidence only; this is decision tracking only and does not clear production blockers.                                                                                                                                                                                                                                                                          | `runbooks/LAUNCH_BLOCKERS_REGISTER.md`                                                                                                                                                                                                                        | Resolve remaining unresolved rows with owner-approved evidence before using them to unblock Phase 7 or Phase 8 work; still capture production `/resume/` and PDF smoke after frontend deploy.                                       | Public-safe summary only; no secrets, tokens, private logs, provider account IDs, or raw sensitive identifiers copied.                                             |
 
-## X-Plane and Conformal pre-release evidence — 2026-08-24
+## X-Plane and Conformal production evidence — 2026-08-24
 
-These rows record completed local artifact verification and the first exact
-provider preview. They do not claim that the public-site release has occurred.
+These rows record completed local artifact verification, the first exact
+provider preview, and the first verified X-Plane frontend production release.
+That scoped frontend release does not claim B-063 or a broader platform launch.
 
 | Area | Command | Target | Evidence Authority | Date | Result / Status | Artifact / Link | Blocker / Next Action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | X-Plane sanitized media | `node --test scripts/xplane-media-contract.test.mjs` | Committed X-Plane public namespace | local/PR | 2026-08-24 | 14 passed; exact 11-file inventory, manifest-to-byte hashes, decodes, H.264/yuv420p/no-audio/fast-start limits, private-content scans, and original-resolution visual inspection passed. | `apps/web/public/media/xplane-fov/capture-manifest.json` SHA-256 `0a00b99bacbf1c0612bdf873ce2e4bea9387b83425e2315603fcbc30c02eeff6` | This local/PR row does not itself prove the separately recorded provider preview or release; replay harness source was not supplied or rerun. |
 | Conformal real-geometry rerender | `node --test scripts/conformal-media-contract.test.mjs` | Committed Conformal Cooling public namespace | local/PR | 2026-08-24 | 1 passed; all 20 manifest records and eight affected assets were recomputed, decoded, and visually inspected at required sizes/timestamps. | Renderer `a51b70ae524e13ef56d79bb07a83462256d361f9`; accepted 1536x864 render SHA-256 `BE308C4C7300123A9EE433DB0733EFDA310D11AF53BB08993D8C6798747E9C39`; `apps/web/public/media/conformal-cooling/capture-manifest.json` | This local/PR row does not itself prove the separately recorded provider preview or release; centerline-style overlay does not evidence tube diameter, cross-section, or surface detail. |
-| X-Plane production-equivalent preview | `gh workflow run phase-0-ci.yml --ref feat/xplane-fov-portfolio`; exact clean build; explicit `wrangler pages deploy`; ignored Playwright preview matrix; HTTP control probes | Cloudflare Pages preview `https://1c92ba32.humankaylee-portfolio.pages.dev`, source `6df39168df3d1374e9e31058b6b7e160a867bcbc` | owner-approved production-equivalent provider preview | 2026-08-24 | Passed | Deployment `1c92ba32-fb78-435b-a229-7dfeb8592579`; exact-SHA CI run `32769663529` passed frontend `97566937985`, WASM `97566938499`, and Rust `97566938386`; five deployed-preview tests and all eight inspected captures passed; every X-Plane and revised Conformal asset matched committed size/hash; direct metadata and controls plus direct playback passed. Cloudflare `pages.dev` direct range and seek are unsupported and use a full-body 200 fallback; Chromium Blob seeking from the exact fetched bytes proves artifact seekability only. Rollback remains deployment `f7a08ad2-16f7-430c-a245-cd600e3d65a9` at source `5d6c060b7133dd69617a80ca1970c64f7310db9b`. | Keep the public-site release pending. Require exact approval-SHA CI and a second isolated preview in Task 8; later require correct custom-domain `206`/`Content-Range`, direct seeking, and full post-deploy verification before release completion. |
-| X-Plane production release | Not run | Public site | Pending | Pending | Pending | No deployment ID, URL, CI run, or rollback ID recorded. | Publish only after preview evidence and final approval, then record exact release and rollback evidence. |
+| X-Plane production-equivalent preview | `gh workflow run phase-0-ci.yml --ref feat/xplane-fov-portfolio`; exact clean build; explicit `wrangler pages deploy`; ignored Playwright preview matrix; HTTP control probes | Cloudflare Pages preview `https://1c92ba32.humankaylee-portfolio.pages.dev`, source `6df39168df3d1374e9e31058b6b7e160a867bcbc` | owner-approved production-equivalent provider preview | 2026-08-24 | Passed | Deployment `1c92ba32-fb78-435b-a229-7dfeb8592579`; exact-SHA CI run `32769663529` passed frontend `97566937985`, WASM `97566938499`, and Rust `97566938386`; five deployed-preview tests and all eight inspected captures passed; every X-Plane and revised Conformal asset matched committed size/hash; direct metadata and controls plus direct playback passed. Cloudflare `pages.dev` direct range and seek are unsupported and use a full-body 200 fallback; Chromium Blob seeking from the exact fetched bytes proves artifact seekability only. Rollback remains deployment `f7a08ad2-16f7-430c-a245-cd600e3d65a9` at source `5d6c060b7133dd69617a80ca1970c64f7310db9b`. | Retained historical preview evidence; the custom-domain production release is recorded separately below. |
+| X-Plane production release | `git push origin HEAD:main`; exact main-push Phase 0 CI; clean `pnpm build`; explicit `pnpm exec wrangler pages deploy dist --project-name humankaylee-portfolio --branch main --commit-hash a4293f91d29256d00a21a8f6e0f7a69ecfc77479 --commit-message "X-Plane production a4293f..." --commit-dirty=false`; ignored Playwright production matrices; HTTP range and propagation probes | `https://joepoznanski.io/work/xplane-cabin-camera-fov-trade-study/` and `https://cf491d10.humankaylee-portfolio.pages.dev`, exact source `a4293f91d29256d00a21a8f6e0f7a69ecfc77479` | production | 2026-08-24T21:08:13Z | Passed | Deployment `cf491d10-d530-4e7f-af3b-b0b4469eabe2`; exact main-push CI run `32776758475` passed WASM `97589465985`, Rust `97589466169`, and Frontend `97589466212`. Credential-less deploy workflow run `32776758493`, job `97589466129`, passed checkout/install/typecheck/unit/build, failed only its Deploy step, and created no provider deployment before the explicit upload. Home, Work, X-Plane, Conformal, sitemap, canonical, and legal route semantics passed; Work remained 2/2/2; X-Plane retained four figures, two native controlled videos, and direct original-image links. All X-Plane manifest records matched exact bytes and manifest SHA-256 `0a00b99bacbf1c0612bdf873ce2e4bea9387b83425e2315603fcbc30c02eeff6`; all 20 Conformal records matched. Custom-domain ranges were HTTP 206 with `bytes 0-1023/5179542` and `bytes 0-1023/5626106`, exactly 1,024 bytes each; both videos proved direct play, seek to 5 seconds, and resume; exact security headers, Cloudflare analytics plus `/cdn-cgi/rum`, WASM repricing from `$10.4506` to `$17.6630` without an API request, Privacy hash `4732951502a465371d8f429f66473c2b856e8c81184a5b3aeb65e520d84e06bb`, Terms hash `5f582ed5e1790b033bc0afc79d568a3f0ee0ce26d782c2f68d04bc6efaed11ae`, no-JS, reduced-motion, keyboard/focus, 44px targets, no unrelated page/console errors, and eight captures inspected with `view_image` all passed. Rollback deployment `f7a08ad2-16f7-430c-a245-cd600e3d65a9` at `https://f7a08ad2.humankaylee-portfolio.pages.dev`, source `5d6c060b7133dd69617a80ca1970c64f7310db9b`, remained listed and returned 200. | Frontend X-Plane production is verified; the broader B-063/API/contact launch work remains open. The final docs-only closeout deployment ID stays external to avoid circular evidence. |
 
 ## Production Blockers
 
-The current record has these launch blockers:
+The verified X-Plane frontend production release removes the stale frontend
+target and frontend rollback blockers only. The current record retains these
+broader launch blockers:
 
 - `runbooks/LAUNCH_BLOCKERS_REGISTER.md` tracks the owner, impact, latest
   acceptable resolution phase, status, and next evidence for launch decisions.
-- Final frontend domain and Cloudflare Pages or alternate static provider
-  project are not selected.
+- The frontend custom domain and Cloudflare Pages project are verified for this
+  scoped release; B-063 and the broader platform launch remains open.
 - Final API domain and Fly.io, Railway, or another approved host provider
   project are not selected.
 - Shuttle is not a viable new launch target and remains legacy compatibility
   only.
-- Required production environment variables and secret storage are not
-  configured.
+- Required production API/contact environment variables and secret storage are
+  not configured.
 - Production contact handling is not approved; mailto remains the reliable
   fallback until a persistent store path or alternate provider has retention,
   backup, rotation, and deletion decisions.
-- Launch case studies still need redaction approvals and public-safe evidence.
-- Production smoke checks have not been run because production targets do not
-  exist yet.
-- Rollback targets cannot be recorded until real production deployments exist.
+- Broader launch claims must continue to respect recorded redaction approvals
+  and public-safe evidence boundaries.
+- X-Plane frontend production smoke is recorded above; production API and
+  production contact smoke remain blocked.
+- Frontend rollback deployment `f7a08ad2-16f7-430c-a245-cd600e3d65a9` is
+  recorded and reachable; an API rollback target remains unavailable until an
+  API provider and deployment exist.
 
 ## Future Evidence Capture Contract
 

@@ -20,6 +20,12 @@ const xplaneReviewedSha = "6df39168df3d1374e9e31058b6b7e160a867bcbc";
 const xplaneFirstPreviewId = "1c92ba32-fb78-435b-a229-7dfeb8592579";
 const xplaneFirstPreviewUrl =
 	"https://1c92ba32.humankaylee-portfolio.pages.dev";
+const xplaneApprovedSha = "a4293f91d29256d00a21a8f6e0f7a69ecfc77479";
+const xplaneFirstProductionId = "cf491d10-d530-4e7f-af3b-b0b4469eabe2";
+const xplaneFirstProductionUrl =
+	"https://cf491d10.humankaylee-portfolio.pages.dev";
+const xplaneRollbackId = "f7a08ad2-16f7-430c-a245-cd600e3d65a9";
+const xplaneRollbackUrl = "https://f7a08ad2.humankaylee-portfolio.pages.dev";
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -44,7 +50,12 @@ function extractTableRow(content, firstCell) {
 	return row;
 }
 
-function expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow) {
+function expectXPlaneProductionEvidence(
+	changelogEntry,
+	previewRow,
+	releaseRow,
+	blockersSection,
+) {
 	const normalizedChangelogEntry = changelogEntry.replace(/\s+/g, " ");
 	for (const expected of [
 		"owner-authorized",
@@ -52,6 +63,10 @@ function expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow) {
 		xplaneFirstPreviewId,
 		xplaneFirstPreviewUrl,
 		"agent/browser verified",
+		"frontend production release",
+		xplaneApprovedSha,
+		xplaneFirstProductionId,
+		xplaneFirstProductionUrl,
 	]) {
 		assert.ok(
 			normalizedChangelogEntry.toLowerCase().includes(expected.toLowerCase()),
@@ -60,8 +75,7 @@ function expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow) {
 	}
 	assert.doesNotMatch(
 		normalizedChangelogEntry,
-		/\b(?:live|production)\b/i,
-		"Unreleased X-Plane entry must not claim a live or production release",
+		/(?:global|platform) launch (?:is )?complete|entire platform (?:is )?(?:live|launched)|all production work (?:is )?complete/i,
 	);
 
 	for (const expected of [
@@ -69,7 +83,7 @@ function expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow) {
 		xplaneFirstPreviewId,
 		xplaneFirstPreviewUrl,
 		"32769663529",
-		"f7a08ad2-16f7-430c-a245-cd600e3d65a9",
+		xplaneRollbackId,
 		"full-body 200",
 		"direct playback",
 		"Blob",
@@ -86,21 +100,79 @@ function expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow) {
 		previewRow,
 		/\| (?:Complete|Live) \||\b(?:is|now) live\b/i,
 	);
-	assert.match(releaseRow, /\| Pending \|/);
-	assert.match(
+	for (const expected of [
+		xplaneApprovedSha,
+		xplaneFirstProductionId,
+		xplaneFirstProductionUrl,
+		"32776758475",
+		"97589465985",
+		"97589466169",
+		"97589466212",
+		"32776758493",
+		"97589466129",
+		xplaneRollbackId,
+		xplaneRollbackUrl,
+		"bytes 0-1023/5179542",
+		"bytes 0-1023/5626106",
+		"exactly 1,024 bytes",
+		"direct play, seek to 5 seconds, and resume",
+		"exact security headers",
+		"Cloudflare analytics",
+		"$10.4506",
+		"$17.6630",
+		"4732951502a465371d8f429f66473c2b856e8c81184a5b3aeb65e520d84e06bb",
+		"5f582ed5e1790b033bc0afc79d568a3f0ee0ce26d782c2f68d04bc6efaed11ae",
+		"no-JS",
+		"reduced-motion",
+		"eight captures",
+	]) {
+		assert.ok(
+			releaseRow.includes(expected),
+			`X-Plane production row must include ${expected}`,
+		);
+	}
+	assert.match(releaseRow, /\| production \|/);
+	assert.match(releaseRow, /\| Passed \|/);
+	assert.match(releaseRow, /rollback.*listed.*200/i);
+	assert.doesNotMatch(
 		releaseRow,
-		/No deployment ID, URL, CI run, or rollback ID recorded/,
+		/No production deployments or rollback targets exist/i,
+	);
+	assert.doesNotMatch(
+		releaseRow,
+		/(?:global|platform) launch (?:is )?complete|entire platform (?:is )?(?:live|launched)|all production work (?:is )?complete/i,
+	);
+
+	for (const expected of [
+		"frontend custom domain and Cloudflare Pages project are verified",
+		"B-063",
+		"production API",
+		"production contact",
+		"broader platform launch remains open",
+	]) {
+		assert.ok(
+			blockersSection.includes(expected),
+			`production blockers section must include ${expected}`,
+		);
+	}
+	assert.doesNotMatch(
+		blockersSection,
+		/Final frontend domain and Cloudflare Pages or alternate static provider\s+project are not selected|Rollback targets cannot be recorded until real production deployments exist/i,
 	);
 }
 
-test("Unreleased notes and launch evidence record the exact approved X-Plane preview without claiming production", () => {
+test("Unreleased notes and launch evidence record the exact verified X-Plane frontend production release without claiming a broader launch", () => {
 	const changelog = extractHeadingSection(
 		readRequiredFile(files.changelog),
 		"## [Unreleased]",
 	);
 	const launchEvidence = extractHeadingSection(
 		readRequiredFile(files.launchEvidence),
-		"## X-Plane and Conformal pre-release evidence — 2026-08-24",
+		"## X-Plane and Conformal production evidence — 2026-08-24",
+	);
+	const blockersSection = extractHeadingSection(
+		readRequiredFile(files.launchEvidence),
+		"## Production Blockers",
 	);
 	const changelogEntry = changelog
 		.split(/\n(?=- )/)
@@ -150,15 +222,24 @@ test("Unreleased notes and launch evidence record the exact approved X-Plane pre
 		launchEvidence,
 		"X-Plane production release",
 	);
-	expectXPlanePreviewApproval(changelogEntry, previewRow, releaseRow);
+	expectXPlaneProductionEvidence(
+		changelogEntry,
+		previewRow,
+		releaseRow,
+		blockersSection,
+	);
 });
 
-test("X-Plane preview approval evidence rejects missing evidence, a wrong SHA, and false production wording", () => {
+test("X-Plane production evidence rejects missing range/seek proof, wrong provenance, false rollback absence, and false global completion", () => {
 	const validChangelog = [
 		`owner-authorized ${xplaneReviewedSha}`,
 		xplaneFirstPreviewId,
 		xplaneFirstPreviewUrl,
 		"agent/browser verified",
+		"frontend production release",
+		xplaneApprovedSha,
+		xplaneFirstProductionId,
+		xplaneFirstProductionUrl,
 	].join(" ");
 	const validPreviewRow = [
 		"| X-Plane production-equivalent preview | command | target | Passed |",
@@ -169,35 +250,90 @@ test("X-Plane preview approval evidence rejects missing evidence, a wrong SHA, a
 		"f7a08ad2-16f7-430c-a245-cd600e3d65a9",
 		"pages.dev direct range and seek unsupported; full-body 200 hashes and direct playback passed; Blob proves artifact seekability only |",
 	].join(" ");
-	const validReleaseRow =
-		"| X-Plane production release | Not run | Public site | Pending | Pending | Pending | No deployment ID, URL, CI run, or rollback ID recorded. | next |";
+	const validReleaseRow = [
+		"| X-Plane production release | explicit deploy and browser/HTTP matrix | joepoznanski.io | production | 2026-08-24T21:08:13Z | Passed |",
+		xplaneApprovedSha,
+		xplaneFirstProductionId,
+		xplaneFirstProductionUrl,
+		"32776758475 97589465985 97589466169 97589466212 32776758493 97589466129",
+		xplaneRollbackId,
+		xplaneRollbackUrl,
+		"bytes 0-1023/5179542 and bytes 0-1023/5626106, exactly 1,024 bytes each; direct play, seek to 5 seconds, and resume; exact security headers; Cloudflare analytics; $10.4506 to $17.6630;",
+		"4732951502a465371d8f429f66473c2b856e8c81184a5b3aeb65e520d84e06bb",
+		"5f582ed5e1790b033bc0afc79d568a3f0ee0ce26d782c2f68d04bc6efaed11ae",
+		"no-JS; reduced-motion; eight captures; rollback remains listed and returned 200 | none |",
+	].join(" ");
+	const validBlockers =
+		"The frontend custom domain and Cloudflare Pages project are verified. B-063, production API, and production contact work remain unresolved; broader platform launch remains open.";
 
 	assert.throws(
 		() =>
-			expectXPlanePreviewApproval(
+			expectXPlaneProductionEvidence(
 				validChangelog,
-				validPreviewRow.replace(xplaneFirstPreviewId, ""),
-				validReleaseRow,
+				validPreviewRow,
+				validReleaseRow.replace("bytes 0-1023/5179542", ""),
+				validBlockers,
 			),
-		/X-Plane preview row must include/,
+		/X-Plane production row must include/,
 	);
 	assert.throws(
 		() =>
-			expectXPlanePreviewApproval(
+			expectXPlaneProductionEvidence(
 				validChangelog,
-				validPreviewRow.replace(xplaneReviewedSha, "0".repeat(40)),
-				validReleaseRow,
+				validPreviewRow,
+				validReleaseRow.replace(
+					"direct play, seek to 5 seconds, and resume",
+					"direct playback only",
+				),
+				validBlockers,
 			),
-		/X-Plane preview row must include/,
+		/X-Plane production row must include/,
 	);
 	assert.throws(
 		() =>
-			expectXPlanePreviewApproval(
-				`${validChangelog} now live in production`,
+			expectXPlaneProductionEvidence(
+				validChangelog,
+				validPreviewRow,
+				validReleaseRow.replace(
+					xplaneApprovedSha,
+					"0".repeat(xplaneApprovedSha.length),
+				),
+				validBlockers,
+			),
+		/X-Plane production row must include/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneProductionEvidence(
+				validChangelog,
+				validPreviewRow,
+				validReleaseRow.replace(xplaneFirstProductionId, "wrong-id"),
+				validBlockers,
+			),
+		/X-Plane production row must include/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneProductionEvidence(
+				validChangelog,
+				validPreviewRow,
+				validReleaseRow.replace(
+					"rollback remains listed and returned 200",
+					"No production deployments or rollback targets exist",
+				),
+				validBlockers,
+			),
+		/X-Plane production row must include|No production deployments or rollback targets exist/,
+	);
+	assert.throws(
+		() =>
+			expectXPlaneProductionEvidence(
+				`${validChangelog} global launch is complete`,
 				validPreviewRow,
 				validReleaseRow,
+				validBlockers,
 			),
-		/live or production release/,
+		/global|match/i,
 	);
 });
 

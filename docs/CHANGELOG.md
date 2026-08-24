@@ -16,8 +16,17 @@ This project uses a planning-first changelog during pre-launch work. Entries sho
   retained meshes. Agent/browser verified reviewed source
   `6df39168df3d1374e9e31058b6b7e160a867bcbc` on isolated preview deployment
   `1c92ba32-fb78-435b-a229-7dfeb8592579` at
-  `https://1c92ba32.humankaylee-portfolio.pages.dev`; the public-site release
-  gate remains pending.
+  `https://1c92ba32.humankaylee-portfolio.pages.dev`. The scoped frontend
+  production release then shipped owner-approved exact source
+  `a4293f91d29256d00a21a8f6e0f7a69ecfc77479` after main-push Phase 0 CI run
+  `32776758475` passed, as deployment
+  `cf491d10-d530-4e7f-af3b-b0b4469eabe2` at
+  `https://cf491d10.humankaylee-portfolio.pages.dev`; agent/browser verified
+  the custom-domain routes, exact media, 206 byte ranges, direct video seeking,
+  headers, analytics, WASM, legal fingerprints, no-JS/reduced-motion behavior,
+  and desktop/mobile captures. This frontend production release retains
+  rollback `f7a08ad2-16f7-430c-a245-cd600e3d65a9` and does not claim B-063 or
+  the broader platform launch; production API and contact work remain open.
 
 - **v1.1-partial (M7): Runtime OG image endpoint + Sentry error tracking.**
   Added `/api/og?title=...&subtitle=...` endpoint that renders a 1200×630 PNG
