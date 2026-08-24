@@ -55,6 +55,7 @@ Each label produces `<label>-desktop-<platform>.png` and
 | `work` | `/work/` | Work index heading is visible |
 | `work-cryo` | `/work/cryo-flow-sim/` | Cryogenic proof surface is visible |
 | `work-conformal-cooling` | `/work/conformal-cooling-channel-generation/` | Conformal workflow and evidence gallery are visible |
+| `work-xplane-fov` | `/work/xplane-cabin-camera-fov-trade-study/` | X-Plane comparison stills and four-tile evidence gallery are visible |
 | `work-cli-fleet` | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof surface is visible |
 | `work-remote-recovery` | `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof surface is visible |
 | `work-black-scholes` | `/work/black-scholes-wasm/` | Black-Scholes WASM controls are initialized and the real price readout is populated |

@@ -32,9 +32,7 @@ const expectedVisualRoutes = [
 	["notes", "/notes/"],
 ];
 
-const expectedAcceptedBaselineRoutes = expectedVisualRoutes.filter(
-	([label]) => label !== "work-xplane-fov",
-);
+const expectedAcceptedBaselineRoutes = expectedVisualRoutes;
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
