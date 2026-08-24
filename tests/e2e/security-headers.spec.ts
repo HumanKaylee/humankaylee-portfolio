@@ -18,7 +18,7 @@ const expectedHeaders = {
 		"object-src 'none'",
 		"frame-ancestors 'none'",
 		"form-action 'self' mailto:",
-		"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+		"script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://static.cloudflareinsights.com",
 		"connect-src 'self'",
 	],
 	"cross-origin-opener-policy": ["same-origin"],

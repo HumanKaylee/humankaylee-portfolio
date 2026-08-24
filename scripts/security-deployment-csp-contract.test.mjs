@@ -10,6 +10,7 @@ const files = {
 	wrangler: "wrangler.toml",
 };
 const allowedContactDeliveryModes = new Set(["disabled", "store"]);
+const cloudflareAnalyticsScriptOrigin = "https://static.cloudflareinsights.com";
 
 function readRequiredFile(path) {
 	const content = readFileSync(path, "utf8");
@@ -105,6 +106,16 @@ function assertStaticFrontendBoundary(csp, label, apiOrigin) {
 	assert.ok(
 		scriptSources.includes("'wasm-unsafe-eval'"),
 		`${label} script-src must preserve the WASM allowance`,
+	);
+	assert.deepEqual(
+		scriptSources,
+		[
+			"'self'",
+			"'unsafe-inline'",
+			"'wasm-unsafe-eval'",
+			cloudflareAnalyticsScriptOrigin,
+		].sort(),
+		`${label} script-src must narrowly allow the Cloudflare Web Analytics beacon`,
 	);
 }
 
