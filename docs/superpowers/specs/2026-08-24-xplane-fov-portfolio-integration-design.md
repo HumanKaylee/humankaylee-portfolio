@@ -1,6 +1,6 @@
 # X-Plane FOV Portfolio Integration Design
 
-**Status:** Approved in chat; awaiting written-spec review
+**Status:** Approved by Joe Poznanski on 2026-08-24
 
 **Date:** 2026-08-24
 
