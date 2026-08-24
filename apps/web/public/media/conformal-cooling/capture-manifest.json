@@ -16,7 +16,7 @@
     "repository": "HumanKaylee/ConformalChannelCreator",
     "repositoryUrl": "https://github.com/HumanKaylee/ConformalChannelCreator",
     "uiApiCaptureCommit": "5514afad8321812037c556d6e21b6c2559851a8d",
-    "rendererCommit": "2926936a8a5104d6724ef6a00b3f0cfbffb23d21",
+    "rendererCommit": "a51b70ae524e13ef56d79bb07a83462256d361f9",
     "cleanAtUiApiCapture": true
   },
   "runtime": {
@@ -208,8 +208,8 @@
   "publishedAssets": [
     {
       "filename": "conformal-cavity-channels-1440.webp",
-      "sizeBytes": 53436,
-      "sha256": "c16b4b280e1341f41326f34e6fcc12116aa2d7b957e9da6d53e79531886996dd",
+      "sizeBytes": 30526,
+      "sha256": "b88de620d7babf6ca58ee15f0ee7a213c64bc17a2be07f59cb3513803f90f8d7",
       "mediaType": "image",
       "codec": "webp",
       "width": 1440,
@@ -217,8 +217,8 @@
     },
     {
       "filename": "conformal-cavity-channels-640.webp",
-      "sizeBytes": 12060,
-      "sha256": "eb1ad908a8a2db8b56d82ce893fc399fcdef5df7ea0c6e7747def8be5db4192a",
+      "sizeBytes": 8096,
+      "sha256": "dc605aad90df7e159424402b1fb2fc36ee18570af8c937d85a3038d1d53c8658",
       "mediaType": "image",
       "codec": "webp",
       "width": 640,
@@ -226,8 +226,8 @@
     },
     {
       "filename": "conformal-cavity-channels-960.webp",
-      "sizeBytes": 25016,
-      "sha256": "610d14f396dc5d62fa7f023e9d4bd14f76d5e3be1bb935700e9c7705849d070d",
+      "sizeBytes": 16088,
+      "sha256": "550b6f00eb4039f356d3ed4f7d4077a512892a58bd0877f08750ef5e4f557a83",
       "mediaType": "image",
       "codec": "webp",
       "width": 960,
@@ -316,8 +316,8 @@
     },
     {
       "filename": "conformal-workflow-loop-poster-1440.webp",
-      "sizeBytes": 53436,
-      "sha256": "c16b4b280e1341f41326f34e6fcc12116aa2d7b957e9da6d53e79531886996dd",
+      "sizeBytes": 30526,
+      "sha256": "b88de620d7babf6ca58ee15f0ee7a213c64bc17a2be07f59cb3513803f90f8d7",
       "mediaType": "image",
       "codec": "webp",
       "width": 1440,
@@ -325,8 +325,8 @@
     },
     {
       "filename": "conformal-workflow-loop-poster-640.webp",
-      "sizeBytes": 12060,
-      "sha256": "eb1ad908a8a2db8b56d82ce893fc399fcdef5df7ea0c6e7747def8be5db4192a",
+      "sizeBytes": 8096,
+      "sha256": "dc605aad90df7e159424402b1fb2fc36ee18570af8c937d85a3038d1d53c8658",
       "mediaType": "image",
       "codec": "webp",
       "width": 640,
@@ -334,8 +334,8 @@
     },
     {
       "filename": "conformal-workflow-loop-poster-960.webp",
-      "sizeBytes": 25016,
-      "sha256": "610d14f396dc5d62fa7f023e9d4bd14f76d5e3be1bb935700e9c7705849d070d",
+      "sizeBytes": 16088,
+      "sha256": "550b6f00eb4039f356d3ed4f7d4077a512892a58bd0877f08750ef5e4f557a83",
       "mediaType": "image",
       "codec": "webp",
       "width": 960,
@@ -343,8 +343,8 @@
     },
     {
       "filename": "conformal-workflow-loop.mp4",
-      "sizeBytes": 143702,
-      "sha256": "bbc92cf87d81cff2de807ccdf7b33d6e7a25f5518fe98ba1bbf8c857b22a54ad",
+      "sizeBytes": 119464,
+      "sha256": "86ddcba4473663f75845f56c15b1316dd7bfbd4f6fd9892b34134f9435ba66b2",
       "mediaType": "video",
       "codec": "h264",
       "width": 960,
@@ -383,8 +383,8 @@
     },
     {
       "filename": "conformal-workflow.mp4",
-      "sizeBytes": 877040,
-      "sha256": "7ca273dc97fab8655112e918e72a4574198d8b4b22929545bb1f006608582e97",
+      "sizeBytes": 510694,
+      "sha256": "9af82dd69b7d65da69d84614e33cd15f832bb9775cd1fc7a7c4ec2df8b567b13",
       "mediaType": "video",
       "codec": "h264",
       "width": 1536,

@@ -53,7 +53,7 @@ evidence:
     - label: "Split molds"
       value: "2 watertight halves"
       detail: "The separate gear mold generator passed validation while retaining two warnings that both mold volumes seemed too large."
-  scope: "UI/API evidence comes from clean source commit 5514afad8321812037c556d6e21b6c2559851a8d. Geometry figures were rendered by commit 2926936a8a5104d6724ef6a00b3f0cfbffb23d21. The split-mold/ports figure comes from a separate repository generator for the same gear family, not from the UI/API exports."
+  scope: "UI/API evidence comes from clean source commit 5514afad8321812037c556d6e21b6c2559851a8d. Geometry figures were rendered by commit a51b70ae524e13ef56d79bb07a83462256d361f9. The split-mold/ports figure comes from a separate repository generator for the same gear family, not from the UI/API exports."
   limits: "This capture did not establish thermal performance, hydraulic performance, cycle-time improvement, shop-floor manufacturability, or physical prototype behavior. The full repository baseline retained five known test failures plus existing Ruff and MyPy debt; the focused capture and renderer checks passed."
 media:
   kind: "video"
@@ -76,7 +76,7 @@ media:
     width: 960
     height: 540
     durationSeconds: 10
-    sizeBytes: 143702
+    sizeBytes: 119464
     alt: "A short sequence showing the input gear, generated channels, separated mold halves, and completed ConformalFlow UI."
     description: "A silent ten-second loop moves from the deterministic gear input through channel and split-mold evidence to the completed application state."
 evidenceMedia:
@@ -105,7 +105,7 @@ evidenceMedia:
     width: 1440
     height: 810
     alt: "Cyan generated cooling channels surrounding a translucent orange gear cavity."
-    caption: "Completed UI/API job overlay; the manifest records a completed job and four nonempty exports without claiming physical performance."
+    caption: "Completed UI/API job shown from a clearer elevated view with a centerline-style route overlay so the real cavity outline and generated channel relationship remain legible; the overlay does not evidence tube diameter, cross-section, or surface detail."
   - kind: "image"
     src: "/media/conformal-cooling/conformal-split-mold-ports-1440.webp"
     responsiveSources:
@@ -219,7 +219,7 @@ entire source repository was green.
 
 The UI/API exports and progress capture trace to clean source commit
 `5514afad8321812037c556d6e21b6c2559851a8d`. The deterministic evidence renderer
-traces to `2926936a8a5104d6724ef6a00b3f0cfbffb23d21`. The public portfolio contains
+traces to `a51b70ae524e13ef56d79bb07a83462256d361f9`. The public portfolio contains
 only the sanitized manifest, optimized MP4 files, and responsive WebP images;
 raw recordings, CAD exports, local paths, and environment details stay outside
 the site repository.

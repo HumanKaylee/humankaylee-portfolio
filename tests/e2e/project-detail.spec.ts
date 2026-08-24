@@ -117,9 +117,24 @@ test("renders the Conformal workflow and ordered responsive evidence gallery", a
 		);
 		await expect(figure.locator("figcaption")).not.toBeEmpty();
 	}
+	const cavityCaption = figures.nth(1).locator("figcaption");
+	await expect(cavityCaption).toContainText(/clearer elevated view/i);
+	await expect(cavityCaption).toContainText(/centerline-style route overlay/i);
+	await expect(cavityCaption).toContainText(
+		/does not evidence tube diameter, cross-section, or surface detail/i,
+	);
+	await expect(page.locator("main")).toContainText(
+		/a51b70ae524e13ef56d79bb07a83462256d361f9/,
+	);
+	await expect(page.locator("main")).not.toContainText(
+		/2926936a8a5104d6724ef6a00b3f0cfbffb23d21/,
+	);
 
 	await expect(page.locator("main")).toContainText(/alpha|prototype/i);
 	await expect(page.locator("main")).toContainText(/UI\/API exports/i);
+	await expect(page.locator("main")).toContainText(
+		/did not establish.*cycle-time improvement/i,
+	);
 	await expect(page.locator("main")).not.toContainText(
 		/20-50%|production-qualified|guaranteed|optimized cooling/i,
 	);

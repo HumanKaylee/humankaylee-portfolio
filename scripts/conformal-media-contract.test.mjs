@@ -8,6 +8,8 @@ import test from "node:test";
 const PUBLIC_ROOT = "apps/web/public/media/conformal-cooling";
 const MANIFEST_PATH = path.join(PUBLIC_ROOT, "capture-manifest.json");
 const ACCEPTED_SOURCE_COMMIT = "5514afad8321812037c556d6e21b6c2559851a8d";
+const REPLACED_RENDERER_COMMIT = "2926936a8a5104d6724ef6a00b3f0cfbffb23d21";
+const ACCEPTED_RENDERER_COMMIT = "a51b70ae524e13ef56d79bb07a83462256d361f9";
 const WIDTHS = [640, 960, 1440];
 const IMAGE_FAMILIES = [
 	"conformal-input-gear",
@@ -55,6 +57,8 @@ test("Conformal cooling media matches its sanitized capture manifest", () => {
 	assertPublicManifest(manifest);
 	assert.equal(manifest.source.uiApiCaptureCommit, ACCEPTED_SOURCE_COMMIT);
 	assert.equal(manifest.source.cleanAtUiApiCapture, true);
+	assert.notEqual(manifest.source.rendererCommit, REPLACED_RENDERER_COMMIT);
+	assert.equal(manifest.source.rendererCommit, ACCEPTED_RENDERER_COMMIT);
 
 	const listedNames = manifest.publishedAssets
 		.map((asset) => asset.filename)
