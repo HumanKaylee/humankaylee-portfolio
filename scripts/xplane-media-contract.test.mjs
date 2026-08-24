@@ -1,12 +1,29 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	readdirSync,
+	rmSync,
+	statSync,
+	writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+import {
+	SOURCE_FILE_SHA256,
+	assertNonOverlappingRoots,
+	assertPinnedFileHashes,
+	assertSafePublicMetadata,
+	buildOutputAtomically,
+} from "./build-xplane-fov-media.mjs";
+
 const ROOT = "apps/web/public/media/xplane-fov";
-const FORBIDDEN = /SNV|[A-Za-z]:\\|XPlaneRecordings|\bLM[5-8]\b/i;
 const EXPECTED = [
 	"capture-manifest.json",
 	"comparison-bank-120-640.webp",
@@ -23,12 +40,7 @@ const EXPECTED = [
 
 // biome-ignore lint/suspicious/noExportsInTest: the public-media contract requires this safety helper to be reusable.
 export function assertPublicXplaneMetadata(value) {
-	const serialized = JSON.stringify(value);
-	assert.doesNotMatch(serialized, FORBIDDEN);
-	assert.doesNotMatch(
-		serialized,
-		/token|password|cookie|authorization|bearer/i,
-	);
+	assertSafePublicMetadata(value);
 }
 
 function sha256(filePath) {
@@ -59,6 +71,112 @@ function assertFastStart(filePath) {
 		`${path.basename(filePath)} is not fast-start compatible`,
 	);
 }
+
+test("source pins accept the expected bytes and reject a changed file", () => {
+	const fixtureRoot = mkdtempSync(path.join(tmpdir(), "xplane-source-pin-"));
+	try {
+		mkdirSync(path.join(fixtureRoot, "nested"));
+		writeFileSync(path.join(fixtureRoot, "alpha.txt"), "alpha");
+		writeFileSync(path.join(fixtureRoot, "nested", "beta.txt"), "beta");
+		const expectedHashes = {
+			"alpha.txt":
+				"8ed3f6ad685b959ead7022518e1af76cd816f8e8ec7ccdda1ed4018e8f2223f8",
+			"nested/beta.txt":
+				"f44e64e75f3948e9f73f8dfa94721c4ce8cbb4f265c4790c702b2d41cfbf2753",
+		};
+
+		assert.doesNotThrow(() =>
+			assertPinnedFileHashes(fixtureRoot, expectedHashes),
+		);
+		writeFileSync(path.join(fixtureRoot, "alpha.txt"), "changed");
+		assert.throws(
+			() => assertPinnedFileHashes(fixtureRoot, expectedHashes),
+			/source content hash mismatch/i,
+		);
+	} finally {
+		rmSync(fixtureRoot, { force: true, recursive: true });
+	}
+});
+
+test("source hash pins cover the exact 24-file supplied inventory", () => {
+	const expectedRelativePaths = ["fov50_p0_h0", "fov110_m5_h0"]
+		.flatMap((configuration) => [
+			`${configuration}/composite.mp4`,
+			`${configuration}/info.txt`,
+			...Array.from(
+				{ length: 10 },
+				(_, index) =>
+					`${configuration}/screenshot_${String(index + 1).padStart(2, "0")}.png`,
+			),
+		])
+		.sort();
+
+	assert.equal(Object.keys(SOURCE_FILE_SHA256).length, 24);
+	assert.deepEqual(
+		Object.keys(SOURCE_FILE_SHA256).sort(),
+		expectedRelativePaths,
+	);
+});
+
+test("failed media production preserves the destination and removes staging residue", () => {
+	const fixtureParent = mkdtempSync(
+		path.join(tmpdir(), "xplane-atomic-output-"),
+	);
+	try {
+		const outputRoot = path.join(fixtureParent, "public-media");
+		mkdirSync(outputRoot);
+		const sentinelManifest = Buffer.from("pre-existing-manifest-sentinel");
+		writeFileSync(
+			path.join(outputRoot, "capture-manifest.json"),
+			sentinelManifest,
+		);
+
+		assert.throws(
+			() =>
+				buildOutputAtomically(outputRoot, (stageRoot) => {
+					writeFileSync(path.join(stageRoot, "partial.mp4"), "partial");
+					throw new Error("injected producer failure");
+				}),
+			/injected producer failure/i,
+		);
+		assert.deepEqual(
+			readFileSync(path.join(outputRoot, "capture-manifest.json")),
+			sentinelManifest,
+		);
+		assert.deepEqual(readdirSync(outputRoot), ["capture-manifest.json"]);
+		assert.deepEqual(readdirSync(fixtureParent), ["public-media"]);
+	} finally {
+		rmSync(fixtureParent, { force: true, recursive: true });
+	}
+});
+
+test("source and output roots must be distinct non-overlapping trees", () => {
+	const fixtureParent = path.join(tmpdir(), "xplane-root-guard");
+	const sourceRoot = path.join(fixtureParent, "source");
+	const outputRoot = path.join(fixtureParent, "output");
+
+	assert.doesNotThrow(() => assertNonOverlappingRoots(sourceRoot, outputRoot));
+	assert.throws(
+		() => assertNonOverlappingRoots(sourceRoot, sourceRoot),
+		/roots must not overlap/i,
+	);
+	assert.throws(
+		() =>
+			assertNonOverlappingRoots(
+				sourceRoot,
+				path.join(sourceRoot, "public-media"),
+			),
+		/roots must not overlap/i,
+	);
+	assert.throws(
+		() =>
+			assertNonOverlappingRoots(
+				path.join(outputRoot, "supplied-source"),
+				outputRoot,
+			),
+		/roots must not overlap/i,
+	);
+});
 
 test("X-Plane media matches its sanitized public manifest", () => {
 	assert.ok(existsSync(ROOT));
@@ -141,6 +259,9 @@ test("X-Plane public metadata rejects recovered private identifiers", () => {
 	for (const unsafe of [
 		"SNV",
 		"E:\\private",
+		"C:/private",
+		"//server/share",
+		"\\\\server\\share",
 		"XPlaneRecordings",
 		"LM5",
 		"lm8",
