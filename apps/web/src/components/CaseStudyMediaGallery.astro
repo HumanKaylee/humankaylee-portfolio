@@ -31,7 +31,10 @@ const sourceSet = (sources: WorkResponsiveSource[]) =>
 			</header>
 			<div class="case-study-media-gallery__grid">
 				{items.map((item) => (
-					<figure data-evidence-media-kind={item.kind}>
+					<figure
+						data-evidence-media-kind={item.kind}
+						style={`--evidence-media-aspect: ${item.width} / ${item.height}`}
+					>
 						{item.kind === "image" ? (
 							<picture>
 								<source
@@ -125,8 +128,8 @@ const sourceSet = (sources: WorkResponsiveSource[]) =>
 
 	.case-study-media-gallery img,
 	.case-study-media-gallery video {
-		aspect-ratio: 16 / 9;
-		object-fit: cover;
+		aspect-ratio: var(--evidence-media-aspect);
+		object-fit: contain;
 	}
 
 	.case-study-media-gallery figcaption {

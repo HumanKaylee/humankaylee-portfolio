@@ -9,7 +9,16 @@ function frontmatterValue(entry, field) {
 	)?.[1];
 }
 
-test("Work content has two flagships, one supporting proof, two archives, and required local assets", () => {
+const expectedPublishedSlugs = [
+	"cryo-flow-sim",
+	"conformal-cooling-channel-generation",
+	"xplane-cabin-camera-fov-trade-study",
+	"black-scholes-wasm",
+	"cli-fleet-synchronization-and-mcp-rollout",
+	"remote-workstation-recovery-and-operational-debugging",
+];
+
+test("Work content has two flagships, two supporting studies, two archives, and required local assets", () => {
 	const dir = "apps/web/src/content/work";
 	const files = readdirSync(dir).filter((name) => name.endsWith(".md"));
 	const source = files.map((name) =>
@@ -29,10 +38,18 @@ test("Work content has two flagships, one supporting proof, two archives, and re
 		"flagship",
 		"flagship",
 		"supporting",
+		"supporting",
 	]);
 	assert.deepEqual(
 		[...featuredOrders].sort((left, right) => left - right),
-		[1, 2, 3, 4, 5],
+		[1, 2, 3, 4, 5, 6],
+	);
+	assert.deepEqual(
+		slugs
+			.map((slug, index) => ({ order: featuredOrders[index], slug }))
+			.sort((left, right) => left.order - right.order)
+			.map(({ slug }) => slug),
+		expectedPublishedSlugs,
 	);
 	assert.equal(new Set(files).size, files.length);
 	assert.ok(slugs.every((slug) => slug));

@@ -29,12 +29,32 @@ describe("Astro content collection fixtures", () => {
 		expect(contentConfig).not.toMatch(/\bprojects,|\bcaseStudies,/);
 	});
 
-	it("keeps exactly five unified Work records", () => {
+	it("keeps exactly six unified Work records in published hierarchy order", () => {
 		const entries = readdirSync(join(contentRoot, "work")).filter((file) =>
 			file.endsWith(".md"),
 		);
+		const orderedSlugs = entries
+			.map((entry) => {
+				const contents = readFileSync(join(contentRoot, "work", entry), "utf8");
+				return {
+					featuredOrder: Number(
+						contents.match(/^featuredOrder:\s*(\d+)$/m)?.[1],
+					),
+					slug: contents.match(/^slug:\s*"([^"]+)"$/m)?.[1],
+				};
+			})
+			.sort((left, right) => left.featuredOrder - right.featuredOrder)
+			.map((entry) => entry.slug);
 
-		expect(entries).toHaveLength(5);
+		expect(entries).toHaveLength(6);
+		expect(orderedSlugs).toEqual([
+			"cryo-flow-sim",
+			"conformal-cooling-channel-generation",
+			"xplane-cabin-camera-fov-trade-study",
+			"black-scholes-wasm",
+			"cli-fleet-synchronization-and-mcp-rollout",
+			"remote-workstation-recovery-and-operational-debugging",
+		]);
 	});
 
 	it("uses the approved production domain for canonical metadata", () => {
@@ -53,7 +73,7 @@ describe("Astro content collection fixtures", () => {
 			.map((entry) => readFileSync(join(contentRoot, "work", entry), "utf8"))
 			.filter((contents) => contents.includes('publicationStatus: "publish"'));
 
-		expect(published).toHaveLength(5);
+		expect(published).toHaveLength(6);
 
 		for (const contents of published) {
 			expect(contents).toContain(

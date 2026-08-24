@@ -211,6 +211,48 @@ test.describe("page metadata @metadata", () => {
 		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
 	});
 
+	test("renders route-specific X-Plane metadata and one canonical CreativeWork record", async ({
+		page,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/xplane-cabin-camera-fov-trade-study/`;
+
+		await page.goto("/work/xplane-cabin-camera-fov-trade-study/");
+		await expect(page).toHaveTitle(
+			"X-Plane Cabin Camera FOV Trade Study | Joe Poznanski",
+		);
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			"content",
+			`${expectedSiteUrl}/media/xplane-fov/comparison-bank-120-1440.webp`,
+		);
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			/A documented X-Plane replay comparing four cabin camera views/i,
+		);
+
+		const records = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		)
+			.flatMap((source) => JSON.parse(source))
+			.filter(
+				(record: { "@type"?: string }) => record["@type"] === "CreativeWork",
+			);
+
+		expect(records).toHaveLength(1);
+		expect(records[0]).toMatchObject({
+			"@type": "CreativeWork",
+			name: "X-Plane Cabin Camera FOV Trade Study",
+			url: canonicalUrl,
+		});
+	});
+
 	test("renders note-specific BlogPosting JSON-LD on note detail pages", async ({
 		page,
 	}) => {

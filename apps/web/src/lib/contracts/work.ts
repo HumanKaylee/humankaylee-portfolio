@@ -1,6 +1,7 @@
 import { z } from "astro/zod";
 
 import {
+	approvalEvidenceSchema,
 	caseStudyRedactionStatusSchema,
 	publicationStatusSchema,
 	redactionReviewSchema,
@@ -130,6 +131,7 @@ export const workSchema = z
 		publicationStatus: publicationStatusSchema,
 		redactionStatus: caseStudyRedactionStatusSchema,
 		redactionReview: redactionReviewSchema,
+		approvalEvidence: approvalEvidenceSchema.optional(),
 		seo: seoSchema,
 	})
 	.superRefine((entry, context) => {
@@ -142,6 +144,51 @@ export const workSchema = z
 				path: ["redactionStatus"],
 				message: "blocked work cannot be published",
 			});
+		}
+
+		if (entry.redactionStatus === "approved") {
+			if (entry.redactionReview.checklistStatus !== "complete") {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ["redactionReview", "checklistStatus"],
+					message: "approved work requires a completed redaction checklist",
+				});
+			}
+			if (!entry.redactionReview.reviewedOn) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ["redactionReview", "reviewedOn"],
+					message: "approved work requires a review date",
+				});
+			}
+			if (!entry.redactionReview.checklist) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ["redactionReview", "checklist"],
+					message: "approved work requires checklist answers",
+				});
+			}
+			if (entry.redactionReview.checklist?.claimsHaveSafeEvidence !== "yes") {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ["redactionReview", "checklist", "claimsHaveSafeEvidence"],
+					message: "approved work requires safe supporting evidence",
+				});
+			}
+			if (entry.redactionReview.openItems.length > 0) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ["redactionReview", "openItems"],
+					message: "approved work cannot have open redaction items",
+				});
+			}
+			if (!entry.approvalEvidence) {
+				context.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ["approvalEvidence"],
+					message: "approved work requires structured approval evidence",
+				});
+			}
 		}
 
 		if (

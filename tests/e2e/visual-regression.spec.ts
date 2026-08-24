@@ -20,6 +20,10 @@ const visualRoutes = [
 		path: "/work/conformal-cooling-channel-generation/",
 	},
 	{
+		label: "work-xplane-fov",
+		path: "/work/xplane-cabin-camera-fov-trade-study/",
+	},
+	{
 		label: "work-cli-fleet",
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 	},

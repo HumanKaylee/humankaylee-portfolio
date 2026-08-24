@@ -99,6 +99,53 @@ const validWork = {
 	},
 };
 
+const completeApprovalEvidence = {
+	humanSignoff: {
+		reviewer: "Joe Poznanski",
+		signedOffOn: "2026-08-24",
+		decision: "approved",
+		notes: "Approved after inspecting the public preview.",
+	},
+	artifactInspection: {
+		source: "sanitized public evidence manifest",
+		inspectedOn: "2026-08-24",
+		result: "passed",
+		notes: "Public artifacts match the reviewed manifest.",
+	},
+	productionOrPreviewEvidence: {
+		source: "isolated Cloudflare Pages preview",
+		capturedOn: "2026-08-24",
+		result: "passed",
+		notes: "The reviewed route and media passed preview inspection.",
+	},
+};
+
+function completeApprovedWork() {
+	return {
+		...structuredClone(validWork),
+		redactionStatus: "approved",
+		redactionReview: {
+			guidePath: "docs/CONTENT_REDACTION_GUIDE.md",
+			reviewer: "operator",
+			reviewedOn: "2026-08-24",
+			checklistStatus: "complete",
+			openItems: [] as string[],
+			notes: "Every public artifact and claim has been reviewed.",
+			checklist: {
+				secretsRemoved: "yes",
+				hostnamesAndAccessPathsGeneralized: "yes",
+				userAndAccountNamesGeneralized: "yes",
+				screenshotsInspected: "yes",
+				logsSummarizedOrSanitized: "not-applicable",
+				publicLinksVerified: "yes",
+				claimsHaveSafeEvidence: "yes",
+				securitySensitiveProceduresRemoved: "yes",
+			},
+		},
+		approvalEvidence: completeApprovalEvidence,
+	};
+}
+
 describe("workSchema", () => {
 	it("accepts a complete public Work entry", () => {
 		const parsed = workSchema.parse(validWork);
@@ -215,5 +262,63 @@ describe("workSchema", () => {
 				redactionStatus: "blocked",
 			}).success,
 		).toBe(false);
+	});
+
+	it("keeps reviewed Work valid before approval evidence exists", () => {
+		expect(workSchema.safeParse(validWork).success).toBe(true);
+	});
+
+	it("rejects approved Work without structured approval evidence", () => {
+		const candidate = completeApprovedWork();
+		Reflect.deleteProperty(candidate, "approvalEvidence");
+
+		expect(workSchema.safeParse(candidate).success).toBe(false);
+	});
+
+	it("accepts approved Work with complete structured approval evidence", () => {
+		const parsed = workSchema.parse(completeApprovedWork());
+
+		expect(parsed.approvalEvidence?.humanSignoff.decision).toBe("approved");
+	});
+
+	it.each([
+		{
+			label: "an incomplete checklist status",
+			mutate: (candidate: ReturnType<typeof completeApprovedWork>) => {
+				candidate.redactionReview.checklistStatus = "partial";
+			},
+		},
+		{
+			label: "no review date",
+			mutate: (candidate: ReturnType<typeof completeApprovedWork>) => {
+				Reflect.deleteProperty(candidate.redactionReview, "reviewedOn");
+			},
+		},
+		{
+			label: "no checklist answers",
+			mutate: (candidate: ReturnType<typeof completeApprovedWork>) => {
+				Reflect.deleteProperty(candidate.redactionReview, "checklist");
+			},
+		},
+		{
+			label: "claims without safe evidence",
+			mutate: (candidate: ReturnType<typeof completeApprovedWork>) => {
+				candidate.redactionReview.checklist.claimsHaveSafeEvidence =
+					"not-applicable";
+			},
+		},
+		{
+			label: "open redaction items",
+			mutate: (candidate: ReturnType<typeof completeApprovedWork>) => {
+				candidate.redactionReview.openItems = [
+					"Preview inspection is pending.",
+				];
+			},
+		},
+	])("rejects approved Work with $label", ({ mutate }) => {
+		const candidate = completeApprovedWork();
+		mutate(candidate);
+
+		expect(workSchema.safeParse(candidate).success).toBe(false);
 	});
 });

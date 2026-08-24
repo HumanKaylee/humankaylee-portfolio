@@ -36,6 +36,7 @@ test.describe("crawler artifacts @metadata", () => {
 			"/work/",
 			"/work/cryo-flow-sim/",
 			"/work/conformal-cooling-channel-generation/",
+			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
 			"/work/black-scholes-wasm/",
@@ -47,6 +48,11 @@ test.describe("crawler artifacts @metadata", () => {
 		]) {
 			expect(body).toContain(`<loc>${expectedSiteUrl}${path}</loc>`);
 		}
+		expect(
+			body.split(
+				`${expectedSiteUrl}/work/xplane-cabin-camera-fov-trade-study/`,
+			),
+		).toHaveLength(2);
 
 		expect(body).not.toContain("/projects/");
 		expect(body).not.toContain("/case-studies/");

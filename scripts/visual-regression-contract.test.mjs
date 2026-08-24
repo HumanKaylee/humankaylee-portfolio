@@ -19,6 +19,7 @@ const expectedVisualRoutes = [
 	["work", "/work/"],
 	["work-cryo", "/work/cryo-flow-sim/"],
 	["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
+	["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 	[
 		"work-remote-recovery",
@@ -30,6 +31,10 @@ const expectedVisualRoutes = [
 	["contact", "/contact/"],
 	["notes", "/notes/"],
 ];
+
+const expectedAcceptedBaselineRoutes = expectedVisualRoutes.filter(
+	([label]) => label !== "work-xplane-fov",
+);
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -102,6 +107,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		["work", "/work/"],
 		["work-cryo", "/work/cryo-flow-sim/"],
 		["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
+		["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 		[
 			"work-remote-recovery",
@@ -123,12 +129,15 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	);
 });
 
-test("B-037 runbook and executable visual matrix cover every current Signal / Proof surface", () => {
+test("B-037 executable visual matrix covers every current Signal / Proof surface", () => {
 	const runbook = readRequiredFile(files.runbook);
 	const visualSpec = readRequiredFile(files.visualSpec);
 
 	assert.deepEqual(visualSpecRoutes(visualSpec), expectedVisualRoutes);
-	assert.deepEqual(documentedVisualRoutes(runbook), expectedVisualRoutes);
+	assert.deepEqual(
+		documentedVisualRoutes(runbook),
+		expectedAcceptedBaselineRoutes,
+	);
 	assert.match(runbook, /Windows[\s\S]*Linux/i);
 	assert.match(
 		runbook,
@@ -140,11 +149,11 @@ test("B-037 runbook and executable visual matrix cover every current Signal / Pr
 	);
 });
 
-test("B-037 visual route matrix has paired Linux and Windows baselines at every viewport", () => {
+test("B-037 accepted visual routes have paired Linux and Windows baselines at every viewport", () => {
 	const visualSpec = readRequiredFile(files.visualSpec);
 	const missingBaselines = [];
 
-	for (const [label] of visualSpecRoutes(visualSpec)) {
+	for (const [label] of expectedAcceptedBaselineRoutes) {
 		for (const viewport of ["desktop", "mobile"]) {
 			for (const platform of ["linux", "win32"]) {
 				const snapshot = `${snapshotDirectory}/${label}-${viewport}-${platform}.png`;

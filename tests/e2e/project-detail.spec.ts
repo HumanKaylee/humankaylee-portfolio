@@ -17,6 +17,12 @@ const workDetails = [
 		galleryItems: 4,
 	},
 	{
+		slug: "xplane-cabin-camera-fov-trade-study",
+		title: "X-Plane Cabin Camera FOV Trade Study",
+		marker: /documented X-Plane replay compares four cabin camera views/i,
+		galleryItems: 4,
+	},
+	{
 		slug: "cli-fleet-synchronization-and-mcp-rollout",
 		title: "CLI Fleet Synchronization",
 		marker: /cross-machine CLI rollout standardized local tool behavior/i,
@@ -116,5 +122,41 @@ test("renders the Conformal workflow and ordered responsive evidence gallery", a
 	await expect(page.locator("main")).toContainText(/UI\/API exports/i);
 	await expect(page.locator("main")).not.toContainText(
 		/20-50%|production-qualified|guaranteed|optimized cooling/i,
+	);
+
+	const existingRatio = await figures
+		.first()
+		.locator("img")
+		.evaluate((element) => {
+			const box = element.getBoundingClientRect();
+			return box.width / box.height;
+		});
+	expect(existingRatio).toBeGreaterThan(1.7);
+	expect(existingRatio).toBeLessThan(1.8);
+});
+
+test("renders uncropped intrinsic-ratio X-Plane evidence without private provenance", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1440, height: 1000 });
+	await page.goto("/work/xplane-cabin-camera-fov-trade-study/");
+
+	const wideVideo = page
+		.locator('[data-evidence-media-kind="video"] video')
+		.first();
+	await expect(wideVideo).toBeVisible();
+	const ratio = await wideVideo.evaluate((element) => {
+		const box = element.getBoundingClientRect();
+		return box.width / box.height;
+	});
+
+	expect(ratio).toBeGreaterThan(3.5);
+	expect(ratio).toBeLessThan(3.7);
+	await expect(wideVideo).toHaveCSS("object-fit", "contain");
+	await expect(page.locator("main")).toContainText(
+		/replay harness source.*not supplied or independently rerun/i,
+	);
+	await expect(page.locator("main")).not.toContainText(
+		/SNV|XPlaneRecordings|\bLM[5-8]\b/i,
 	);
 });

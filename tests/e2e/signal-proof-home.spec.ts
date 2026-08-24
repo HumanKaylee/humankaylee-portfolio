@@ -112,7 +112,7 @@ for (const viewport of [
 	});
 }
 
-test("leads with two flagships, one supporting proof, and no archive projects", async ({
+test("leads with two flagships, two supporting studies, and no archive projects", async ({
 	page,
 }) => {
 	await page.goto("/");
@@ -120,17 +120,23 @@ test("leads with two flagships, one supporting proof, and no archive projects", 
 	const flagship = page.locator('[data-proof-placement="flagship"]');
 	const supporting = page.locator('[data-proof-placement="supporting"]');
 	await expect(flagship).toHaveCount(2);
-	await expect(supporting).toHaveCount(1);
+	await expect(supporting).toHaveCount(2);
 	await expect(flagship.locator("h3")).toHaveText([
 		"Cryogenic Flow Simulation",
 		"Conformal Cooling Channel Generation",
 	]);
-	await expect(supporting).toContainText(
+	await expect(supporting.locator("h3")).toHaveText([
+		"X-Plane Cabin Camera FOV Trade Study",
 		"Black-Scholes Options Pricer in Rust and WASM",
-	);
+	]);
 	await expect(
 		flagship.getByRole("link", { name: "Cryogenic Flow Simulation" }),
 	).toHaveAttribute("href", "/work/cryo-flow-sim/");
+	await expect(
+		supporting.getByRole("link", {
+			name: "X-Plane Cabin Camera FOV Trade Study",
+		}),
+	).toHaveAttribute("href", "/work/xplane-cabin-camera-fov-trade-study/");
 	await expect(
 		supporting.getByRole("link", {
 			name: "Black-Scholes Options Pricer in Rust and WASM",
@@ -139,6 +145,7 @@ test("leads with two flagships, one supporting proof, and no archive projects", 
 	await expect(page.locator("[data-proof-placement] h3")).toHaveText([
 		"Cryogenic Flow Simulation",
 		"Conformal Cooling Channel Generation",
+		"X-Plane Cabin Camera FOV Trade Study",
 		"Black-Scholes Options Pricer in Rust and WASM",
 	]);
 	await expect(page.locator("main")).not.toContainText(
@@ -166,7 +173,7 @@ test("stays static and useful during an API outage", async ({ page }) => {
 		2,
 	);
 	await expect(page.locator('[data-proof-placement="supporting"]')).toHaveCount(
-		1,
+		2,
 	);
 	await expect(page.locator("main")).not.toContainText(
 		/Failed to fetch|ECONNREFUSED|TypeError:|API health/i,
@@ -186,7 +193,7 @@ test.describe("static homepage without JavaScript", () => {
 		);
 		await expect(
 			page.locator('[data-proof-placement="supporting"]'),
-		).toBeVisible();
+		).toHaveCount(2);
 		await expect(page.locator("[data-motion-loop]")).toHaveCount(3);
 		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(3);
 		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);

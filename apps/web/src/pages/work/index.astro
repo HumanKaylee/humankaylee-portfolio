@@ -24,11 +24,11 @@ const archiveWork = publishedWork
 
 if (
 	flagshipWork.length !== 2 ||
-	supportingWork.length !== 1 ||
+	supportingWork.length !== 2 ||
 	archiveWork.length !== 2
 ) {
 	throw new Error(
-		`Work hierarchy requires two flagships, one supporting demonstration, and two archive entries; found ${flagshipWork.length}, ${supportingWork.length}, and ${archiveWork.length}.`,
+		`Work hierarchy requires two flagships, two supporting studies, and two archive entries; found ${flagshipWork.length}, ${supportingWork.length}, and ${archiveWork.length}.`,
 	);
 }
 ---
@@ -44,9 +44,9 @@ if (
 			<p class="work-index__kicker">Selected work</p>
 			<h1>Systems made legible through proof.</h1>
 			<p>
-				Two flagship simulation systems, a working browser demonstration, and
-				an operational archive. Each stays framed by the decisions, evidence,
-				and limits that make the result trustworthy.
+				Two flagship engineering systems, two focused technical studies, and an
+				operational archive. Each stays framed by the decisions, evidence, and
+				limits that make the result trustworthy.
 			</p>
 		</header>
 

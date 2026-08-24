@@ -23,6 +23,11 @@ const implementedRoutes = [
 		marker: /Evidence boundary/i,
 	},
 	{
+		path: "/work/xplane-cabin-camera-fov-trade-study/",
+		heading: /X-Plane Cabin Camera FOV Trade Study/i,
+		marker: /Two documented camera configurations/i,
+	},
+	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		heading: /CLI Fleet Synchronization/i,
 		marker: /Proof/i,

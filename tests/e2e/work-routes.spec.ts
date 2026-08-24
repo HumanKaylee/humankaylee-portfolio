@@ -8,6 +8,10 @@ const allPublishedWork = [
 		slug: "conformal-cooling-channel-generation",
 	},
 	{
+		title: "X-Plane Cabin Camera FOV Trade Study",
+		slug: "xplane-cabin-camera-fov-trade-study",
+	},
+	{
 		title: "Black-Scholes Options Pricer in Rust and WASM",
 		slug: "black-scholes-wasm",
 	},
@@ -36,7 +40,7 @@ const detailHeadings = [
 ] as const;
 
 const internalWorkCopy =
-	/PR evidence|approval pass|launch approval|approval checklist|production launch|deployment status|fallback mode|API health|launch readiness|openItems|redaction/i;
+	/PR evidence|approval pass|launch approval|approval checklist|production launch|deployment status|fallback mode|API health|launch readiness|openItems|redaction status|redaction review/i;
 
 test.describe("Work routes @work", () => {
 	test("separates flagship, supporting, and archive work while preserving every route", async ({
@@ -50,7 +54,7 @@ test.describe("Work routes @work", () => {
 			"Read the case study",
 			"Read the case study",
 		]);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Cryogenic Flow Simulation",
@@ -58,9 +62,10 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Conformal Cooling Channel Generation",
 		);
-		await expect(page.locator("[data-supporting-work]")).toContainText(
+		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
+			"X-Plane Cabin Camera FOV Trade Study",
 			"Black-Scholes Options Pricer in Rust and WASM",
-		);
+		]);
 		await expect(page.locator("[data-archive-work]")).toContainText(
 			"CLI Fleet Synchronization",
 		);
@@ -71,6 +76,7 @@ test.describe("Work routes @work", () => {
 		for (const path of [
 			"/work/cryo-flow-sim/",
 			"/work/conformal-cooling-channel-generation/",
+			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/black-scholes-wasm/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
@@ -98,7 +104,16 @@ test.describe("Work routes @work", () => {
 			"Conformal Cooling Channel Generation",
 		]);
 		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(1);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(2);
+		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
+			"X-Plane Cabin Camera FOV Trade Study",
+			"Black-Scholes Options Pricer in Rust and WASM",
+		]);
+		await expect(
+			page.locator("[data-supporting-work]").getByRole("link", {
+				name: "X-Plane Cabin Camera FOV Trade Study",
+			}),
+		).toHaveAttribute("href", "/work/xplane-cabin-camera-fov-trade-study/");
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
 				name: "Black-Scholes Options Pricer in Rust and WASM",
@@ -119,6 +134,7 @@ test.describe("Work routes @work", () => {
 	}) => {
 		const expectedNext = [
 			"Conformal Cooling Channel Generation",
+			"X-Plane Cabin Camera FOV Trade Study",
 			"Black-Scholes Options Pricer in Rust and WASM",
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
@@ -395,6 +411,7 @@ test.describe("Work routes @work", () => {
 	}) => {
 		for (const path of [
 			"/work/",
+			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 		]) {
 			for (const viewport of [
