@@ -5,7 +5,7 @@ discipline: "simulation"
 year: 2026
 placement: "flagship"
 featuredOrder: 2
-lede: "ConformalFlow is an engineering prototype that converts injection-mold cavity geometry into conformal cooling-channel designs for additive manufacturing. It combines parameterized routing, split-mold generation, ports, and manufacturing checks for clearance, continuity, overhangs, powder removal, and flow through a React and Three.js interface backed by a Python geometry and validation engine."
+lede: "ConformalFlow automatically designs cooling passages that follow an injection-mold cavity. The goal is to remove heat more evenly so molded parts can reach ejection temperature sooner, while keeping the geometry inspectable and compatible with complex internal passages enabled by metal additive manufacturing."
 problem: "Cooling paths inside an injection mold need to follow part geometry closely enough to be useful while remaining inspectable as geometry, bounded by manufacturing-oriented checks, and exportable for downstream engineering work."
 stakes: "A visually plausible path is not enough: disconnected channels, poor wall clearance, unsupported overhangs, trapped powder, or ambiguous mold interfaces can turn an attractive rendering into unusable geometry."
 role: "Prototype architecture, Python geometry and validation engine, React and Three.js workflow, deterministic evidence capture, and public-safe case-study verification."
@@ -32,7 +32,7 @@ decisions:
     alternatives:
       - "Host a public geometry-generation service."
     tradeoff: "Visitors cannot submit arbitrary parts, but the portfolio remains fast, secure, and auditable against fixed evidence."
-outcome: "The alpha prototype completed a fresh browser-driven gear-cavity job, produced four UI/API export artifacts, and separately generated two watertight split-mold halves with a passing repository validation report and two recorded volume warnings."
+outcome: "This engineering prototype that converts injection-mold cavity geometry into cooling passages completed a fresh browser-driven gear-cavity job, produced four UI/API export artifacts, and separately generated two watertight split-mold halves with a passing repository validation report and two recorded volume warnings."
 lessons:
   - "Geometry evidence is strongest when the input, running state, output meshes, and validation boundary are all preserved together."
   - "Separate generator paths need separate provenance; visual similarity is not evidence that two artifacts came from the same workflow."
@@ -152,7 +152,7 @@ redactionReview:
     securitySensitiveProceduresRemoved: "yes"
 seo:
   title: "Conformal Cooling Channel Generation | Joe Poznanski"
-  description: "An evidence-backed engineering prototype for generating and validating conformal cooling channels and split injection molds."
+  description: "An engineering prototype for designing and validating conformal cooling passages inside injection molds, including geometries enabled by metal additive manufacturing."
   canonicalPath: "/work/conformal-cooling-channel-generation/"
   ogImage: "/social/default.png"
 ---

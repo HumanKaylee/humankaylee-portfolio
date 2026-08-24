@@ -5,4 +5,18 @@ export const profile = {
 	email: "josephpoznanski@gmail.com",
 	linkedin: "https://www.linkedin.com/in/joe-poznanski",
 	github: "https://github.com/HumanKaylee",
+	knowsAbout: [
+		"Flight simulation",
+		"Aerospace simulation",
+		"Controls software",
+		"Telemetry systems",
+		"Rust",
+		"C++",
+		"Hardware-in-the-loop testing",
+		"Injection molding",
+		"Conformal cooling",
+		"Metal additive manufacturing",
+		"Distributed systems",
+		"Operational software",
+	] as const,
 } as const;

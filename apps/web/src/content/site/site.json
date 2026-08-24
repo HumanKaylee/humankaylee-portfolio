@@ -1,11 +1,11 @@
 {
 	"siteName": "Joe Poznanski Portfolio",
-	"siteDescription": "Principal engineer for simulation, controls, and operational software.",
+	"siteDescription": "Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++.",
 	"siteUrl": "https://joepoznanski.io",
 	"defaultOgImage": "/social/default.png",
 	"seo": {
 		"title": "Joe Poznanski Portfolio",
-		"description": "Principal engineer for simulation, controls, and operational software.",
+		"description": "Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++.",
 		"canonicalPath": "/",
 		"ogImage": "/social/default.png"
 	}

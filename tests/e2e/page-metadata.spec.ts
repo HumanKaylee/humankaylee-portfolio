@@ -81,10 +81,53 @@ test.describe("page metadata @metadata", () => {
 		const structuredData = await page
 			.locator('script[type="application/ld+json"]')
 			.allTextContents();
+		const records = structuredData.flatMap((source) => JSON.parse(source));
+		const person = records.find(
+			(record: { "@type"?: string }) => record["@type"] === "Person",
+		);
 
-		expect(structuredData.join("\n")).toContain('"@type":"Person"');
+		expect(person).toMatchObject({
+			"@type": "Person",
+			name: "Joe Poznanski",
+			jobTitle: "Principal Software Engineer",
+			sameAs: [
+				"https://www.linkedin.com/in/joe-poznanski",
+				"https://github.com/HumanKaylee",
+			],
+		});
+		expect(person.knowsAbout).toEqual([
+			"Flight simulation",
+			"Aerospace simulation",
+			"Controls software",
+			"Telemetry systems",
+			"Rust",
+			"C++",
+			"Hardware-in-the-loop testing",
+			"Injection molding",
+			"Conformal cooling",
+			"Metal additive manufacturing",
+			"Distributed systems",
+			"Operational software",
+		]);
+		expect(JSON.stringify(person)).not.toMatch(/josephpoznanski@gmail\.com/i);
 		expect(structuredData.join("\n")).toContain('"@type":"WebSite"');
 		expect(structuredData.join("\n")).not.toContain("/home/joe");
+	});
+
+	test("describes Home and Work with matching simulation and manufacturing scope", async ({
+		page,
+	}) => {
+		await page.goto("/");
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			"Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++.",
+		);
+
+		await page.goto("/work/");
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			"Evidence-backed work across flight simulation, engineering simulation, manufacturing software, and operational systems.",
+		);
 	});
 
 	test("serves the configured default social preview asset", async ({
@@ -179,7 +222,7 @@ test.describe("page metadata @metadata", () => {
 		).join("\n");
 		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
 		expect(jsonLdText).toContain(
-			'"description":"Principal engineer for simulation, controls, and operational software."',
+			'"description":"Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++."',
 		);
 		expect(jsonLdText).not.toMatch(
 			/humankaylee\.dev|\/projects\/|\/case-studies\//i,
@@ -199,6 +242,10 @@ test.describe("page metadata @metadata", () => {
 		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
 			"content",
 			canonicalUrl,
+		);
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			"An engineering prototype for designing and validating conformal cooling passages inside injection molds, including geometries enabled by metal additive manufacturing.",
 		);
 
 		const jsonLdText = (

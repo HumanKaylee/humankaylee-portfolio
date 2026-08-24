@@ -49,9 +49,12 @@ const baseStructuredData = [
 	{
 		"@context": "https://schema.org",
 		"@type": "Person",
-		name: "Joe Poznanski",
+		name: profile.name,
 		url: siteUrl,
 		description: site.data.siteDescription,
+		jobTitle: profile.role,
+		knowsAbout: profile.knowsAbout,
+		sameAs: [profile.linkedin, profile.github],
 	},
 	{
 		"@context": "https://schema.org",

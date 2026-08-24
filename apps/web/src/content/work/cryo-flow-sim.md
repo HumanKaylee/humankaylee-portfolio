@@ -5,7 +5,7 @@ discipline: "simulation"
 year: 2026
 placement: "flagship"
 featuredOrder: 1
-lede: "A deterministic simulation of cryogenic valve transients and pressure cascades, captured as a 96.9-second 1080p video artifact verified by 92 passing tests and zero unexpected clamp events."
+lede: "A deterministic cryogenic-flow simulation showing timed valve transitions, tank behavior, and pressure cascades in a verified 96.9-second browser capture."
 problem: "Visualizing fluid dynamics in a cryogenic system requires accurate, reproducible state transitions across valves, tanks, and pipes, without depending on live hardware or an unpredictable animation loop."
 stakes: "An incorrect simulation misleads about system behavior at the exact boundary conditions where engineering errors are most costly: low temperatures, pressure differentials, and timed valve sequencing."
 role: "Rust workspace architecture, simulation implementation, capture pipeline, and artifact validation."
@@ -27,14 +27,14 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
-outcome: "Stage 1 produced a verified 1920x1080 at 30fps, 96.9-second simulation video (13.2 MB) with 92 passing tests, all artifact thresholds met, and zero unexpected system behaviors."
+outcome: "This deterministic simulation of cryogenic valve transients produced a verified 1920x1080 at 30fps, 96.9-second video (13.2 MB); 92 tests passed, all artifact thresholds were met, and the run recorded zero unexpected system behaviors."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
   - "Threshold-based artifact validation is more trustworthy than visual inspection alone, but the thresholds need calibration against known-good runs."
 evidence:
   label: "Stage 1 verified artifact"
-  summary: "1920x1080 at 30fps MP4 capture, 92 tests passed, all validation thresholds met, zero unexpected clamp events, and a run-metadata.json provenance record with git SHA, seed, and per-threshold results."
+  summary: "A 1920x1080, 30fps simulation capture backed by 92 passing tests, recorded validation thresholds, and a provenance record containing the source commit and fixed seed."
   values:
     - label: "Tests"
       value: "92 passing"
@@ -42,9 +42,9 @@ evidence:
     - label: "Capture"
       value: "96.9 seconds"
       detail: "Verified 1920x1080 at 30fps Stage 1 MP4 artifact."
-    - label: "Unexpected clamps"
-      value: "0"
-      detail: "Artifact validation reported zero unexpected clamp events."
+    - label: "Run provenance"
+      value: "Fixed and recorded"
+      detail: "The artifact record includes the source commit, deterministic seed, and measured validation thresholds."
   scope: "Stage 1 artifact evidence from the deterministic capture and validation run."
   limits: "Stage 2 is outside this release; validation thresholds were manually calibrated against the first successful run."
 media:
@@ -114,8 +114,8 @@ seo:
     is a 96.9-second, 1920x1080 at 30fps simulation of cryogenic valve
     transients and pressure cascades across six scenario phases: overview,
     fill start, pipe chilldown, valve travel, tank transfer, and vent recovery.
-    All artifact validation thresholds passed. 92 tests passed with zero
-    unexpected clamp events.
+    All artifact validation thresholds passed. The run record includes the
+    source commit, fixed seed, and measured threshold results across 92 tests.
   </p>
 </video>
 
@@ -160,8 +160,9 @@ output, which makes the artifact auditable against its source commit.
 After capture, a validation script reads `run-metadata.json` and checks seven
 threshold groups: OCR match ratio on dashboard labels, valve motion score,
 flow active pair count, tank fill total delta, pipe cold monotonic pairs,
-telemetry changed count, and unexpected clamp events. All thresholds passed on
-the Stage 1 final artifact with zero unexpected clamps.
+telemetry changed count, and clamp-condition violations. All thresholds passed
+on the Stage 1 final artifact and were recorded with its fixed seed and source
+commit.
 
 | Validation check | Threshold | Stage 1 result |
 | --- | --- | --- |
@@ -171,7 +172,7 @@ the Stage 1 final artifact with zero unexpected clamps.
 | Tank fill delta | ≥ 8 px | 10.694 px |
 | Pipe cold monotonic pairs | ≥ 4 | 6 |
 | Telemetry changed count | ≥ 12 | 30 |
-| Unexpected clamps | 0 | 0 |
+| Clamp-condition violations | 0 | 0 |
 
 ## Test and quality results
 

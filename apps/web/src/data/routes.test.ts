@@ -73,6 +73,29 @@ describe("routeInventory", () => {
 			linkedin: "https://www.linkedin.com/in/joe-poznanski",
 			github: "https://github.com/HumanKaylee",
 		});
+		expect(profile.knowsAbout).toEqual([
+			"Flight simulation",
+			"Aerospace simulation",
+			"Controls software",
+			"Telemetry systems",
+			"Rust",
+			"C++",
+			"Hardware-in-the-loop testing",
+			"Injection molding",
+			"Conformal cooling",
+			"Metal additive manufacturing",
+			"Distributed systems",
+			"Operational software",
+		]);
 		expect(Object.values(profile).join(" ")).not.toMatch(/systems atelier/i);
+	});
+
+	it("describes Home and Work with the exact simulation and manufacturing scope", () => {
+		expect(routeInventoryById.home.seo.description).toBe(
+			"Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++.",
+		);
+		expect(routeInventoryById.work.seo.description).toBe(
+			"Evidence-backed work across flight simulation, engineering simulation, manufacturing software, and operational systems.",
+		);
 	});
 });

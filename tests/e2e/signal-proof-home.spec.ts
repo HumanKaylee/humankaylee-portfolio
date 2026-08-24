@@ -34,7 +34,7 @@ async function expectFirstViewportStory(
 		"Principal engineer for simulation, controls, and operational software.",
 	);
 	await expect(value).toHaveText(
-		"I build high-fidelity simulation, telemetry, and operator-facing software across Rust, C++, distributed systems, and human-in-the-loop AI.",
+		"I build flight simulation, telemetry, controls, and operator-facing software across Rust, C++, distributed systems, and human-in-the-loop AI.",
 	);
 	await expect(workAction).toHaveAttribute("href", "/work/");
 	await expect(heroVideo).toHaveAttribute(
@@ -158,6 +158,18 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 		capabilityLabels,
 	);
 	await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
+	await expect(page.locator("main")).not.toContainText(
+		/unexpected clamp events/i,
+	);
+	await expect(page.locator("main")).toContainText(
+		/cooling passages.*injection-mold cavity/i,
+	);
+	await expect(page.locator("main")).toContainText(
+		/metal additive manufacturing/i,
+	);
+	await expect(page.locator(".proof-gallery__header")).toContainText(
+		/The flagship case studies carry captured motion and geometry evidence\. Focused technical studies show how the same evidence-first approach applies to camera tradeoffs and browser computation\./,
+	);
 	await expect(page.locator("canvas, svg")).toHaveCount(0);
 });
 

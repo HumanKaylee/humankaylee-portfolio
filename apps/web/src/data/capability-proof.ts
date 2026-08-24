@@ -12,7 +12,7 @@ export const capabilityProof: readonly CapabilityProof[] = [
 			"Deterministic models, timed state transitions, and operator-facing system behavior.",
 		href: "/work/cryo-flow-sim/",
 		evidence:
-			"The Cryogenic Flow case study records a 96.9-second verified artifact, 92 passing tests, and zero unexpected clamp events.",
+			"The Cryogenic Flow case study records a 96.9-second verified artifact, 92 passing tests, and a fixed-seed provenance record.",
 	},
 	{
 		capability: "Rust and C++ systems",

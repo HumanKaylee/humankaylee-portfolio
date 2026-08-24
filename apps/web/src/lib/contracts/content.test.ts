@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -19,6 +20,10 @@ const seo = {
 	canonicalPath: "/case-studies/cli-fleet-synchronization",
 	ogImage: "/og/case-studies/cli-fleet-synchronization.png",
 };
+
+const siteMetadata = JSON.parse(
+	readFileSync("apps/web/src/content/site/site.json", "utf8"),
+);
 
 const partialRedactionReview = {
 	guidePath: "docs/CONTENT_REDACTION_GUIDE.md",
@@ -382,5 +387,14 @@ describe("content contracts", () => {
 				seo,
 			}).success,
 		).toBe(false);
+	});
+
+	it("keeps the public site description specific to simulation and systems work", () => {
+		const parsedSiteMetadata = siteMetadataSchema.parse(siteMetadata);
+		const expectedDescription =
+			"Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++.";
+
+		expect(parsedSiteMetadata.siteDescription).toBe(expectedDescription);
+		expect(parsedSiteMetadata.seo.description).toBe(expectedDescription);
 	});
 });

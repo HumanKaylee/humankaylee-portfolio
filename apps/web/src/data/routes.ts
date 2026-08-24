@@ -33,7 +33,7 @@ export const routeInventory = [
 		seo: {
 			title: "Joe Poznanski portfolio",
 			description:
-				"Principal engineer for simulation, controls, and operational software.",
+				"Principal software engineer for flight simulation, controls, telemetry, and operational systems in Rust and C++.",
 			canonicalPath: "/",
 			ogImage: defaultOgImage,
 			robots: "index,follow",
@@ -49,7 +49,7 @@ export const routeInventory = [
 		seo: {
 			title: "Work | Joe Poznanski",
 			description:
-				"Evidence-backed engineering work across simulation, infrastructure, and automation.",
+				"Evidence-backed work across flight simulation, engineering simulation, manufacturing software, and operational systems.",
 			canonicalPath: "/work/",
 			ogImage: defaultOgImage,
 			robots: "index,follow",

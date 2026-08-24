@@ -72,6 +72,15 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-archive-work]")).toContainText(
 			"Remote Workstation Recovery",
 		);
+		await expect(page.locator("main")).not.toContainText(
+			/unexpected clamp events/i,
+		);
+		await expect(page.locator("main")).toContainText(
+			/cooling passages.*injection-mold cavity/i,
+		);
+		await expect(page.locator("main")).toContainText(
+			/metal additive manufacturing/i,
+		);
 
 		for (const path of [
 			"/work/cryo-flow-sim/",
@@ -182,6 +191,12 @@ test.describe("Work routes @work", () => {
 		await page.goto("/work/cryo-flow-sim/");
 		await expect(page.locator("main")).toContainText(/SVG\/HTML\/CSS/i);
 		await expect(page.locator("main")).not.toContainText(/Three\.js/i);
+		await expect(page.locator("main")).not.toContainText(
+			/unexpected clamp events/i,
+		);
+		await expect(page.locator("main")).toContainText(
+			/fixed seed.*measured validation thresholds/i,
+		);
 
 		const frame = page.locator('[data-media-kind="video"]');
 		const video = frame.locator("video");
