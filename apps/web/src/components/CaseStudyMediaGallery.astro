@@ -36,21 +36,31 @@ const sourceSet = (sources: WorkResponsiveSource[]) =>
 						style={`--evidence-media-aspect: ${item.width} / ${item.height}`}
 					>
 						{item.kind === "image" ? (
-							<picture>
-								<source
-									type="image/webp"
-									srcset={sourceSet(item.responsiveSources)}
-									sizes="(max-width: 48rem) 100vw, 50vw"
-								/>
-								<img
-									src={item.src}
-									width={item.width}
-									height={item.height}
-									alt={item.alt}
-									loading="lazy"
-									decoding="async"
-								/>
-							</picture>
+							<>
+								<picture>
+									<source
+										type="image/webp"
+										srcset={sourceSet(item.responsiveSources)}
+										sizes="(max-width: 48rem) 100vw, 50vw"
+									/>
+									<img
+										src={item.src}
+										width={item.width}
+										height={item.height}
+										alt={item.alt}
+										loading="lazy"
+										decoding="async"
+									/>
+								</picture>
+								<a
+									class="case-study-media-gallery__fallback"
+									data-evidence-original
+									data-touch-target="true"
+									href={item.src}
+								>
+									Open the full-size evidence image
+								</a>
+							</>
 						) : (
 							<>
 								<video

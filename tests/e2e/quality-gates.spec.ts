@@ -81,7 +81,7 @@ test.describe("Signal / Proof quality @quality @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(3);
+				).toHaveCount(4);
 			}
 		});
 	}

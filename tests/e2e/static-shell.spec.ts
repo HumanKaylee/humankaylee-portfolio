@@ -163,12 +163,13 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toBeVisible();
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(3);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(4);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
 		for (const href of [
 			"/work/cryo-flow-sim/",
 			"/work/conformal-cooling-channel-generation/",
+			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/black-scholes-wasm/",
 		]) {
 			await expect(
@@ -322,9 +323,9 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 					label: element.textContent?.trim(),
 				})),
 			);
-		expect(links).toHaveLength(5);
-		expect(new Set(links.map((link) => link.href)).size).toBe(5);
-		expect(new Set(links.map((link) => link.label)).size).toBe(5);
+		expect(links).toHaveLength(6);
+		expect(new Set(links.map((link) => link.href)).size).toBe(6);
+		expect(new Set(links.map((link) => link.label)).size).toBe(6);
 	});
 });
 
@@ -346,7 +347,7 @@ test.describe("Signal / Proof static shell @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(3);
+				).toHaveCount(4);
 			}
 		});
 	}

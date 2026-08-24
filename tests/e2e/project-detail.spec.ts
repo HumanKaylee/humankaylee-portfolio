@@ -135,24 +135,76 @@ test("renders the Conformal workflow and ordered responsive evidence gallery", a
 	expect(existingRatio).toBeLessThan(1.8);
 });
 
-test("renders uncropped intrinsic-ratio X-Plane evidence without private provenance", async ({
+test("renders inspectable uncropped X-Plane evidence on mobile and desktop without private provenance", async ({
 	page,
 }) => {
-	await page.setViewportSize({ width: 1440, height: 1000 });
-	await page.goto("/work/xplane-cabin-camera-fov-trade-study/");
+	const imageSources = [
+		"/media/xplane-fov/comparison-bank-120-1440.webp",
+		"/media/xplane-fov/comparison-bank-180-1440.webp",
+	] as const;
+	const videoSources = [
+		"/media/xplane-fov/fov50-p0-h0.mp4",
+		"/media/xplane-fov/fov110-m5-h0.mp4",
+	] as const;
 
-	const wideVideo = page
-		.locator('[data-evidence-media-kind="video"] video')
-		.first();
-	await expect(wideVideo).toBeVisible();
-	const ratio = await wideVideo.evaluate((element) => {
-		const box = element.getBoundingClientRect();
-		return box.width / box.height;
-	});
+	for (const viewport of [
+		{ name: "mobile", width: 390, height: 844 },
+		{ name: "desktop", width: 1440, height: 1000 },
+	] as const) {
+		await page.setViewportSize(viewport);
+		await page.goto("/work/xplane-cabin-camera-fov-trade-study/");
 
-	expect(ratio).toBeGreaterThan(3.5);
-	expect(ratio).toBeLessThan(3.7);
-	await expect(wideVideo).toHaveCSS("object-fit", "contain");
+		const originalImageLinks = page.locator("[data-evidence-original]");
+		await expect(originalImageLinks).toHaveCount(2);
+		for (const [index, src] of imageSources.entries()) {
+			const link = originalImageLinks.nth(index);
+			await expect(link).toBeVisible();
+			await expect(link).toHaveText("Open the full-size evidence image");
+			await expect(link).toHaveAttribute("href", src);
+			await expect(link).toHaveAttribute("data-touch-target", "true");
+			const box = await link.boundingBox();
+			expect(box, `${viewport.name} original image link`).not.toBeNull();
+			expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+			expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+		}
+
+		const videoLinks = page.getByRole("link", {
+			name: "Open the evidence video",
+		});
+		await expect(videoLinks).toHaveCount(2);
+		for (const [index, src] of videoSources.entries()) {
+			await expect(videoLinks.nth(index)).toHaveAttribute("href", src);
+		}
+
+		const comparisonImage = page
+			.locator('[data-evidence-media-kind="image"] img')
+			.first();
+		const wideVideo = page
+			.locator('[data-evidence-media-kind="video"] video')
+			.first();
+		await expect(comparisonImage).toBeVisible();
+		await expect(wideVideo).toBeVisible();
+		for (const media of [comparisonImage, wideVideo]) {
+			await expect(media).toHaveCSS("object-fit", "contain");
+		}
+		const imageRatio = await comparisonImage.evaluate((element) => {
+			const box = element.getBoundingClientRect();
+			return box.width / box.height;
+		});
+		const videoRatio = await wideVideo.evaluate((element) => {
+			const box = element.getBoundingClientRect();
+			return box.width / box.height;
+		});
+		expect(imageRatio).toBeGreaterThan(1.75);
+		expect(imageRatio).toBeLessThan(1.85);
+		expect(videoRatio).toBeGreaterThan(3.5);
+		expect(videoRatio).toBeLessThan(3.7);
+		const horizontalOverflow = await page.evaluate(
+			() => document.documentElement.scrollWidth - window.innerWidth,
+		);
+		expect(horizontalOverflow, viewport.name).toBeLessThanOrEqual(1);
+	}
+
 	await expect(page.locator("main")).toContainText(
 		/replay harness source.*not supplied or independently rerun/i,
 	);

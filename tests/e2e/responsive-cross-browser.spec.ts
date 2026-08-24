@@ -181,7 +181,7 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 				/Principal engineer for simulation, controls, and operational software/i,
 			);
 			await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(
-				3,
+				4,
 			);
 			await expect(
 				page.getByRole("link", { name: /View selected work/i }),

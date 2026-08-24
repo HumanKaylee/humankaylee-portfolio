@@ -80,9 +80,13 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toHaveCount(1);
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(3);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(4);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
-		await expect(page.locator(".proof-gallery .media-frame")).toHaveCount(1);
+		await expect(page.locator(".proof-gallery .media-frame")).toHaveCount(2);
+		const xplaneProof = page.locator(".proof-gallery__item").filter({
+			has: page.locator('a[href="/work/xplane-cabin-camera-fov-trade-study/"]'),
+		});
+		await expect(xplaneProof.locator(".media-frame")).toHaveCount(1);
 		await expect(page.locator(".proof-gallery .evidence-flow")).toHaveCount(1);
 		await expect(page.locator("[data-motion-loop]")).toHaveCount(3);
 		await expect(
@@ -143,6 +147,6 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		}
 
 		await page.goto("/");
-		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(3);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(4);
 	});
 });
