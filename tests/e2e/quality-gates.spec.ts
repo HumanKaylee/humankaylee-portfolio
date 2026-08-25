@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 const coreRoutes = [
 	{ path: "/", marker: /Flagship systems, backed by working software/i },
 	{ path: "/work/", marker: /Flagship work/i },
-	{ path: "/work/cryo-flow-sim/", marker: /92 tests passed/i },
+	{ path: "/work/cryo-flow-sim/", marker: /29,500 entities/i },
 	{
 		path: "/work/conformal-cooling-channel-generation/",
 		marker: /Fresh gear-cavity capture/i,
