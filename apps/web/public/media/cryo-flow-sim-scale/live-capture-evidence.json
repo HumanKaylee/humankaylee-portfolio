@@ -1,0 +1,212 @@
+{
+  "schema_version": "cryo-live-capture-evidence/v1",
+  "scenario": "generated:5000:20260823",
+  "authoritative": {
+    "counts": {
+      "tanks": 5000,
+      "valves": 15000,
+      "pipes": 4500,
+      "sensors": 5000
+    },
+    "uiElementCount": 69029
+  },
+  "final_authoritative": {
+    "counts": {
+      "tanks": 5000,
+      "valves": 15000,
+      "pipes": 4500,
+      "sensors": 5000
+    },
+    "uiElementCount": 69029
+  },
+  "renderer": {
+    "totalEntityCount": 29500,
+    "visibleEntityCount": 29500,
+    "tier": "L0"
+  },
+  "source_dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration_after_readiness_seconds": 60.237,
+  "raw_recording_trim_start_seconds": 19.385,
+  "chapters": [
+    {
+      "name": "normal",
+      "start_seconds": 0
+    },
+    {
+      "name": "stress",
+      "start_seconds": 10.074
+    },
+    {
+      "name": "recovery",
+      "start_seconds": 20.125
+    }
+  ],
+  "normal_window": {
+    "tick_hz": 30,
+    "drift_seconds": -9.99999993922529e-8,
+    "drift_ppm": -0.00999999993922529,
+    "all_time_max_abs_drift_seconds": 0.0374172779999995,
+    "dropped_ticks": 0,
+    "conflated_frames": 0,
+    "websocket_conflated_frames": 0,
+    "sse_conflated_frames": 0,
+    "lateness": {
+      "p50_ms": 1.223,
+      "p95_ms": 4.515,
+      "p99_ms": 8.951,
+      "max_ms": 12.015
+    },
+    "process_cpu_percent": 67.577644,
+    "process_memory_bytes": 131215360,
+    "gpu": {
+      "status": "unavailable",
+      "utilization_percent": null,
+      "detail": "unsupported_platform"
+    },
+    "headroom_percent": 73.14699973147,
+    "raw_tick": 600,
+    "wall_timestamp_ms": 1787663847667,
+    "seed": 20260823,
+    "scenario": "generated:5000:20260823",
+    "state_hash": "sha256:74a56db40b3890a0752ff6cc75397e0b69ddcfceb2f28af2f3df320eb207faf8",
+    "window": {
+      "identity": 1,
+      "start_wall_timestamp_ms": 1787663837640,
+      "end_wall_timestamp_ms": 1787663847640,
+      "status": "pass",
+      "observed_ticks": 300,
+      "dropped_ticks": 0,
+      "conflated_frames": 0
+    }
+  },
+  "stress_request": {
+    "requested_at_ms": 1787663848078,
+    "response": {
+      "duration_ms": 3000,
+      "status": "scheduled_auto_recovery"
+    }
+  },
+  "stress_window": {
+    "tick_hz": 24.1,
+    "drift_seconds": -1.9666667469999997,
+    "drift_ppm": -196666.67469999997,
+    "all_time_max_abs_drift_seconds": 2.0028802300000024,
+    "dropped_ticks": 59,
+    "conflated_frames": 8,
+    "websocket_conflated_frames": 8,
+    "sse_conflated_frames": 0,
+    "lateness": {
+      "p50_ms": 1.248,
+      "p95_ms": 81.919,
+      "p99_ms": 91.967,
+      "max_ms": 93.375
+    },
+    "process_cpu_percent": 70.03699,
+    "process_memory_bytes": 133115904,
+    "gpu": {
+      "status": "unavailable",
+      "utilization_percent": null,
+      "detail": "unsupported_platform"
+    },
+    "headroom_percent": 0,
+    "raw_tick": 842,
+    "wall_timestamp_ms": 1787663857710,
+    "seed": 20260823,
+    "scenario": "generated:5000:20260823",
+    "state_hash": "sha256:5f518850c34d182a5c7def7eb19c237e436bb51d4a55db93140ae38b3ecf1b54",
+    "window": {
+      "identity": 2,
+      "start_wall_timestamp_ms": 1787663847640,
+      "end_wall_timestamp_ms": 1787663857640,
+      "status": "fail",
+      "observed_ticks": 241,
+      "dropped_ticks": 59,
+      "conflated_frames": 8
+    }
+  },
+  "recovery_window": {
+    "tick_hz": 30,
+    "drift_seconds": -9.99999993922529e-8,
+    "drift_ppm": -0.00999999993922529,
+    "all_time_max_abs_drift_seconds": 2.0028802300000024,
+    "dropped_ticks": 59,
+    "conflated_frames": 8,
+    "websocket_conflated_frames": 8,
+    "sse_conflated_frames": 0,
+    "lateness": {
+      "p50_ms": 1.14,
+      "p95_ms": 1.9,
+      "p99_ms": 2.601,
+      "max_ms": 5.867
+    },
+    "process_cpu_percent": 66.58507,
+    "process_memory_bytes": 133210112,
+    "gpu": {
+      "status": "unavailable",
+      "utilization_percent": null,
+      "detail": "unsupported_platform"
+    },
+    "headroom_percent": 92.19699992197,
+    "raw_tick": 1146,
+    "wall_timestamp_ms": 1787663867839,
+    "seed": 20260823,
+    "scenario": "generated:5000:20260823",
+    "state_hash": "sha256:3f1ba48e156409dd9fa036fa4a891e8525d10d9066c88f81ae14bb069dd4b042",
+    "window": {
+      "identity": 3,
+      "start_wall_timestamp_ms": 1787663857640,
+      "end_wall_timestamp_ms": 1787663867640,
+      "status": "pass",
+      "observed_ticks": 300,
+      "dropped_ticks": 0,
+      "conflated_frames": 0
+    }
+  },
+  "final_telemetry": {
+    "tick_hz": 30,
+    "drift_seconds": -9.99999993922529e-8,
+    "drift_ppm": -0.00999999993922529,
+    "all_time_max_abs_drift_seconds": 2.011246754999995,
+    "dropped_ticks": 59,
+    "conflated_frames": 8,
+    "websocket_conflated_frames": 8,
+    "sse_conflated_frames": 0,
+    "lateness": {
+      "p50_ms": 1.14,
+      "p95_ms": 1.843,
+      "p99_ms": 2,
+      "max_ms": 4.041
+    },
+    "process_cpu_percent": 66.42247,
+    "process_memory_bytes": 133279744,
+    "gpu": {
+      "status": "unavailable",
+      "utilization_percent": null,
+      "detail": "unsupported_platform"
+    },
+    "headroom_percent": 93.99999994,
+    "raw_tick": 2351,
+    "wall_timestamp_ms": 1787663908000,
+    "seed": 20260823,
+    "scenario": "generated:5000:20260823",
+    "state_hash": "sha256:620333e92641becced5d8e7e9c802254c3c4fe47289b0e9204dca0622b37c78c",
+    "window": {
+      "identity": 7,
+      "start_wall_timestamp_ms": 1787663897640,
+      "end_wall_timestamp_ms": 1787663907640,
+      "status": "pass",
+      "observed_ticks": 300,
+      "dropped_ticks": 0,
+      "conflated_frames": 0
+    }
+  },
+  "screenshots": {
+    "normal": "live-normal-1920.png",
+    "stress": "live-stress-1920.png",
+    "recovery": "live-recovery-1920.png"
+  },
+  "console_errors": []
+}

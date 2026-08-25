@@ -1,0 +1,112 @@
+{
+  "schema_version": "cryo-scale-media/v1",
+  "media_kind": "deterministic_offline",
+  "truthful_label": "DETERMINISTIC / OFFLINE",
+  "source_sha": "bdb72f92c7e2623bdd59aa30d9e7f5f2d321b853",
+  "scenario": "generated:5000:20260823",
+  "seed": 20260823,
+  "counts": {
+    "tanks": 5000,
+    "valves": 15000,
+    "pipes": 4500,
+    "sensors": 5000
+  },
+  "source_dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "output_dimensions": {
+    "width": 960,
+    "height": 540
+  },
+  "fps": 30,
+  "duration_seconds": 60,
+  "chapters": [
+    {
+      "name": "overview",
+      "start_seconds": 0
+    },
+    {
+      "name": "detail",
+      "start_seconds": 30
+    }
+  ],
+  "codecs": {
+    "mp4": {
+      "container": "mp4",
+      "video": "h264",
+      "pixel_format": "yuv420p",
+      "faststart": true,
+      "audio": false
+    },
+    "webm": {
+      "container": "webm",
+      "video": "vp9",
+      "pixel_format": "yuv420p",
+      "audio": false
+    },
+    "poster": {
+      "container": "png",
+      "reduced_motion": true
+    }
+  },
+  "artifacts": {
+    "mp4": {
+      "path": "cryo-scale-deterministic-960.mp4",
+      "bytes": 5862627,
+      "sha256": "32221082a0593f93450e7e89443987fa96612b0f81dd1e1215b4456afe377e68"
+    },
+    "webm": {
+      "path": "cryo-scale-deterministic-960.webm",
+      "bytes": 5512352,
+      "sha256": "b5606e1a753bf96b4e9d138ca873ea501da319f16a6f8ac1e5f6ca9ccbad4e0b"
+    },
+    "poster": {
+      "path": "cryo-scale-deterministic-960.png",
+      "bytes": 581354,
+      "sha256": "d07a7939534bf761311288d51f6b265b156156faf297466694587f7aa94beb2c"
+    }
+  },
+  "validation": {
+    "passed": true,
+    "checks": [
+      "truthful_media_kind_and_label",
+      "scenario_counts_dimensions_fps_duration",
+      "artifact_hash_size_budget_and_poster",
+      "codec_pixfmt_dimensions_fps_duration_audio_faststart",
+      "ordered_chapters",
+      "seek_frame_change_visible_labels_counts_telemetry_public_safe_pixels",
+      "reduced_motion_no_autoplay"
+    ],
+    "validated_at_utc": "2026-08-25T13:28:25.663Z",
+    "ffprobe": {
+      "mp4": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "pix_fmt": "yuv420p",
+        "fps": 30.0,
+        "duration_seconds": 60.0,
+        "audio": false,
+        "faststart": true
+      },
+      "webm": {
+        "width": 960,
+        "height": 540,
+        "codec": "vp9",
+        "pix_fmt": "yuv420p",
+        "fps": 30.0,
+        "duration_seconds": 60.0,
+        "audio": false,
+        "faststart": false
+      }
+    }
+  },
+  "handoff": {
+    "prefers_reduced_motion_poster": true,
+    "autoplay": false
+  },
+  "created_at_utc": "2026-08-25T13:13:22.516Z",
+  "raw_sha256": "8c96aefd18451e8de8f38acb8d10f1bdef0a85d8760fcf7113bbff05b649f0fc",
+  "determinism_scope": "same executable, adapter, and driver; compressed bytes and cross-vendor GPU output are not claimed deterministic"
+}

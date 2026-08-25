@@ -224,6 +224,138 @@ test.describe("Work routes @work", () => {
 		await expect(video.getByRole("link")).toHaveCount(0);
 	});
 
+	test("renders the two Cryo scale proofs in their evidence order with native opt-in controls", async ({
+		page,
+	}) => {
+		await page.goto("/work/cryo-flow-sim/");
+
+		const gallery = page.locator("[data-case-study-media-gallery]");
+		const items = gallery.locator("figure");
+		await expect(items).toHaveCount(2);
+
+		const videos = items.locator("video");
+		await expect(videos).toHaveCount(2);
+		const expectedVideos = [
+			{
+				src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4",
+				poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.png",
+				alt: "Cryogenic flow simulator overview and detail views for a generated fleet of 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors.",
+			},
+			{
+				src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4",
+				poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.png",
+				alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window.",
+			},
+		] as const;
+		for (const [index, expectedVideo] of expectedVideos.entries()) {
+			const item = items.nth(index);
+			const video = videos.nth(index);
+			await expect(item).toHaveAttribute("data-evidence-media-kind", "video");
+			await expect(video.locator("source")).toHaveAttribute(
+				"src",
+				expectedVideo.src,
+			);
+			await expect(video).toHaveAttribute("poster", expectedVideo.poster);
+			await expect(video).toHaveAttribute("width", "960");
+			await expect(video).toHaveAttribute("height", "540");
+			await expect(video).toHaveAttribute("aria-label", expectedVideo.alt);
+			await expect(video).toHaveAttribute("controls", "");
+			await expect(video).toHaveAttribute("preload", "none");
+			await expect(video).not.toHaveAttribute("autoplay", "");
+		}
+		await expect(items.locator("figcaption")).toHaveText([
+			"Deterministic offline proof of all 29,500 generated entities, moving from fleet overview to a readable detail view.",
+			"Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window.",
+		]);
+		const fallbackLinks = items.getByRole("link", {
+			name: "Open the evidence video",
+		});
+		for (const [index, expectedVideo] of expectedVideos.entries()) {
+			await expect(fallbackLinks.nth(index)).toHaveAttribute(
+				"href",
+				expectedVideo.src,
+			);
+		}
+	});
+
+	test("keeps both Cryo scale proofs contained at phone, tablet, and desktop widths", async ({
+		page,
+	}) => {
+		for (const viewport of [
+			{ width: 390, height: 844 },
+			{ width: 820, height: 900 },
+			{ width: 1440, height: 1000 },
+		]) {
+			await page.setViewportSize(viewport);
+			await page.goto("/work/cryo-flow-sim/");
+			const gallery = page.locator("[data-case-study-media-gallery]");
+			await expect(gallery.locator("figure")).toHaveCount(2);
+			expect(
+				await page.evaluate(
+					() => document.documentElement.scrollWidth - window.innerWidth,
+				),
+			).toBeLessThanOrEqual(1);
+			for (const video of await gallery.locator("video").all()) {
+				const box = await video.boundingBox();
+				expect(box?.width ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(
+					viewport.width,
+				);
+			}
+		}
+	});
+
+	test("plays, seeks, and resumes each local Cryo scale proof", async ({
+		page,
+	}) => {
+		await page.goto("/work/cryo-flow-sim/");
+		const videos = page.locator("[data-case-study-media-gallery] video");
+		await expect(videos).toHaveCount(2);
+
+		for (const video of await videos.all()) {
+			await video.scrollIntoViewIfNeeded();
+			await video.evaluate(async (element) => {
+				const media = element as HTMLVideoElement;
+				media.muted = true;
+				await media.play();
+			});
+			await expect
+				.poll(() =>
+					video.evaluate((element) => (element as HTMLVideoElement).duration),
+				)
+				.toBeGreaterThan(59);
+			await expect
+				.poll(() =>
+					video.evaluate(
+						(element) => (element as HTMLVideoElement).currentTime,
+					),
+				)
+				.toBeGreaterThan(0.05);
+			await video.evaluate(
+				(element) =>
+					new Promise<void>((resolve) => {
+						const media = element as HTMLVideoElement;
+						media.addEventListener("seeked", () => resolve(), { once: true });
+						media.currentTime = 30;
+					}),
+			);
+			expect(
+				await video.evaluate(
+					(element) => (element as HTMLVideoElement).currentTime,
+				),
+			).toBeGreaterThan(29.5);
+			await video.evaluate(async (element) => {
+				await (element as HTMLVideoElement).play();
+			});
+			await expect
+				.poll(() =>
+					video.evaluate(
+						(element) => (element as HTMLVideoElement).currentTime,
+					),
+				)
+				.toBeGreaterThan(30.05);
+		}
+	});
+
 	test("uses project-specific semantic evidence flows with record-backed values", async ({
 		page,
 	}) => {
@@ -308,6 +440,14 @@ test.describe("Work routes @work", () => {
 		await page.emulateMedia({ reducedMotion: "reduce" });
 		await page.goto("/work/cryo-flow-sim/");
 		await expect(page.locator("[data-reading-progress]")).toBeHidden();
+		await expect(
+			page.locator("[data-case-study-media-gallery] video"),
+		).toHaveCount(2);
+		for (const video of await page
+			.locator("[data-case-study-media-gallery] video")
+			.all()) {
+			await expect(video).not.toHaveAttribute("autoplay", "");
+		}
 	});
 
 	test("maps the Black-Scholes demo only from its Work record", async ({
@@ -505,10 +645,17 @@ test.describe("Work routes @work @noscript", () => {
 				page.getByRole("heading", { level: 2, name: heading }),
 			).toBeVisible();
 		}
-		await expect(page.locator("video[controls]")).toHaveAttribute(
-			"preload",
-			"none",
-		);
+		await expect(
+			page.locator('[data-media-kind="video"] video[controls]'),
+		).toHaveAttribute("preload", "none");
+		await expect(
+			page.locator("[data-case-study-media-gallery] figure"),
+		).toHaveCount(2);
+		for (const video of await page
+			.locator("[data-case-study-media-gallery] video")
+			.all()) {
+			await expect(video).toHaveAttribute("preload", "none");
+		}
 		await expect(page.locator("[data-reading-progress]")).toHaveAttribute(
 			"aria-hidden",
 			"true",

@@ -1,0 +1,120 @@
+{
+  "schema_version": "cryo-scale-media/v1",
+  "media_kind": "live_realtime",
+  "truthful_label": "LIVE / REAL-TIME",
+  "source_sha": "bdb72f92c7e2623bdd59aa30d9e7f5f2d321b853",
+  "scenario": "generated:5000:20260823",
+  "seed": 20260823,
+  "counts": {
+    "tanks": 5000,
+    "valves": 15000,
+    "pipes": 4500,
+    "sensors": 5000
+  },
+  "source_dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "output_dimensions": {
+    "width": 960,
+    "height": 540
+  },
+  "fps": 30,
+  "duration_seconds": 60,
+  "chapters": [
+    {
+      "name": "normal",
+      "start_seconds": 0
+    },
+    {
+      "name": "stress",
+      "start_seconds": 10.074
+    },
+    {
+      "name": "recovery",
+      "start_seconds": 20.125
+    }
+  ],
+  "codecs": {
+    "mp4": {
+      "container": "mp4",
+      "video": "h264",
+      "pixel_format": "yuv420p",
+      "faststart": true,
+      "audio": false
+    },
+    "webm": {
+      "container": "webm",
+      "video": "vp9",
+      "pixel_format": "yuv420p",
+      "audio": false
+    },
+    "poster": {
+      "container": "png",
+      "reduced_motion": true
+    }
+  },
+  "artifacts": {
+    "mp4": {
+      "path": "cryo-scale-realtime-960.mp4",
+      "bytes": 2405814,
+      "sha256": "2315ede1ebf418c6c8fb41b58b07d6b928eab7b6e1a569511de216ae93893458"
+    },
+    "webm": {
+      "path": "cryo-scale-realtime-960.webm",
+      "bytes": 1886387,
+      "sha256": "6b2011b2e5c7ccf279062bbf3fbb596dfccfc2d08a8d18a9914f77eea213e274"
+    },
+    "poster": {
+      "path": "cryo-scale-realtime-960.png",
+      "bytes": 400305,
+      "sha256": "6294acb3ec91155adf971efc91a67240bb86f1fc74532ec4178073da6d8a7156"
+    },
+    "evidence": {
+      "path": "live-capture-evidence.json",
+      "bytes": 5720,
+      "sha256": "bab9aba5b6674c54fe0cf2dd2f8f5bc1494b54baf322bc2a4cabd5273a99a276"
+    }
+  },
+  "validation": {
+    "passed": true,
+    "checks": [
+      "truthful_media_kind_and_label",
+      "scenario_counts_dimensions_fps_duration",
+      "artifact_hash_size_budget_and_poster",
+      "codec_pixfmt_dimensions_fps_duration_audio_faststart",
+      "ordered_chapters",
+      "visible_chapter_pass_fail_pass_metrics",
+      "seek_frame_change_visible_labels_counts_telemetry_public_safe_pixels",
+      "reduced_motion_no_autoplay"
+    ],
+    "validated_at_utc": "2026-08-25T13:28:35.654Z",
+    "ffprobe": {
+      "mp4": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "pix_fmt": "yuv420p",
+        "fps": 30.0,
+        "duration_seconds": 60.0,
+        "audio": false,
+        "faststart": true
+      },
+      "webm": {
+        "width": 960,
+        "height": 540,
+        "codec": "vp9",
+        "pix_fmt": "yuv420p",
+        "fps": 30.0,
+        "duration_seconds": 60.0,
+        "audio": false,
+        "faststart": false
+      }
+    }
+  },
+  "handoff": {
+    "prefers_reduced_motion_poster": true,
+    "autoplay": false
+  },
+  "created_at_utc": "2026-08-25T13:20:26.317Z"
+}

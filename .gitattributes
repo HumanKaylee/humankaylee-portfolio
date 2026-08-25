@@ -16,3 +16,6 @@
 *.zip binary
 *.tar.gz binary
 *.gz binary
+
+# Preserve accepted Cryo public manifest and evidence bytes for SHA-256 contracts.
+/apps/web/public/media/cryo-flow-sim-scale/*.json binary

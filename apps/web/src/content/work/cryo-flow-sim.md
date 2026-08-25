@@ -27,7 +27,7 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
-outcome: "This deterministic simulation of cryogenic valve transients produced a verified 1920x1080 at 30fps, 96.9-second video (13.2 MB); 92 tests passed, all artifact thresholds were met, and the run recorded zero unexpected system behaviors."
+outcome: "The original Stage 1 run produced a verified 1920x1080 at 30fps, 96.9-second video with 92 passing tests. A separate generated fleet run rendered all 29,500 entities (5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors), passed 218/218 workspace tests, and held 30 Hz before deliberate stress and after recovery."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
@@ -71,6 +71,25 @@ media:
     sizeBytes: 222403
     alt: "Cryogenic flow dashboard showing coordinated valve travel and changing telemetry."
     description: "A ten-second silent loop: the overview transitions into coordinated valve movement, active transfer flow, and changing tank telemetry before returning to a stable frame."
+evidenceMedia:
+  - kind: "video"
+    src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4"
+    poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.png"
+    responsivePosterSources:
+      - { src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.png", width: 960 }
+    width: 960
+    height: 540
+    alt: "Cryogenic flow simulator overview and detail views for a generated fleet of 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors."
+    caption: "Deterministic offline proof of all 29,500 generated entities, moving from fleet overview to a readable detail view."
+  - kind: "video"
+    src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4"
+    poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.png"
+    responsivePosterSources:
+      - { src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.png", width: 960 }
+    width: 960
+    height: 540
+    alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window."
+    caption: "Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window."
 publicationStatus: "publish"
 redactionStatus: "reviewed"
 redactionReview:
