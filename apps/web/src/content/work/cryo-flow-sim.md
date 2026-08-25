@@ -27,7 +27,7 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
-outcome: "The original Stage 1 run produced a verified 1920x1080 at 30fps, 96.9-second video with 92 passing tests. A separate generated fleet run rendered all 29,500 entities (5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors), passed 218/218 workspace tests, and held 30 Hz before deliberate stress and after recovery."
+outcome: "The original Stage 1 run produced a verified 1920x1080 at 30fps, 96.9-second video with 92 passing tests. A separate generated fleet run rendered all 29,500 entities (5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors), passed 210/210 workspace tests, and held 30 Hz before deliberate stress and after recovery."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."

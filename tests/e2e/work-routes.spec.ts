@@ -228,6 +228,12 @@ test.describe("Work routes @work", () => {
 		page,
 	}) => {
 		await page.goto("/work/cryo-flow-sim/");
+		await expect(page.locator("main")).toContainText(
+			"passed 210/210 workspace tests",
+		);
+		await expect(page.locator("main")).not.toContainText(
+			"passed 218/218 workspace tests",
+		);
 
 		const gallery = page.locator("[data-case-study-media-gallery]");
 		const items = gallery.locator("figure");
