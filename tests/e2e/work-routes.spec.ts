@@ -244,12 +244,12 @@ test.describe("Work routes @work", () => {
 		const expectedVideos = [
 			{
 				src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4",
-				poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.png",
+				poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp",
 				alt: "Cryogenic flow simulator overview and detail views for a generated fleet of 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors.",
 			},
 			{
 				src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4",
-				poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.png",
+				poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.webp",
 				alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window.",
 			},
 		] as const;

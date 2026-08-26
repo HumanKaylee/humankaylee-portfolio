@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 
@@ -30,6 +30,10 @@ const EXPECTED_SHA256 = {
 	"live-capture-evidence.json":
 		"bab9aba5b6674c54fe0cf2dd2f8f5bc1494b54baf322bc2a4cabd5273a99a276",
 };
+const OPTIMIZED_POSTERS = [
+	"cryo-scale-deterministic-960.webp",
+	"cryo-scale-realtime-960.webp",
+];
 
 function sha256(filePath) {
 	return createHash("sha256").update(readFileSync(filePath)).digest("hex");
@@ -141,7 +145,7 @@ test("Cryo scale contract rejects a dishonest media kind or entity count", () =>
 test("Cryo scale public media matches the accepted source bytes and manifests", () => {
 	assert.deepEqual(
 		readdirSync(PUBLIC_ROOT).sort(),
-		Object.keys(EXPECTED_SHA256).sort(),
+		[...Object.keys(EXPECTED_SHA256), ...OPTIMIZED_POSTERS].sort(),
 	);
 	for (const [filename, expectedHash] of Object.entries(EXPECTED_SHA256)) {
 		assert.equal(
@@ -244,6 +248,20 @@ test("Cryo scale public media matches the accepted source bytes and manifests", 
 		{ status: "pass", observed: 300, dropped: 0 },
 	);
 	assert.deepEqual(evidence.console_errors, []);
+});
+
+test("Cryo scale website posters use compact modern-image derivatives", () => {
+	for (const filename of OPTIMIZED_POSTERS) {
+		const filePath = path.join(PUBLIC_ROOT, filename);
+		const image = probe(filePath).streams.find(
+			(stream) => stream.codec_type === "video",
+		);
+		assert.ok(image, filename);
+		assert.equal(image.codec_name, "webp", filename);
+		assert.equal(image.width, 960, filename);
+		assert.equal(image.height, 540, filename);
+		assert.ok(statSync(filePath).size < 100_000, filename);
+	}
 });
 
 test("Cryo scale MP4 and poster files satisfy the website media contract", () => {

@@ -74,18 +74,18 @@ media:
 evidenceMedia:
   - kind: "video"
     src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4"
-    poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.png"
+    poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp"
     responsivePosterSources:
-      - { src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.png", width: 960 }
+      - { src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp", width: 960 }
     width: 960
     height: 540
     alt: "Cryogenic flow simulator overview and detail views for a generated fleet of 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors."
     caption: "Deterministic offline proof of all 29,500 generated entities, moving from fleet overview to a readable detail view."
   - kind: "video"
     src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4"
-    poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.png"
+    poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.webp"
     responsivePosterSources:
-      - { src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.png", width: 960 }
+      - { src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.webp", width: 960 }
     width: 960
     height: 540
     alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window."
