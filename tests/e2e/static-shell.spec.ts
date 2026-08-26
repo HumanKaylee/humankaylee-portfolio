@@ -15,7 +15,7 @@ const coreRoutes = [
 	{
 		path: "/work/cryo-flow-sim/",
 		heading: /Cryogenic Flow Simulation/i,
-		copy: /92 tests passed/i,
+		copy: /29,500 entities/i,
 	},
 	{
 		path: "/work/conformal-cooling-channel-generation/",

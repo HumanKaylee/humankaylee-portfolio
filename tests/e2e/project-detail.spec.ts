@@ -6,8 +6,8 @@ const workDetails = [
 	{
 		slug: "cryo-flow-sim",
 		title: "Cryogenic Flow Simulation",
-		marker: /deterministic simulation of cryogenic valve transients/i,
-		galleryItems: 0,
+		marker: /29,500 entities/i,
+		galleryItems: 2,
 	},
 	{
 		slug: "conformal-cooling-channel-generation",
