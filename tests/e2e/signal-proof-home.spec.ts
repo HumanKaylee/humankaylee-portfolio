@@ -129,7 +129,20 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 		"30 Hz",
 		"1,800 frames",
 	]);
-	await expect(page.locator("main")).toContainText("6.8 KB binary deltas");
+	await expect(
+		page
+			.locator("[data-capability-proof]")
+			.filter({ hasText: "Simulation and controls" })
+			.locator(".capability-matrix__evidence span"),
+	).toHaveText(
+		"The Cryogenic Flow case study runs 29,500 entities at 30 Hz, reproduces a byte-identical 1,800-frame raw replay in its fixed hardware and software scope, and makes coordinated valve waves visible across all 15,000 valves. A measured warmed state used a 6.8 KB representative binary delta instead of a 5.29 MB full JSON snapshot.",
+	);
+	await expect(page.locator("main")).toContainText(
+		"6.8 KB representative binary delta",
+	);
+	await expect(page.locator("main")).toContainText(
+		"5.29 MB full JSON snapshot",
+	);
 	await expect(page.locator("main")).not.toContainText(/92 passing tests/i);
 
 	const flagship = page.locator('[data-proof-placement="flagship"]');

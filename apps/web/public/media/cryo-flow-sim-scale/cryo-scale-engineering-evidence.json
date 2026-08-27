@@ -1,0 +1,52 @@
+{
+  "schema_version": "cryo-scale-engineering-evidence/v1",
+  "scenario": "generated:5000:20260823",
+  "counts": {
+    "tanks": 5000,
+    "valves": 15000,
+    "pipes": 4500,
+    "sensors": 5000
+  },
+  "transport": {
+    "full_json_state_snapshot": {
+      "measurement_source_sha": "94ec41eb42a4aeb758843d7fed22bbb3f4233bed",
+      "request_method": "GET",
+      "route": "/api/state",
+      "response_type": "cryo_core::StateSnapshot",
+      "step_request": {
+        "route": "/api/step",
+        "ticks": 61
+      },
+      "tick": 61,
+      "bytes": 5293279
+    },
+    "representative_warmed_binary_delta": {
+      "transport_source_sha": "9f2c5809021b6bcc912aab9273e8aeb07f4cb05f",
+      "from_tick": 60,
+      "to_tick": 61,
+      "bytes": 6798,
+      "changed_records": {
+        "tanks": 234,
+        "valves": 0,
+        "pipes": 348,
+        "sensors": 169
+      }
+    },
+    "full_snapshot_to_delta_ratio": 778.7,
+    "comparison_scope": "The full JSON state snapshot and warmed incremental binary delta have different transport semantics; static layout is retained separately."
+  },
+  "visible_change": {
+    "measurement_source_sha": "94ec41eb42a4aeb758843d7fed22bbb3f4233bed",
+    "changed_pixels": 109851,
+    "total_pixels": 451200,
+    "changed_percent": 24.3464095744681,
+    "legacy_whole_percent_comparator": 1.0,
+    "comparison_scope": "Label-excluded fleet pixels at baseline versus open-wave; the legacy comparator is the prior deterministic artifact measured with the historical whole-percent black-frame method."
+  },
+  "determinism": {
+    "measurement_source_sha": "94ec41eb42a4aeb758843d7fed22bbb3f4233bed",
+    "frames": 1800,
+    "raw_sha256": "f5e73c228b43bd71c8aba19f15d11b56a70ed4aa5c18fcc24b14d91e6882e8a1",
+    "scope": "Same executable, seed, GPU adapter, and driver; compressed bytes and cross-vendor GPU output are not claimed deterministic."
+  }
+}

@@ -6,7 +6,10 @@ import path from "node:path";
 import test from "node:test";
 
 const PUBLIC_ROOT = "apps/web/public/media/cryo-flow-sim-scale";
+const ENGINEERING_EVIDENCE_FILE = "cryo-scale-engineering-evidence.json";
 const DETERMINISTIC_SOURCE_SHA = "94ec41eb42a4aeb758843d7fed22bbb3f4233bed";
+const DETERMINISTIC_RAW_SHA =
+	"f5e73c228b43bd71c8aba19f15d11b56a70ed4aa5c18fcc24b14d91e6882e8a1";
 const LIVE_SOURCE_SHA = "bdb72f92c7e2623bdd59aa30d9e7f5f2d321b853";
 const SCENARIO = "generated:5000:20260823";
 const COUNTS = {
@@ -16,6 +19,8 @@ const COUNTS = {
 	sensors: 5000,
 };
 const EXPECTED_SHA256 = {
+	"cryo-scale-engineering-evidence.json":
+		"97f7cbfc72c45034df5ffa12d086cec21895d84df27bd3102bbfc675dfd8f6e9",
 	"cryo-scale-deterministic-960.manifest.json":
 		"a9edc5a8bc589ae3766403f94eb5096132698f3ec70366f25656587c684dea88",
 	"cryo-scale-deterministic-960.mp4":
@@ -110,6 +115,16 @@ function assertCaptureManifestContract(
 
 function assertVisibleChangeContract(manifest) {
 	assert.equal(manifest.capture_profile, "visible_change_v1");
+	assert.equal(manifest.raw_sha256, DETERMINISTIC_RAW_SHA);
+	assert.equal(
+		manifest.determinism_scope,
+		"same executable, adapter, and driver; compressed bytes and cross-vendor GPU output are not claimed deterministic",
+	);
+	assert.ok(
+		manifest.validation.checks.includes(
+			"deterministic_fleet_visible_change_at_least_5_percent",
+		),
+	);
 	assert.deepEqual(manifest.chapters, [
 		{ name: "baseline", start_seconds: 0 },
 		{ name: "close_sweep", start_seconds: 5 },
@@ -118,6 +133,46 @@ function assertVisibleChangeContract(manifest) {
 		{ name: "restore_sweep", start_seconds: 40 },
 		{ name: "recovery", start_seconds: 52 },
 	]);
+}
+
+function deterministicFleetChange(filePath) {
+	const filter =
+		"[0:v]crop=960:470:0:40[a];[1:v]crop=960:470:0:40[b];[a][b]blend=all_mode=difference,format=gray,lut='if(gte(val,16),255,0)'";
+	const result = spawnSync(
+		"ffmpeg",
+		[
+			"-hide_banner",
+			"-nostdin",
+			"-loglevel",
+			"error",
+			"-ss",
+			"0.5",
+			"-i",
+			filePath,
+			"-ss",
+			"20.0",
+			"-i",
+			filePath,
+			"-filter_complex",
+			filter,
+			"-frames:v",
+			"1",
+			"-pix_fmt",
+			"gray",
+			"-f",
+			"rawvideo",
+			"-",
+		],
+		{ maxBuffer: 2 * 1024 * 1024 },
+	);
+	assert.equal(result.status, 0, result.stderr.toString("utf8"));
+	const totalPixels = 960 * 470;
+	assert.equal(result.stdout.length, totalPixels);
+	let changedPixels = 0;
+	for (const pixel of result.stdout) {
+		if (pixel !== 0) changedPixels += 1;
+	}
+	return { changedPixels, totalPixels };
 }
 
 function validManifestFixture() {
@@ -134,6 +189,9 @@ function validManifestFixture() {
 		fps: 30,
 		duration_seconds: 60,
 		capture_profile: "visible_change_v1",
+		raw_sha256: DETERMINISTIC_RAW_SHA,
+		determinism_scope:
+			"same executable, adapter, and driver; compressed bytes and cross-vendor GPU output are not claimed deterministic",
 		chapters: [
 			{ name: "baseline", start_seconds: 0 },
 			{ name: "close_sweep", start_seconds: 5 },
@@ -142,7 +200,10 @@ function validManifestFixture() {
 			{ name: "restore_sweep", start_seconds: 40 },
 			{ name: "recovery", start_seconds: 52 },
 		],
-		validation: { passed: true },
+		validation: {
+			passed: true,
+			checks: ["deterministic_fleet_visible_change_at_least_5_percent"],
+		},
 		handoff: { prefers_reduced_motion_poster: true, autoplay: false },
 	};
 }
@@ -169,6 +230,67 @@ test("Cryo scale contract rejects a dishonest media kind or entity count", () =>
 			DETERMINISTIC_SOURCE_SHA,
 		),
 	);
+});
+
+test("Cryo visible-change figure is recalculated from the shipped fleet pixels", () => {
+	const change = deterministicFleetChange(
+		path.join(PUBLIC_ROOT, "cryo-scale-deterministic-960.mp4"),
+	);
+	assert.deepEqual(change, {
+		changedPixels: 109851,
+		totalPixels: 451200,
+	});
+	assert.equal(
+		Number(((100 * change.changedPixels) / change.totalPixels).toFixed(1)),
+		24.3,
+	);
+});
+
+test("Cryo engineering figures are pinned to public, scoped source evidence", () => {
+	const evidence = JSON.parse(
+		readFileSync(path.join(PUBLIC_ROOT, ENGINEERING_EVIDENCE_FILE), "utf8"),
+	);
+	assertPublicMetadata(evidence);
+	assert.equal(evidence.schema_version, "cryo-scale-engineering-evidence/v1");
+	assert.equal(evidence.scenario, SCENARIO);
+	assert.deepEqual(evidence.counts, COUNTS);
+	assert.deepEqual(evidence.transport, {
+		full_json_state_snapshot: {
+			measurement_source_sha: DETERMINISTIC_SOURCE_SHA,
+			request_method: "GET",
+			route: "/api/state",
+			response_type: "cryo_core::StateSnapshot",
+			step_request: { route: "/api/step", ticks: 61 },
+			tick: 61,
+			bytes: 5293279,
+		},
+		representative_warmed_binary_delta: {
+			transport_source_sha: "9f2c5809021b6bcc912aab9273e8aeb07f4cb05f",
+			from_tick: 60,
+			to_tick: 61,
+			bytes: 6798,
+			changed_records: { tanks: 234, valves: 0, pipes: 348, sensors: 169 },
+		},
+		full_snapshot_to_delta_ratio: 778.7,
+		comparison_scope:
+			"The full JSON state snapshot and warmed incremental binary delta have different transport semantics; static layout is retained separately.",
+	});
+	assert.deepEqual(evidence.visible_change, {
+		measurement_source_sha: DETERMINISTIC_SOURCE_SHA,
+		changed_pixels: 109851,
+		total_pixels: 451200,
+		changed_percent: 24.3464095744681,
+		legacy_whole_percent_comparator: 1,
+		comparison_scope:
+			"Label-excluded fleet pixels at baseline versus open-wave; the legacy comparator is the prior deterministic artifact measured with the historical whole-percent black-frame method.",
+	});
+	assert.deepEqual(evidence.determinism, {
+		measurement_source_sha: DETERMINISTIC_SOURCE_SHA,
+		frames: 1800,
+		raw_sha256: DETERMINISTIC_RAW_SHA,
+		scope:
+			"Same executable, seed, GPU adapter, and driver; compressed bytes and cross-vendor GPU output are not claimed deterministic.",
+	});
 });
 
 test("Cryo scale contract rejects a passive or incomplete deterministic choreography", () => {

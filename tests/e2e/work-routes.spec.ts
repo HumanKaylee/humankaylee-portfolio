@@ -226,6 +226,7 @@ test.describe("Work routes @work", () => {
 
 	test("renders the two Cryo scale proofs in their evidence order with native opt-in controls", async ({
 		page,
+		request,
 	}) => {
 		await page.goto("/work/cryo-flow-sim/");
 		const evidence = page.locator(
@@ -241,13 +242,39 @@ test.describe("Work routes @work", () => {
 			"30 Hz",
 			"1,800 frames",
 		]);
-		await expect(evidence).toContainText("1,200 ticks across 40 seconds");
+		await expect(evidence).toContainText(
+			"300 ticks in a 10-second normal window and 300 more after recovery",
+		);
+		await expect(evidence).toContainText("frame-budget headroom was 94%");
 		await expect(evidence).toContainText("Byte-identical raw replay");
 		await expect(evidence).not.toContainText(/92 passing|96\.9 seconds/i);
 		await expect(page.locator("main")).toContainText(
 			"spatial valve-command waves",
 		);
-		await expect(page.locator("main")).toContainText("24.3% of fleet pixels");
+		await expect(page.locator("main")).toContainText(
+			"24.3% of label-excluded fleet pixels",
+		);
+		await expect(page.locator("main")).toContainText(
+			"legacy 1.0% whole-percent comparator",
+		);
+		await expect(page.locator("main")).toContainText(
+			"5.29 MB full JSON state snapshot",
+		);
+		await expect(page.locator("main")).toContainText(
+			"6.8 KB representative warmed binary delta",
+		);
+		const engineeringEvidence = await request.get(
+			"/media/cryo-flow-sim-scale/cryo-scale-engineering-evidence.json",
+		);
+		expect(engineeringEvidence.status()).toBe(200);
+		expect((await engineeringEvidence.json()).transport).toMatchObject({
+			full_json_state_snapshot: { tick: 61, bytes: 5293279 },
+			representative_warmed_binary_delta: { bytes: 6798 },
+			full_snapshot_to_delta_ratio: 778.7,
+		});
+		await expect(page.locator("main")).not.toContainText(
+			/Rust workspace shipped 92|Test and quality results/i,
+		);
 
 		const gallery = page.locator("[data-case-study-media-gallery]");
 		const items = gallery.locator("figure");

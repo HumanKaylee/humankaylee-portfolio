@@ -27,7 +27,7 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
-outcome: "The scaled system ran 29,500 entities at 30 Hz, recovered to 30 Hz after deliberate overload, and reproduced a byte-identical 1,800-frame raw capture within its pinned executable, seed, GPU-adapter, and driver scope. Its representative warmed transport update fell from a 3.53 MB JSON snapshot to a 6.8 KB binary delta, while the new deterministic video changed 24.3% of fleet pixels (excluding labels) versus 1.0% in the prior capture."
+outcome: "The scaled system ran 29,500 entities at 30 Hz and recovered to 30 Hz after deliberate overload. Its fixed-seed deterministic capture produced 1,800 frames with raw output pinned by SHA-256 inside the same executable, seed, GPU-adapter, and driver scope. Coordinated close, open, and restore waves moved across all 15,000 valves; the shipped video changed 24.3% of label-excluded fleet pixels versus a legacy 1.0% whole-percent comparator. A measured warmed 5.29 MB full JSON state snapshot compared with a 6.8 KB representative warmed binary delta—about 779× smaller, with static layout retained separately."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
@@ -41,7 +41,7 @@ evidence:
       detail: "5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors share one authoritative state."
     - label: "Real-time runtime"
       value: "30 Hz"
-      detail: "1,200 ticks across 40 seconds of selected normal and recovery windows, with zero dropped ticks in those windows."
+      detail: "300 ticks in a 10-second normal window and 300 more after recovery, with zero drops in both; final measured frame-budget headroom was 94%."
     - label: "Deterministic replay"
       value: "1,800 frames"
       detail: "Byte-identical raw replay for the same executable, seed, GPU adapter, and driver."
@@ -126,15 +126,15 @@ seo:
   playsinline
   controls
   width="1280"
-  aria-label="Cryo-flow-sim Stage 1 — 96.9-second simulation of valve transients and pressure cascade at 1920x1080 30fps"
+  aria-label="Cryo-flow-sim Stage 1 simulation of valve transients and pressure cascade at 1920x1080 30fps"
 >
   <p>
     This browser does not support the HTML video element. The Stage 1 showcase
-    is a 96.9-second, 1920x1080 at 30fps simulation of cryogenic valve
+    is a 1920x1080 at 30fps simulation of cryogenic valve
     transients and pressure cascades across six scenario phases: overview,
     fill start, pipe chilldown, valve travel, tank transfer, and vent recovery.
-    All artifact validation thresholds passed. The run record includes the
-    source commit, fixed seed, and measured threshold results across 92 tests.
+    The run record includes the source commit, fixed seed, and measured
+    threshold results for each state transition.
   </p>
 </video>
 
@@ -193,17 +193,28 @@ commit.
 | Telemetry changed count | ≥ 12 | 30 |
 | Clamp-condition violations | 0 | 0 |
 
-## Test and quality results
+## Scale, runtime, and transport results
 
-The Rust workspace shipped 92 nextest tests across all crates. All passed.
-Zero skipped. cargo clippy exited with no warnings across all targets and
-features. cargo audit scanned 136 dependencies with zero advisory blockers.
-The single duplicate-crate warning (wit-bindgen) was recorded and did not block
-the audit.
+The generated plant holds 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000
+sensors in one authoritative 29,500-entity state. A separately measured live
+run recorded 300 ticks in a 10-second normal window and another 300 after
+recovery, with zero drops in both windows and 94% final frame-budget headroom.
 
-Code coverage was captured with cargo-llvm-cov across the same 92 tests. The
-lcov report is committed to the artifact archive alongside the capture logs,
-clippy output, and nextest summary for auditability.
+The deterministic capture advances one simulation tick per frame for 1,800
+frames. Replaying the same executable and seed on the same GPU adapter and
+driver produced the same raw SHA-256 stream. That scope is deliberate:
+compressed video bytes and cross-vendor GPU output are not claimed identical.
+
+At warmed tick 61, the full JSON state snapshot measured 5,293,279 bytes. A
+representative incremental binary update from tick 60 to 61 measured 6,798
+bytes—about 779 times smaller—with unchanged static layout retained separately.
+The two payloads have different transport semantics; the comparison shows why
+index-stable deltas matter rather than pretending they are interchangeable.
+
+The visible-change capture altered 109,851 of 451,200 label-excluded fleet
+pixels, or 24.3%, compared with a legacy 1.0% whole-percent comparator for the
+prior deterministic artifact. The public engineering evidence record pins the
+source commits, byte counts, pixel counts, replay hash, and comparison scope.
 
 ## What I would do differently
 

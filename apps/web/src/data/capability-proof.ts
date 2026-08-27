@@ -12,7 +12,7 @@ export const capabilityProof: readonly CapabilityProof[] = [
 			"Deterministic models, timed state transitions, and operator-facing system behavior.",
 		href: "/work/cryo-flow-sim/",
 		evidence:
-			"The Cryogenic Flow case study scales to 29,500 entities at 30 Hz, reproduces a byte-identical 1,800-frame raw replay, and replaces 3.53 MB JSON snapshots with 6.8 KB binary deltas in a representative warmed update.",
+			"The Cryogenic Flow case study runs 29,500 entities at 30 Hz, reproduces a byte-identical 1,800-frame raw replay in its fixed hardware and software scope, and makes coordinated valve waves visible across all 15,000 valves. A measured warmed state used a 6.8 KB representative binary delta instead of a 5.29 MB full JSON snapshot.",
 	},
 	{
 		capability: "Rust and C++ systems",
