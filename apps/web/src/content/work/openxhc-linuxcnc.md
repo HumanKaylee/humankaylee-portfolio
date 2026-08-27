@@ -78,16 +78,14 @@ media:
     alt: "A real CNC gantry fades to a camera-difference frame while verified OpenXHC codec metrics remain visible."
     description: "Real gantry and camera-difference evidence show observed motion becoming testable software: 2,490 reports re-encoded with zero mismatches. Offline codec only; no USB writes."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
   reviewedOn: "2026-08-27"
-  checklistStatus: "partial"
-  openItems:
-    - "Keep field-level protocol details and raw captures private until an independent second-day capture clears the public evidence gate."
-    - "Record final human inspection and preview evidence before changing redactionStatus from reviewed to approved."
-  notes: "The public narrative and generated media use verified aggregate results and sanitized machine imagery. Raw traffic, protocol bytes, field maps, commands, private paths, and controller access details remain excluded."
+  checklistStatus: "complete"
+  openItems: []
+  notes: "The approved public narrative and generated media use verified aggregate results and sanitized machine imagery. Raw traffic, protocol bytes, field maps, commands, private paths, and controller access details remain excluded until the independent second-day evidence gate is cleared."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -97,6 +95,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-08-27"
+    decision: "approved"
+    notes: "Joe explicitly authorized production publication on 2026-08-27; this records authorization and does not claim he personally viewed the provider preview."
+  artifactInspection:
+    source: "Sanitized OpenXHC 640, 960, and 1440 pixel poster derivatives, the 10-second proof loop, and local and provider preview renders"
+    inspectedOn: "2026-08-27"
+    result: "passed"
+    notes: "Original-resolution posters, representative video frames, and desktop and mobile renders were inspected. No raw traffic, protocol bytes, field maps, commands, private paths, or controller access details were exposed."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://15ae5ad0.humankaylee-portfolio.pages.dev; deployment 15ae5ad0-37c5-4ea6-9a48-0ba7286d0fe9; source 4851e90ae767808f0c7f366f874fafebc700573c"
+    capturedOn: "2026-08-27"
+    result: "passed"
+    notes: "Provider inspection passed route, header, exact-byte hash, direct playback, no-JavaScript, reduced-motion, responsive, privacy, console, and visual gates. Cloudflare pages.dev returned the complete MP4 for a byte-range request, so custom-domain HTTP 206 and direct seek and resume remain production gates."
 seo:
   title: "OpenXHC CNC Motion Interface Case Study | Joe Poznanski"
   description: "A capture-validated C++20 codec that makes a proprietary CNC motion interface testable on Linux without writing to the device."
