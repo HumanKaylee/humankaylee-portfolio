@@ -90,15 +90,14 @@ media:
     alt: "A real CNC gantry fades to a camera-difference frame while verified OpenXHC codec metrics remain visible."
     description: "Real gantry and camera-difference evidence show observed motion becoming testable software: 2,490 reports re-encoded with zero mismatches. Offline codec only; no USB writes."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
   reviewedOn: "2026-08-27"
-  checklistStatus: "partial"
-  openItems:
-    - "Fresh provider preview and owner authorization for the expanded recruiter package are pending."
-  notes: "The expanded narrative, recruiter panel, resume entry, technical note, social card, and illustrative validation media passed local public-safety and visual inspection. Fresh provider preview and owner authorization remain pending. Raw traffic, protocol bytes, field maps, commands, private paths, and controller access details remain excluded until the independent second-day evidence gate is cleared."
+  checklistStatus: "complete"
+  openItems: []
+  notes: "The expanded narrative, recruiter panel, resume entry, technical note, social card, and illustrative validation media passed independent public-safety review plus agent/browser inspection on the exact Cloudflare provider preview. Joe authorized production publication on 2026-08-27. This records authorization without claiming he personally inspected the preview. Raw traffic, protocol bytes, field maps, commands, private paths, and controller access details remain excluded until the independent second-day evidence gate is cleared."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -108,6 +107,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-08-27"
+    decision: "approved"
+    notes: "Joe explicitly approved production publication in this task on 2026-08-27 after the exact provider preview was supplied for review. This records authorization and does not claim he personally inspected the preview."
+  artifactInspection:
+    source: "OpenXHC recruiter package at source 96051e09e0d5fdef8b21378d0a17af701f544025; independent review task review_openxhc_portfolio"
+    inspectedOn: "2026-08-27"
+    result: "passed"
+    notes: "The public narrative, real-machine proof media, clearly labeled synthetic illustration, social card, recruiter panel, resume entry, technical note, and desktop/mobile captures were inspected. No Critical or Important findings, private data, or unsupported machine-control claims remained."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://99f05c83.humankaylee-portfolio.pages.dev; deployment 99f05c83-fe84-4d29-b95a-afe95f5d40a8; source 96051e09e0d5fdef8b21378d0a17af701f544025"
+    capturedOn: "2026-08-27"
+    result: "passed"
+    notes: "Exact-SHA CI passed frontend, WASM, and Rust. Agent/browser inspection passed case-study, front-page, resume, notes, RSS, social-card, canonical, security-header, no-JavaScript, reduced-motion, responsive-image, privacy, console, and visual checks. Cloudflare pages.dev returned full-body 200 to the media range probe, so this is preview artifact evidence rather than production CDN range evidence."
 seo:
   title: "OpenXHC CNC Motion Interface Case Study | Joe Poznanski"
   description: "A capture-validated C++20 codec that makes a proprietary CNC motion interface testable on Linux without writing to the device."
