@@ -6,7 +6,8 @@ import path from "node:path";
 import test from "node:test";
 
 const PUBLIC_ROOT = "apps/web/public/media/cryo-flow-sim-scale";
-const SOURCE_SHA = "bdb72f92c7e2623bdd59aa30d9e7f5f2d321b853";
+const DETERMINISTIC_SOURCE_SHA = "94ec41eb42a4aeb758843d7fed22bbb3f4233bed";
+const LIVE_SOURCE_SHA = "bdb72f92c7e2623bdd59aa30d9e7f5f2d321b853";
 const SCENARIO = "generated:5000:20260823";
 const COUNTS = {
 	tanks: 5000,
@@ -16,11 +17,11 @@ const COUNTS = {
 };
 const EXPECTED_SHA256 = {
 	"cryo-scale-deterministic-960.manifest.json":
-		"85806ad365cf43c7c576a1ba807653452092910256ddc4bc135f0e7349ee540e",
+		"a9edc5a8bc589ae3766403f94eb5096132698f3ec70366f25656587c684dea88",
 	"cryo-scale-deterministic-960.mp4":
-		"32221082a0593f93450e7e89443987fa96612b0f81dd1e1215b4456afe377e68",
+		"7476523deba2250cb3abc50028a824c9691da71e1c9ae5b3bdb560c92c7c4c71",
 	"cryo-scale-deterministic-960.png":
-		"d07a7939534bf761311288d51f6b265b156156faf297466694587f7aa94beb2c",
+		"4382cc0015cead25d6aeed28e3464e43a653337b0f19e65e7cc53d38c3069519",
 	"cryo-scale-realtime-960.manifest.json":
 		"8916b662f2644b58d75bec72d2603ddc9e99caded19fe35e4e1561d25627fb05",
 	"cryo-scale-realtime-960.mp4":
@@ -80,12 +81,17 @@ function assertPublicMetadata(value) {
 	assert.doesNotMatch(serialized, /\b(?:joepo|rog-strix-joe|lightred)\b/i);
 }
 
-function assertCaptureManifestContract(manifest, expectedKind, expectedLabel) {
+function assertCaptureManifestContract(
+	manifest,
+	expectedKind,
+	expectedLabel,
+	expectedSourceSha,
+) {
 	assertPublicMetadata(manifest);
 	assert.equal(manifest.schema_version, "cryo-scale-media/v1");
 	assert.equal(manifest.media_kind, expectedKind);
 	assert.equal(manifest.truthful_label, expectedLabel);
-	assert.equal(manifest.source_sha, SOURCE_SHA);
+	assert.equal(manifest.source_sha, expectedSourceSha);
 	assert.equal(manifest.scenario, SCENARIO);
 	assert.equal(manifest.seed, 20260823);
 	assert.deepEqual(manifest.counts, COUNTS);
@@ -102,12 +108,24 @@ function assertCaptureManifestContract(manifest, expectedKind, expectedLabel) {
 	assert.equal(manifest.handoff.autoplay, false);
 }
 
+function assertVisibleChangeContract(manifest) {
+	assert.equal(manifest.capture_profile, "visible_change_v1");
+	assert.deepEqual(manifest.chapters, [
+		{ name: "baseline", start_seconds: 0 },
+		{ name: "close_sweep", start_seconds: 5 },
+		{ name: "open_wave", start_seconds: 15 },
+		{ name: "transfer_hold", start_seconds: 30 },
+		{ name: "restore_sweep", start_seconds: 40 },
+		{ name: "recovery", start_seconds: 52 },
+	]);
+}
+
 function validManifestFixture() {
 	return {
 		schema_version: "cryo-scale-media/v1",
 		media_kind: "deterministic_offline",
 		truthful_label: "DETERMINISTIC / OFFLINE",
-		source_sha: SOURCE_SHA,
+		source_sha: DETERMINISTIC_SOURCE_SHA,
 		scenario: SCENARIO,
 		seed: 20260823,
 		counts: structuredClone(COUNTS),
@@ -115,6 +133,15 @@ function validManifestFixture() {
 		output_dimensions: { width: 960, height: 540 },
 		fps: 30,
 		duration_seconds: 60,
+		capture_profile: "visible_change_v1",
+		chapters: [
+			{ name: "baseline", start_seconds: 0 },
+			{ name: "close_sweep", start_seconds: 5 },
+			{ name: "open_wave", start_seconds: 15 },
+			{ name: "transfer_hold", start_seconds: 30 },
+			{ name: "restore_sweep", start_seconds: 40 },
+			{ name: "recovery", start_seconds: 52 },
+		],
 		validation: { passed: true },
 		handoff: { prefers_reduced_motion_poster: true, autoplay: false },
 	};
@@ -128,6 +155,7 @@ test("Cryo scale contract rejects a dishonest media kind or entity count", () =>
 			dishonestKind,
 			"deterministic_offline",
 			"DETERMINISTIC / OFFLINE",
+			DETERMINISTIC_SOURCE_SHA,
 		),
 	);
 
@@ -138,8 +166,21 @@ test("Cryo scale contract rejects a dishonest media kind or entity count", () =>
 			dishonestCount,
 			"deterministic_offline",
 			"DETERMINISTIC / OFFLINE",
+			DETERMINISTIC_SOURCE_SHA,
 		),
 	);
+});
+
+test("Cryo scale contract rejects a passive or incomplete deterministic choreography", () => {
+	const passive = validManifestFixture();
+	passive.capture_profile = "passive_v1";
+	assert.throws(() => assertVisibleChangeContract(passive));
+
+	const missingOpenWave = validManifestFixture();
+	missingOpenWave.chapters = missingOpenWave.chapters.filter(
+		(chapter) => chapter.name !== "open_wave",
+	);
+	assert.throws(() => assertVisibleChangeContract(missingOpenWave));
 });
 
 test("Cryo scale public media matches the accepted source bytes and manifests", () => {
@@ -165,11 +206,9 @@ test("Cryo scale public media matches the accepted source bytes and manifests", 
 		deterministic,
 		"deterministic_offline",
 		"DETERMINISTIC / OFFLINE",
+		DETERMINISTIC_SOURCE_SHA,
 	);
-	assert.deepEqual(deterministic.chapters, [
-		{ name: "overview", start_seconds: 0 },
-		{ name: "detail", start_seconds: 30 },
-	]);
+	assertVisibleChangeContract(deterministic);
 	assert.equal(
 		deterministic.artifacts.mp4.sha256,
 		EXPECTED_SHA256["cryo-scale-deterministic-960.mp4"],
@@ -185,7 +224,12 @@ test("Cryo scale public media matches the accepted source bytes and manifests", 
 			"utf8",
 		),
 	);
-	assertCaptureManifestContract(realtime, "live_realtime", "LIVE / REAL-TIME");
+	assertCaptureManifestContract(
+		realtime,
+		"live_realtime",
+		"LIVE / REAL-TIME",
+		LIVE_SOURCE_SHA,
+	);
 	assert.deepEqual(realtime.chapters, [
 		{ name: "normal", start_seconds: 0 },
 		{ name: "stress", start_seconds: 10.074 },

@@ -2,7 +2,7 @@
   "schema_version": "cryo-scale-media/v1",
   "media_kind": "deterministic_offline",
   "truthful_label": "DETERMINISTIC / OFFLINE",
-  "source_sha": "bdb72f92c7e2623bdd59aa30d9e7f5f2d321b853",
+  "source_sha": "94ec41eb42a4aeb758843d7fed22bbb3f4233bed",
   "scenario": "generated:5000:20260823",
   "seed": 20260823,
   "counts": {
@@ -23,12 +23,28 @@
   "duration_seconds": 60,
   "chapters": [
     {
-      "name": "overview",
+      "name": "baseline",
       "start_seconds": 0
     },
     {
-      "name": "detail",
+      "name": "close_sweep",
+      "start_seconds": 5
+    },
+    {
+      "name": "open_wave",
+      "start_seconds": 15
+    },
+    {
+      "name": "transfer_hold",
       "start_seconds": 30
+    },
+    {
+      "name": "restore_sweep",
+      "start_seconds": 40
+    },
+    {
+      "name": "recovery",
+      "start_seconds": 52
     }
   ],
   "codecs": {
@@ -53,18 +69,18 @@
   "artifacts": {
     "mp4": {
       "path": "cryo-scale-deterministic-960.mp4",
-      "bytes": 5862627,
-      "sha256": "32221082a0593f93450e7e89443987fa96612b0f81dd1e1215b4456afe377e68"
+      "bytes": 5440731,
+      "sha256": "7476523deba2250cb3abc50028a824c9691da71e1c9ae5b3bdb560c92c7c4c71"
     },
     "webm": {
       "path": "cryo-scale-deterministic-960.webm",
-      "bytes": 5512352,
-      "sha256": "b5606e1a753bf96b4e9d138ca873ea501da319f16a6f8ac1e5f6ca9ccbad4e0b"
+      "bytes": 5792654,
+      "sha256": "433adb6a3251ef9fae290243cdc4cf7428712b97b2ca1fda2ad691126d71d822"
     },
     "poster": {
       "path": "cryo-scale-deterministic-960.png",
-      "bytes": 581354,
-      "sha256": "d07a7939534bf761311288d51f6b265b156156faf297466694587f7aa94beb2c"
+      "bytes": 825028,
+      "sha256": "4382cc0015cead25d6aeed28e3464e43a653337b0f19e65e7cc53d38c3069519"
     }
   },
   "validation": {
@@ -75,10 +91,11 @@
       "artifact_hash_size_budget_and_poster",
       "codec_pixfmt_dimensions_fps_duration_audio_faststart",
       "ordered_chapters",
+      "deterministic_fleet_visible_change_at_least_5_percent",
       "seek_frame_change_visible_labels_counts_telemetry_public_safe_pixels",
       "reduced_motion_no_autoplay"
     ],
-    "validated_at_utc": "2026-08-25T13:28:25.663Z",
+    "validated_at_utc": "2026-08-26T18:43:54.453Z",
     "ffprobe": {
       "mp4": {
         "width": 960,
@@ -106,7 +123,8 @@
     "prefers_reduced_motion_poster": true,
     "autoplay": false
   },
-  "created_at_utc": "2026-08-25T13:13:22.516Z",
-  "raw_sha256": "8c96aefd18451e8de8f38acb8d10f1bdef0a85d8760fcf7113bbff05b649f0fc",
+  "created_at_utc": "2026-08-26T18:42:30.393Z",
+  "capture_profile": "visible_change_v1",
+  "raw_sha256": "f5e73c228b43bd71c8aba19f15d11b56a70ed4aa5c18fcc24b14d91e6882e8a1",
   "determinism_scope": "same executable, adapter, and driver; compressed bytes and cross-vendor GPU output are not claimed deterministic"
 }

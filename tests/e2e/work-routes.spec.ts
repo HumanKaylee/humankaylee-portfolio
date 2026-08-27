@@ -228,12 +228,26 @@ test.describe("Work routes @work", () => {
 		page,
 	}) => {
 		await page.goto("/work/cryo-flow-sim/");
+		const evidence = page.locator(
+			'.evidence-strip[aria-label="Cryogenic Flow Simulation verified evidence"]',
+		);
+		await expect(evidence.locator("dt")).toHaveText([
+			"System scale",
+			"Real-time runtime",
+			"Deterministic replay",
+		]);
+		await expect(evidence.locator("strong")).toHaveText([
+			"29,500 entities",
+			"30 Hz",
+			"1,800 frames",
+		]);
+		await expect(evidence).toContainText("1,200 ticks across 40 seconds");
+		await expect(evidence).toContainText("Byte-identical raw replay");
+		await expect(evidence).not.toContainText(/92 passing|96\.9 seconds/i);
 		await expect(page.locator("main")).toContainText(
-			"passed 210/210 workspace tests",
+			"spatial valve-command waves",
 		);
-		await expect(page.locator("main")).not.toContainText(
-			"passed 218/218 workspace tests",
-		);
+		await expect(page.locator("main")).toContainText("24.3% of fleet pixels");
 
 		const gallery = page.locator("[data-case-study-media-gallery]");
 		const items = gallery.locator("figure");
@@ -245,7 +259,7 @@ test.describe("Work routes @work", () => {
 			{
 				src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4",
 				poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp",
-				alt: "Cryogenic flow simulator overview and detail views for a generated fleet of 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors.",
+				alt: "Deterministic Cryogenic flow simulation showing spatial valve-command waves and actual tank, pipe, and sensor response across 29,500 generated entities.",
 			},
 			{
 				src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4",
@@ -270,9 +284,10 @@ test.describe("Work routes @work", () => {
 			await expect(video).not.toHaveAttribute("autoplay", "");
 		}
 		await expect(items.locator("figcaption")).toHaveText([
-			"Deterministic offline proof of all 29,500 generated entities, moving from fleet overview to a readable detail view.",
+			"Deterministic offline proof of all 29,500 generated entities: spatial valve-command waves close, open, and restore cohorts while actual tank, pipe, and sensor state responds across the fleet.",
 			"Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window.",
 		]);
+		await expect(items.nth(0)).not.toContainText(/live|real-time/i);
 		const fallbackLinks = items.getByRole("link", {
 			name: "Open the evidence video",
 		});

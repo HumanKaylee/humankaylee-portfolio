@@ -5,7 +5,7 @@ discipline: "simulation"
 year: 2026
 placement: "flagship"
 featuredOrder: 1
-lede: "A deterministic cryogenic-flow simulation showing timed valve transitions, tank behavior, and pressure cascades in a verified 96.9-second browser capture."
+lede: "A deterministic Rust cryogenic-flow simulator scaling to 29,500 entities, sustaining 30 Hz, and replaying identical state from a fixed seed."
 problem: "Visualizing fluid dynamics in a cryogenic system requires accurate, reproducible state transitions across valves, tanks, and pipes, without depending on live hardware or an unpredictable animation loop."
 stakes: "An incorrect simulation misleads about system behavior at the exact boundary conditions where engineering errors are most costly: low temperatures, pressure differentials, and timed valve sequencing."
 role: "Rust workspace architecture, simulation implementation, capture pipeline, and artifact validation."
@@ -27,26 +27,26 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
-outcome: "The original Stage 1 run produced a verified 1920x1080 at 30fps, 96.9-second video with 92 passing tests. A separate generated fleet run rendered all 29,500 entities (5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors), passed 210/210 workspace tests, and held 30 Hz before deliberate stress and after recovery."
+outcome: "The scaled system ran 29,500 entities at 30 Hz, recovered to 30 Hz after deliberate overload, and reproduced a byte-identical 1,800-frame raw capture within its pinned executable, seed, GPU-adapter, and driver scope. Its representative warmed transport update fell from a 3.53 MB JSON snapshot to a 6.8 KB binary delta, while the new deterministic video changed 24.3% of fleet pixels (excluding labels) versus 1.0% in the prior capture."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
   - "Threshold-based artifact validation is more trustworthy than visual inspection alone, but the thresholds need calibration against known-good runs."
 evidence:
-  label: "Stage 1 verified artifact"
-  summary: "A 1920x1080, 30fps simulation capture backed by 92 passing tests, recorded validation thresholds, and a provenance record containing the source commit and fixed seed."
+  label: "Scale simulation proof"
+  summary: "Measured scale, real-time recovery, and byte-identical deterministic replay for the 29,500-entity generated plant."
   values:
-    - label: "Tests"
-      value: "92 passing"
-      detail: "cargo-nextest tests across all workspace crates with zero skipped."
-    - label: "Capture"
-      value: "96.9 seconds"
-      detail: "Verified 1920x1080 at 30fps Stage 1 MP4 artifact."
-    - label: "Run provenance"
-      value: "Fixed and recorded"
-      detail: "The artifact record includes the source commit, deterministic seed, and measured validation thresholds."
-  scope: "Stage 1 artifact evidence from the deterministic capture and validation run."
-  limits: "Stage 2 is outside this release; validation thresholds were manually calibrated against the first successful run."
+    - label: "System scale"
+      value: "29,500 entities"
+      detail: "5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors share one authoritative state."
+    - label: "Real-time runtime"
+      value: "30 Hz"
+      detail: "1,200 ticks across 40 seconds of selected normal and recovery windows, with zero dropped ticks in those windows."
+    - label: "Deterministic replay"
+      value: "1,800 frames"
+      detail: "Byte-identical raw replay for the same executable, seed, GPU adapter, and driver."
+  scope: "Generated-scale evidence combines a deterministic offline capture from a fixed seed with a separately measured live real-time run; source commits and measured validation thresholds are recorded."
+  limits: "Byte determinism is scoped to the same executable, seed, GPU adapter, and driver; the deterministic offline capture does not claim wall-clock real-time performance."
 media:
   kind: "video"
   src: "/media/cryo-flow-sim-stage1.mp4"
@@ -79,8 +79,8 @@ evidenceMedia:
       - { src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp", width: 960 }
     width: 960
     height: 540
-    alt: "Cryogenic flow simulator overview and detail views for a generated fleet of 5,000 tanks, 15,000 valves, 4,500 pipes, and 5,000 sensors."
-    caption: "Deterministic offline proof of all 29,500 generated entities, moving from fleet overview to a readable detail view."
+    alt: "Deterministic Cryogenic flow simulation showing spatial valve-command waves and actual tank, pipe, and sensor response across 29,500 generated entities."
+    caption: "Deterministic offline proof of all 29,500 generated entities: spatial valve-command waves close, open, and restore cohorts while actual tank, pipe, and sensor state responds across the fleet."
   - kind: "video"
     src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4"
     poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.webp"

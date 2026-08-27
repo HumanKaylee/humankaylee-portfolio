@@ -116,6 +116,21 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 	page,
 }) => {
 	await page.goto("/");
+	const cryoEvidence = page.locator(
+		'.evidence-strip[aria-label="Verified Cryogenic Flow evidence"]',
+	);
+	await expect(cryoEvidence.locator("dt")).toHaveText([
+		"System scale",
+		"Real-time runtime",
+		"Deterministic replay",
+	]);
+	await expect(cryoEvidence.locator("strong")).toHaveText([
+		"29,500 entities",
+		"30 Hz",
+		"1,800 frames",
+	]);
+	await expect(page.locator("main")).toContainText("6.8 KB binary deltas");
+	await expect(page.locator("main")).not.toContainText(/92 passing tests/i);
 
 	const flagship = page.locator('[data-proof-placement="flagship"]');
 	const supporting = page.locator('[data-proof-placement="supporting"]');
