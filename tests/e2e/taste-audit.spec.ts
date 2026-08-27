@@ -29,6 +29,7 @@ const surfaces = [
 		label: "work-remote-recovery",
 		path: "/work/remote-workstation-recovery-and-operational-debugging/",
 	},
+	{ label: "work-openxhc", path: "/work/openxhc-linuxcnc/" },
 	{ label: "work-black-scholes", path: "/work/black-scholes-wasm/" },
 	{ label: "about", path: "/about/" },
 	{ label: "resume", path: "/resume/" },
@@ -154,6 +155,7 @@ test("keeps visible public copy free of em and en dashes @taste-audit", async ({
 	for (const path of [
 		"/work/cryo-flow-sim/",
 		"/work/conformal-cooling-channel-generation/",
+		"/work/openxhc-linuxcnc/",
 		"/work/black-scholes-wasm/",
 		"/about/",
 		"/notes/wasm-black-scholes-options-pricer/",
@@ -191,7 +193,13 @@ test.describe("Signal / Proof capture audit @taste-audit", () => {
 							.evaluateAll((items) =>
 								items.map((item) => item.getAttribute("data-proof-placement")),
 							),
-					).toEqual(["flagship", "flagship", "supporting"]);
+					).toEqual([
+						"flagship",
+						"flagship",
+						"supporting",
+						"supporting",
+						"supporting",
+					]);
 				}
 				if (surface.path === "/work/black-scholes-wasm/") {
 					await page.locator(".bs-demo").scrollIntoViewIfNeeded();

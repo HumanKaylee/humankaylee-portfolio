@@ -18,8 +18,8 @@ const { projects } = Astro.props;
 		<h2 id="selected-proof-title">Flagship systems, backed by working software.</h2>
 		<p>
 			The flagship case studies carry captured motion and geometry evidence.
-			Focused technical studies show how the same evidence-first approach applies
-			to camera tradeoffs and browser computation.
+			Focused technical studies extend that evidence-first approach to camera
+			tradeoffs, browser computation, and machine-interface reverse engineering.
 		</p>
 	</header>
 	<div class="proof-gallery__list">
@@ -58,7 +58,7 @@ const { projects } = Astro.props;
 					</div>
 				<div class="proof-gallery__media">
 					{project.data.media.loop ? (
-						<MotionLoop loop={project.data.media.loop} />
+						<MotionLoop loop={project.data.media.loop} posterLoading="lazy" />
 					) : (
 						<MediaFrame media={project.data.media}>
 							<WorkEvidenceFlow work={project} />

@@ -17,10 +17,10 @@ export const capabilityProof: readonly CapabilityProof[] = [
 	{
 		capability: "Rust and C++ systems",
 		summary:
-			"Typed systems software across browser, service, real-time, and hardware-in-the-loop boundaries.",
-		href: "/resume/#experience",
+			"Typed systems software across browser, simulation, service, and hardware boundaries.",
+		href: "/work/openxhc-linuxcnc/",
 		evidence:
-			"The résumé documents Rust simulation and orchestration systems plus a C++17, VxWorks, and ZeroMQ data bus fielded on 18+ aircraft simulators.",
+			"OpenXHC's C++20 offline codec re-encoded 2,490 real CNC interface reports with 0 mismatches and matched machine coordinates within 0.0005 mm, while preserving a hard no-USB-write boundary.",
 	},
 	{
 		capability: "High-rate telemetry",

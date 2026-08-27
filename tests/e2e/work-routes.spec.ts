@@ -12,6 +12,10 @@ const allPublishedWork = [
 		slug: "xplane-cabin-camera-fov-trade-study",
 	},
 	{
+		title: "OpenXHC: Reverse-Engineering a CNC Motion Interface",
+		slug: "openxhc-linuxcnc",
+	},
+	{
 		title: "Black-Scholes Options Pricer in Rust and WASM",
 		slug: "black-scholes-wasm",
 	},
@@ -54,7 +58,7 @@ test.describe("Work routes @work", () => {
 			"Read the case study",
 			"Read the case study",
 		]);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(2);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(3);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Cryogenic Flow Simulation",
@@ -64,6 +68,7 @@ test.describe("Work routes @work", () => {
 		);
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
+			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 			"Black-Scholes Options Pricer in Rust and WASM",
 		]);
 		await expect(page.locator("[data-archive-work]")).toContainText(
@@ -86,6 +91,7 @@ test.describe("Work routes @work", () => {
 			"/work/cryo-flow-sim/",
 			"/work/conformal-cooling-channel-generation/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
+			"/work/openxhc-linuxcnc/",
 			"/work/black-scholes-wasm/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
@@ -113,11 +119,17 @@ test.describe("Work routes @work", () => {
 			"Conformal Cooling Channel Generation",
 		]);
 		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(2);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(3);
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
+			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 			"Black-Scholes Options Pricer in Rust and WASM",
 		]);
+		await expect(
+			page.locator("[data-supporting-work]").getByRole("link", {
+				name: "OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			}),
+		).toHaveAttribute("href", "/work/openxhc-linuxcnc/");
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
 				name: "X-Plane Cabin Camera FOV Trade Study",
@@ -144,6 +156,7 @@ test.describe("Work routes @work", () => {
 		const expectedNext = [
 			"Conformal Cooling Channel Generation",
 			"X-Plane Cabin Camera FOV Trade Study",
+			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 			"Black-Scholes Options Pricer in Rust and WASM",
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
@@ -176,6 +189,65 @@ test.describe("Work routes @work", () => {
 		}
 	});
 
+	test("presents OpenXHC as an offline codec foundation with authentic bounded proof", async ({
+		page,
+	}) => {
+		await page.goto("/work/openxhc-linuxcnc/");
+
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: "OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			}),
+		).toBeVisible();
+		await expect(page.locator("main")).toContainText(/C\+\+20.*offline codec/i);
+		await expect(page.locator("main")).toContainText(/2,490.*0 mismatches/i);
+		await expect(page.locator("main")).toContainText(/0\.0005 mm/i);
+		await expect(page.locator("main")).toContainText(/No USB writes/i);
+		await expect(page.locator("main")).not.toContainText(
+			/complete LinuxCNC driver|production-ready|closed-loop|real-time safe|Mach3 replacement/i,
+		);
+
+		const media = page.locator('[data-media-kind="video"]');
+		const video = media.locator("video");
+		await expect(video).toHaveAttribute(
+			"poster",
+			"/media/openxhc/openxhc-proof-loop-640.webp",
+		);
+		await expect(video.locator("source")).toHaveAttribute(
+			"src",
+			"/media/openxhc/openxhc-proof-loop.mp4",
+		);
+		await video.evaluate(async (element) => {
+			const player = element as HTMLVideoElement;
+			player.muted = true;
+			await player.play();
+		});
+		await expect
+			.poll(() =>
+				video.evaluate((element) => (element as HTMLVideoElement).duration),
+			)
+			.toBeGreaterThan(9.9);
+		await expect
+			.poll(() =>
+				video.evaluate((element) => (element as HTMLVideoElement).currentTime),
+			)
+			.toBeGreaterThan(0.05);
+		await video.evaluate(
+			(element) =>
+				new Promise<void>((resolve) => {
+					const player = element as HTMLVideoElement;
+					player.addEventListener("seeked", () => resolve(), { once: true });
+					player.currentTime = 5;
+				}),
+		);
+		expect(
+			await video.evaluate(
+				(element) => (element as HTMLVideoElement).currentTime,
+			),
+		).toBeGreaterThan(4.9);
+	});
+
 	test("renders authentic Cryogenic media with opt-in playback and durable fallback context", async ({
 		page,
 	}) => {
@@ -204,9 +276,9 @@ test.describe("Work routes @work", () => {
 		await expect(video).toHaveAttribute("preload", "none");
 		await expect(video).toHaveAttribute(
 			"poster",
-			"/media/cryo-flow-sim-stage1-1440.webp",
+			"/media/cryo-flow-sim-stage1-640.webp",
 		);
-		expect(requestedMedia).toContain("/media/cryo-flow-sim-stage1-1440.webp");
+		expect(requestedMedia).toContain("/media/cryo-flow-sim-stage1-640.webp");
 		expect(requestedMedia).not.toContain(
 			"/media/cryo-flow-sim-stage1-poster.png",
 		);
@@ -214,7 +286,7 @@ test.describe("Work routes @work", () => {
 			"Deterministic Stage 1 capture at 1920 by 1080.",
 		);
 		const externalFallback = frame.getByRole("link", {
-			name: "Open the simulation video",
+			name: "Open the project video",
 		});
 		await expect(externalFallback).toBeVisible();
 		await expect(externalFallback).toHaveAttribute(

@@ -361,7 +361,10 @@ test("Signal / Proof surfaces bind claims to ProofGallery, CapabilityMatrix, Evi
 	assert.match(evidenceStrip, /<dl>/);
 	assert.match(evidenceStrip, /items\.map/);
 
-	assert.match(workDetail, /<MediaFrame media=\{data\.media\} playback=/);
+	assert.match(
+		workDetail,
+		/<MediaFrame[\s\S]*?media=\{data\.media\}\s+playback=/,
+	);
 	assert.match(workDetail, /<WorkEvidenceFlow work=\{work\}/);
 	assert.match(workDetail, /<EvidenceStrip/);
 	assert.match(workEvidenceFlow, /data\.architecture/);

@@ -20,6 +20,7 @@ const expectedVisualRoutes = [
 	["work-cryo", "/work/cryo-flow-sim/"],
 	["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 	["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
+	["work-openxhc", "/work/openxhc-linuxcnc/"],
 	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 	[
 		"work-remote-recovery",
@@ -106,6 +107,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		["work-cryo", "/work/cryo-flow-sim/"],
 		["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 		["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
+		["work-openxhc", "/work/openxhc-linuxcnc/"],
 		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 		[
 			"work-remote-recovery",

@@ -49,7 +49,7 @@ test.describe("Signal / Proof no-WebGL behavior @no-webgl", () => {
 		await page.waitForLoadState("networkidle");
 
 		await expect(page.locator(".proof-gallery")).toBeVisible();
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(4);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(5);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
 		await expect(page.locator("script[src*='constellation']")).toHaveCount(0);
