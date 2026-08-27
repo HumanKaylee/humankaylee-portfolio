@@ -205,6 +205,58 @@ test("the real generator supports isolated deterministic output", () => {
 	assert.equal(existsSync(tempDirectory), false);
 });
 
+test("the real generator produces a deterministic OpenXHC social card from authentic media", () => {
+	const tempDirectory = mkdtempSync(
+		path.join(tmpdir(), "openxhc-social-preview-"),
+	);
+	const generatedPaths = [
+		path.join(tempDirectory, "first.png"),
+		path.join(tempDirectory, "second.png"),
+	];
+
+	try {
+		for (const generatedPath of generatedPaths) {
+			const result = spawnSync(
+				process.execPath,
+				[
+					path.join(repoRoot, "scripts/generate-social-preview-assets.mjs"),
+					"--project",
+					"openxhc",
+					"--output",
+					generatedPath,
+				],
+				{ cwd: repoRoot, encoding: "utf8" },
+			);
+
+			assert.equal(
+				result.status,
+				0,
+				`OpenXHC generator failed: ${result.stderr || result.stdout}`,
+			);
+			assert.deepEqual(readPngDimensions(generatedPath), {
+				width: 1200,
+				height: 630,
+			});
+			assert.ok(
+				statSync(generatedPath).size > 100_000,
+				"OpenXHC preview must contain nontrivial authentic image data",
+			);
+			assert.match(
+				result.stdout,
+				/openxhc-proof-loop-1440\.webp: OpenXHC.*2,490 reports.*0 mismatches/i,
+			);
+		}
+
+		assert.equal(
+			sha256(readFileSync(generatedPaths[0])),
+			sha256(readFileSync(generatedPaths[1])),
+			"OpenXHC social generation must be deterministic on one platform",
+		);
+	} finally {
+		rmSync(tempDirectory, { recursive: true, force: true });
+	}
+});
+
 test("unpublished case-study candidates use the generic social preview", () => {
 	// Updated 2026-05-26 (post-0a1f924 M7-partial): static per-page OG PNGs
 	// (incl. /social/case-study-detail.png) were retired in favor of the

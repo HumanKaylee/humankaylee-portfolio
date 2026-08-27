@@ -1,0 +1,259 @@
+<section
+	class="openxhc-boundary"
+	data-openxhc-system-boundary
+	aria-labelledby="openxhc-boundary-title"
+>
+	<header class="openxhc-boundary__header">
+		<p class="section-kicker">System boundary / offline first</p>
+		<h2 id="openxhc-boundary-title">From captured motion to testable code</h2>
+		<p>
+			The project converts observations from a real CNC system into a native,
+			falsifiable software model. Each stage narrows uncertainty before any
+			future Linux control path can reach hardware.
+		</p>
+	</header>
+
+	<ol class="openxhc-boundary__flow" aria-label="Validated OpenXHC workflow">
+		<li data-boundary-step>
+			<p aria-hidden="true">01</p>
+			<h3>Owner-authorized captures</h3>
+			<span>Real motion evidence retained privately and summarized safely.</span>
+		</li>
+		<li data-boundary-step>
+			<p aria-hidden="true">02</p>
+			<h3>Offline C++20 codec</h3>
+			<span>Fixed-capacity parsing and encoding with no device-open path.</span>
+		</li>
+		<li data-boundary-step>
+			<p aria-hidden="true">03</p>
+			<h3>Byte-exact validator</h3>
+			<span>Captured reports must reconstruct exactly, not just round-trip.</span>
+		</li>
+		<li data-boundary-step>
+			<p aria-hidden="true">04</p>
+			<h3>Coordinate comparison</h3>
+			<span>Decoded positions are checked against observed machine coordinates.</span>
+		</li>
+	</ol>
+
+	<div class="openxhc-boundary__evidence">
+		<figure data-synthetic-validation>
+			<picture>
+				<source
+					srcset="/media/openxhc/openxhc-validation-illustrative-640.webp 640w, /media/openxhc/openxhc-validation-illustrative-960.webp 960w, /media/openxhc/openxhc-validation-illustrative-1440.webp 1440w"
+					sizes="(max-width: 768px) calc(100vw - 2rem), 62vw"
+					type="image/webp"
+				/>
+				<img
+					src="/media/openxhc/openxhc-validation-illustrative-640.webp"
+					width="1440"
+					height="960"
+					loading="lazy"
+					decoding="async"
+					alt="Illustrative CNC evidence flow passing through offline validation stages before a hard machine-control boundary."
+				/>
+			</picture>
+			<figcaption>
+				Illustrative model. Aggregate metrics are measured; no protocol bytes are shown.
+			</figcaption>
+		</figure>
+
+		<aside data-future-boundary aria-labelledby="future-boundary-title">
+			<p class="section-kicker">Deliberately outside the current artifact</p>
+			<h3 id="future-boundary-title">Future integration boundary</h3>
+			<ul>
+				<li>USB transport</li>
+				<li>Trajectory planning</li>
+				<li>Safety supervision</li>
+				<li>LinuxCNC HAL integration</li>
+			</ul>
+			<p>
+				The current result is a validated foundation, not a claim of autonomous
+				machine control.
+			</p>
+		</aside>
+	</div>
+</section>
+
+<style>
+	.openxhc-boundary {
+		display: grid;
+		gap: var(--space-5);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.openxhc-boundary__header {
+		display: grid;
+		grid-template-columns: minmax(0, 0.75fr) minmax(18rem, 1.25fr);
+		gap: var(--space-3) clamp(2rem, 6vw, 7rem);
+	}
+
+	.openxhc-boundary__header .section-kicker {
+		grid-column: 1 / -1;
+	}
+
+	.openxhc-boundary__header h2 {
+		max-width: 12ch;
+		font-size: clamp(2.2rem, 5vw, 5rem);
+	}
+
+	.openxhc-boundary__header > p:last-child {
+		max-width: 54ch;
+		align-self: end;
+		color: var(--color-muted);
+		font-size: clamp(1rem, 1.6vw, 1.2rem);
+	}
+
+	.openxhc-boundary__flow {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		margin: 0;
+		padding: 0;
+		border-block: 1px solid var(--line);
+		list-style: none;
+	}
+
+	.openxhc-boundary__flow li {
+		position: relative;
+		display: grid;
+		align-content: start;
+		gap: var(--space-2);
+		min-height: 13rem;
+		padding: var(--space-4);
+	}
+
+	.openxhc-boundary__flow li + li {
+		border-left: 1px solid var(--line);
+	}
+
+	.openxhc-boundary__flow li:not(:last-child)::after {
+		position: absolute;
+		right: -0.55rem;
+		top: 50%;
+		z-index: 1;
+		width: 1.1rem;
+		height: 1.1rem;
+		border-top: 1px solid var(--color-ink);
+		border-right: 1px solid var(--color-ink);
+		background: var(--color-paper);
+		content: "";
+		transform: translateY(-50%) rotate(45deg);
+	}
+
+	.openxhc-boundary__flow p,
+	.openxhc-boundary__flow span {
+		color: var(--color-muted);
+		font-family: var(--font-evidence);
+		font-size: 0.74rem;
+		line-height: 1.55;
+	}
+
+	.openxhc-boundary__flow h3 {
+		font-size: clamp(1.2rem, 2vw, 1.65rem);
+	}
+
+	.openxhc-boundary__evidence {
+		display: grid;
+		grid-template-columns: minmax(0, 1.35fr) minmax(17rem, 0.65fr);
+		gap: var(--space-4);
+		align-items: stretch;
+	}
+
+	.openxhc-boundary figure {
+		margin: 0;
+		background: #11120f;
+	}
+
+	.openxhc-boundary picture,
+	.openxhc-boundary img {
+		display: block;
+		width: 100%;
+	}
+
+	.openxhc-boundary img {
+		height: auto;
+	}
+
+	.openxhc-boundary figcaption {
+		padding: var(--space-3);
+		color: #f2f1eb;
+		font-family: var(--font-evidence);
+		font-size: 0.72rem;
+	}
+
+	.openxhc-boundary aside {
+		display: grid;
+		align-content: start;
+		gap: var(--space-3);
+		border-top: 0.5rem solid var(--color-signal);
+		background: var(--color-ink);
+		padding: var(--space-4);
+		color: var(--color-paper);
+	}
+
+	.openxhc-boundary aside .section-kicker,
+	.openxhc-boundary aside > p:last-child {
+		color: #bfc0b8;
+	}
+
+	.openxhc-boundary aside h3 {
+		font-size: clamp(1.5rem, 2.8vw, 2.6rem);
+	}
+
+	.openxhc-boundary aside ul {
+		display: grid;
+		gap: var(--space-2);
+		margin: 0;
+		padding: var(--space-3) 0;
+		border-block: 1px solid #3b3c37;
+		list-style: none;
+	}
+
+	.openxhc-boundary aside li::before {
+		margin-right: var(--space-2);
+		color: var(--color-signal);
+		content: "+";
+	}
+
+	@media (max-width: 64rem) {
+		.openxhc-boundary__flow {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.openxhc-boundary__flow li:nth-child(3) {
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+
+		.openxhc-boundary__flow li:nth-child(4) {
+			border-top: 1px solid var(--line);
+		}
+
+		.openxhc-boundary__flow li:nth-child(2)::after {
+			display: none;
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.openxhc-boundary__header,
+		.openxhc-boundary__flow,
+		.openxhc-boundary__evidence {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.openxhc-boundary__flow li {
+			min-height: 0;
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+
+		.openxhc-boundary__flow li:first-child {
+			border-top: 0;
+		}
+
+		.openxhc-boundary__flow li::after {
+			display: none;
+		}
+	}
+</style>

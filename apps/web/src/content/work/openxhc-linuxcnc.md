@@ -37,6 +37,18 @@ lessons:
   - "Byte-exact reconstruction is a stronger protocol check than a synthetic encoder-decoder round trip because the device traffic was produced outside the implementation under test."
   - "Physical-system software becomes easier to reason about when parsing, transport, planning, and actuation are separate boundaries."
   - "A useful early milestone can remove uncertainty without pretending to deliver machine control before its safety layers exist."
+recruiterSignificance:
+  title: "Why this matters to engineering teams"
+  summary: "OpenXHC demonstrates the judgment required to make an undocumented physical-system boundary measurable, testable, and safe enough for a team to extend deliberately."
+  points:
+    - label: "Falsifiable interface model"
+      detail: "The codec must reproduce traffic created outside the implementation, so an incorrect model can fail visibly."
+    - label: "Hardware-safe iteration"
+      detail: "Protocol work remains offline, allowing fast test cycles without turning incomplete knowledge into physical motion."
+    - label: "Portable integration boundary"
+      detail: "Parsing is isolated from transport, planning, supervision, and the future LinuxCNC HAL layer."
+    - label: "Evidence-led systems work"
+      detail: "Measured results, explicit limits, and publication gates separate demonstrated capability from future scope."
 evidence:
   label: "Real-traffic codec validation"
   summary: "Across 14 owner-authorized move bursts, 2,490 real reports re-encoded byte-exact with 0 mismatches, and decoded machine coordinates agreed with the controller display within 0.0005 mm."
@@ -115,5 +127,5 @@ seo:
   title: "OpenXHC CNC Motion Interface Case Study | Joe Poznanski"
   description: "A capture-validated C++20 codec that makes a proprietary CNC motion interface testable on Linux without writing to the device."
   canonicalPath: "/work/openxhc-linuxcnc/"
-  ogImage: "/media/openxhc/openxhc-proof-loop-1440.webp"
+  ogImage: "/social/openxhc-linuxcnc.png"
 ---

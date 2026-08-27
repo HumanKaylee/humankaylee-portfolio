@@ -8,7 +8,9 @@ import CaseStudySection from "../../components/CaseStudySection.astro";
 import EvidenceStrip from "../../components/EvidenceStrip.astro";
 import MediaFrame from "../../components/MediaFrame.astro";
 import NextWork from "../../components/NextWork.astro";
+import OpenXhcSystemBoundary from "../../components/OpenXhcSystemBoundary.astro";
 import ReadingProgress from "../../components/ReadingProgress.astro";
+import RecruiterSignificance from "../../components/RecruiterSignificance.astro";
 import WorkEvidenceFlow from "../../components/WorkEvidenceFlow.astro";
 import { profile } from "../../data/profile";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -128,6 +130,8 @@ const structuredData = {
 			</p>
 		</CaseStudySection>
 
+		{data.slug === "openxhc-linuxcnc" ? <OpenXhcSystemBoundary /> : null}
+
 		<CaseStudySection id="decisions" title="Critical decisions" wide>
 			<div class="decision-list">
 				{
@@ -181,6 +185,12 @@ const structuredData = {
 				</div>
 			</dl>
 		</CaseStudySection>
+
+		{
+			data.recruiterSignificance ? (
+				<RecruiterSignificance significance={data.recruiterSignificance} />
+			) : null
+		}
 
 		<CaseStudyMediaGallery items={data.evidenceMedia} />
 

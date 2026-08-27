@@ -8,11 +8,21 @@ const repoRoot = path.resolve(
 	"..",
 );
 const publicDir = path.join(repoRoot, "apps/web/public");
-const sourcePoster = path.join(
-	publicDir,
-	"media/cryo-flow-sim-stage1-poster.png",
-);
-const defaultOutputPath = path.join(publicDir, "social/default.png");
+const projectDefinitions = {
+	default: {
+		sourceName: "cryo-flow-sim-stage1-poster.png",
+		sourcePath: path.join(publicDir, "media/cryo-flow-sim-stage1-poster.png"),
+		outputPath: path.join(publicDir, "social/default.png"),
+	},
+	openxhc: {
+		sourceName: "openxhc-proof-loop-1440.webp",
+		sourcePath: path.join(
+			publicDir,
+			"media/openxhc/openxhc-proof-loop-1440.webp",
+		),
+		outputPath: path.join(publicDir, "social/openxhc-linuxcnc.png"),
+	},
+};
 const name = "Joe Poznanski";
 const positioningLines = [
 	"Principal engineer",
@@ -28,18 +38,35 @@ function firstExistingPath(paths, label) {
 	return result;
 }
 
-function requestedOutputPath(args) {
-	if (args.length === 0) {
-		return defaultOutputPath;
+function requestedOptions(args) {
+	let project = "default";
+	let outputPath;
+
+	for (let index = 0; index < args.length; index += 2) {
+		const flag = args[index];
+		const value = args[index + 1];
+
+		if (!value?.trim() || !["--project", "--output"].includes(flag)) {
+			throw new Error(
+				"Usage: node scripts/generate-social-preview-assets.mjs [--project openxhc] [--output <png-path>]",
+			);
+		}
+
+		if (flag === "--project") {
+			project = value;
+		} else {
+			outputPath = path.resolve(repoRoot, value);
+		}
 	}
 
-	if (args.length !== 2 || args[0] !== "--output" || !args[1].trim()) {
-		throw new Error(
-			"Usage: node scripts/generate-social-preview-assets.mjs [--output <png-path>]",
-		);
+	if (!(project in projectDefinitions)) {
+		throw new Error(`Unknown social preview project: ${project}`);
 	}
 
-	return path.resolve(repoRoot, args[1]);
+	return {
+		project,
+		outputPath: outputPath ?? projectDefinitions[project].outputPath,
+	};
 }
 
 function ffmpegFilterPath(filePath) {
@@ -66,7 +93,9 @@ const boldFont = ffmpegFilterPath(
 		"bold",
 	),
 );
-const outputPath = requestedOutputPath(process.argv.slice(2));
+const { outputPath, project } = requestedOptions(process.argv.slice(2));
+const projectDefinition = projectDefinitions[project];
+const sourcePoster = projectDefinition.sourcePath;
 
 if (!existsSync(sourcePoster)) {
 	throw new Error(`Missing authentic source poster: ${sourcePoster}`);
@@ -74,17 +103,24 @@ if (!existsSync(sourcePoster)) {
 
 mkdirSync(path.dirname(outputPath), { recursive: true });
 
-const positioningFilters = positioningLines
+const defaultPositioningFilters = positioningLines
 	.map(
 		(line, index) =>
 			`drawtext=fontfile='${boldFont}':text='${line}':fontcolor=0x11120F:fontsize=48:x=58:y=${220 + index * 66}`,
 	)
 	.join(",");
-const filter = [
-	`[0:v]drawbox=x=58:y=60:w=86:h=12:color=0xD9FF43:t=fill,drawtext=fontfile='${regularFont}':text='${name}':fontcolor=0x11120F:fontsize=32:x=58:y=106,${positioningFilters}[text]`,
+const defaultFilter = [
+	`[0:v]drawbox=x=58:y=60:w=86:h=12:color=0xD9FF43:t=fill,drawtext=fontfile='${regularFont}':text='${name}':fontcolor=0x11120F:fontsize=32:x=58:y=106,${defaultPositioningFilters}[text]`,
 	"[1:v]scale=1120:630,crop=660:630:0:0[media]",
 	"[text][media]hstack=inputs=2[out]",
 ].join(";");
+const openXhcFilter = [
+	`[0:v]drawbox=x=54:y=52:w=92:h=12:color=0xD9FF43:t=fill,drawtext=fontfile='${boldFont}':text='OpenXHC':fontcolor=0xF2F1EB:fontsize=54:x=54:y=102,drawtext=fontfile='${regularFont}':text='CNC MOTION INTERFACE':fontcolor=0xBFC0B8:fontsize=21:x=54:y=176,drawtext=fontfile='${boldFont}':text='2,490 reports':fontcolor=0xD9FF43:fontsize=42:x=54:y=294,drawtext=fontfile='${boldFont}':text='0 mismatches':fontcolor=0xF2F1EB:fontsize=42:x=54:y=352,drawtext=fontfile='${regularFont}':text='OFFLINE C++20 VALIDATION':fontcolor=0xBFC0B8:fontsize=19:x=54:y=473,drawtext=fontfile='${regularFont}':text='NO USB WRITES':fontcolor=0xBFC0B8:fontsize=19:x=54:y=509[text]`,
+	"[1:v]scale=1120:630,crop=684:630:16:0[media]",
+	"[text][media]hstack=inputs=2[out]",
+].join(";");
+const filter = project === "openxhc" ? openXhcFilter : defaultFilter;
+const panelWidth = project === "openxhc" ? 516 : 540;
 
 const result = spawnSync(
 	"ffmpeg",
@@ -96,7 +132,7 @@ const result = spawnSync(
 		"-f",
 		"lavfi",
 		"-i",
-		"color=c=0xF2F1EB:s=540x630",
+		`color=c=${project === "openxhc" ? "0x11120F" : "0xF2F1EB"}:s=${panelWidth}x630`,
 		"-i",
 		sourcePoster,
 		"-filter_complex",
@@ -116,6 +152,11 @@ if (result.status !== 0) {
 	throw new Error(`Failed to generate ${outputPath}`);
 }
 
+const summary =
+	project === "openxhc"
+		? "OpenXHC | 2,490 reports | 0 mismatches"
+		: `${name} — ${positioningLines.join(" ")}`;
+
 console.log(
-	`Generated ${path.relative(repoRoot, outputPath)} from cryo-flow-sim-stage1-poster.png: ${name} — ${positioningLines.join(" ")}`,
+	`Generated ${path.relative(repoRoot, outputPath)} from ${projectDefinition.sourceName}: ${summary}`,
 );

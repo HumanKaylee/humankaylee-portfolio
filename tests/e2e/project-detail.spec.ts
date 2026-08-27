@@ -110,6 +110,73 @@ test("selects the full-width OpenXHC poster on desktop detail", async ({
 		.toMatch(/\/media\/openxhc\/openxhc-proof-loop-1440\.webp$/);
 });
 
+test("explains the OpenXHC system boundary and recruiter significance without exposing protocol internals", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 390, height: 844 });
+	await page.goto("/work/openxhc-linuxcnc/");
+	await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+		"content",
+		"https://joepoznanski.io/social/openxhc-linuxcnc.png",
+	);
+
+	const boundary = page.locator("[data-openxhc-system-boundary]");
+	await expect(
+		boundary.getByRole("heading", {
+			name: "From captured motion to testable code",
+		}),
+	).toBeVisible();
+	await expect(boundary.locator("[data-boundary-step] h3")).toHaveText([
+		"Owner-authorized captures",
+		"Offline C++20 codec",
+		"Byte-exact validator",
+		"Coordinate comparison",
+	]);
+	await expect(
+		boundary.getByRole("heading", { name: "Future integration boundary" }),
+	).toBeVisible();
+	await expect(boundary.locator("[data-future-boundary] li")).toHaveText([
+		"USB transport",
+		"Trajectory planning",
+		"Safety supervision",
+		"LinuxCNC HAL integration",
+	]);
+
+	const illustration = boundary.locator("[data-synthetic-validation] img");
+	await illustration.scrollIntoViewIfNeeded();
+	await expect(illustration).toBeVisible();
+	await expect
+		.poll(() =>
+			illustration.evaluate((image) => (image as HTMLImageElement).currentSrc),
+		)
+		.toMatch(/\/media\/openxhc\/openxhc-validation-illustrative-640\.webp$/);
+	await expect(
+		boundary.locator("[data-synthetic-validation] figcaption"),
+	).toHaveText(
+		"Illustrative model. Aggregate metrics are measured; no protocol bytes are shown.",
+	);
+
+	const significance = page.locator("[data-recruiter-significance]");
+	await expect(
+		significance.getByRole("heading", {
+			name: "Why this matters to engineering teams",
+		}),
+	).toBeVisible();
+	await expect(significance.locator("[data-significance-point] h3")).toHaveText(
+		[
+			"Falsifiable interface model",
+			"Hardware-safe iteration",
+			"Portable integration boundary",
+			"Evidence-led systems work",
+		],
+	);
+
+	const publicText = await page.locator("main").textContent();
+	expect(publicText ?? "").not.toMatch(
+		/0x[0-9a-f]{2}|VID_[0-9a-f]+|PID_[0-9a-f]+/i,
+	);
+});
+
 test.describe("Work detail routes @work @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 
