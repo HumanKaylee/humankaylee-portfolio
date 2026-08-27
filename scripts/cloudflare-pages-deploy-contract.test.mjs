@@ -37,6 +37,7 @@ test("Cloudflare production deploy is main-only and pins the provider source to 
 
 	assert.match(workflow, /^ {6}- main$/m);
 	assert.doesNotMatch(workflow, /goal\/portfolio-implementation/);
+	assert.doesNotMatch(workflow, /workflow_dispatch:/);
 	assert.match(
 		workflow,
 		/FORCE_JAVASCRIPT_ACTIONS_TO_NODE24:\s*["']?true["']?/,
