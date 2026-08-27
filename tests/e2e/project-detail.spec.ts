@@ -23,6 +23,12 @@ const workDetails = [
 		galleryItems: 4,
 	},
 	{
+		slug: "openxhc-linuxcnc",
+		title: "OpenXHC: Reverse-Engineering a CNC Motion Interface",
+		marker: /C\+\+20 offline codec/i,
+		galleryItems: 0,
+	},
+	{
 		slug: "cli-fleet-synchronization-and-mcp-rollout",
 		title: "CLI Fleet Synchronization",
 		marker: /cross-machine CLI rollout standardized local tool behavior/i,
@@ -50,6 +56,33 @@ test("keeps responsive primary posters driven by Work record data", () => {
 
 	expect(mediaFrameSource).toContain("media.responsivePosterSources");
 	expect(mediaFrameSource).not.toMatch(/cryo-flow-sim-stage1-\d+\.webp/);
+});
+
+test("selects the narrow OpenXHC poster on homepage and detail video", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 390, height: 844 });
+
+	await page.goto("/");
+	const homepageProof = page.locator(".proof-gallery__item").filter({
+		has: page.locator('a[href="/work/openxhc-linuxcnc/"]'),
+	});
+	await expect
+		.poll(() =>
+			homepageProof
+				.locator("picture img")
+				.evaluate((image) => (image as HTMLImageElement).currentSrc),
+		)
+		.toMatch(/\/media\/openxhc\/openxhc-proof-loop-640\.webp$/);
+
+	await page.goto("/work/openxhc-linuxcnc/");
+	await expect
+		.poll(() =>
+			page
+				.locator(".work-detail__media [data-video-poster] img")
+				.evaluate((image) => (image as HTMLImageElement).currentSrc),
+		)
+		.toMatch(/\/media\/openxhc\/openxhc-proof-loop-640\.webp$/);
 });
 
 test.describe("Work detail routes @work @noscript", () => {
@@ -84,6 +117,20 @@ test.describe("Work detail routes @work @noscript", () => {
 			await expect(gallery.locator("figure")).toHaveCount(work.galleryItems);
 		});
 	}
+
+	test("keeps a narrow native OpenXHC poster fallback without JavaScript", async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await page.goto("/work/openxhc-linuxcnc/");
+
+		const media = page.locator('.work-detail__media [data-media-kind="video"]');
+		await expect(media.locator("video")).toHaveAttribute(
+			"poster",
+			"/media/openxhc/openxhc-proof-loop-640.webp",
+		);
+		await expect(media.locator("[data-video-poster]")).toBeHidden();
+	});
 });
 
 test("renders the Conformal workflow and ordered responsive evidence gallery", async ({
@@ -98,7 +145,7 @@ test("renders the Conformal workflow and ordered responsive evidence gallery", a
 	);
 	await expect(workflow.locator("video")).toHaveAttribute("controls", "");
 	await expect(workflow.locator("video")).toHaveAttribute("preload", "none");
-	await expect(workflow.locator("source")).toHaveAttribute(
+	await expect(workflow.locator("video > source")).toHaveAttribute(
 		"src",
 		"/media/conformal-cooling/conformal-workflow.mp4",
 	);

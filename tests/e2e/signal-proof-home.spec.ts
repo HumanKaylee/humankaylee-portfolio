@@ -112,7 +112,7 @@ for (const viewport of [
 	});
 }
 
-test("leads with two flagships, two supporting studies, and no archive projects", async ({
+test("leads with two flagships, three supporting studies, and no archive projects", async ({
 	page,
 }) => {
 	await page.goto("/");
@@ -148,18 +148,24 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 	const flagship = page.locator('[data-proof-placement="flagship"]');
 	const supporting = page.locator('[data-proof-placement="supporting"]');
 	await expect(flagship).toHaveCount(2);
-	await expect(supporting).toHaveCount(2);
+	await expect(supporting).toHaveCount(3);
 	await expect(flagship.locator("h3")).toHaveText([
 		"Cryogenic Flow Simulation",
 		"Conformal Cooling Channel Generation",
 	]);
 	await expect(supporting.locator("h3")).toHaveText([
 		"X-Plane Cabin Camera FOV Trade Study",
+		"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 		"Black-Scholes Options Pricer in Rust and WASM",
 	]);
 	await expect(
 		flagship.getByRole("link", { name: "Cryogenic Flow Simulation" }),
 	).toHaveAttribute("href", "/work/cryo-flow-sim/");
+	await expect(
+		supporting.getByRole("link", {
+			name: "OpenXHC: Reverse-Engineering a CNC Motion Interface",
+		}),
+	).toHaveAttribute("href", "/work/openxhc-linuxcnc/");
 	await expect(
 		supporting.getByRole("link", {
 			name: "X-Plane Cabin Camera FOV Trade Study",
@@ -174,6 +180,7 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 		"Cryogenic Flow Simulation",
 		"Conformal Cooling Channel Generation",
 		"X-Plane Cabin Camera FOV Trade Study",
+		"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 		"Black-Scholes Options Pricer in Rust and WASM",
 	]);
 	await expect(page.locator("main")).not.toContainText(
@@ -186,6 +193,14 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 		capabilityLabels,
 	);
 	await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
+	const cppCapability = page
+		.locator("[data-capability-proof]")
+		.filter({ hasText: "Rust and C++ systems" });
+	await expect(cppCapability.getByRole("link")).toHaveAttribute(
+		"href",
+		"/work/openxhc-linuxcnc/",
+	);
+	await expect(cppCapability).toContainText(/2,490.*0 mismatches/i);
 	await expect(page.locator("main")).not.toContainText(
 		/unexpected clamp events/i,
 	);
@@ -196,7 +211,7 @@ test("leads with two flagships, two supporting studies, and no archive projects"
 		/metal additive manufacturing/i,
 	);
 	await expect(page.locator(".proof-gallery__header")).toContainText(
-		/The flagship case studies carry captured motion and geometry evidence\. Focused technical studies show how the same evidence-first approach applies to camera tradeoffs and browser computation\./,
+		/The flagship case studies carry captured motion and geometry evidence\. Focused technical studies extend that evidence-first approach to camera tradeoffs, browser computation, and machine-interface reverse engineering\./,
 	);
 	await expect(page.locator("canvas, svg")).toHaveCount(0);
 });
@@ -213,7 +228,7 @@ test("stays static and useful during an API outage", async ({ page }) => {
 		2,
 	);
 	await expect(page.locator('[data-proof-placement="supporting"]')).toHaveCount(
-		2,
+		3,
 	);
 	await expect(page.locator("main")).not.toContainText(
 		/Failed to fetch|ECONNREFUSED|TypeError:|API health/i,
@@ -233,11 +248,11 @@ test.describe("static homepage without JavaScript", () => {
 		);
 		await expect(
 			page.locator('[data-proof-placement="supporting"]'),
-		).toHaveCount(2);
-		await expect(page.locator("[data-motion-loop]")).toHaveCount(3);
-		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(3);
+		).toHaveCount(3);
+		await expect(page.locator("[data-motion-loop]")).toHaveCount(4);
+		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(4);
 		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
-		await expect(page.locator("[data-motion-description]")).toHaveCount(3);
+		await expect(page.locator("[data-motion-description]")).toHaveCount(4);
 		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("main")).not.toContainText(internalHomepageCopy);

@@ -4,7 +4,7 @@ slug: "cli-fleet-synchronization-and-mcp-rollout"
 discipline: "operations"
 year: 2026
 placement: "archive"
-featuredOrder: 5
+featuredOrder: 6
 lede: "A cross-machine CLI rollout standardized local tool behavior, client registration, and verification so the same workflow could be executed consistently across a small fleet."
 problem: "Multiple workstations had drift in CLI setup, making it hard to trust that an operator would see the same tool inventory, registrations, and health checks everywhere."
 stakes: "Without a reproducible rollout path, every follow-on automation task had a higher risk of ad hoc fixes, inconsistent state, or lost time during handoff."

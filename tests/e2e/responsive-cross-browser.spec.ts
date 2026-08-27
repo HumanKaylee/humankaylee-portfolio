@@ -18,13 +18,19 @@ const launchRoutes = [
 		path: "/work/cryo-flow-sim/",
 		heading: /Cryogenic Flow Simulation/i,
 		marker: /Proof/i,
-		primaryLink: /Open the simulation video/i,
+		primaryLink: /Open the project video/i,
 	},
 	{
 		path: "/work/conformal-cooling-channel-generation/",
 		heading: /Conformal Cooling Channel Generation/i,
 		marker: /Fresh gear-cavity capture/i,
-		primaryLink: /Open the simulation video/i,
+		primaryLink: /Open the project video/i,
+	},
+	{
+		path: "/work/openxhc-linuxcnc/",
+		heading: /OpenXHC: Reverse-Engineering a CNC Motion Interface/i,
+		marker: /2,490/i,
+		primaryLink: /Open the project video/i,
 	},
 	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
@@ -181,7 +187,7 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 				/Principal engineer for simulation, controls, and operational software/i,
 			);
 			await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(
-				4,
+				5,
 			);
 			await expect(
 				page.getByRole("link", { name: /View selected work/i }),

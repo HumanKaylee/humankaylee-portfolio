@@ -55,6 +55,7 @@ const workEvidenceVideoSchema = z.object({
 const workLoopMediaSchema = z.object({
 	src: z.string().min(1),
 	poster: z.string().min(1),
+	responsivePosterSources: workResponsiveSourcesSchema.optional(),
 	width: z.number().int().positive(),
 	height: z.number().int().positive(),
 	durationSeconds: z.number().min(6).max(12),

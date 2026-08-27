@@ -37,6 +37,7 @@ test.describe("crawler artifacts @metadata", () => {
 			"/work/cryo-flow-sim/",
 			"/work/conformal-cooling-channel-generation/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
+			"/work/openxhc-linuxcnc/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
 			"/work/black-scholes-wasm/",

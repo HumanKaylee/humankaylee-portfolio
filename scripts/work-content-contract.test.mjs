@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 
@@ -13,12 +13,13 @@ const expectedPublishedSlugs = [
 	"cryo-flow-sim",
 	"conformal-cooling-channel-generation",
 	"xplane-cabin-camera-fov-trade-study",
+	"openxhc-linuxcnc",
 	"black-scholes-wasm",
 	"cli-fleet-synchronization-and-mcp-rollout",
 	"remote-workstation-recovery-and-operational-debugging",
 ];
 
-test("Work content has two flagships, two supporting studies, two archives, and required local assets", () => {
+test("Work content has two flagships, three supporting studies, two archives, and required local assets", () => {
 	const dir = "apps/web/src/content/work";
 	const files = readdirSync(dir).filter((name) => name.endsWith(".md"));
 	const source = files.map((name) =>
@@ -39,10 +40,11 @@ test("Work content has two flagships, two supporting studies, two archives, and 
 		"flagship",
 		"supporting",
 		"supporting",
+		"supporting",
 	]);
 	assert.deepEqual(
 		[...featuredOrders].sort((left, right) => left - right),
-		[1, 2, 3, 4, 5, 6],
+		[1, 2, 3, 4, 5, 6, 7],
 	);
 	assert.deepEqual(
 		slugs
@@ -72,5 +74,21 @@ test("Work content has two flagships, two supporting studies, two archives, and 
 		);
 	}
 	assert.ok(existsSync("apps/web/public/media/cryo-flow-sim-stage1.mp4"));
+	for (const width of [640, 960, 1440]) {
+		assert.ok(
+			existsSync(
+				`apps/web/public/media/openxhc/openxhc-proof-loop-${width}.webp`,
+			),
+		);
+	}
+	assert.ok(existsSync("apps/web/public/media/openxhc/openxhc-proof-loop.mp4"));
+	const openxhcSource = source.find(
+		(entry) => frontmatterValue(entry, "slug") === "openxhc-linuxcnc",
+	);
+	assert.ok(openxhcSource);
+	assert.equal(
+		statSync("apps/web/public/media/openxhc/openxhc-proof-loop.mp4").size,
+		Number(openxhcSource.match(/^\s+sizeBytes:\s*(\d+)$/m)?.[1]),
+	);
 	assert.ok(existsSync("apps/web/public/downloads/joe-poznanski-resume.pdf"));
 });

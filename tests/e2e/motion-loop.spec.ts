@@ -108,7 +108,7 @@ test.describe("Cryogenic Flow motion loop @motion-loop", () => {
 		await page.goto("/");
 
 		const loops = page.locator("[data-motion-loop]");
-		await expect(loops).toHaveCount(3);
+		await expect(loops).toHaveCount(4);
 		await loops.nth(1).scrollIntoViewIfNeeded();
 
 		await expect

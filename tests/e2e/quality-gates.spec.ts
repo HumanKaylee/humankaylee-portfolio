@@ -10,6 +10,10 @@ const coreRoutes = [
 		marker: /Fresh gear-cavity capture/i,
 	},
 	{
+		path: "/work/openxhc-linuxcnc/",
+		marker: /2,490/i,
+	},
+	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		marker: /Verification matrix/i,
 	},
@@ -81,7 +85,7 @@ test.describe("Signal / Proof quality @quality @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(4);
+				).toHaveCount(5);
 			}
 		});
 	}

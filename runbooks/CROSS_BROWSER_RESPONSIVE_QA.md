@@ -35,6 +35,7 @@ The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 | `/work/` | Work index, flagship proof, and case-study link |
 | `/work/cryo-flow-sim/` | Cryogenic proof and authentic video path |
 | `/work/conformal-cooling-channel-generation/` | Conformal-channel workflow, evidence gallery, and source-boundary narrative |
+| `/work/openxhc-linuxcnc/` | OpenXHC capture proof, offline-codec boundary, and project-video path |
 | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof and next-Work path |
 | `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof and next-Work path |
 | `/work/black-scholes-wasm/` | Black-Scholes live-pricer narrative and next-Work path |
@@ -55,7 +56,7 @@ The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 
 The automated LinkedIn in-app mobile check is an approximation, not a real
 device-app certification. It disables JavaScript and uses a mobile viewport plus
-a LinkedIn-style user agent. The first load must retain the Home identity, both
+a LinkedIn-style user agent. The first load must retain the Home identity, all
 selected ProofGallery records, the selected-Work link, and a layout without
 horizontal overflow.
 
