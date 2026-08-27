@@ -23,6 +23,7 @@ const visualRoutes = [
 		label: "work-xplane-fov",
 		path: "/work/xplane-cabin-camera-fov-trade-study/",
 	},
+	{ label: "work-openxhc", path: "/work/openxhc-linuxcnc/" },
 	{
 		label: "work-cli-fleet",
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",

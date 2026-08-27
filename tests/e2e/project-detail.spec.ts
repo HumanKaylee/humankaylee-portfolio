@@ -143,18 +143,35 @@ test.describe("Work detail routes @work @noscript", () => {
 		});
 	}
 
-	test("keeps a narrow native OpenXHC poster fallback without JavaScript", async ({
+	test("keeps the responsive OpenXHC poster fallback without JavaScript", async ({
 		page,
 	}) => {
-		await page.setViewportSize({ width: 390, height: 844 });
-		await page.goto("/work/openxhc-linuxcnc/");
+		for (const viewport of [
+			{ width: 390, height: 844, poster: /openxhc-proof-loop-640\.webp$/ },
+			{ width: 1440, height: 1200, poster: /openxhc-proof-loop-1440\.webp$/ },
+		] as const) {
+			await page.setViewportSize(viewport);
+			await page.goto("/work/openxhc-linuxcnc/");
 
-		const media = page.locator('.work-detail__media [data-media-kind="video"]');
-		await expect(media.locator("video")).toHaveAttribute(
-			"poster",
-			"/media/openxhc/openxhc-proof-loop-640.webp",
-		);
-		await expect(media.locator("[data-video-poster]")).toBeHidden();
+			const media = page.locator(
+				'.work-detail__media [data-media-kind="video"]',
+			);
+			const responsivePoster = media.locator("[data-video-poster]");
+			await expect(responsivePoster).toBeVisible();
+			await expect
+				.poll(() =>
+					responsivePoster
+						.locator("img")
+						.evaluate((image) => (image as HTMLImageElement).currentSrc),
+				)
+				.toMatch(viewport.poster);
+			await expect(media.locator("video")).toBeHidden();
+			await expect(media.locator(".media-fallback")).toBeVisible();
+			await expect(media.locator(".media-fallback")).toHaveAttribute(
+				"href",
+				"/media/openxhc/openxhc-proof-loop.mp4",
+			);
+		}
 	});
 });
 

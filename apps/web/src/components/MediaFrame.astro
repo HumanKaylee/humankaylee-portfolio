@@ -76,7 +76,7 @@ const nativePoster = responsivePosterSources?.[0]?.src ?? media.poster;
 					</video>
 				</div>
 				<noscript
-					set:html={"<style>.media-playback__poster{display:none!important}</style>"}
+					set:html={"<style>.media-playback__poster{position:static!important;inset:auto!important}.media-playback video{display:none!important}</style>"}
 				/>
 				<a class="media-fallback" data-touch-target="true" href={media.src}>
 					Open the project video
