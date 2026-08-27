@@ -77,7 +77,11 @@ const structuredData = {
 		</header>
 
 		<div class="work-detail__media">
-			<MediaFrame media={data.media} playback={data.media.kind === "video"}>
+			<MediaFrame
+				media={data.media}
+				playback={data.media.kind === "video"}
+				posterSizes="(max-width: 533px) calc(100vw - 2rem), (min-width: 1600px) 92rem, 94vw"
+			>
 				<WorkEvidenceFlow work={work} />
 			</MediaFrame>
 		</div>

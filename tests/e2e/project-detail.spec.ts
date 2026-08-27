@@ -85,6 +85,21 @@ test("selects the narrow OpenXHC poster on homepage and detail video", async ({
 		.toMatch(/\/media\/openxhc\/openxhc-proof-loop-640\.webp$/);
 });
 
+test("selects the full-width OpenXHC poster on desktop detail", async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1440, height: 900 });
+	await page.goto("/work/openxhc-linuxcnc/");
+
+	await expect
+		.poll(() =>
+			page
+				.locator(".work-detail__media [data-video-poster] img")
+				.evaluate((image) => (image as HTMLImageElement).currentSrc),
+		)
+		.toMatch(/\/media\/openxhc\/openxhc-proof-loop-1440\.webp$/);
+});
+
 test.describe("Work detail routes @work @noscript", () => {
 	test.use({ javaScriptEnabled: false });
 

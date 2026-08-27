@@ -5,9 +5,14 @@ import MotionLoop from "./MotionLoop.astro";
 type Props = {
 	media: WorkMedia;
 	playback?: boolean;
+	posterSizes?: string;
 };
 
-const { media, playback = false } = Astro.props;
+const {
+	media,
+	playback = false,
+	posterSizes = "(max-width: 760px) 100vw, 50vw",
+} = Astro.props;
 const responsivePosterSources = media.responsivePosterSources
 	?.slice()
 	.sort((left, right) => left.width - right.width);
@@ -27,7 +32,7 @@ const nativePoster = responsivePosterSources?.[0]?.src ?? media.poster;
 					<source
 						type="image/webp"
 						srcset={responsivePosterSrcset}
-						sizes="(max-width: 760px) 100vw, 50vw"
+						sizes={posterSizes}
 					/>
 				) : null}
 				<img
@@ -49,7 +54,7 @@ const nativePoster = responsivePosterSources?.[0]?.src ?? media.poster;
 							<source
 								type="image/webp"
 								srcset={responsivePosterSrcset}
-								sizes="(max-width: 760px) 100vw, 50vw"
+								sizes={posterSizes}
 							/>
 							<img
 								src={media.poster}
