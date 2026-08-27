@@ -116,6 +116,21 @@ test.describe("About, resume, and contact @primary-routes", () => {
 		await expect(page.locator("#highlights .resume-bullets li")).toHaveText(
 			resumeContent.highlights,
 		);
+		const selectedSystems = page.locator("#selected-systems");
+		await expect(
+			selectedSystems.getByRole("heading", { name: "Selected systems" }),
+		).toBeVisible();
+		await expect(
+			selectedSystems.getByRole("link", {
+				name: "OpenXHC: CNC Motion Interface",
+			}),
+		).toHaveAttribute("href", "/work/openxhc-linuxcnc/");
+		await expect(selectedSystems).toContainText(
+			/2,490 captured HID reports byte for byte with zero mismatches/i,
+		);
+		await expect(selectedSystems).toContainText(
+			/offline C\+\+20 codec.*no USB writes/i,
+		);
 		for (const job of resumeContent.experience) {
 			const resumeJob = page.locator(".resume-job").filter({
 				has: page.locator(".resume-job-company", { hasText: job.company }),

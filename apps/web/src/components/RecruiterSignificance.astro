@@ -1,0 +1,110 @@
+---
+import type { WorkEntryData } from "../lib/contracts/work";
+
+type Props = {
+	significance: NonNullable<WorkEntryData["recruiterSignificance"]>;
+};
+
+const { significance } = Astro.props;
+---
+
+<section
+	class="recruiter-significance"
+	data-recruiter-significance
+	aria-labelledby="recruiter-significance-title"
+>
+	<header>
+		<p class="section-kicker">Engineering signal</p>
+		<h2 id="recruiter-significance-title">{significance.title}</h2>
+		<p>{significance.summary}</p>
+	</header>
+	<div class="recruiter-significance__points">
+		{
+			significance.points.map((point, index) => (
+				<article data-significance-point>
+					<p aria-hidden="true">{String(index + 1).padStart(2, "0")}</p>
+					<h3>{point.label}</h3>
+					<span>{point.detail}</span>
+				</article>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.recruiter-significance {
+		display: grid;
+		gap: var(--space-5);
+		border-top: 1px solid var(--line);
+		background: var(--color-signal);
+		padding: clamp(2rem, 5vw, 5rem);
+	}
+
+	.recruiter-significance header {
+		display: grid;
+		grid-template-columns: minmax(0, 0.8fr) minmax(18rem, 1.2fr);
+		gap: var(--space-3) clamp(2rem, 6vw, 7rem);
+	}
+
+	.recruiter-significance header .section-kicker {
+		grid-column: 1 / -1;
+		color: var(--color-ink);
+	}
+
+	.recruiter-significance h2 {
+		max-width: 12ch;
+		font-size: clamp(2rem, 4.4vw, 4.5rem);
+	}
+
+	.recruiter-significance header > p:last-child {
+		max-width: 56ch;
+		align-self: end;
+		font-size: clamp(1rem, 1.7vw, 1.2rem);
+	}
+
+	.recruiter-significance__points {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		border-block: 1px solid rgb(17 18 15 / 32%);
+	}
+
+	.recruiter-significance article {
+		display: grid;
+		gap: var(--space-2);
+		padding: var(--space-4);
+	}
+
+	.recruiter-significance article:nth-child(even) {
+		border-left: 1px solid rgb(17 18 15 / 32%);
+	}
+
+	.recruiter-significance article:nth-child(n + 3) {
+		border-top: 1px solid rgb(17 18 15 / 32%);
+	}
+
+	.recruiter-significance article p,
+	.recruiter-significance article span {
+		font-family: var(--font-evidence);
+		font-size: 0.76rem;
+		line-height: 1.55;
+	}
+
+	.recruiter-significance article h3 {
+		font-size: clamp(1.25rem, 2.1vw, 1.8rem);
+	}
+
+	@media (max-width: 48rem) {
+		.recruiter-significance header,
+		.recruiter-significance__points {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.recruiter-significance article:nth-child(even) {
+			border-left: 0;
+		}
+
+		.recruiter-significance article + article {
+			border-top: 1px solid rgb(17 18 15 / 32%);
+		}
+	}
+</style>

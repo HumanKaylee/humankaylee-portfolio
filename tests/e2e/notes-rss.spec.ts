@@ -18,6 +18,19 @@ const blackScholesNote = {
 	tags: ["rust", "wasm", "options"],
 };
 
+const openXhcNote = {
+	title:
+		"Reverse-engineering a CNC motion interface without moving the machine",
+	path: "/notes/reverse-engineering-a-cnc-motion-interface-safely/",
+	summary:
+		"A safety-first method for turning captured CNC traffic into a falsifiable C++20 interface model before any Linux driver can touch hardware.",
+	body: /The first useful milestone was not machine motion/i,
+	dateLabel: "August 27, 2026",
+	datetime: "2026-08-27",
+	pubDate: "Thu, 27 Aug 2026 00:00:00 GMT",
+	tags: ["C++20", "Linux", "reverse engineering"],
+};
+
 const suppressedNotes = [
 	{
 		title: "How the portfolio stays useful when the API is offline",
@@ -90,6 +103,19 @@ test.describe("notes and RSS @notes-rss", () => {
 		).toHaveAttribute("href", blackScholesNote.path);
 		await expect(article.getByText(blackScholesNote.dateLabel)).toBeVisible();
 
+		const openXhcArticle = main.getByRole("article", {
+			name: new RegExp(openXhcNote.title, "i"),
+		});
+		await expect(
+			openXhcArticle.getByRole("heading", { name: openXhcNote.title }),
+		).toBeVisible();
+		await expect(openXhcArticle.getByText(openXhcNote.summary)).toBeVisible();
+		await expect(
+			openXhcArticle.getByRole("link", {
+				name: new RegExp(openXhcNote.title, "i"),
+			}),
+		).toHaveAttribute("href", openXhcNote.path);
+
 		for (const note of suppressedNotes) {
 			await expect(main).not.toContainText(note.title);
 		}
@@ -121,6 +147,28 @@ test.describe("notes and RSS @notes-rss", () => {
 			borderRadius: "0px",
 			boxShadow: "none",
 		});
+	});
+
+	test("publishes the OpenXHC safety method without private protocol details", async ({
+		page,
+	}) => {
+		await page.goto(openXhcNote.path);
+		const noteArticle = page.locator("article");
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+			openXhcNote.title,
+		);
+		await expect(noteArticle).toContainText(openXhcNote.summary);
+		await expect(noteArticle).toContainText(openXhcNote.body);
+		await expect(
+			noteArticle.getByRole("link", { name: "Read the OpenXHC case study" }),
+		).toHaveAttribute("href", "/work/openxhc-linuxcnc/");
+		const publicText = await noteArticle.textContent();
+		for (const pattern of privateContentPatterns) {
+			expect(publicText ?? "").not.toMatch(pattern);
+		}
+		expect(publicText ?? "").not.toMatch(
+			/0x[0-9a-f]{2}|VID_[0-9a-f]+|PID_[0-9a-f]+|raw protocol bytes/i,
+		);
 	});
 
 	test("does not generate public routes for suppressed operational notes", async ({
@@ -180,6 +228,12 @@ test.describe("notes and RSS @notes-rss", () => {
 			`<description>${blackScholesNote.summary}</description>`,
 		);
 		for (const tag of blackScholesNote.tags) {
+			expect(xml).toContain(`<category>${tag}</category>`);
+		}
+		expect(xml).toContain(`<title>${openXhcNote.title}</title>`);
+		expect(xml).toContain(`<link>${expectedSiteUrl}${openXhcNote.path}</link>`);
+		expect(xml).toContain(`<pubDate>${openXhcNote.pubDate}</pubDate>`);
+		for (const tag of openXhcNote.tags) {
 			expect(xml).toContain(`<category>${tag}</category>`);
 		}
 

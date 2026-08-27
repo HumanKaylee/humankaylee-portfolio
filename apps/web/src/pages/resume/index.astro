@@ -8,8 +8,15 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const [resume] = await getCollection("resume");
 const data = resume.data;
 
-const { clearance, contact, experience, highlights, skillGroups, summary } =
-	resumeContent;
+const {
+	clearance,
+	contact,
+	experience,
+	highlights,
+	selectedSystems,
+	skillGroups,
+	summary,
+} = resumeContent;
 ---
 
 <BaseLayout
@@ -49,6 +56,7 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 			<nav class="resume-section-nav" aria-label="Resume sections">
 				<a data-touch-target="true" href="#summary">Summary</a>
 				<a data-touch-target="true" href="#highlights">AI and automation</a>
+				<a data-touch-target="true" href="#selected-systems">Selected systems</a>
 				<a data-touch-target="true" href="#experience">Experience</a>
 				<a data-touch-target="true" href="#skills">Skills</a>
 			</nav>
@@ -73,8 +81,34 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 				</div>
 			</section>
 
-			<section class="resume-section" id="experience" aria-labelledby="experience-title">
+			<section
+				class="resume-section"
+				id="selected-systems"
+				aria-labelledby="selected-systems-title"
+			>
 				<p class="resume-section-number" aria-hidden="true">03</p>
+				<div class="resume-section-content">
+					<h2 id="selected-systems-title">Selected systems</h2>
+					<div class="resume-systems">
+						{
+							selectedSystems.map((system) => (
+								<article>
+									<h3>
+										<a data-touch-target="true" href={system.href}>
+											{system.title}
+										</a>
+									</h3>
+									<p>{system.proof}</p>
+									<p>{system.boundary}</p>
+								</article>
+							))
+						}
+					</div>
+				</div>
+			</section>
+
+			<section class="resume-section" id="experience" aria-labelledby="experience-title">
+				<p class="resume-section-number" aria-hidden="true">04</p>
 				<div class="resume-section-content">
 					<h2 id="experience-title">Experience</h2>
 					<ol class="resume-experience">
@@ -102,7 +136,7 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 			</section>
 
 			<section class="resume-section" id="skills" aria-labelledby="skills-title">
-				<p class="resume-section-number" aria-hidden="true">04</p>
+				<p class="resume-section-number" aria-hidden="true">05</p>
 				<div class="resume-section-content">
 					<h2 id="skills-title">Technical skills</h2>
 					<dl class="resume-skills">
@@ -117,7 +151,7 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 			</section>
 
 			<section class="resume-section resume-clearance" aria-labelledby="clearance-title">
-				<p class="resume-section-number" aria-hidden="true">05</p>
+				<p class="resume-section-number" aria-hidden="true">06</p>
 				<div class="resume-section-content">
 					<h2 id="clearance-title">Clearance</h2>
 					<p>{clearance}</p>
@@ -266,6 +300,28 @@ const { clearance, contact, experience, highlights, skillGroups, summary } =
 		margin: 0;
 		padding: 0;
 		list-style: none;
+	}
+
+	.resume-systems {
+		display: grid;
+		gap: var(--space-4);
+	}
+
+	.resume-systems article {
+		display: grid;
+		gap: var(--space-3);
+		max-width: 76ch;
+		border-top: 0.45rem solid var(--color-signal);
+		background: color-mix(in srgb, var(--color-signal) 12%, transparent);
+		padding: var(--space-4);
+	}
+
+	.resume-systems h3 {
+		font-size: clamp(1.35rem, 2.5vw, 2rem);
+	}
+
+	.resume-systems p:last-child {
+		color: var(--color-muted);
 	}
 
 	.resume-job {

@@ -22,6 +22,16 @@ export const resumeContent = {
 		"Developed ops copilots for log/telemetry summarization and anomaly correlation across distributed services, cutting time-to-diagnosis during integration and drills.",
 		"Standardized prompt/playbook libraries and deterministic guardrails so teams can adopt AI workflows safely at scale.",
 	],
+	selectedSystems: [
+		{
+			title: "OpenXHC: CNC Motion Interface",
+			href: "/work/openxhc-linuxcnc/",
+			proof:
+				"Reconstructed 2,490 captured HID reports byte for byte with zero mismatches and matched observed machine coordinates within 0.0005 mm.",
+			boundary:
+				"Built an offline C++20 codec and validator with no device-open path and no USB writes, creating a testable foundation for future LinuxCNC integration.",
+		},
+	],
 	experience: [
 		{
 			company: "Otto Aerospace",

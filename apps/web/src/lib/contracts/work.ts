@@ -94,6 +94,21 @@ export const workSchema = z
 			.max(3),
 		outcome: z.string().min(1),
 		lessons: z.array(z.string().min(1)).min(1),
+		recruiterSignificance: z
+			.object({
+				title: z.string().min(1),
+				summary: z.string().min(1),
+				points: z
+					.array(
+						z.object({
+							label: z.string().min(1),
+							detail: z.string().min(1),
+						}),
+					)
+					.min(2)
+					.max(4),
+			})
+			.optional(),
 		evidence: z.object({
 			label: z.string().min(1),
 			summary: z.string().min(1),

@@ -30,6 +30,21 @@ const validWork = {
 	],
 	outcome: "A verified 1080p artifact with 92 passing tests.",
 	lessons: ["Deterministic artifacts make regressions diagnosable."],
+	recruiterSignificance: {
+		title: "Why this matters to engineering teams",
+		summary:
+			"The work turns an opaque hardware boundary into a deterministic software boundary.",
+		points: [
+			{
+				label: "Safer development",
+				detail: "Protocol logic can be tested without issuing device writes.",
+			},
+			{
+				label: "Falsifiable evidence",
+				detail: "Real captures can reject an incorrect codec implementation.",
+			},
+		],
+	},
 	evidence: {
 		label: "Stage 1 verified artifact",
 		summary: "92 tests and all capture thresholds passed.",
@@ -157,6 +172,19 @@ describe("workSchema", () => {
 			"image",
 			"video",
 		]);
+		expect(parsed.recruiterSignificance?.points).toHaveLength(2);
+	});
+
+	it("rejects a recruiter-significance panel without two concrete outcomes", () => {
+		const candidate = structuredClone(validWork);
+		candidate.recruiterSignificance.points = [
+			{
+				label: "Safer development",
+				detail: "Protocol logic can be tested without issuing device writes.",
+			},
+		];
+
+		expect(workSchema.safeParse(candidate).success).toBe(false);
 	});
 
 	it.each(["placement", "featuredOrder", "role", "evidence", "media"])(

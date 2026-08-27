@@ -37,6 +37,18 @@ lessons:
   - "Byte-exact reconstruction is a stronger protocol check than a synthetic encoder-decoder round trip because the device traffic was produced outside the implementation under test."
   - "Physical-system software becomes easier to reason about when parsing, transport, planning, and actuation are separate boundaries."
   - "A useful early milestone can remove uncertainty without pretending to deliver machine control before its safety layers exist."
+recruiterSignificance:
+  title: "Why this matters to engineering teams"
+  summary: "OpenXHC demonstrates the judgment required to make an undocumented physical-system boundary measurable, testable, and safe enough for a team to extend deliberately."
+  points:
+    - label: "Falsifiable interface model"
+      detail: "The codec must reproduce traffic created outside the implementation, so an incorrect model can fail visibly."
+    - label: "Hardware-safe iteration"
+      detail: "Protocol work remains offline, allowing fast test cycles without turning incomplete knowledge into physical motion."
+    - label: "Portable integration boundary"
+      detail: "Parsing is isolated from transport, planning, supervision, and the future LinuxCNC HAL layer."
+    - label: "Evidence-led systems work"
+      detail: "Measured results, explicit limits, and publication gates separate demonstrated capability from future scope."
 evidence:
   label: "Real-traffic codec validation"
   summary: "Across 14 owner-authorized move bursts, 2,490 real reports re-encoded byte-exact with 0 mismatches, and decoded machine coordinates agreed with the controller display within 0.0005 mm."
@@ -85,7 +97,7 @@ redactionReview:
   reviewedOn: "2026-08-27"
   checklistStatus: "complete"
   openItems: []
-  notes: "The approved public narrative and generated media use verified aggregate results and sanitized machine imagery. Raw traffic, protocol bytes, field maps, commands, private paths, and controller access details remain excluded until the independent second-day evidence gate is cleared."
+  notes: "The expanded narrative, recruiter panel, resume entry, technical note, social card, and illustrative validation media passed independent public-safety review plus agent/browser inspection on the exact Cloudflare provider preview. Joe authorized production publication on 2026-08-27. This records authorization without claiming he personally inspected the preview. Raw traffic, protocol bytes, field maps, commands, private paths, and controller access details remain excluded until the independent second-day evidence gate is cleared."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -100,20 +112,20 @@ approvalEvidence:
     reviewer: "Joe Poznanski"
     signedOffOn: "2026-08-27"
     decision: "approved"
-    notes: "Joe explicitly authorized production publication on 2026-08-27; this records authorization and does not claim he personally viewed the provider preview."
+    notes: "Joe explicitly approved production publication in this task on 2026-08-27 after the exact provider preview was supplied for review. This records authorization and does not claim he personally inspected the preview."
   artifactInspection:
-    source: "Sanitized OpenXHC 640, 960, and 1440 pixel poster derivatives, the 10-second proof loop, and local and provider preview renders"
+    source: "OpenXHC recruiter package at source 96051e09e0d5fdef8b21378d0a17af701f544025; independent review task review_openxhc_portfolio"
     inspectedOn: "2026-08-27"
     result: "passed"
-    notes: "Original-resolution posters, representative video frames, and desktop and mobile renders were inspected. No raw traffic, protocol bytes, field maps, commands, private paths, or controller access details were exposed."
+    notes: "The public narrative, real-machine proof media, clearly labeled synthetic illustration, social card, recruiter panel, resume entry, technical note, and desktop/mobile captures were inspected. No Critical or Important findings, private data, or unsupported machine-control claims remained."
   productionOrPreviewEvidence:
-    source: "Cloudflare Pages preview https://15ae5ad0.humankaylee-portfolio.pages.dev; deployment 15ae5ad0-37c5-4ea6-9a48-0ba7286d0fe9; source 4851e90ae767808f0c7f366f874fafebc700573c"
+    source: "Cloudflare Pages preview https://99f05c83.humankaylee-portfolio.pages.dev; deployment 99f05c83-fe84-4d29-b95a-afe95f5d40a8; source 96051e09e0d5fdef8b21378d0a17af701f544025"
     capturedOn: "2026-08-27"
     result: "passed"
-    notes: "Provider inspection passed route, header, exact-byte hash, direct playback, no-JavaScript, reduced-motion, responsive, privacy, console, and visual gates. Cloudflare pages.dev returned the complete MP4 for a byte-range request, so custom-domain HTTP 206 and direct seek and resume remain production gates."
+    notes: "Exact-SHA CI passed frontend, WASM, and Rust. Agent/browser inspection passed case-study, front-page, resume, notes, RSS, social-card, canonical, security-header, no-JavaScript, reduced-motion, responsive-image, privacy, console, and visual checks. Cloudflare pages.dev returned full-body 200 to the media range probe, so this is preview artifact evidence rather than production CDN range evidence."
 seo:
   title: "OpenXHC CNC Motion Interface Case Study | Joe Poznanski"
   description: "A capture-validated C++20 codec that makes a proprietary CNC motion interface testable on Linux without writing to the device."
   canonicalPath: "/work/openxhc-linuxcnc/"
-  ogImage: "/media/openxhc/openxhc-proof-loop-1440.webp"
+  ogImage: "/social/openxhc-linuxcnc.png"
 ---
