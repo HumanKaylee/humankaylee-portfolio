@@ -3,16 +3,17 @@ import type { WorkLoopMedia } from "../lib/contracts/work";
 
 type Props = {
 	loop: WorkLoopMedia;
+	posterLoading?: "eager" | "lazy";
 };
 
-const { loop } = Astro.props;
+const { loop, posterLoading = "eager" } = Astro.props;
 const responsivePosterSources = loop.responsivePosterSources
 	?.slice()
 	.sort((left, right) => left.width - right.width);
 const responsivePosterSrcset = responsivePosterSources
 	?.map((source) => `${source.src} ${source.width}w`)
 	.join(", ");
-const nativePoster = responsivePosterSources?.[0]?.src ?? loop.poster;
+const nativePoster = responsivePosterSrcset ? undefined : loop.poster;
 ---
 
 <div
@@ -40,6 +41,7 @@ const nativePoster = responsivePosterSources?.[0]?.src ?? loop.poster;
 						width={loop.width}
 						height={loop.height}
 						alt=""
+						loading={posterLoading}
 					/>
 				</picture>
 			) : null

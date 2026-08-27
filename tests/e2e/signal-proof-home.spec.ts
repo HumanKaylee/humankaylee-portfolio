@@ -249,8 +249,18 @@ test.describe("static homepage without JavaScript", () => {
 		await expect(
 			page.locator('[data-proof-placement="supporting"]'),
 		).toHaveCount(3);
-		await expect(page.locator("[data-motion-loop]")).toHaveCount(4);
-		await expect(page.locator("[data-motion-video][poster]")).toHaveCount(4);
+		const motionLoops = page.locator("[data-motion-loop]");
+		await expect(motionLoops).toHaveCount(4);
+		await expect(
+			motionLoops.filter({
+				has: page.locator("[data-motion-video][poster]"),
+			}),
+		).toHaveCount(3);
+		await expect(
+			motionLoops.filter({
+				has: page.locator('[data-video-poster] img[loading="lazy"]'),
+			}),
+		).toHaveCount(1);
 		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
 		await expect(page.locator("[data-motion-description]")).toHaveCount(4);
 		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);

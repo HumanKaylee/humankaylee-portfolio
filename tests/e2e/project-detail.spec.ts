@@ -62,11 +62,21 @@ test("selects the narrow OpenXHC poster on homepage and detail video", async ({
 	page,
 }) => {
 	await page.setViewportSize({ width: 390, height: 844 });
+	const homepageMediaRequests: string[] = [];
+	page.on("request", (request) => {
+		if (request.url().includes("/media/openxhc/")) {
+			homepageMediaRequests.push(request.url());
+		}
+	});
 
 	await page.goto("/");
+	await page.waitForLoadState("networkidle");
+	expect(homepageMediaRequests).toEqual([]);
+
 	const homepageProof = page.locator(".proof-gallery__item").filter({
 		has: page.locator('a[href="/work/openxhc-linuxcnc/"]'),
 	});
+	await homepageProof.scrollIntoViewIfNeeded();
 	await expect
 		.poll(() =>
 			homepageProof
