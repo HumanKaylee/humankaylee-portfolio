@@ -27,7 +27,7 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
-outcome: "The scaled system ran 29,500 entities at 30 Hz and recovered to 30 Hz after deliberate overload. Its fixed-seed deterministic capture produced 1,800 frames with raw output pinned by SHA-256 inside the same executable, seed, GPU-adapter, and driver scope. Coordinated close, open, and restore waves moved across all 15,000 valves; the shipped video changed 24.3% of label-excluded fleet pixels versus a legacy 1.0% whole-percent comparator. A measured warmed 5.29 MB full JSON state snapshot compared with a 6.8 KB representative warmed binary delta—about 779× smaller, with static layout retained separately."
+outcome: "The scaled system ran 29,500 entities at 30 Hz and recovered to 30 Hz after deliberate overload. Its fixed-seed deterministic capture produced 1,800 frames with raw output pinned by SHA-256 inside the same executable, seed, GPU-adapter, and driver scope. Coordinated close, open, and restore waves moved across all 15,000 valves; the shipped video changed 24.3% of label-excluded fleet pixels versus a legacy 1.0% whole-percent comparator. A measured warmed 5.29 MB full JSON state snapshot compared with a 6.8 KB representative warmed binary delta, about 779× smaller, with static layout retained separately."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
@@ -207,7 +207,7 @@ compressed video bytes and cross-vendor GPU output are not claimed identical.
 
 At warmed tick 61, the full JSON state snapshot measured 5,293,279 bytes. A
 representative incremental binary update from tick 60 to 61 measured 6,798
-bytes—about 779 times smaller—with unchanged static layout retained separately.
+bytes, about 779 times smaller, with unchanged static layout retained separately.
 The two payloads have different transport semantics; the comparison shows why
 index-stable deltas matter rather than pretending they are interchangeable.
 
