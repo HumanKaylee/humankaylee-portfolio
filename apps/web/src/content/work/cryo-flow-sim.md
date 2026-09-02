@@ -109,16 +109,14 @@ evidenceMedia:
     alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window."
     caption: "Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
-  reviewedOn: "2026-05-26"
-  checklistStatus: "partial"
-  openItems:
-    - "Production domain, provider, and deploy evidence are blocked in this repository snapshot."
-    - "Final human signoff and approvalEvidence required before launch-eligible status."
-  notes: "Public-safe narrative uses role labels only. No private hostnames, private repo paths, account identifiers, raw logs, credentials, or internal access paths are present. The simulation artifact is self-contained."
+  reviewedOn: "2026-09-02"
+  checklistStatus: "complete"
+  openItems: []
+  notes: "The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -128,6 +126,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-09-02"
+    decision: "approved"
+    notes: "Joe explicitly approved this design and production publication in the task on 2026-09-02. This records authorization and does not claim he personally inspected the preview."
+  artifactInspection:
+    source: "CryoSim case study at source d38ee966d62e7af595723140305afc64369ccd4e; agent and browser review in this task"
+    inspectedOn: "2026-09-02"
+    result: "passed"
+    notes: "The controls-experience narrative, measured claims, limitation language, consulting offer, desktop and mobile captures, no-JavaScript rendering, accessibility, and public-safety boundary were inspected. No unsupported operational-digital-twin claim, private data, serious or critical accessibility finding, overflow, broken image, or runtime error remained."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://e8126372.humankaylee-portfolio.pages.dev; deployment e8126372-8d39-4c15-9aec-f2d3904ff9db; source d38ee966d62e7af595723140305afc64369ccd4e"
+    capturedOn: "2026-09-02"
+    result: "passed"
+    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers and passed desktop, mobile, no-JavaScript, content, image, console, overflow, and accessibility inspection. The pages.dev preview returned full-body HTTP 200 to the media range probe, so production custom-domain streaming remains a post-deploy gate."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
   description: "A deterministic Rust process simulator informed by Siemens and Rockwell controls experience, with measured 29,500-entity evidence."
