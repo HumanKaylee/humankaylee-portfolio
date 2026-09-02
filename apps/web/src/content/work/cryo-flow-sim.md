@@ -5,14 +5,15 @@ discipline: "simulation"
 year: 2026
 placement: "flagship"
 featuredOrder: 1
-lede: "A deterministic Rust cryogenic-flow simulator scaling to 29,500 entities, sustaining 30 Hz, and replaying identical state from a fixed seed."
-problem: "Visualizing fluid dynamics in a cryogenic system requires accurate, reproducible state transitions across valves, tanks, and pipes, without depending on live hardware or an unpredictable animation loop."
-stakes: "An incorrect simulation misleads about system behavior at the exact boundary conditions where engineering errors are most costly: low temperatures, pressure differentials, and timed valve sequencing."
-role: "Rust workspace architecture, simulation implementation, capture pipeline, and artifact validation."
+lede: "Rust process simulation informed by Siemens and Rockwell PLC experience: 29,500 entities at 30 Hz with fixed-seed replay."
+problem: "Control sequences are difficult to rehearse when the real facility is unavailable, incomplete, or too costly to place into every fault and boundary condition. The simulator needed reproducible state transitions across valves, tanks, pipes, and instrumentation without depending on live hardware."
+stakes: "A simulation that hides its assumptions can create false confidence at the exact conditions where engineering errors are most costly: low temperatures, pressure differentials, actuator timing, alarms, and recovery sequences."
+role: "Controls-domain translation, Rust workspace architecture, simulation implementation, capture pipeline, and artifact validation."
 constraints:
   - "All behavior must be deterministic from a fixed seed so artifacts are reproducible and auditable."
   - "No live hardware dependency; the simulation must run entirely from a Rust service with a browser-rendered UI."
   - "The capture pipeline must verify its own output with measurable thresholds, not just visual inspection."
+  - "The current demonstration is not plant-calibrated, connected to PLC or DCS control logic, safety-authoritative, or an operational digital twin."
 architecture:
   overview: "A Rust workspace drives three crates: cryo-core owns the physics domain model, cryo-service exposes an Axum HTTP layer, and cryo-web serves the browser-rendered SVG/HTML/CSS dashboard. Playwright orchestrates the Stage 1 capture scenario and validates the artifact."
   diagramAlt: "A three-crate Rust workspace with a physics core, Axum service layer, and browser-rendered SVG/HTML/CSS dashboard captured by a Playwright scenario harness."
@@ -27,11 +28,28 @@ decisions:
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs."
+  - title: "Sell a bounded outcome before a platform"
+    choice: "Start with a facility-specific control-sequence rehearsal engagement built from approved customer engineering information and acceptance scenarios."
+    alternatives:
+      - "Build a general simulation platform or multi-tenant SaaS before proving paid customer demand."
+    tradeoff: "Manual customer translation limits early software scale, but it tests the buyer, inputs, fidelity, acceptance criteria, and delivery economics before making a larger product commitment."
 outcome: "The scaled system ran 29,500 entities at 30 Hz and recovered to 30 Hz after deliberate overload. Its fixed-seed deterministic capture produced 1,800 frames with raw output pinned by SHA-256 inside the same executable, seed, GPU-adapter, and driver scope. Coordinated close, open, and restore waves moved across all 15,000 valves; the shipped video changed 24.3% of label-excluded fleet pixels versus a legacy 1.0% whole-percent comparator. A measured warmed 5.29 MB full JSON state snapshot compared with a 6.8 KB representative warmed binary delta, about 779× smaller, with static layout retained separately."
 lessons:
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
   - "Threshold-based artifact validation is more trustworthy than visual inspection alone, but the thresholds need calibration against known-good runs."
+recruiterSignificance:
+  title: "Why this matters to engineering teams"
+  summary: "CryoSim connects practical controls-engineering experience with a deterministic software architecture that makes facility behavior easier to rehearse, inspect, and explain."
+  points:
+    - label: "Controls experience"
+      detail: "Earlier facility simulation in integrated Siemens and Rockwell PLC logic modeled commodity inventories, temperatures, pressures, and other sensor and actuator feedback for sequence, interlock, alarm, and recovery rehearsal."
+    - label: "Testable domain core"
+      detail: "The no-I/O Rust core keeps state transitions deterministic and directly testable before service or browser code is involved."
+    - label: "Measured scale"
+      detail: "Generated topology, compact transport, and semantic rendering sustain an operator-readable 29,500-entity demonstration."
+    - label: "Evidence boundaries"
+      detail: "Offline determinism, live runtime behavior, and future facility integration are reported as separate claims."
 evidence:
   label: "Scale simulation proof"
   summary: "Measured scale, real-time recovery, and byte-identical deterministic replay for the 29,500-entity generated plant."
@@ -91,16 +109,14 @@ evidenceMedia:
     alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window."
     caption: "Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
-  reviewedOn: "2026-05-26"
-  checklistStatus: "partial"
-  openItems:
-    - "Production domain, provider, and deploy evidence are blocked in this repository snapshot."
-    - "Final human signoff and approvalEvidence required before launch-eligible status."
-  notes: "Public-safe narrative uses role labels only. No private hostnames, private repo paths, account identifiers, raw logs, credentials, or internal access paths are present. The simulation artifact is self-contained."
+  reviewedOn: "2026-09-02"
+  checklistStatus: "complete"
+  openItems: []
+  notes: "The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -110,9 +126,25 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-09-02"
+    decision: "approved"
+    notes: "Joe explicitly approved this design and production publication in the task on 2026-09-02. This records authorization and does not claim he personally inspected the preview."
+  artifactInspection:
+    source: "CryoSim case study at source d38ee966d62e7af595723140305afc64369ccd4e; agent and browser review in this task"
+    inspectedOn: "2026-09-02"
+    result: "passed"
+    notes: "The controls-experience narrative, measured claims, limitation language, consulting offer, desktop and mobile captures, no-JavaScript rendering, accessibility, and public-safety boundary were inspected. No unsupported operational-digital-twin claim, private data, serious or critical accessibility finding, overflow, broken image, or runtime error remained."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://e8126372.humankaylee-portfolio.pages.dev; deployment e8126372-8d39-4c15-9aec-f2d3904ff9db; source d38ee966d62e7af595723140305afc64369ccd4e"
+    capturedOn: "2026-09-02"
+    result: "passed"
+    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers and passed desktop, mobile, no-JavaScript, content, image, console, overflow, and accessibility inspection. The pages.dev preview returned full-body HTTP 200 to the media range probe, so production custom-domain streaming remains a post-deploy gate."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
-  description: "A deterministic Rust simulation and verified capture pipeline."
+  description: "A deterministic Rust process simulator informed by Siemens and Rockwell controls experience, with measured 29,500-entity evidence."
   canonicalPath: "/work/cryo-flow-sim/"
   ogImage: "/social/default.png"
 ---
@@ -153,6 +185,20 @@ Pipe temperatures follow a cooldown curve from ambient to cryogenic. Telemetry
 event counts advance as the simulation progresses. The artifact validation
 script checks each of these transitions against calibrated thresholds, not just
 visual inspection.
+
+## The controls-engineering throughline
+
+Earlier in my controls career, I built similar facility-simulation behavior
+into integrated Siemens and Rockwell PLC logic. Those systems modeled
+commodity inventories, temperatures, pressures, and other sensor and actuator feedback
+so sequences, interlocks, alarms, and recovery behavior could be exercised
+without waiting for every field condition to become available.
+
+CryoSim carries that same modeling discipline into a standalone Rust
+architecture. State transitions live in a deterministic no-I/O core, typed
+service boundaries carry state to the browser, and a fixed seed makes a run
+reproducible. This public case study does not reproduce proprietary employer
+implementation or claim validation against a specific operating facility.
 
 ## Crate structure
 
@@ -216,6 +262,22 @@ pixels, or 24.3%, compared with a legacy 1.0% whole-percent comparator for the
 prior deterministic artifact. The public engineering evidence record pins the
 source commits, byte counts, pixel counts, replay hash, and comparison scope.
 
+## Commercial application
+
+The most credible next use is a facility-specific control-sequence rehearsal
+engagement. A client would provide sanitized P&IDs, an I/O and equipment list,
+cause-and-effect or sequence documentation, and agreed acceptance scenarios. I
+would translate that material into a bounded model delivered on a
+customer-controlled workstation, then use deterministic scenarios to support
+sequence reviews, operator workshops, HMI and alarm discussions, and FAT
+evidence.
+
+The current demonstration is not plant-calibrated, connected to PLC or DCS control logic, safety-authoritative, or an operational digital twin.
+Those descriptions require named facility data, documented validation, and a
+defined control-system or operational connection. The present value is a
+testable process-simulation foundation and a disciplined way to turn facility
+knowledge into repeatable engineering conversations.
+
 ## What I would do differently
 
 The current validation thresholds were calibrated manually against the first
@@ -229,9 +291,15 @@ resolution for the poster use case, rather than downscaling the 1920x1080
 capture after the fact. That would reduce the poster asset size without a
 separate conversion step.
 
-## Stage 2
+## Next engineering gates
 
-Stage 2 scope is deferred and will require a separate approval pass. The
-current artifact establishes the pipeline and validation contract. Stage 2
-will extend the scenario set, add multi-node tank network behavior, and
-validate against a broader set of cryogenic event types.
+Product work should begin with customer discovery and one paid, bounded pilot,
+not a generic platform build. The first useful additions would be a versioned
+customer-model boundary, reusable scenario and acceptance-result formats,
+documented fidelity envelopes, and exportable evidence. Read-only OPC UA or FMI
+integration can follow when a pilot proves that the interface is required.
+
+Closed hydraulic networks, two-phase flow, arbitrary-fluid support, live control
+writes, safety analysis, and multi-tenant hosting remain outside the current
+model. Each requires its own validation method, security boundary, and customer
+need before it earns implementation scope.
