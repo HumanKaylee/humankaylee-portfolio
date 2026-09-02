@@ -92,3 +92,28 @@ test("Work content has two flagships, three supporting studies, two archives, an
 	);
 	assert.ok(existsSync("apps/web/public/downloads/joe-poznanski-resume.pdf"));
 });
+
+test("CryoSim connects prior controls experience to a bounded consulting offer", () => {
+	const cryo = readFileSync(
+		"apps/web/src/content/work/cryo-flow-sim.md",
+		"utf8",
+	);
+	const normalizedCryo = cryo.replace(/\s+/g, " ");
+
+	for (const requiredClaim of [
+		"informed by Siemens and Rockwell PLC experience",
+		"Siemens and Rockwell PLC logic",
+		"commodity inventories, temperatures, pressures, and other sensor and actuator feedback",
+		"facility-specific control-sequence rehearsal",
+		"does not reproduce proprietary employer implementation",
+		"is not plant-calibrated, connected to PLC or DCS control logic, safety-authoritative, or an operational digital twin",
+	]) {
+		assert.ok(
+			normalizedCryo.includes(requiredClaim),
+			`CryoSim case study is missing: ${requiredClaim}`,
+		);
+	}
+
+	assert.doesNotMatch(cryo, /is an operational digital twin/i);
+	assert.doesNotMatch(cryo, /[—–]/);
+});
