@@ -1,7 +1,7 @@
 # Mac mini Shelf Case Study Design
 
-Date: 2026-09-02  
-Status: Approved design, awaiting written-spec review  
+Date: 2026-09-02
+Status: Approved design, awaiting written-spec review
 Target route: `/work/mac-mini-shelf/`
 
 ## Outcome
