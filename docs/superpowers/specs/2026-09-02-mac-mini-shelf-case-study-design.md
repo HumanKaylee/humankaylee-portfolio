@@ -1,7 +1,7 @@
 # Mac mini Shelf Case Study Design
 
 Date: 2026-09-02
-Status: Approved design, awaiting written-spec review
+Status: Approved for implementation
 Target route: `/work/mac-mini-shelf/`
 
 ## Outcome
@@ -10,6 +10,12 @@ Add a media-rich supporting case study that shows how an agentic AI workflow
 turned Joe's requirements for a six-Mac-mini wall shelf into a parametric CAD
 model, a checked finite-element analysis, a support-free K1C manufacturing
 package, and a visually inspected evidence set.
+
+If a completed physical print is later proven by Joe's finished-product
+photographs or a matching K1C time-lapse, add that material as a distinct
+physical-evidence layer. Do not let pending physical media delay the digital
+case-study implementation, and do not let an available recording substitute
+for inspection of the finished part.
 
 The public story must distinguish an end-to-end **digital engineering result**
 from an unverified physical outcome. The recovered evidence proves the CAD,
@@ -37,6 +43,9 @@ six-unit load test, or long-term creep performance.
 7. Production is released only after an exact-source preview, visual review,
    redaction review, passing CI, retained rollback, and live custom-domain
    verification.
+8. A time-lapse or finished-product photograph appears only when its source is
+   matched to this shelf and the recovered evidence proves a completed,
+   visually acceptable part. Otherwise the physical media section is omitted.
 
 ## Placement And Message
 
@@ -113,6 +122,12 @@ Follow-up printer history showed incomplete attempts, so the page must not use
 “printed,” “installed,” “load-tested,” “production-ready,” or equivalent
 language as an accomplished result.
 
+A fresh read-only probe on 2026-09-03 found another matching shelf job active,
+while the prior 23.79-hour run still had `printfinish: 0`. The signed-in
+Creality Cloud workbench exposed a Time-Lapses tab, but its listing failed to
+load and yielded no downloadable recording. These facts keep the physical
+status unverified until later evidence changes it.
+
 ## Case Study Structure
 
 The standard Work page remains the shell. The Mac mini entry supplies its
@@ -176,13 +191,24 @@ Evidence gallery:
 
 Each image keeps its original PNG as the full-size fallback. Responsive WebP
 derivatives are generated at 640, 960, and 1440 pixels using the repository's
-existing Sharp dependency and deterministic asset tooling. Captions state the
-load case and evidentiary meaning. Alt text describes the engineering content,
-not colors alone.
+existing FFmpeg-based deterministic asset tooling. Captions state the load
+case and evidentiary meaning. Alt text describes the engineering content, not
+colors alone.
 
 A 1200 x 630 social card will be generated deterministically from the authentic
 fit render and site typography. It will not invent geometry or a physical
 installation.
+
+Optional physical media is handled separately:
+
+- Joe's forthcoming photographs are accepted only from files he supplies for
+  this case study, inspected at full resolution, stripped of location and
+  device metadata, and captioned with only what is visibly established.
+- A K1C time-lapse is accepted only when its cloud or printer history matches
+  the shelf job and a completed physical result is also verified.
+- If neither source clears those gates before release, no empty panel,
+  stand-in image, printer-dashboard screenshot, or completion claim is
+  published. The physical evidence can be added in a later scoped release.
 
 ## Implementation Shape
 
@@ -193,6 +219,12 @@ Expected new files:
 - `apps/web/public/media/mac-mini-shelf/` recovered and responsive visuals
 - `apps/web/public/social/mac-mini-shelf.png`
 - route-specific or content-contract tests needed to falsify unsupported claims
+
+Only after verified physical media exists:
+
+- sanitized photographs under `apps/web/public/media/mac-mini-shelf/physical/`
+- a compact web MP4 and poster under the same directory when a matching K1C
+  time-lapse is recoverable
 
 Expected surgical edits:
 
@@ -225,6 +257,8 @@ behaviors:
 - the page does not claim a successful physical print or installation;
 - all referenced media exists, has the declared dimensions, and comes from the
   approved source inventory;
+- any physical photograph or time-lapse has a retained private source record,
+  sanitized public derivative, and completed-print evidence;
 - the case-specific process component renders only for the Mac mini shelf;
 - desktop and mobile layouts have no overflow and retain 44-pixel touch targets;
 - no-JavaScript and reduced-motion states retain the complete narrative and
@@ -252,6 +286,7 @@ The content begins with `redactionStatus: reviewed`. Before setting it to
 - a Cloudflare provider preview pinned to that revision;
 - agent/browser inspection at desktop and mobile widths;
 - full-resolution media inspection and private-content scanning;
+- completed-print provenance and metadata sanitization for any physical media;
 - recorded artifact-inspection evidence;
 - Joe's already-recorded publication authorization, described without claiming
   that he personally inspected the preview.
@@ -278,6 +313,8 @@ repository's broader API/contact/global-launch issues.
 - No STL, STEP, FCStd, G-code, OrcaSlicer profile, raw FEM input, private
   transcript, or absolute local path is published.
 - No physical shelf photograph is fabricated or substituted.
+- No printer-dashboard or active-print screenshot is presented as a completed
+  physical result.
 - No certification, code compliance, anchor qualification, product warranty,
   or safe-load recommendation is claimed.
 - No unrelated portfolio refactor, visual-system redesign, dependency change,
