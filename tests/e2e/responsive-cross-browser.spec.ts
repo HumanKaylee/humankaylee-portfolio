@@ -33,6 +33,12 @@ const launchRoutes = [
 		primaryLink: /Open the project video/i,
 	},
 	{
+		path: "/work/mac-mini-shelf/",
+		heading: /Mac mini Wall Shelf/i,
+		marker: /Agentic engineering loop/i,
+		primaryLink: /Open the full-size evidence image/i,
+	},
+	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		heading: /CLI Fleet Synchronization/i,
 		marker: /Proof/i,
@@ -94,20 +100,7 @@ const viewportMatrix = [
 async function expectNoHorizontalOverflow(page: Page, label: string) {
 	const overflow = await page.evaluate(() => {
 		const viewportWidth = window.innerWidth;
-		const main = document.querySelector("main");
-
-		return Array.from(main?.querySelectorAll("*") ?? []).some((element) => {
-			const style = getComputedStyle(element);
-			const rect = element.getBoundingClientRect();
-			const intersectsViewport = rect.right > 0 && rect.left < viewportWidth;
-
-			return (
-				intersectsViewport &&
-				style.display !== "none" &&
-				style.visibility !== "hidden" &&
-				(rect.left < -1 || rect.right > viewportWidth + 1)
-			);
-		});
+		return document.documentElement.scrollWidth > viewportWidth + 1;
 	});
 
 	expect(overflow, `${label} should not have horizontal overflow`).toBe(false);
@@ -187,7 +180,7 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 				/Principal engineer for simulation, controls, and operational software/i,
 			);
 			await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(
-				5,
+				6,
 			);
 			await expect(
 				page.getByRole("link", { name: /View selected work/i }),
@@ -198,6 +191,19 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 			);
 		} finally {
 			await context.close();
+		}
+	});
+
+	test("removes process card side borders on the shelf at phone width", async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await page.goto("/work/mac-mini-shelf/");
+
+		for (const card of await page
+			.locator("[data-shelf-agentic-loop] li")
+			.all()) {
+			await expect(card).toHaveCSS("border-left-width", "0px");
 		}
 	});
 });

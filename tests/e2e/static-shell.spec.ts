@@ -168,7 +168,7 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toBeVisible();
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(5);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(6);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
 		for (const href of [
@@ -353,7 +353,7 @@ test.describe("Signal / Proof static shell @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(5);
+				).toHaveCount(6);
 			}
 		});
 	}

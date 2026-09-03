@@ -24,6 +24,7 @@ const visualRoutes = [
 		path: "/work/xplane-cabin-camera-fov-trade-study/",
 	},
 	{ label: "work-openxhc", path: "/work/openxhc-linuxcnc/" },
+	{ label: "work-mac-mini-shelf", path: "/work/mac-mini-shelf/" },
 	{
 		label: "work-cli-fleet",
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",

@@ -14,6 +14,10 @@ const coreRoutes = [
 		marker: /2,490/i,
 	},
 	{
+		path: "/work/mac-mini-shelf/",
+		marker: /0\.064 mm.*1\.42 MPa/i,
+	},
+	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		marker: /Verification matrix/i,
 	},
@@ -85,7 +89,7 @@ test.describe("Signal / Proof quality @quality @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(5);
+				).toHaveCount(6);
 			}
 		});
 	}
