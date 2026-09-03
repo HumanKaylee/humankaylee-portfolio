@@ -14,12 +14,13 @@ const expectedPublishedSlugs = [
 	"conformal-cooling-channel-generation",
 	"xplane-cabin-camera-fov-trade-study",
 	"openxhc-linuxcnc",
+	"mac-mini-shelf",
 	"black-scholes-wasm",
 	"cli-fleet-synchronization-and-mcp-rollout",
 	"remote-workstation-recovery-and-operational-debugging",
 ];
 
-test("Work content has two flagships, three supporting studies, two archives, and required local assets", () => {
+test("Work content has two flagships, four supporting studies, two archives, and required local assets", () => {
 	const dir = "apps/web/src/content/work";
 	const files = readdirSync(dir).filter((name) => name.endsWith(".md"));
 	const source = files.map((name) =>
@@ -41,10 +42,11 @@ test("Work content has two flagships, three supporting studies, two archives, an
 		"supporting",
 		"supporting",
 		"supporting",
+		"supporting",
 	]);
 	assert.deepEqual(
 		[...featuredOrders].sort((left, right) => left - right),
-		[1, 2, 3, 4, 5, 6, 7],
+		[1, 2, 3, 4, 5, 6, 7, 8],
 	);
 	assert.deepEqual(
 		slugs
@@ -74,6 +76,14 @@ test("Work content has two flagships, three supporting studies, two archives, an
 		);
 	}
 	assert.ok(existsSync("apps/web/public/media/cryo-flow-sim-stage1.mp4"));
+	assert.ok(existsSync("apps/web/public/media/mac-mini-shelf/shelf-fit.png"));
+	for (const width of [640, 960, 1440]) {
+		assert.ok(
+			existsSync(
+				`apps/web/public/media/mac-mini-shelf/shelf-fit-${width}.webp`,
+			),
+		);
+	}
 	for (const width of [640, 960, 1440]) {
 		assert.ok(
 			existsSync(
@@ -91,6 +101,18 @@ test("Work content has two flagships, three supporting studies, two archives, an
 		Number(openxhcSource.match(/^\s+sizeBytes:\s*(\d+)$/m)?.[1]),
 	);
 	assert.ok(existsSync("apps/web/public/downloads/joe-poznanski-resume.pdf"));
+});
+
+test("Mac mini shelf keeps its four-times front-edge case out of service guidance", () => {
+	const shelf = readFileSync(
+		"apps/web/src/content/work/mac-mini-shelf.md",
+		"utf8",
+	);
+
+	assert.match(
+		shelf,
+		/four-times front-edge case was transient analysis evidence, not a recommended service load/i,
+	);
 });
 
 test("CryoSim connects prior controls experience to a bounded consulting offer", () => {

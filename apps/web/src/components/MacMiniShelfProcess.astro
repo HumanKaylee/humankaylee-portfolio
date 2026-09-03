@@ -1,0 +1,398 @@
+---
+const processSteps = [
+	[
+		"Recover the toolchain",
+		"Verify FreeCAD, CalculiX, meshing, rendering, and OrcaSlicer before modeling.",
+	],
+	[
+		"Bound the problem",
+		"Set device, stack-frame, service-load, printer-envelope, and one-piece constraints.",
+	],
+	[
+		"Generate parametric CAD",
+		"Build one FreeCAD solid with side walls, front apron, ventilation slots, and three gussets.",
+	],
+	[
+		"Check manufacturing geometry",
+		"Prove validity, watertightness, manifold STL output, K1C fit, and support-free orientation.",
+	],
+	[
+		"Solve four load cases",
+		"Compare spread and front-edge service loads plus their four-times transient overloads.",
+	],
+	[
+		"Challenge the solver",
+		"Use beam theory, 6-to-4 mm mesh refinement, and a sharp-corner singularity demonstration.",
+	],
+	[
+		"Compare variants",
+		"Measure the sustained-load cost of reducing the design from three gussets to one or none.",
+	],
+	[
+		"Inspect and package",
+		"Render fit, constraints, mesh, stress, displacement, deformation, then slice and cross-check reports.",
+	],
+] as const;
+
+const assumptions = [
+	["Shelf envelope", "Measured artifact", "170 x 160 x 106 mm"],
+	["Service load", "Modeled input", "48.8 N / 4.98 kg"],
+	["PLA material", "Modeled input", "E = 3000 MPa; Poisson ratio = 0.36"],
+	[
+		"Sustained ceiling",
+		"Engineering comparison",
+		"5 MPa; not a certification limit",
+	],
+	["Wall boundary", "Modeled input", "Back face held rigidly"],
+	["Device contact", "Modeled input", "Distributed pressure, not four feet"],
+	[
+		"Printed body",
+		"Unverified translation",
+		"Solid FEM versus four walls and 30% gyroid",
+	],
+	[
+		"Physical system",
+		"Not verified",
+		"Print, anchors, installation, heat, tipping, load test, and long-term creep",
+	],
+] as const;
+
+const loadCases = [
+	[
+		"A",
+		"Service / spread",
+		"48.8 N",
+		"0.015 mm",
+		"0.26 MPa",
+		"19x to 5 MPa creep ceiling",
+	],
+	[
+		"C",
+		"Service / front edge",
+		"48.8 N",
+		"0.064 mm",
+		"1.42 MPa",
+		"Governing sustained case; 3.5x",
+	],
+	["B", "4x / spread", "195 N", "0.060 mm", "1.03 MPa", "48x to 50 MPa yield"],
+	[
+		"D",
+		"4x / front edge",
+		"195 N",
+		"0.255 mm",
+		"5.69 MPa",
+		"9x to yield; not a service recommendation",
+	],
+] as const;
+---
+
+<section
+	class="mac-mini-shelf-process"
+	data-mac-mini-shelf-process
+	aria-labelledby="mac-mini-shelf-process-title"
+>
+	<header class="mac-mini-shelf-process__header">
+		<p class="section-kicker">Agentic engineering loop / recovered digital toolchain</p>
+		<h2 id="mac-mini-shelf-process-title">
+			Human intent, agentic execution, bounded evidence
+		</h2>
+		<p>
+			Joe defined the objective, constraints, and evidence boundary. Agentic AI
+			performed the recovered digital toolchain across CAD, simulation,
+			manufacturing preparation, and report cross-checking.
+		</p>
+	</header>
+
+	<ol class="mac-mini-shelf-process__loop" data-shelf-agentic-loop>
+		{
+			processSteps.map(([title, detail], index) => (
+				<li>
+					<p aria-hidden="true">{String(index + 1).padStart(2, "0")}</p>
+					<h3>{title}</h3>
+					<span>{detail}</span>
+				</li>
+			))
+		}
+	</ol>
+
+	<div class="mac-mini-shelf-process__evidence">
+		<section aria-labelledby="shelf-assumptions-title">
+			<header class="mac-mini-shelf-process__section-header">
+				<p class="section-kicker">Model boundary</p>
+				<h3 id="shelf-assumptions-title">Inputs are not physical proof.</h3>
+			</header>
+			<div class="mac-mini-shelf-process__table-scroll" tabindex="0">
+				<table data-shelf-assumptions>
+					<caption>Model assumptions and evidence boundaries</caption>
+					<thead>
+						<tr>
+							<th scope="col">Assumption</th>
+							<th scope="col">Status</th>
+							<th scope="col">Value or boundary</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							assumptions.map(([assumption, status, value]) => (
+								<tr>
+									<th scope="row">{assumption}</th>
+									<td>{status}</td>
+									<td>{value}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section aria-labelledby="shelf-fem-title">
+			<header class="mac-mini-shelf-process__section-header">
+				<p class="section-kicker">Linear-static comparison</p>
+				<h3 id="shelf-fem-title">Front-edge loading governs.</h3>
+			</header>
+			<div class="mac-mini-shelf-process__table-scroll" tabindex="0">
+				<table data-shelf-fem-matrix>
+					<caption>Four checked FEM load cases</caption>
+					<thead>
+						<tr>
+							<th scope="col">Case</th>
+							<th scope="col">Placement</th>
+							<th scope="col">Load</th>
+							<th scope="col">Deflection</th>
+							<th scope="col">Stress</th>
+							<th scope="col">Comparison</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							loadCases.map(
+								([caseName, placement, load, deflection, stress, comparison]) => (
+									<tr>
+										<th scope="row">{caseName}</th>
+										<td>{placement}</td>
+										<td>{load}</td>
+										<td>{deflection}</td>
+										<td>{stress}</td>
+										<td>{comparison}</td>
+									</tr>
+								),
+							)
+						}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+
+	<aside class="mac-mini-shelf-process__inspection" data-shelf-visual-inspection>
+		<p class="section-kicker">Visual inspection changes the interpretation</p>
+		<h3>The centered-load/yield framing was corrected.</h3>
+		<p>
+			The favorable centered spread-load case and short-term yield comparison do
+			not set the shelf claim. The 48.8 N front-edge case governs sustained
+			comparison at 0.064 mm displacement, 1.42 MPa stress, and a 3.5x margin
+			to the selected 5 MPa PLA creep ceiling.
+		</p>
+		<p>
+			The four-times front-edge result is transient evidence, not a service
+			recommendation. The seven published views inspect fit, print orientation,
+			constraints, mesh, stress, displacement, and exaggerated deformation so a
+			plausible report cannot hide the wrong geometry or load placement.
+		</p>
+		<p>
+			Physical print, installation, and load testing were not verified in the
+			recovered evidence.
+		</p>
+	</aside>
+</section>
+
+<style>
+	.mac-mini-shelf-process {
+		display: grid;
+		min-width: 0;
+		gap: var(--space-5);
+		border-top: 1px solid var(--line);
+		padding-block: var(--space-6);
+	}
+
+	.mac-mini-shelf-process__header {
+		display: grid;
+		grid-template-columns: minmax(0, 0.8fr) minmax(18rem, 1.2fr);
+		gap: var(--space-3) clamp(2rem, 6vw, 7rem);
+	}
+
+	.mac-mini-shelf-process__header .section-kicker {
+		grid-column: 1 / -1;
+	}
+
+	.mac-mini-shelf-process__header h2 {
+		max-width: 12ch;
+		font-size: clamp(2.2rem, 5vw, 5rem);
+	}
+
+	.mac-mini-shelf-process__header > p:last-child {
+		max-width: 54ch;
+		align-self: end;
+		color: var(--color-muted);
+		font-size: clamp(1rem, 1.6vw, 1.2rem);
+	}
+
+	.mac-mini-shelf-process__loop {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		margin: 0;
+		padding: 0;
+		border-block: 1px solid var(--line);
+		list-style: none;
+	}
+
+	.mac-mini-shelf-process__loop li {
+		display: grid;
+		align-content: start;
+		gap: var(--space-2);
+		min-height: 12rem;
+		padding: var(--space-4);
+	}
+
+	.mac-mini-shelf-process__loop li + li {
+		border-left: 1px solid var(--line);
+	}
+
+	.mac-mini-shelf-process__loop li:nth-child(4n + 1) {
+		border-left: 0;
+	}
+
+	.mac-mini-shelf-process__loop li:nth-child(n + 5) {
+		border-top: 1px solid var(--line);
+	}
+
+	.mac-mini-shelf-process__loop p,
+	.mac-mini-shelf-process__loop span,
+	table,
+	caption {
+		font-family: var(--font-evidence);
+	}
+
+	.mac-mini-shelf-process__loop p,
+	.mac-mini-shelf-process__loop span {
+		color: var(--color-muted);
+		font-size: 0.74rem;
+		line-height: 1.55;
+	}
+
+	.mac-mini-shelf-process__loop h3,
+	.mac-mini-shelf-process__section-header h3,
+	.mac-mini-shelf-process__inspection h3 {
+		font-size: clamp(1.35rem, 2.2vw, 2rem);
+	}
+
+	.mac-mini-shelf-process__evidence {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-4);
+	}
+
+	.mac-mini-shelf-process__evidence > section {
+		display: grid;
+		min-width: 0;
+		gap: var(--space-3);
+		border-top: 0.35rem solid var(--color-ink);
+		padding-top: var(--space-3);
+	}
+
+	.mac-mini-shelf-process__section-header {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.mac-mini-shelf-process__table-scroll {
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.mac-mini-shelf-process table {
+		width: 100%;
+		min-width: 38rem;
+		border-collapse: collapse;
+		font-size: 0.72rem;
+		line-height: 1.5;
+	}
+
+	.mac-mini-shelf-process caption {
+		padding-bottom: var(--space-2);
+		color: var(--color-muted);
+		text-align: left;
+	}
+
+	.mac-mini-shelf-process th,
+	.mac-mini-shelf-process td {
+		padding: var(--space-2);
+		border-top: 1px solid var(--line);
+		vertical-align: top;
+		text-align: left;
+	}
+
+	.mac-mini-shelf-process thead th {
+		color: var(--color-muted);
+		font-size: 0.66rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.mac-mini-shelf-process tbody th {
+		font-weight: 700;
+	}
+
+	.mac-mini-shelf-process__inspection {
+		display: grid;
+		gap: var(--space-3);
+		border-top: 0.5rem solid var(--color-signal);
+		background: var(--color-ink);
+		padding: var(--space-4);
+		color: var(--color-media);
+	}
+
+	.mac-mini-shelf-process__inspection .section-kicker,
+	.mac-mini-shelf-process__inspection > p {
+		max-width: 76ch;
+		color: color-mix(in srgb, var(--color-media) 76%, transparent);
+	}
+
+	@media (max-width: 64rem) {
+		.mac-mini-shelf-process__loop {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.mac-mini-shelf-process__loop li + li:nth-child(odd) {
+			border-left: 0;
+		}
+
+		.mac-mini-shelf-process__loop li:nth-child(n + 3) {
+			border-top: 1px solid var(--line);
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.mac-mini-shelf-process__header,
+		.mac-mini-shelf-process__loop,
+		.mac-mini-shelf-process__evidence {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.mac-mini-shelf-process__loop li {
+			min-height: 0;
+			border-top: 1px solid var(--line);
+			border-left: 0;
+		}
+
+		.mac-mini-shelf-process__loop li + li {
+			border-left: 0;
+		}
+
+		.mac-mini-shelf-process__loop li:first-child {
+			border-top: 0;
+		}
+	}
+</style>

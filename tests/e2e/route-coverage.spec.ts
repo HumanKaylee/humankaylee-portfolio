@@ -28,6 +28,11 @@ const implementedRoutes = [
 		marker: /Two documented camera configurations/i,
 	},
 	{
+		path: "/work/mac-mini-shelf/",
+		heading: /Mac mini Wall Shelf/i,
+		marker: /Agentic engineering loop/i,
+	},
+	{
 		path: "/work/cli-fleet-synchronization-and-mcp-rollout/",
 		heading: /CLI Fleet Synchronization/i,
 		marker: /Proof/i,

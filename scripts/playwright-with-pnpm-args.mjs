@@ -1,11 +1,25 @@
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const args = process.argv.slice(2);
-const normalizedArgs = args[0] === "--" ? args.slice(1) : args;
+const playwrightCliPath = fileURLToPath(
+	new URL("../node_modules/@playwright/test/cli.js", import.meta.url),
+);
 
-const result = spawnSync("playwright", ["test", ...normalizedArgs], {
-	stdio: "inherit",
-	shell: process.platform === "win32",
-});
+export function runPlaywright(args, spawn = spawnSync) {
+	const normalizedArgs = args[0] === "--" ? args.slice(1) : args;
 
-process.exit(result.status ?? 1);
+	return spawn(
+		process.execPath,
+		[playwrightCliPath, "test", ...normalizedArgs],
+		{
+			stdio: "inherit",
+			shell: false,
+		},
+	);
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+	const result = runPlaywright(process.argv.slice(2));
+
+	process.exit(result.status ?? 1);
+}

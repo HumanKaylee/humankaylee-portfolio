@@ -6,6 +6,7 @@ import BlackScholesDemo from "../../components/BlackScholesDemo.astro";
 import CaseStudyMediaGallery from "../../components/CaseStudyMediaGallery.astro";
 import CaseStudySection from "../../components/CaseStudySection.astro";
 import EvidenceStrip from "../../components/EvidenceStrip.astro";
+import MacMiniShelfProcess from "../../components/MacMiniShelfProcess.astro";
 import MediaFrame from "../../components/MediaFrame.astro";
 import NextWork from "../../components/NextWork.astro";
 import OpenXhcSystemBoundary from "../../components/OpenXhcSystemBoundary.astro";
@@ -129,6 +130,8 @@ const structuredData = {
 				<span>{data.architecture.diagramAlt}</span>
 			</p>
 		</CaseStudySection>
+
+		{data.slug === "mac-mini-shelf" ? <MacMiniShelfProcess /> : null}
 
 		{data.slug === "openxhc-linuxcnc" ? <OpenXhcSystemBoundary /> : null}
 

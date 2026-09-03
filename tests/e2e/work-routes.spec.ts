@@ -16,6 +16,11 @@ const allPublishedWork = [
 		slug: "openxhc-linuxcnc",
 	},
 	{
+		title:
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+		slug: "mac-mini-shelf",
+	},
+	{
 		title: "Black-Scholes Options Pricer in Rust and WASM",
 		slug: "black-scholes-wasm",
 	},
@@ -58,7 +63,7 @@ test.describe("Work routes @work", () => {
 			"Read the case study",
 			"Read the case study",
 		]);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(3);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(4);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Cryogenic Flow Simulation",
@@ -69,6 +74,7 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 		]);
 		await expect(page.locator("[data-archive-work]")).toContainText(
@@ -92,6 +98,7 @@ test.describe("Work routes @work", () => {
 			"/work/conformal-cooling-channel-generation/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/openxhc-linuxcnc/",
+			"/work/mac-mini-shelf/",
 			"/work/black-scholes-wasm/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
@@ -114,15 +121,19 @@ test.describe("Work routes @work", () => {
 		const response = await page.goto("/work/");
 
 		expect(response?.status()).toBe(200);
+		await expect(page.locator(".work-index__header > p:last-child")).toHaveText(
+			"Two flagship engineering systems, four focused technical studies, and an operational archive. Each stays framed by the decisions, evidence, and limits that make the result trustworthy.",
+		);
 		await expect(page.locator("[data-flagship-work] h2")).toHaveText([
 			"Cryogenic Flow Simulation",
 			"Conformal Cooling Channel Generation",
 		]);
 		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(3);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(4);
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 		]);
 		await expect(
@@ -135,6 +146,11 @@ test.describe("Work routes @work", () => {
 				name: "X-Plane Cabin Camera FOV Trade Study",
 			}),
 		).toHaveAttribute("href", "/work/xplane-cabin-camera-fov-trade-study/");
+		await expect(
+			page.locator("[data-supporting-work]").getByRole("link", {
+				name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+			}),
+		).toHaveAttribute("href", "/work/mac-mini-shelf/");
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
 				name: "Black-Scholes Options Pricer in Rust and WASM",
@@ -157,6 +173,7 @@ test.describe("Work routes @work", () => {
 			"Conformal Cooling Channel Generation",
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
@@ -186,6 +203,54 @@ test.describe("Work routes @work", () => {
 		for (const work of allPublishedWork) {
 			await page.goto(`/work/${work.slug}/`);
 			await expect(page.locator("main")).not.toContainText(internalWorkCopy);
+		}
+	});
+
+	test("presents the Mac mini shelf as bounded Agentic AI engineering evidence", async ({
+		page,
+	}) => {
+		await page.goto("/work/mac-mini-shelf/");
+		const main = page.locator("main");
+
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+			}),
+		).toBeVisible();
+		await expect(main).toContainText(/Joe defined the objective.*Agentic AI/i);
+		await expect(page.locator("[data-shelf-agentic-loop] li")).toHaveCount(8);
+		await expect(page.locator("[data-shelf-assumptions] tbody tr")).toHaveCount(
+			8,
+		);
+		await expect(page.locator("[data-shelf-fem-matrix] tbody tr")).toHaveCount(
+			4,
+		);
+		await expect(main).toContainText(/0\.064 mm.*1\.42 MPa.*3\.5x/is);
+		await expect(main).toContainText(/exaggerated deformation/i);
+		await expect(main).toContainText(
+			/Physical print, installation, and load testing were not verified/i,
+		);
+		await expect(main).not.toContainText(
+			/successfully printed|installed and tested|production-ready|safe load/i,
+		);
+
+		await page.setViewportSize({ width: 820, height: 900 });
+		await page.goto("/work/mac-mini-shelf/");
+		await expect(page.locator("[data-shelf-agentic-loop] li").nth(6)).toHaveCSS(
+			"border-left-width",
+			"0px",
+		);
+	});
+
+	test("renders the shelf process component only for the shelf slug", async ({
+		page,
+	}) => {
+		for (const work of allPublishedWork) {
+			await page.goto(`/work/${work.slug}/`);
+			await expect(page.locator("[data-mac-mini-shelf-process]")).toHaveCount(
+				work.slug === "mac-mini-shelf" ? 1 : 0,
+			);
 		}
 	});
 
@@ -687,6 +752,7 @@ test.describe("Work routes @work", () => {
 		for (const path of [
 			"/work/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
+			"/work/mac-mini-shelf/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 		]) {
 			for (const viewport of [

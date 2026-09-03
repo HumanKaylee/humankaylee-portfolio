@@ -27,7 +27,7 @@ test.describe("purposeful motion @motion", () => {
 				items.map((item) => getComputedStyle(item).transitionDuration),
 			);
 
-		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(5);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(6);
 		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
 		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);
 		expect(
@@ -94,7 +94,7 @@ test.describe("purposeful motion @motion @noscript", () => {
 		await page.setViewportSize({ width: 1440, height: 1000 });
 		await page.goto("/");
 
-		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(5);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(6);
 		await expect(page.locator("[data-capability-proof]:visible")).toHaveCount(
 			6,
 		);

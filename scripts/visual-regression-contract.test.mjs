@@ -6,6 +6,7 @@ const files = {
 	backlog: "docs/BACKLOG.md",
 	ci: ".github/workflows/phase-0-ci.yml",
 	playwrightConfig: "playwright.config.ts",
+	visualPlaywrightConfig: "playwright.visual.config.ts",
 	visualSpec: "tests/e2e/visual-regression.spec.ts",
 	packageConfig: "package.json",
 	runbook: "runbooks/VISUAL_REGRESSION.md",
@@ -21,6 +22,7 @@ const expectedVisualRoutes = [
 	["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 	["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 	["work-openxhc", "/work/openxhc-linuxcnc/"],
+	["work-mac-mini-shelf", "/work/mac-mini-shelf/"],
 	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 	[
 		"work-remote-recovery",
@@ -74,6 +76,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	const runbook = readRequiredFile(files.runbook);
 	const ci = readRequiredFile(files.ci);
 	const playwrightConfig = readRequiredFile(files.playwrightConfig);
+	const visualPlaywrightConfig = readRequiredFile(files.visualPlaywrightConfig);
 	const tsconfig = readRequiredFile(files.tsconfig);
 
 	expectContains(backlog, "### B-037: Add visual regression snapshots");
@@ -108,6 +111,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 		["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 		["work-openxhc", "/work/openxhc-linuxcnc/"],
+		["work-mac-mini-shelf", "/work/mac-mini-shelf/"],
 		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 		[
 			"work-remote-recovery",
@@ -123,6 +127,16 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	}
 	expectContains(playwrightConfig, "testIgnore");
 	expectContains(playwrightConfig, "visual-regression.spec.ts");
+	expectContains(
+		visualPlaywrightConfig,
+		"node node_modules/astro/bin/astro.mjs dev --host 127.0.0.1 --port 4321",
+		"foreground Astro visual web server",
+	);
+	expectContains(
+		visualPlaywrightConfig,
+		'ASTRO_DEV_BACKGROUND: "1"',
+		"visual web server foreground environment",
+	);
 	assert.ok(
 		existsSync(files.runbook),
 		`missing required file: ${files.runbook}`,
@@ -134,10 +148,7 @@ test("B-037 executable visual matrix covers every current Signal / Proof surface
 	const visualSpec = readRequiredFile(files.visualSpec);
 
 	assert.deepEqual(visualSpecRoutes(visualSpec), expectedVisualRoutes);
-	assert.deepEqual(
-		documentedVisualRoutes(runbook),
-		expectedAcceptedBaselineRoutes,
-	);
+	assert.deepEqual(documentedVisualRoutes(runbook), expectedVisualRoutes);
 	assert.match(runbook, /Windows[\s\S]*Linux/i);
 	assert.match(
 		runbook,
@@ -167,4 +178,14 @@ test("B-037 accepted visual routes have paired Linux and Windows baselines at ev
 	}
 
 	assert.deepEqual(missingBaselines, [], "missing visual baselines");
+});
+
+test("B-037 Mac mini shelf visual coverage documents paired platform baselines", () => {
+	const runbook = readRequiredFile(files.runbook);
+
+	expectContains(
+		runbook,
+		"Mac mini shelf heading, explicit digital-versus-physical limit, and initial evidence image are visible; paired Windows and Linux baselines recorded",
+		"Mac mini shelf paired-baseline boundary",
+	);
 });

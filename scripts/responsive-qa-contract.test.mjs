@@ -16,6 +16,7 @@ const expectedResponsiveRoutes = [
 	"/work/cryo-flow-sim/",
 	"/work/conformal-cooling-channel-generation/",
 	"/work/openxhc-linuxcnc/",
+	"/work/mac-mini-shelf/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/work/black-scholes-wasm/",
