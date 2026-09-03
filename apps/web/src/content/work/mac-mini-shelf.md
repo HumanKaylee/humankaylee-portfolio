@@ -155,14 +155,39 @@ evidenceMedia:
     alt: "Exaggerated CalculiX deformation shape bending downward from the fixed wall face toward the front edge."
     caption: "Exaggerated deformation for visual interpretation; it is not literal physical sag."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
-  checklistStatus: "partial"
-  openItems:
-    - "Exact-source provider preview and final artifact-inspection evidence are pending."
-  notes: "Source claims and authentic digital renders were bounded against retained CAD, FEM, validation, variant, and slicer reports. No raw manufacturing file, printer identity, private path, transcript, or physical-completion claim is public. Final approval follows exact-source preview inspection."
+  reviewedOn: "2026-09-03"
+  checklistStatus: "complete"
+  openItems: []
+  notes: "Source claims, authentic digital renders, the complete case-study copy, and responsive presentation passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized later production publication in this task on 2026-09-03. This records authorization without claiming he personally inspected the preview. No raw manufacturing file, printer identity, private path, transcript, or physical-completion claim is public."
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "yes"
+    logsSummarizedOrSanitized: "not-applicable"
+    publicLinksVerified: "not-applicable"
+    claimsHaveSafeEvidence: "yes"
+    securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-09-03"
+    decision: "approved"
+    notes: "Joe explicitly authorized the feature-branch preview and later production publication in this task on 2026-09-03. This records authorization and does not claim he personally inspected the preview."
+  artifactInspection:
+    source: "Mac mini shelf case study at source 9c68050b979da07d0437b525e6dedcb3d361271a; agent and browser inspection in this task"
+    inspectedOn: "2026-09-03"
+    result: "passed"
+    notes: "The complete copy, three routes at 390 x 844, 820 x 1180, and 1440 x 1200, responsive images, eight full-size originals, evidence tables, captions, no-overflow behavior, clean console and network activity, no-JavaScript rendering, reduced-motion behavior, canonical and Open Graph metadata, sitemap inclusion, security headers, and Axe results were inspected. No serious or critical accessibility finding, broken media, private material, unsupported physical-completion claim, or runtime error remained."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://191be978.humankaylee-portfolio.pages.dev; deployment 191be978-8574-4890-9b89-270e44818d3b; source 9c68050b979da07d0437b525e6dedcb3d361271a"
+    capturedOn: "2026-09-03"
+    result: "passed"
+    notes: "Exact-source provider preview passed the full route and viewport inspection matrix. This preview evidence does not claim a production release. Physical print, installation, and load testing remain explicitly unverified and no physical media was published."
 seo:
   title: "Agentic AI Mac mini Shelf CAD and FEM Case Study | Joe Poznanski"
   description: "How Agentic AI turned requirements for a six-Mac-mini wall shelf into parametric CAD, checked FEM, support-free slicing, and visually inspected engineering evidence."
