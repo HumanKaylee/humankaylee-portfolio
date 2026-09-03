@@ -22,6 +22,14 @@ const projectDefinitions = {
 		),
 		outputPath: path.join(publicDir, "social/openxhc-linuxcnc.png"),
 	},
+	"mac-mini-shelf": {
+		sourceName: "shelf-fit.png",
+		sourcePath: path.join(
+			publicDir,
+			"media/mac-mini-shelf/shelf-fit.png",
+		),
+		outputPath: path.join(publicDir, "social/mac-mini-shelf.png"),
+	},
 };
 const name = "Joe Poznanski";
 const positioningLines = [
@@ -48,7 +56,7 @@ function requestedOptions(args) {
 
 		if (!value?.trim() || !["--project", "--output"].includes(flag)) {
 			throw new Error(
-				"Usage: node scripts/generate-social-preview-assets.mjs [--project openxhc] [--output <png-path>]",
+				"Usage: node scripts/generate-social-preview-assets.mjs [--project openxhc|mac-mini-shelf] [--output <png-path>]",
 			);
 		}
 
@@ -119,8 +127,19 @@ const openXhcFilter = [
 	"[1:v]scale=1120:630,crop=684:630:16:0[media]",
 	"[text][media]hstack=inputs=2[out]",
 ].join(";");
-const filter = project === "openxhc" ? openXhcFilter : defaultFilter;
-const panelWidth = project === "openxhc" ? 516 : 540;
+const macMiniShelfFilter = [
+	`[0:v]drawbox=x=54:y=52:w=92:h=12:color=0xD9FF43:t=fill,drawtext=fontfile='${boldFont}':text='MAC MINI WALL SHELF':fontcolor=0xF2F1EB:fontsize=38:x=54:y=102,drawtext=fontfile='${regularFont}':text='AGENTIC CAD + FEM':fontcolor=0xBFC0B8:fontsize=21:x=54:y=172,drawtext=fontfile='${boldFont}':text='0.064 mm deflection':fontcolor=0xD9FF43:fontsize=36:x=54:y=274,drawtext=fontfile='${boldFont}':text='1.42 MPa stress':fontcolor=0xF2F1EB:fontsize=36:x=54:y=326,drawtext=fontfile='${boldFont}':text='3.5x creep margin':fontcolor=0xF2F1EB:fontsize=36:x=54:y=378,drawtext=fontfile='${regularFont}':text='DIGITAL MANUFACTURING PACKAGE':fontcolor=0xBFC0B8:fontsize=18:x=54:y=492[text]`,
+	"[1:v]scale=1120:630,crop=684:630:16:0[media]",
+	"[text][media]hstack=inputs=2[out]",
+].join(";");
+const filter =
+	project === "openxhc"
+		? openXhcFilter
+		: project === "mac-mini-shelf"
+			? macMiniShelfFilter
+			: defaultFilter;
+const panelWidth =
+	project === "openxhc" || project === "mac-mini-shelf" ? 516 : 540;
 
 const result = spawnSync(
 	"ffmpeg",
@@ -132,7 +151,7 @@ const result = spawnSync(
 		"-f",
 		"lavfi",
 		"-i",
-		`color=c=${project === "openxhc" ? "0x11120F" : "0xF2F1EB"}:s=${panelWidth}x630`,
+		`color=c=${project === "openxhc" || project === "mac-mini-shelf" ? "0x11120F" : "0xF2F1EB"}:s=${panelWidth}x630`,
 		"-i",
 		sourcePoster,
 		"-filter_complex",
@@ -155,6 +174,8 @@ if (result.status !== 0) {
 const summary =
 	project === "openxhc"
 		? "OpenXHC | 2,490 reports | 0 mismatches"
+		: project === "mac-mini-shelf"
+			? "Mac mini shelf | 0.064 mm deflection | 3.5x creep margin"
 		: `${name} — ${positioningLines.join(" ")}`;
 
 console.log(

@@ -257,6 +257,58 @@ test("the real generator produces a deterministic OpenXHC social card from authe
 	}
 });
 
+test("the real generator produces a deterministic Mac mini shelf social card from authentic media", () => {
+	const tempDirectory = mkdtempSync(
+		path.join(tmpdir(), "mac-mini-shelf-social-preview-"),
+	);
+	const generatedPaths = [
+		path.join(tempDirectory, "first.png"),
+		path.join(tempDirectory, "second.png"),
+	];
+
+	try {
+		for (const generatedPath of generatedPaths) {
+			const result = spawnSync(
+				process.execPath,
+				[
+					path.join(repoRoot, "scripts/generate-social-preview-assets.mjs"),
+					"--project",
+					"mac-mini-shelf",
+					"--output",
+					generatedPath,
+				],
+				{ cwd: repoRoot, encoding: "utf8" },
+			);
+
+			assert.equal(
+				result.status,
+				0,
+				`Mac mini shelf generator failed: ${result.stderr || result.stdout}`,
+			);
+			assert.deepEqual(readPngDimensions(generatedPath), {
+				width: 1200,
+				height: 630,
+			});
+			assert.ok(
+				statSync(generatedPath).size > 100_000,
+				"Mac mini shelf preview must contain nontrivial authentic image data",
+			);
+			assert.match(
+				result.stdout,
+				/shelf-fit\.png: Mac mini shelf.*0\.064 mm.*3\.5x creep margin/i,
+			);
+		}
+
+		assert.equal(
+			sha256(readFileSync(generatedPaths[0])),
+			sha256(readFileSync(generatedPaths[1])),
+			"Mac mini shelf social generation must be deterministic on one platform",
+		);
+	} finally {
+		rmSync(tempDirectory, { recursive: true, force: true });
+	}
+});
+
 test("unpublished case-study candidates use the generic social preview", () => {
 	// Updated 2026-05-26 (post-0a1f924 M7-partial): static per-page OG PNGs
 	// (incl. /social/case-study-detail.png) were retired in favor of the
