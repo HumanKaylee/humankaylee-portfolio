@@ -179,12 +179,12 @@ approvalEvidence:
     decision: "approved"
     notes: "Joe explicitly authorized the feature-branch preview and later production publication in this task on 2026-09-03. This records authorization and does not claim he personally inspected the preview."
   artifactInspection:
-    source: "Mac mini shelf case study at source 9c68050b979da07d0437b525e6dedcb3d361271a; agent and browser inspection in this task"
+    source: "Mac mini shelf case study at source ba8bbca1197bc654d94c42a7eb47d05b93524f78; agent and browser inspection in this task"
     inspectedOn: "2026-09-03"
     result: "passed"
     notes: "The complete copy, three routes at 390 x 844, 820 x 1180, and 1440 x 1200, responsive images, eight full-size originals, evidence tables, captions, no-overflow behavior, clean console and network activity, no-JavaScript rendering, reduced-motion behavior, canonical and Open Graph metadata, sitemap inclusion, security headers, and Axe results were inspected. No serious or critical accessibility finding, broken media, private material, unsupported physical-completion claim, or runtime error remained."
   productionOrPreviewEvidence:
-    source: "Cloudflare Pages preview https://191be978.humankaylee-portfolio.pages.dev; deployment 191be978-8574-4890-9b89-270e44818d3b; source 9c68050b979da07d0437b525e6dedcb3d361271a"
+    source: "Cloudflare Pages preview https://cbcdd59c.humankaylee-portfolio.pages.dev; deployment cbcdd59c-60ed-4acc-aa1d-8019d56b27e1; source ba8bbca1197bc654d94c42a7eb47d05b93524f78"
     capturedOn: "2026-09-03"
     result: "passed"
     notes: "Exact-source provider preview passed the full route and viewport inspection matrix. This preview evidence does not claim a production release. Physical print, installation, and load testing remain explicitly unverified and no physical media was published."
