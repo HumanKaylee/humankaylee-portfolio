@@ -24,11 +24,11 @@ const archiveWork = publishedWork
 
 if (
 	flagshipWork.length !== 2 ||
-	supportingWork.length !== 3 ||
+	supportingWork.length !== 4 ||
 	archiveWork.length !== 2
 ) {
 	throw new Error(
-		`Work hierarchy requires two flagships, three supporting studies, and two archive entries; found ${flagshipWork.length}, ${supportingWork.length}, and ${archiveWork.length}.`,
+		`Work hierarchy requires two flagships, four supporting studies, and two archive entries; found ${flagshipWork.length}, ${supportingWork.length}, and ${archiveWork.length}.`,
 	);
 }
 ---
