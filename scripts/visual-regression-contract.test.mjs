@@ -21,6 +21,7 @@ const expectedVisualRoutes = [
 	["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 	["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 	["work-openxhc", "/work/openxhc-linuxcnc/"],
+	["work-mac-mini-shelf", "/work/mac-mini-shelf/"],
 	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 	[
 		"work-remote-recovery",
@@ -33,7 +34,10 @@ const expectedVisualRoutes = [
 	["notes", "/notes/"],
 ];
 
-const expectedAcceptedBaselineRoutes = expectedVisualRoutes;
+const expectedAcceptedBaselineRoutes = expectedVisualRoutes.filter(
+	([label]) => label !== "work-mac-mini-shelf",
+);
+const expectedWindowsOnlyBaselineRoutes = ["work-mac-mini-shelf"];
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -108,6 +112,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		["work-conformal-cooling", "/work/conformal-cooling-channel-generation/"],
 		["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 		["work-openxhc", "/work/openxhc-linuxcnc/"],
+		["work-mac-mini-shelf", "/work/mac-mini-shelf/"],
 		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 		[
 			"work-remote-recovery",
@@ -134,10 +139,7 @@ test("B-037 executable visual matrix covers every current Signal / Proof surface
 	const visualSpec = readRequiredFile(files.visualSpec);
 
 	assert.deepEqual(visualSpecRoutes(visualSpec), expectedVisualRoutes);
-	assert.deepEqual(
-		documentedVisualRoutes(runbook),
-		expectedAcceptedBaselineRoutes,
-	);
+	assert.deepEqual(documentedVisualRoutes(runbook), expectedVisualRoutes);
 	assert.match(runbook, /Windows[\s\S]*Linux/i);
 	assert.match(
 		runbook,
@@ -167,4 +169,21 @@ test("B-037 accepted visual routes have paired Linux and Windows baselines at ev
 	}
 
 	assert.deepEqual(missingBaselines, [], "missing visual baselines");
+});
+
+test("B-037 Mac mini shelf visual coverage retains Windows-only baseline evidence", () => {
+	const missingWindowsBaselines = [];
+
+	for (const label of expectedWindowsOnlyBaselineRoutes) {
+		for (const viewport of ["desktop", "mobile"]) {
+			const snapshot = `${snapshotDirectory}/${label}-${viewport}-win32.png`;
+			if (!existsSync(snapshot)) missingWindowsBaselines.push(snapshot);
+		}
+	}
+
+	assert.deepEqual(
+		missingWindowsBaselines,
+		[],
+		"missing Windows-only baselines",
+	);
 });

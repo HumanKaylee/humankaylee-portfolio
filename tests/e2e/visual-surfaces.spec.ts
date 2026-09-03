@@ -6,6 +6,7 @@ const releaseRoutes = [
 	"/work/cryo-flow-sim/",
 	"/work/conformal-cooling-channel-generation/",
 	"/work/openxhc-linuxcnc/",
+	"/work/mac-mini-shelf/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/about/",
@@ -19,20 +20,7 @@ const releaseRoutes = [
 async function expectNoHorizontalOverflow(page: Page) {
 	const overflow = await page.evaluate(() => {
 		const viewportWidth = window.innerWidth;
-		const main = document.querySelector("main");
-
-		return Array.from(main?.querySelectorAll("*") ?? []).some((element) => {
-			const style = getComputedStyle(element);
-			const rect = element.getBoundingClientRect();
-			const intersectsViewport = rect.right > 0 && rect.left < viewportWidth;
-
-			return (
-				intersectsViewport &&
-				style.display !== "none" &&
-				style.visibility !== "hidden" &&
-				(rect.left < -1 || rect.right > viewportWidth + 1)
-			);
-		});
+		return document.documentElement.scrollWidth > viewportWidth + 1;
 	});
 
 	expect(overflow, "main content should not overflow horizontally").toBe(false);

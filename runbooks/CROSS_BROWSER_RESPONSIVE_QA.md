@@ -36,6 +36,7 @@ The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 | `/work/cryo-flow-sim/` | Cryogenic proof and authentic video path |
 | `/work/conformal-cooling-channel-generation/` | Conformal-channel workflow, evidence gallery, and source-boundary narrative |
 | `/work/openxhc-linuxcnc/` | OpenXHC capture proof, offline-codec boundary, and project-video path |
+| `/work/mac-mini-shelf/` | Agentic engineering loop, full-size evidence image, and explicit digital-versus-physical boundary |
 | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof and next-Work path |
 | `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof and next-Work path |
 | `/work/black-scholes-wasm/` | Black-Scholes live-pricer narrative and next-Work path |

@@ -65,6 +65,11 @@ const socialImageRoutes = [
 		path: "/work/conformal-cooling-channel-generation/",
 	},
 	{
+		label: "Mac mini shelf Work detail",
+		path: "/work/mac-mini-shelf/",
+		image: `${expectedSiteUrl}/social/mac-mini-shelf.png`,
+	},
+	{
 		label: "note detail",
 		path: "/notes/wasm-black-scholes-options-pricer/",
 	},
@@ -191,11 +196,11 @@ test.describe("page metadata @metadata", () => {
 
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 				"content",
-				expectedSocialImage,
+				testCase.image ?? expectedSocialImage,
 			);
 			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 				"content",
-				expectedSocialImage,
+				testCase.image ?? expectedSocialImage,
 			);
 		});
 	}
@@ -300,6 +305,52 @@ test.describe("page metadata @metadata", () => {
 			'"name":"Conformal Cooling Channel Generation"',
 		);
 		expect(jsonLdText).toContain(`"url":"${canonicalUrl}"`);
+	});
+
+	test("renders route-specific Mac mini shelf metadata and CreativeWork JSON-LD", async ({
+		page,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/mac-mini-shelf/`;
+
+		await page.goto("/work/mac-mini-shelf/");
+		await expect(page).toHaveTitle(
+			"Agentic AI Mac mini Shelf CAD and FEM Case Study | Joe Poznanski",
+		);
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			"content",
+			`${expectedSiteUrl}/social/mac-mini-shelf.png`,
+		);
+		await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+			"content",
+			`${expectedSiteUrl}/social/mac-mini-shelf.png`,
+		);
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			/How Agentic AI turned requirements for a six-Mac-mini wall shelf/i,
+		);
+
+		const records = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		)
+			.flatMap((source) => JSON.parse(source))
+			.filter(
+				(record: { "@type"?: string }) => record["@type"] === "CreativeWork",
+			);
+
+		expect(records).toHaveLength(1);
+		expect(records[0]).toMatchObject({
+			"@type": "CreativeWork",
+			name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+			url: canonicalUrl,
+		});
 	});
 
 	test("renders route-specific X-Plane metadata and one canonical CreativeWork record", async ({

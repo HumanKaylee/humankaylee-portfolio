@@ -199,11 +199,47 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 	}) => {
 		await page.setViewportSize({ width: 390, height: 844 });
 		await page.goto("/work/mac-mini-shelf/");
+		const cards = page.locator("[data-shelf-agentic-loop] li");
 
-		for (const card of await page
-			.locator("[data-shelf-agentic-loop] li")
-			.all()) {
+		await expect(cards).toHaveCount(8);
+
+		for (const card of await cards.all()) {
 			await expect(card).toHaveCSS("border-left-width", "0px");
 		}
+	});
+
+	test("loads shelf media without console or page errors", async ({ page }) => {
+		const runtimeErrors: string[] = [];
+		page.on("pageerror", (error) => runtimeErrors.push(error.message));
+		page.on("console", (message) => {
+			if (message.type() === "error" || message.type() === "warning") {
+				runtimeErrors.push(`${message.type()}: ${message.text()}`);
+			}
+		});
+
+		await page.goto("/work/mac-mini-shelf/", { waitUntil: "networkidle" });
+		const gallery = page.locator("[data-case-study-media-gallery]");
+		await expect(gallery.locator("figure")).toHaveCount(7);
+		await gallery.scrollIntoViewIfNeeded();
+		await gallery.locator("img").evaluateAll(async (images) => {
+			for (const image of images) {
+				const media = image as HTMLImageElement;
+				if (!media.complete || media.naturalWidth === 0) {
+					await new Promise<void>((resolve, reject) => {
+						media.addEventListener("load", () => resolve(), { once: true });
+						media.addEventListener("error", () => reject(), { once: true });
+					});
+				}
+				await media.decode();
+			}
+		});
+		await page.evaluate(
+			() =>
+				new Promise<void>((resolve) =>
+					requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+				),
+		);
+
+		expect(runtimeErrors).toEqual([]);
 	});
 });
