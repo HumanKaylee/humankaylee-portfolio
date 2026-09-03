@@ -24,10 +24,7 @@ const projectDefinitions = {
 	},
 	"mac-mini-shelf": {
 		sourceName: "shelf-fit.png",
-		sourcePath: path.join(
-			publicDir,
-			"media/mac-mini-shelf/shelf-fit.png",
-		),
+		sourcePath: path.join(publicDir, "media/mac-mini-shelf/shelf-fit.png"),
 		outputPath: path.join(publicDir, "social/mac-mini-shelf.png"),
 	},
 };
@@ -176,7 +173,7 @@ const summary =
 		? "OpenXHC | 2,490 reports | 0 mismatches"
 		: project === "mac-mini-shelf"
 			? "Mac mini shelf | 0.064 mm deflection | 3.5x creep margin"
-		: `${name} — ${positioningLines.join(" ")}`;
+			: `${name} — ${positioningLines.join(" ")}`;
 
 console.log(
 	`Generated ${path.relative(repoRoot, outputPath)} from ${projectDefinition.sourceName}: ${summary}`,
