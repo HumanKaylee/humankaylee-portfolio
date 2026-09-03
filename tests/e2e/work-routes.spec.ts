@@ -16,6 +16,11 @@ const allPublishedWork = [
 		slug: "openxhc-linuxcnc",
 	},
 	{
+		title:
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+		slug: "mac-mini-shelf",
+	},
+	{
 		title: "Black-Scholes Options Pricer in Rust and WASM",
 		slug: "black-scholes-wasm",
 	},
@@ -157,6 +162,7 @@ test.describe("Work routes @work", () => {
 			"Conformal Cooling Channel Generation",
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
@@ -186,6 +192,47 @@ test.describe("Work routes @work", () => {
 		for (const work of allPublishedWork) {
 			await page.goto(`/work/${work.slug}/`);
 			await expect(page.locator("main")).not.toContainText(internalWorkCopy);
+		}
+	});
+
+	test("presents the Mac mini shelf as bounded Agentic AI engineering evidence", async ({
+		page,
+	}) => {
+		await page.goto("/work/mac-mini-shelf/");
+		const main = page.locator("main");
+
+		await expect(
+			page.getByRole("heading", {
+				level: 1,
+				name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+			}),
+		).toBeVisible();
+		await expect(main).toContainText(/Joe defined the objective.*Agentic AI/i);
+		await expect(page.locator("[data-shelf-agentic-loop] li")).toHaveCount(8);
+		await expect(page.locator("[data-shelf-assumptions] tbody tr")).toHaveCount(
+			8,
+		);
+		await expect(page.locator("[data-shelf-fem-matrix] tbody tr")).toHaveCount(
+			4,
+		);
+		await expect(main).toContainText(/0\.064 mm.*1\.42 MPa.*3\.5x/is);
+		await expect(main).toContainText(/exaggerated deformation/i);
+		await expect(main).toContainText(
+			/Physical print, installation, and load testing were not verified/i,
+		);
+		await expect(main).not.toContainText(
+			/successfully printed|installed and tested|production-ready|safe load/i,
+		);
+	});
+
+	test("renders the shelf process component only for the shelf slug", async ({
+		page,
+	}) => {
+		for (const work of allPublishedWork) {
+			await page.goto(`/work/${work.slug}/`);
+			await expect(page.locator("[data-mac-mini-shelf-process]")).toHaveCount(
+				work.slug === "mac-mini-shelf" ? 1 : 0,
+			);
 		}
 	});
 
