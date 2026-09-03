@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 const sourceNames = [
@@ -25,6 +25,14 @@ function runFfmpeg(args) {
 	}
 }
 
+function pngWidth(sourcePath) {
+	const bytes = readFileSync(sourcePath);
+	if (bytes.subarray(12, 16).toString("ascii") !== "IHDR") {
+		throw new Error(`Invalid PNG source image: ${sourcePath}`);
+	}
+	return bytes.readUInt32BE(16);
+}
+
 function main() {
 	const outputRoot = path.resolve(publicRoot);
 	mkdirSync(outputRoot, { recursive: true });
@@ -34,8 +42,10 @@ function main() {
 		if (!existsSync(sourcePath)) {
 			throw new Error(`Missing source image: ${sourcePath}`);
 		}
+		const sourceWidth = pngWidth(sourcePath);
 		const basename = path.basename(sourceName, ".png");
 		for (const width of widths) {
+			const encodedWidth = Math.min(width, sourceWidth);
 			const outputPath = path.join(outputRoot, `${basename}-${width}.webp`);
 			runFfmpeg([
 				"-hide_banner",
@@ -45,7 +55,7 @@ function main() {
 				"-i",
 				sourcePath,
 				"-vf",
-				`scale=${width}:-2:flags=lanczos`,
+				`scale=${encodedWidth}:-2:flags=lanczos`,
 				"-frames:v",
 				"1",
 				"-map_metadata",

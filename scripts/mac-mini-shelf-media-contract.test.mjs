@@ -98,7 +98,11 @@ test("Mac mini shelf media preserves verified originals and responsive derivativ
 			const derivative = `${basename}-${width}.webp`;
 			const derivativePath = path.join(publicRoot, derivative);
 			assert.ok(existsSync(derivativePath), `missing derivative ${derivative}`);
-			assert.equal(webpDimensions(derivativePath).width, width, derivative);
+			assert.equal(
+				webpDimensions(derivativePath).width,
+				Math.min(width, original.width),
+				derivative,
+			);
 		}
 	}
 
