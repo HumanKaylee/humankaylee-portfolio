@@ -223,6 +223,13 @@ test.describe("Work routes @work", () => {
 		await expect(main).not.toContainText(
 			/successfully printed|installed and tested|production-ready|safe load/i,
 		);
+
+		await page.setViewportSize({ width: 820, height: 900 });
+		await page.goto("/work/mac-mini-shelf/");
+		await expect(page.locator("[data-shelf-agentic-loop] li").nth(6)).toHaveCSS(
+			"border-left-width",
+			"0px",
+		);
 	});
 
 	test("renders the shelf process component only for the shelf slug", async ({
@@ -734,6 +741,7 @@ test.describe("Work routes @work", () => {
 		for (const path of [
 			"/work/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
+			"/work/mac-mini-shelf/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 		]) {
 			for (const viewport of [
