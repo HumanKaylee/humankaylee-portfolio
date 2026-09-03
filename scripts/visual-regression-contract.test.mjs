@@ -35,10 +35,7 @@ const expectedVisualRoutes = [
 	["notes", "/notes/"],
 ];
 
-const expectedAcceptedBaselineRoutes = expectedVisualRoutes.filter(
-	([label]) => label !== "work-mac-mini-shelf",
-);
-const expectedWindowsOnlyBaselineRoutes = ["work-mac-mini-shelf"];
+const expectedAcceptedBaselineRoutes = expectedVisualRoutes;
 
 function readRequiredFile(path) {
 	assert.ok(existsSync(path), `missing required file: ${path}`);
@@ -183,19 +180,12 @@ test("B-037 accepted visual routes have paired Linux and Windows baselines at ev
 	assert.deepEqual(missingBaselines, [], "missing visual baselines");
 });
 
-test("B-037 Mac mini shelf visual coverage retains Windows-only baseline evidence", () => {
-	const missingWindowsBaselines = [];
+test("B-037 Mac mini shelf visual coverage documents paired platform baselines", () => {
+	const runbook = readRequiredFile(files.runbook);
 
-	for (const label of expectedWindowsOnlyBaselineRoutes) {
-		for (const viewport of ["desktop", "mobile"]) {
-			const snapshot = `${snapshotDirectory}/${label}-${viewport}-win32.png`;
-			if (!existsSync(snapshot)) missingWindowsBaselines.push(snapshot);
-		}
-	}
-
-	assert.deepEqual(
-		missingWindowsBaselines,
-		[],
-		"missing Windows-only baselines",
+	expectContains(
+		runbook,
+		"Mac mini shelf heading, explicit digital-versus-physical limit, and initial evidence image are visible; paired Windows and Linux baselines recorded",
+		"Mac mini shelf paired-baseline boundary",
 	);
 });

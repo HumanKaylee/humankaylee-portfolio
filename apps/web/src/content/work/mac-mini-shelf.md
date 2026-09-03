@@ -112,8 +112,8 @@ evidenceMedia:
       - { src: "/media/mac-mini-shelf/fem-constraints-1440.webp", width: 1400 }
     width: 1400
     height: 950
-    alt: "CalculiX setup render showing the shelf back face constrained and the governing load applied near the front edge."
-    caption: "Modeled boundary conditions: rigid back face and distributed front-edge service load."
+    alt: "CalculiX setup render showing fixed constraint markers across the modeled shelf back face."
+    caption: "Modeled rigid-back-face boundary condition; the red markers identify held points. The governing load placement is documented in the load-case table, not shown in this view."
   - kind: "image"
     src: "/media/mac-mini-shelf/fem-mesh-underside.png"
     responsiveSources:

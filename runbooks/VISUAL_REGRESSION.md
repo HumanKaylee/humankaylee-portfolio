@@ -57,7 +57,7 @@ Each label produces `<label>-desktop-<platform>.png` and
 | `work-conformal-cooling` | `/work/conformal-cooling-channel-generation/` | Conformal workflow and evidence gallery are visible |
 | `work-xplane-fov` | `/work/xplane-cabin-camera-fov-trade-study/` | X-Plane detail heading and comparison intro are visible in the viewport baseline; the four-item gallery is verified by `project-detail.spec.ts` and ten-surface full-page QA |
 | `work-openxhc` | `/work/openxhc-linuxcnc/` | OpenXHC detail heading and sanitized capture-backed proof media are visible; the offline-codec and no-USB-write boundary remains explicit |
-| `work-mac-mini-shelf` | `/work/mac-mini-shelf/` | Mac mini shelf heading, explicit digital-versus-physical limit, and initial evidence image are visible; Windows baseline recorded, Linux baseline remains ungenerated |
+| `work-mac-mini-shelf` | `/work/mac-mini-shelf/` | Mac mini shelf heading, explicit digital-versus-physical limit, and initial evidence image are visible; paired Windows and Linux baselines recorded |
 | `work-cli-fleet` | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof surface is visible |
 | `work-remote-recovery` | `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof surface is visible |
 | `work-black-scholes` | `/work/black-scholes-wasm/` | Black-Scholes WASM controls are initialized and the real price readout is populated |
