@@ -39,7 +39,13 @@ function collectJsonLdRecords(value: unknown): Record<string, unknown>[] {
 	return [record, ...Object.values(record).flatMap(collectJsonLdRecords)];
 }
 
-const socialImageRoutes = [
+interface SocialImageRoute {
+	label: string;
+	path: string;
+	image?: string;
+}
+
+const socialImageRoutes: readonly SocialImageRoute[] = [
 	{
 		label: "home",
 		path: "/",
@@ -85,7 +91,7 @@ const socialImageRoutes = [
 		label: "terms",
 		path: "/terms/",
 	},
-] as const;
+];
 
 const legalRoutes = [
 	{ path: "/privacy/", title: "Privacy Policy | Joe Poznanski" },
