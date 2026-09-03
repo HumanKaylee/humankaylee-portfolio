@@ -71,7 +71,9 @@ function main() {
 		}
 	}
 
-	console.log("Generated 8 originals and 24 responsive WebP files at 640/960/1440.");
+	console.log(
+		"Generated 8 originals and 24 responsive WebP files at 640/960/1440.",
+	);
 }
 
 main();
