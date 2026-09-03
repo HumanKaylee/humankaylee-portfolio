@@ -63,7 +63,7 @@ test.describe("Work routes @work", () => {
 			"Read the case study",
 			"Read the case study",
 		]);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(3);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(4);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Cryogenic Flow Simulation",
@@ -74,6 +74,7 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 		]);
 		await expect(page.locator("[data-archive-work]")).toContainText(
@@ -97,6 +98,7 @@ test.describe("Work routes @work", () => {
 			"/work/conformal-cooling-channel-generation/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/openxhc-linuxcnc/",
+			"/work/mac-mini-shelf/",
 			"/work/black-scholes-wasm/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
@@ -119,15 +121,19 @@ test.describe("Work routes @work", () => {
 		const response = await page.goto("/work/");
 
 		expect(response?.status()).toBe(200);
+		await expect(page.locator(".work-index__header > p:last-child")).toHaveText(
+			"Two flagship engineering systems, four focused technical studies, and an operational archive. Each stays framed by the decisions, evidence, and limits that make the result trustworthy.",
+		);
 		await expect(page.locator("[data-flagship-work] h2")).toHaveText([
 			"Cryogenic Flow Simulation",
 			"Conformal Cooling Channel Generation",
 		]);
 		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(3);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(4);
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
 		]);
 		await expect(
@@ -140,6 +146,11 @@ test.describe("Work routes @work", () => {
 				name: "X-Plane Cabin Camera FOV Trade Study",
 			}),
 		).toHaveAttribute("href", "/work/xplane-cabin-camera-fov-trade-study/");
+		await expect(
+			page.locator("[data-supporting-work]").getByRole("link", {
+				name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+			}),
+		).toHaveAttribute("href", "/work/mac-mini-shelf/");
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
 				name: "Black-Scholes Options Pricer in Rust and WASM",

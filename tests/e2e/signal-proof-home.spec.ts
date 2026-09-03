@@ -112,7 +112,7 @@ for (const viewport of [
 	});
 }
 
-test("leads with two flagships, three supporting studies, and no archive projects", async ({
+test("Signal / Proof homepage leads with two flagships, four supporting studies, and no archive projects", async ({
 	page,
 }) => {
 	await page.goto("/");
@@ -148,7 +148,7 @@ test("leads with two flagships, three supporting studies, and no archive project
 	const flagship = page.locator('[data-proof-placement="flagship"]');
 	const supporting = page.locator('[data-proof-placement="supporting"]');
 	await expect(flagship).toHaveCount(2);
-	await expect(supporting).toHaveCount(3);
+	await expect(supporting).toHaveCount(4);
 	await expect(flagship.locator("h3")).toHaveText([
 		"Cryogenic Flow Simulation",
 		"Conformal Cooling Channel Generation",
@@ -156,6 +156,7 @@ test("leads with two flagships, three supporting studies, and no archive project
 	await expect(supporting.locator("h3")).toHaveText([
 		"X-Plane Cabin Camera FOV Trade Study",
 		"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+		"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 		"Black-Scholes Options Pricer in Rust and WASM",
 	]);
 	await expect(
@@ -173,6 +174,11 @@ test("leads with two flagships, three supporting studies, and no archive project
 	).toHaveAttribute("href", "/work/xplane-cabin-camera-fov-trade-study/");
 	await expect(
 		supporting.getByRole("link", {
+			name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+		}),
+	).toHaveAttribute("href", "/work/mac-mini-shelf/");
+	await expect(
+		supporting.getByRole("link", {
 			name: "Black-Scholes Options Pricer in Rust and WASM",
 		}),
 	).toHaveAttribute("href", "/work/black-scholes-wasm/");
@@ -181,8 +187,16 @@ test("leads with two flagships, three supporting studies, and no archive project
 		"Conformal Cooling Channel Generation",
 		"X-Plane Cabin Camera FOV Trade Study",
 		"OpenXHC: Reverse-Engineering a CNC Motion Interface",
+		"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 		"Black-Scholes Options Pricer in Rust and WASM",
 	]);
+	await expect(page.locator("[data-proof-placement]")).toHaveCount(6);
+	const shelfProof = supporting.filter({
+		hasText:
+			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
+	});
+	await expect(shelfProof).toContainText("Agentic AI");
+	await expect(shelfProof).toContainText(/0\.064 mm.*1\.42 MPa.*3\.5x/);
 	await expect(page.locator("main")).not.toContainText(
 		"CLI Fleet Synchronization",
 	);
@@ -211,7 +225,7 @@ test("leads with two flagships, three supporting studies, and no archive project
 		/metal additive manufacturing/i,
 	);
 	await expect(page.locator(".proof-gallery__header")).toContainText(
-		/The flagship case studies carry captured motion and geometry evidence\. Focused technical studies extend that evidence-first approach to camera tradeoffs, browser computation, and machine-interface reverse engineering\./,
+		/The flagship case studies carry captured motion and geometry evidence\. Focused technical studies extend that evidence-first approach to camera tradeoffs, machine-interface reverse engineering, Agentic AI physical-product development, and browser computation\./,
 	);
 	await expect(page.locator("canvas, svg")).toHaveCount(0);
 });
@@ -228,7 +242,7 @@ test("stays static and useful during an API outage", async ({ page }) => {
 		2,
 	);
 	await expect(page.locator('[data-proof-placement="supporting"]')).toHaveCount(
-		3,
+		4,
 	);
 	await expect(page.locator("main")).not.toContainText(
 		/Failed to fetch|ECONNREFUSED|TypeError:|API health/i,
@@ -248,7 +262,7 @@ test.describe("static homepage without JavaScript", () => {
 		);
 		await expect(
 			page.locator('[data-proof-placement="supporting"]'),
-		).toHaveCount(3);
+		).toHaveCount(4);
 		const motionLoops = page.locator("[data-motion-loop]");
 		await expect(motionLoops).toHaveCount(4);
 		await expect(
