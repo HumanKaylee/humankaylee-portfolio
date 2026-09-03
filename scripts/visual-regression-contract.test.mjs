@@ -6,6 +6,7 @@ const files = {
 	backlog: "docs/BACKLOG.md",
 	ci: ".github/workflows/phase-0-ci.yml",
 	playwrightConfig: "playwright.config.ts",
+	visualPlaywrightConfig: "playwright.visual.config.ts",
 	visualSpec: "tests/e2e/visual-regression.spec.ts",
 	packageConfig: "package.json",
 	runbook: "runbooks/VISUAL_REGRESSION.md",
@@ -78,6 +79,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	const runbook = readRequiredFile(files.runbook);
 	const ci = readRequiredFile(files.ci);
 	const playwrightConfig = readRequiredFile(files.playwrightConfig);
+	const visualPlaywrightConfig = readRequiredFile(files.visualPlaywrightConfig);
 	const tsconfig = readRequiredFile(files.tsconfig);
 
 	expectContains(backlog, "### B-037: Add visual regression snapshots");
@@ -128,6 +130,16 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 	}
 	expectContains(playwrightConfig, "testIgnore");
 	expectContains(playwrightConfig, "visual-regression.spec.ts");
+	expectContains(
+		visualPlaywrightConfig,
+		"node node_modules/astro/bin/astro.mjs dev --host 127.0.0.1 --port 4321",
+		"foreground Astro visual web server",
+	);
+	expectContains(
+		visualPlaywrightConfig,
+		'ASTRO_DEV_BACKGROUND: "1"',
+		"visual web server foreground environment",
+	);
 	assert.ok(
 		existsSync(files.runbook),
 		`missing required file: ${files.runbook}`,
