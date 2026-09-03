@@ -329,9 +329,9 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 					label: element.textContent?.trim(),
 				})),
 			);
-		expect(links).toHaveLength(7);
-		expect(new Set(links.map((link) => link.href)).size).toBe(7);
-		expect(new Set(links.map((link) => link.label)).size).toBe(7);
+		expect(links).toHaveLength(8);
+		expect(new Set(links.map((link) => link.href)).size).toBe(8);
+		expect(new Set(links.map((link) => link.label)).size).toBe(8);
 	});
 });
 
