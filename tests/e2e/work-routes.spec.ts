@@ -486,7 +486,7 @@ test.describe("Work routes @work", () => {
 		}
 		// The photoreal family replaced the placeholder cue: no figure may still
 		// describe the translucent sphere, and the stills are the 2026-09-11 family.
-		await expect(items).not.toContainText(/translucent sphere/i);
+		await expect(gallery).not.toContainText(/translucent sphere/i);
 		for (const index of [2, 3, 5]) {
 			await expect(items.nth(index)).toHaveAttribute(
 				"data-evidence-media-kind",
@@ -725,7 +725,7 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-reading-progress]")).toBeHidden();
 		await expect(
 			page.locator("[data-case-study-media-gallery] video"),
-		).toHaveCount(2);
+		).toHaveCount(3);
 		for (const video of await page
 			.locator("[data-case-study-media-gallery] video")
 			.all()) {
