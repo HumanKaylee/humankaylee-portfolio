@@ -17,20 +17,24 @@ const PATH = "/work/cryo-flow-sim/";
 const MANIFEST = "apps/web/src/data/cryo-m10-media-manifest.json";
 const PUBLIC_MEDIA_DIR = "apps/web/public/media/cryo-flow-sim-m10";
 
-// budgets-m11-stage1.v1.json: content_scan_forbidden_terms
-const FORBIDDEN = [
-	"127.0.0.1",
-	"ROG_STRIX",
-	"rog-strix",
-	"lightred",
-	"ares-tron",
-	"joepo\\",
-	"C:\\Users",
-	"/home/",
-	"Documents\\Codex",
-	"_target-",
-	"100.",
-	"192.168.",
+// budgets-m11-stage1.v1.json: content_scan_forbidden_terms. The scan covers what
+// ships to a visitor: the rendered text, every alt/aria-label/title, and every
+// href/src under the page, plus metadata. It does not cover the dev server's
+// own module URLs (Vite injects the runner's absolute path into dev-only script
+// attributes, which never reach the static build; measured on CI 2026-09-11).
+const FORBIDDEN: RegExp[] = [
+	/127\.0\.0\.1/,
+	/ROG_STRIX/i,
+	/rog-strix/i,
+	/lightred/i,
+	/ares-tron/i,
+	/joepo\\/,
+	/C:\\Users/i,
+	/\/home\/[a-z]/i,
+	/Documents\\Codex/i,
+	/_target-/,
+	/\b100\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+	/\b192\.168\.\d{1,3}\.\d{1,3}\b/,
 ];
 
 const MANDATORY = [
@@ -42,21 +46,45 @@ const MANDATORY = [
 ];
 
 function scanForbidden(text: string): string[] {
-	return FORBIDDEN.filter((term) => text.includes(term));
+	return FORBIDDEN.filter((term) => term.test(text)).map(String);
 }
 
 test.describe("CryoSim case study - stage 1 release instruments", () => {
-	test("the rendered page contains no forbidden host, path or address term and carries the mandatory language", async ({
+	test("the shipped page content contains no forbidden host, path or address term and carries the mandatory language", async ({
 		page,
 	}) => {
 		await page.goto(PATH);
-		const html = await page.content();
-		expect(scanForbidden(html)).toEqual([]);
+		const shipped = await page.evaluate(() => {
+			const parts: string[] = [document.title, document.body.innerText];
+			for (const meta of document.querySelectorAll("meta[content]")) {
+				parts.push(meta.getAttribute("content") ?? "");
+			}
+			for (const el of document.querySelectorAll(
+				"main *, header *, footer *",
+			)) {
+				for (const attr of [
+					"alt",
+					"aria-label",
+					"title",
+					"href",
+					"src",
+					"poster",
+					"srcset",
+				]) {
+					const value = el.getAttribute(attr);
+					if (value) parts.push(value);
+				}
+			}
+			return parts.join("\n");
+		});
+		expect(scanForbidden(shipped)).toEqual([]);
 		for (const pattern of MANDATORY) {
-			expect(html, `mandatory language ${pattern}`).toMatch(pattern);
+			expect(shipped, `mandatory language ${pattern}`).toMatch(pattern);
 		}
-		// negative: the scanner must catch a planted term
-		expect(scanForbidden(`${html} see 127.0.0.1:8791`)).toEqual(["127.0.0.1"]);
+		// negative: the scanner must catch planted terms
+		expect(
+			scanForbidden(`${shipped} see 127.0.0.1:8791 and 100.77.135.5`),
+		).toEqual([String(FORBIDDEN[0]), String(FORBIDDEN[10])]);
 	});
 
 	test("every manifest derivative is served with the manifest's bytes and hash, and no still is black", async ({

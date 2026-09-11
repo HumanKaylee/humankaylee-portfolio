@@ -123,11 +123,15 @@ test("Signal / Proof homepage leads with two flagships, four supporting studies,
 		"System scale",
 		"Real-time runtime",
 		"Deterministic replay",
+		"Program gate",
+		"Unreal camera latency",
 	]);
 	await expect(cryoEvidence.locator("strong")).toHaveText([
 		"29,500 entities",
 		"30 Hz",
 		"1,800 frames",
+		"734 tests",
+		"109 ms",
 	]);
 	await expect(
 		page
