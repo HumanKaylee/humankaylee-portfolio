@@ -1,0 +1,173 @@
+{
+	"contract": "cryosim.m11_stage1_media_manifest",
+	"schema_version": "1.0.0",
+	"created": "2026-09-11",
+	"source_repository": "HumanKaylee/cryo-flow-sim-showcase",
+	"notes": "SITE-320 manifest: every derivative binds to its source still, the evidence document that cites it, its capture class and its SHA-256. Unreal stills are repository-authored synthetic scenes rendered by Unreal Engine 5.8.2 (see the rights note in the entry plan). Derivatives are never upscaled (source 1280x720). Mean luminance is recorded so a black frame cannot pass as a still (the M10B lesson).",
+	"items": [
+		{
+			"id": "cryo-m10b-field-scene",
+			"source_path": "m10b-scene/field-cam.fixed.cctv.seam.v1-1280x720-DebugGame.png",
+			"source_sha256": "5c888fa5390e6d53c31990499c04a6dd1afccc4f3e815296e5504209217ad197",
+			"source_bytes": 833953,
+			"source_size": "1280x720",
+			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
+			"scenario": "field scene, no projection fed",
+			"severity_band": "none",
+			"evidence_document": "docs/program/verification/M10B-EXIT-EVIDENCE.md",
+			"decision": "VIS-DEC-012",
+			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
+			"caption": "M10B qualified local Unreal scene: the synthetic tank, seam anchor and transfer line from the fixed CCTV-style camera (DebugGame diagnostic package, 1280x720).",
+			"derivatives": [
+				{
+					"file": "cryo-m10b-field-scene-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 14920,
+					"sha256": "fc819e07c480cfc767e04136af256b9d5afc9d7bf21fe41e31b3455b0cca7231",
+					"mean_luminance_0_255": 163.4
+				},
+				{
+					"file": "cryo-m10b-field-scene-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 10222,
+					"sha256": "738afaa198756a14c40a2305c23997b430f2b2f17519a2e6f6e1467691a03aa4",
+					"mean_luminance_0_255": 163.4
+				},
+				{
+					"file": "cryo-m10b-field-scene-640.webp",
+					"width": 640,
+					"height": 360,
+					"bytes": 6060,
+					"sha256": "b11b3b6b469c11af0ab32ec876427c2474a3901d291b8e875ad8c716224ab90c",
+					"mean_luminance_0_255": 163.3
+				}
+			],
+			"source_mean_luminance_0_255": 163.2
+		},
+		{
+			"id": "cryo-m10c-cue-none",
+			"source_path": "m10c-adapter/runs-Shipping/good/m10c-index-02.png",
+			"source_sha256": "1be0f2e49e60728261362c7fbdf2364bc0b6320e93d1952637a7d218f56ca5f0",
+			"source_bytes": 833471,
+			"source_size": "1280x720",
+			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
+			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
+			"severity_band": "none",
+			"evidence_document": "docs/program/verification/M10C-EXIT-EVIDENCE.md",
+			"decision": "VIS-DEC-014",
+			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
+			"caption": "M10C adapter, sequence index 2: seam-vapour cue band none (no cue shown). Shipping package.",
+			"derivatives": [
+				{
+					"file": "cryo-m10c-cue-none-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 14854,
+					"sha256": "23486b231b66f08ae1818b3e114dfebfb3c2672aebd6a0ce2c7e7c00dbcbd835",
+					"mean_luminance_0_255": 163.4
+				},
+				{
+					"file": "cryo-m10c-cue-none-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 10184,
+					"sha256": "fc41236705a0b4311b0a8105eb08abdd444942983bda0fafd74f358c2e55fe3f",
+					"mean_luminance_0_255": 163.4
+				},
+				{
+					"file": "cryo-m10c-cue-none-640.webp",
+					"width": 640,
+					"height": 360,
+					"bytes": 6126,
+					"sha256": "badde2c1c9f050ce53639e5453840e4011f0b2471136f4990e0626508518850f",
+					"mean_luminance_0_255": 163.4
+				}
+			],
+			"source_mean_luminance_0_255": 163.3
+		},
+		{
+			"id": "cryo-m10c-cue-medium",
+			"source_path": "m10c-adapter/runs-Shipping/good/m10c-index-03.png",
+			"source_sha256": "d113498479bd4e41e8b2f1536af3bfed8258cf2f5f596412c94c34fe59813e44",
+			"source_bytes": 831143,
+			"source_size": "1280x720",
+			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
+			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
+			"severity_band": "medium",
+			"evidence_document": "docs/program/verification/M10C-EXIT-EVIDENCE.md",
+			"decision": "VIS-DEC-014",
+			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
+			"caption": "M10C adapter, sequence index 3: seam-vapour cue band medium - a translucent qualitative cue at the seam anchor. Symbolic only: not a concentration, release-rate, dispersion or hazard-distance analysis (VIS-201).",
+			"derivatives": [
+				{
+					"file": "cryo-m10c-cue-medium-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 14818,
+					"sha256": "7cb119693e13838a2df59bf1237503431acb0b65e8331457ee14956ac4b797a0",
+					"mean_luminance_0_255": 164.0
+				},
+				{
+					"file": "cryo-m10c-cue-medium-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 10234,
+					"sha256": "3a49177a22d6e0fd8be09dd5a3bc2690adaca4e954a3916f2a35156ef54577ea",
+					"mean_luminance_0_255": 164.0
+				},
+				{
+					"file": "cryo-m10c-cue-medium-640.webp",
+					"width": 640,
+					"height": 360,
+					"bytes": 6098,
+					"sha256": "df141b2c5852038373684e2cef496879b48e179400928d868496adfb48b5be0e",
+					"mean_luminance_0_255": 164.0
+				}
+			],
+			"source_mean_luminance_0_255": 163.8
+		},
+		{
+			"id": "cryo-m10c-cue-cleared",
+			"source_path": "m10c-adapter/runs-Shipping/good/m10c-index-05.png",
+			"source_sha256": "c51cd9b7a248a452cf16c6ef53b38f9ccab4f5dafb99819fc0ffa01e63f864ca",
+			"source_bytes": 827501,
+			"source_size": "1280x720",
+			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
+			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
+			"severity_band": "none",
+			"evidence_document": "docs/program/verification/M10C-EXIT-EVIDENCE.md",
+			"decision": "VIS-DEC-014",
+			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
+			"caption": "M10C adapter, sequence index 5: cue cleared after the leak's clear tick. Shipping package.",
+			"derivatives": [
+				{
+					"file": "cryo-m10c-cue-cleared-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 14978,
+					"sha256": "a3fe53f1cae8fbc31733154cc586960a681dc80802a08c6c69413cb72144ad95",
+					"mean_luminance_0_255": 162.9
+				},
+				{
+					"file": "cryo-m10c-cue-cleared-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 10240,
+					"sha256": "afe37a3b988a042b3f89e4a40ac4d295c37643c4d7417a1f88528ab1ca558d71",
+					"mean_luminance_0_255": 162.9
+				},
+				{
+					"file": "cryo-m10c-cue-cleared-640.webp",
+					"width": 640,
+					"height": 360,
+					"bytes": 6096,
+					"sha256": "ca5f84de39a8ff0fa4d1a65a93746cb8fc1d33ef84c95b0170ece9a0baa47dca",
+					"mean_luminance_0_255": 162.9
+				}
+			],
+			"source_mean_luminance_0_255": 162.7
+		}
+	]
+}

@@ -373,11 +373,15 @@ test.describe("Work routes @work", () => {
 			"System scale",
 			"Real-time runtime",
 			"Deterministic replay",
+			"Program gate",
+			"Unreal camera latency",
 		]);
 		await expect(evidence.locator("strong")).toHaveText([
 			"29,500 entities",
 			"30 Hz",
 			"1,800 frames",
+			"734 tests",
+			"109 ms",
 		]);
 		await expect(evidence).toContainText(
 			"300 ticks in a 10-second normal window and 300 more after recovery",
@@ -415,7 +419,7 @@ test.describe("Work routes @work", () => {
 
 		const gallery = page.locator("[data-case-study-media-gallery]");
 		const items = gallery.locator("figure");
-		await expect(items).toHaveCount(2);
+		await expect(items).toHaveCount(6);
 
 		const videos = items.locator("video");
 		await expect(videos).toHaveCount(2);
@@ -447,10 +451,19 @@ test.describe("Work routes @work", () => {
 			await expect(video).toHaveAttribute("preload", "none");
 			await expect(video).not.toHaveAttribute("autoplay", "");
 		}
-		await expect(items.locator("figcaption")).toHaveText([
+		const scaleCaptions = [
 			"Deterministic offline proof of all 29,500 generated entities: spatial valve-command waves close, open, and restore cohorts while actual tank, pipe, and sensor state responds across the fleet.",
 			"Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window.",
-		]);
+		];
+		for (const [index, caption] of scaleCaptions.entries()) {
+			await expect(items.locator("figcaption").nth(index)).toHaveText(caption);
+		}
+		await expect(items.locator("figcaption")).toHaveCount(6);
+		for (const index of [2, 3, 4, 5]) {
+			await expect(items.locator("figcaption").nth(index)).toContainText(
+				"Qualitative visualization only",
+			);
+		}
 		await expect(items.nth(0)).not.toContainText(/live|real-time/i);
 		const fallbackLinks = items.getByRole("link", {
 			name: "Open the evidence video",
@@ -474,7 +487,7 @@ test.describe("Work routes @work", () => {
 			await page.setViewportSize(viewport);
 			await page.goto("/work/cryo-flow-sim/");
 			const gallery = page.locator("[data-case-study-media-gallery]");
-			await expect(gallery.locator("figure")).toHaveCount(2);
+			await expect(gallery.locator("figure")).toHaveCount(6);
 			expect(
 				await page.evaluate(
 					() => document.documentElement.scrollWidth - window.innerWidth,
@@ -836,7 +849,7 @@ test.describe("Work routes @work @noscript", () => {
 		).toHaveAttribute("preload", "none");
 		await expect(
 			page.locator("[data-case-study-media-gallery] figure"),
-		).toHaveCount(2);
+		).toHaveCount(6);
 		for (const video of await page
 			.locator("[data-case-study-media-gallery] video")
 			.all()) {
