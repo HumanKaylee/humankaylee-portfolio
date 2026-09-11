@@ -191,10 +191,10 @@ approvalEvidence:
     result: "passed"
     notes: "Local build inspected: lint, typecheck, 76 unit tests and 172 node contract tests, 42 end-to-end tests across the three specs that pin the case study (release instruments with negative cases, including the video's on-disk and served hash; work routes with three gallery videos and a seek test for the clip; project detail); the full Windows visual suite (28) against regenerated cryo baselines; every still and poster frame carries its measured luminance so no black frame could pass; the video was viewed frame by frame before encoding; no private hostnames, paths, addresses or account identifiers in the rendered page, captions or media paths."
   productionOrPreviewEvidence:
-    source: "Cloudflare Pages preview https://94a84d57.humankaylee-portfolio.pages.dev; deployment 94a84d57-581d-4c93-93c3-352d88f45bca; source tree of 1ad3187 (uploaded under the pre-amend hash 4b35683; same tree)"
+    source: "Cloudflare Pages preview https://dc07a2aa.humankaylee-portfolio.pages.dev; deployment dc07a2aa-62b6-4ac4-bf9f-e365cb8d1f1e; source 22d2330 (the branch head adds only this record; rendered output identical)"
     capturedOn: "2026-09-11"
     result: "passed"
-    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the photoreal stills and the seam-vapour video rendered in the gallery with their captions and were served with their manifest SHA-256 (four hash matches, zero mismatches). Byte-range requests answered 200 on the uncached preview, as on the previous revision, and 206 on the cached production origin; the production origin check runs after the merge."
+    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the photoreal stills and the seam-vapour video rendered in the gallery with their captions and were served with their manifest SHA-256 (four hash matches, zero mismatches, re-checked on the second preview after the clip poster was re-encoded lighter for the Lighthouse performance gate). Byte-range requests answered 200 on the uncached preview, as on the previous revision, and 206 on the cached production origin; the production origin check runs after the merge."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
   description: "A deterministic Rust process simulator informed by Siemens and Rockwell controls experience, with measured 29,500-entity evidence and a graded September 2026 engineering program through a localhost Unreal Engine camera."
