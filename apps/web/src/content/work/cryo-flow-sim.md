@@ -119,45 +119,48 @@ evidenceMedia:
     alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window."
     caption: "Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window."
   - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-1280.webp"
+    src: "/media/cryo-flow-sim-m10/cryo-field-scene-1920.webp"
     responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-1280.webp", width: 1280 }
-    width: 1280
-    height: 720
-    alt: "Synthetic Unreal Engine field scene: a single tank with a seam anchor, a transfer line, a valve and sensor markers, from a fixed camera."
-    caption: "Localhost Unreal Engine 5.8.2 scene (program milestone M10B, diagnostic package, 1280 by 720): repository-authored synthetic geometry, no marketplace assets. These stills use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-1920.webp", width: 1920 }
+    width: 1920
+    height: 1080
+    alt: "Photoreal synthetic Unreal Engine yard from the fixed CCTV-style camera: a white vertical liquid-oxygen storage tank on a concrete pad, a flanged transfer line with a red globe valve and instrument taps, yellow bollards, a chain-link fence and trees, with no vapour at the seam."
+    caption: "Fixed CCTV-style camera on the synthetic liquid-oxygen yard with no leak (Unreal Engine 5.8.2, 1920 by 1080). Every object is repository-authored: the tank, flanged transfer line, globe valve, instrument taps, bollards, pad and fence were modelled and baked in Blender and placed by the scene builder; Lumen lights the yard under a CC0 Poly Haven sky. Why it matters: this is the baseline the adapter drives. A cue is only readable against equipment an operator recognises, and the flange at the tank seam is the pinned anchor where the fault library's seam leak is projected. These stills use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
   - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-1280.webp"
+    src: "/media/cryo-flow-sim-m10/cryo-cue-none-1280.webp"
     responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-none-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-none-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-none-1280.webp", width: 1280 }
     width: 1280
     height: 720
-    alt: "The same Unreal scene with no seam-vapour cue shown, before a simulated seam leak activates."
-    caption: "M10C read-only adapter driving the scene from a committed projection sequence: cue band none before the FLT-315 seam leak's activation tick (Shipping package). Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+    alt: "The same synthetic yard rendered by the Shipping package before the simulated seam leak activates: the transfer-line flange is clear and there is no vapour."
+    caption: "Read-only adapter on the pinned Shipping package (1280 by 720): cue band none. The committed projection sequence has not yet reached the FLT-315 seam leak's activation tick, so the adapter leaves the flange untouched. Why it matters: the adapter cannot invent a cue, it shows only what the projection document says, and this before frame is the control that gives the leak frame its meaning. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+  - kind: "video"
+    src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak.mp4"
+    poster: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1920.webp"
+    responsivePosterSources:
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1920.webp", width: 1920 }
+    width: 1920
+    height: 1080
+    alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active."
+    caption: "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the plume shades and drifts like the vapour that boils off a cryogenic spill. It replaces the earlier translucent-sphere placeholder. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be recognisable at a glance from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
   - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-1280.webp"
+    src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-1280.webp"
     responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-1280.webp", width: 1280 }
     width: 1280
     height: 720
-    alt: "The Unreal scene with a translucent sphere at the seam anchor while the simulated leak is active."
-    caption: "M10C adapter: cue band medium while the injected seam leak is active - a translucent qualitative cue at the seam anchor. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
-  - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-1280.webp"
-    responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-1280.webp", width: 1280 }
-    width: 1280
-    height: 720
-    alt: "The Unreal scene with the cue cleared after the simulated leak's clear tick."
-    caption: "M10C adapter: cue cleared at the leak's clear tick; the scene is untouched by any refused or stale document. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+    alt: "The synthetic yard from the Shipping package after the leak's clear tick: the vapour is gone and the flange is clear again."
+    caption: "Read-only adapter on the pinned Shipping package (1280 by 720): cue cleared at the leak's clear tick. Why it matters: a cue that never clears misleads as badly as one that never appears. The adapter hides the plume the moment the projection band returns to none, and a refused or stale document leaves the scene untouched. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
 publicationStatus: "publish"
 redactionStatus: "approved"
 redactionReview:

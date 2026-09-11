@@ -1,173 +1,207 @@
 {
 	"contract": "cryosim.m11_stage1_media_manifest",
-	"schema_version": "1.0.0",
+	"schema_version": "2.0.0",
 	"created": "2026-09-11",
 	"source_repository": "HumanKaylee/cryo-flow-sim-showcase",
-	"notes": "SITE-320 manifest: every derivative binds to its source still, the evidence document that cites it, its capture class and its SHA-256. Unreal stills are repository-authored synthetic scenes rendered by Unreal Engine 5.8.2 (see the rights note in the entry plan). Derivatives are never upscaled (source 1280x720). Mean luminance is recorded so a black frame cannot pass as a still (the M10B lesson).",
+	"notes": "Photoreal revision of the M11 stage-1 family (program decision VIS-DEC-021, evidence PHOTOREAL-SCENE-EVIDENCE.md). Every derivative binds to its committed source (a still or the encoded video), the evidence document that cites it, its capture class and its SHA-256. All scenes are repository-authored synthetic geometry rendered locally with Unreal Engine 5.8.2 and Blender 4.5; the sky and ground textures are CC0 assets from Poly Haven. The video item carries the mp4's hash under 'video' and its poster frames under 'derivatives'. The cue-medium still of the earlier revision is replaced by the video.",
 	"items": [
 		{
-			"id": "cryo-m10b-field-scene",
-			"source_path": "m10b-scene/field-cam.fixed.cctv.seam.v1-1280x720-DebugGame.png",
-			"source_sha256": "5c888fa5390e6d53c31990499c04a6dd1afccc4f3e815296e5504209217ad197",
-			"source_bytes": 833953,
-			"source_size": "1280x720",
-			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
-			"scenario": "field scene, no projection fed",
+			"id": "cryo-field-scene",
+			"kind": "image",
+			"source_path": "photoreal-scene/site-media/field-cam.fixed.cctv.seam.v1-1920x1080-editor-game.png",
+			"source_sha256": "5bfdb1c8a434b5a1c4ec537f517e7b872fb6d3b3178caaf33613639130b0810b",
+			"source_bytes": 3460058,
+			"source_size": "1920x1080",
+			"source_mean_luminance_0_255": 93.3,
+			"capture_class": "qualitative visual (Unreal editor -game still, HighResShot, cue hidden)",
+			"scenario": "photoreal field scene, no projection fed, cue hidden",
 			"severity_band": "none",
-			"evidence_document": "docs/program/verification/M10B-EXIT-EVIDENCE.md",
-			"decision": "VIS-DEC-012",
+			"evidence_document": "docs/program/verification/PHOTOREAL-SCENE-EVIDENCE.md",
+			"decision": "VIS-DEC-021",
 			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
-			"caption": "M10B qualified local Unreal scene: the synthetic tank, seam anchor and transfer line from the fixed CCTV-style camera (DebugGame diagnostic package, 1280x720).",
+			"alt": "Photoreal synthetic Unreal Engine yard from the fixed CCTV-style camera: a white vertical liquid-oxygen storage tank on a concrete pad, a flanged transfer line with a red globe valve and instrument taps, yellow bollards, a chain-link fence and trees, with no vapour at the seam.",
+			"caption": "Fixed CCTV-style camera on the synthetic liquid-oxygen yard with no leak (Unreal Engine 5.8.2, 1920 by 1080). Every object is repository-authored: the tank, flanged transfer line, globe valve, instrument taps, bollards, pad and fence were modelled and baked in Blender and placed by the scene builder; Lumen lights the yard under a CC0 Poly Haven sky. Why it matters: this is the baseline the adapter drives. A cue is only readable against equipment an operator recognises, and the flange at the tank seam is the pinned anchor where the fault library's seam leak is projected. These stills use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
 			"derivatives": [
 				{
-					"file": "cryo-m10b-field-scene-1280.webp",
-					"width": 1280,
-					"height": 720,
-					"bytes": 14920,
-					"sha256": "fc819e07c480cfc767e04136af256b9d5afc9d7bf21fe41e31b3455b0cca7231",
-					"mean_luminance_0_255": 163.4
-				},
-				{
-					"file": "cryo-m10b-field-scene-960.webp",
-					"width": 960,
-					"height": 540,
-					"bytes": 10222,
-					"sha256": "738afaa198756a14c40a2305c23997b430f2b2f17519a2e6f6e1467691a03aa4",
-					"mean_luminance_0_255": 163.4
-				},
-				{
-					"file": "cryo-m10b-field-scene-640.webp",
+					"file": "cryo-field-scene-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 6060,
-					"sha256": "b11b3b6b469c11af0ab32ec876427c2474a3901d291b8e875ad8c716224ab90c",
-					"mean_luminance_0_255": 163.3
+					"bytes": 29088,
+					"sha256": "10ab3911895a59e47e0757e80937bfac700324dd2c2253162c02df38f65bac47",
+					"mean_luminance_0_255": 93.4
+				},
+				{
+					"file": "cryo-field-scene-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 66604,
+					"sha256": "85ed76c1295074e4d51fc168537942abf32b13a84f6f8a508cbe053d6c96bfbc",
+					"mean_luminance_0_255": 93.4
+				},
+				{
+					"file": "cryo-field-scene-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 112930,
+					"sha256": "416b588a8b902feb5a37c152bfbf7e6c990ea703ebdaf9ac3ad420dd66970157",
+					"mean_luminance_0_255": 93.4
+				},
+				{
+					"file": "cryo-field-scene-1920.webp",
+					"width": 1920,
+					"height": 1080,
+					"bytes": 248434,
+					"sha256": "1feebfb79fe00822b47b308d7e451dba8565755791c728c47b9efd773180e35e",
+					"mean_luminance_0_255": 93.4
 				}
-			],
-			"source_mean_luminance_0_255": 163.2
+			]
 		},
 		{
-			"id": "cryo-m10c-cue-none",
-			"source_path": "m10c-adapter/runs-Shipping/good/m10c-index-02.png",
-			"source_sha256": "1be0f2e49e60728261362c7fbdf2364bc0b6320e93d1952637a7d218f56ca5f0",
-			"source_bytes": 833471,
+			"id": "cryo-cue-none",
+			"kind": "image",
+			"source_path": "photoreal-scene/m10c-runs-Shipping/good/m10c-index-02.png",
+			"source_sha256": "449538176d6621ea41861903ff78cb61b08323e6fb28c0dfca58f02a87bfa8df",
+			"source_bytes": 1614873,
 			"source_size": "1280x720",
-			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
+			"source_mean_luminance_0_255": 93.7,
+			"capture_class": "qualitative visual (Unreal adapter, pinned Shipping package)",
 			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
 			"severity_band": "none",
-			"evidence_document": "docs/program/verification/M10C-EXIT-EVIDENCE.md",
-			"decision": "VIS-DEC-014",
+			"evidence_document": "docs/program/verification/PHOTOREAL-SCENE-EVIDENCE.md",
+			"decision": "VIS-DEC-021",
 			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
-			"caption": "M10C adapter, sequence index 2: seam-vapour cue band none (no cue shown). Shipping package.",
+			"alt": "The same synthetic yard rendered by the Shipping package before the simulated seam leak activates: the transfer-line flange is clear and there is no vapour.",
+			"caption": "Read-only adapter on the pinned Shipping package (1280 by 720): cue band none. The committed projection sequence has not yet reached the FLT-315 seam leak's activation tick, so the adapter leaves the flange untouched. Why it matters: the adapter cannot invent a cue, it shows only what the projection document says, and this before frame is the control that gives the leak frame its meaning. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
 			"derivatives": [
 				{
-					"file": "cryo-m10c-cue-none-1280.webp",
-					"width": 1280,
-					"height": 720,
-					"bytes": 14854,
-					"sha256": "23486b231b66f08ae1818b3e114dfebfb3c2672aebd6a0ce2c7e7c00dbcbd835",
-					"mean_luminance_0_255": 163.4
-				},
-				{
-					"file": "cryo-m10c-cue-none-960.webp",
-					"width": 960,
-					"height": 540,
-					"bytes": 10184,
-					"sha256": "fc41236705a0b4311b0a8105eb08abdd444942983bda0fafd74f358c2e55fe3f",
-					"mean_luminance_0_255": 163.4
-				},
-				{
-					"file": "cryo-m10c-cue-none-640.webp",
+					"file": "cryo-cue-none-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 6126,
-					"sha256": "badde2c1c9f050ce53639e5453840e4011f0b2471136f4990e0626508518850f",
-					"mean_luminance_0_255": 163.4
+					"bytes": 29376,
+					"sha256": "fb829142fcabea6d5e43ae2ecdb1de20d171381ff43e52408efd1f931a31576e",
+					"mean_luminance_0_255": 93.8
+				},
+				{
+					"file": "cryo-cue-none-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 66270,
+					"sha256": "83d6c7aa69de1b43ebf9838d9c6de7b8f236f509b5dbd15190e0e1378957dc75",
+					"mean_luminance_0_255": 93.8
+				},
+				{
+					"file": "cryo-cue-none-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 120588,
+					"sha256": "191f1562b6caed365905429bd2fd4aa96ca9a1b40b3a9f9033409017d3fa0bef",
+					"mean_luminance_0_255": 93.8
 				}
-			],
-			"source_mean_luminance_0_255": 163.3
+			]
 		},
 		{
-			"id": "cryo-m10c-cue-medium",
-			"source_path": "m10c-adapter/runs-Shipping/good/m10c-index-03.png",
-			"source_sha256": "d113498479bd4e41e8b2f1536af3bfed8258cf2f5f596412c94c34fe59813e44",
-			"source_bytes": 831143,
-			"source_size": "1280x720",
-			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
-			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
+			"id": "cryo-seam-vapour-leak",
+			"kind": "video",
+			"source_path": "photoreal-scene/site-media/cryo-seam-vapour-leak.mp4",
+			"source_sha256": "d65bf60096646276191fa09eccbcf1ad93646b4900eba50ca5772ded1481fb22",
+			"source_bytes": 2060367,
+			"source_size": "1920x1080",
+			"capture_class": "qualitative visual (Unreal editor -game frame dump at a fixed 30 fps timestep, cue preview; encoded H.264)",
+			"scenario": "photoreal field scene, seam-vapour cue band medium held (flipbook cue), preceded by the cue-hidden still",
 			"severity_band": "medium",
-			"evidence_document": "docs/program/verification/M10C-EXIT-EVIDENCE.md",
-			"decision": "VIS-DEC-014",
+			"evidence_document": "docs/program/verification/PHOTOREAL-SCENE-EVIDENCE.md",
+			"decision": "VIS-DEC-021",
 			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
-			"caption": "M10C adapter, sequence index 3: seam-vapour cue band medium - a translucent qualitative cue at the seam anchor. Symbolic only: not a concentration, release-rate, dispersion or hazard-distance analysis (VIS-201).",
+			"alt": "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active.",
+			"caption": "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the plume shades and drifts like the vapour that boils off a cryogenic spill. It replaces the earlier translucent-sphere placeholder. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be recognisable at a glance from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
+			"video": {
+				"file": "cryo-seam-vapour-leak.mp4",
+				"width": 1920,
+				"height": 1080,
+				"duration_seconds": 9.9,
+				"frames_per_second": 30,
+				"bytes": 2060367,
+				"sha256": "d65bf60096646276191fa09eccbcf1ad93646b4900eba50ca5772ded1481fb22",
+				"poster_frame_seconds": 6.0,
+				"poster_frame_mean_luminance_0_255": 94.5
+			},
 			"derivatives": [
 				{
-					"file": "cryo-m10c-cue-medium-1280.webp",
-					"width": 1280,
-					"height": 720,
-					"bytes": 14818,
-					"sha256": "7cb119693e13838a2df59bf1237503431acb0b65e8331457ee14956ac4b797a0",
-					"mean_luminance_0_255": 164.0
-				},
-				{
-					"file": "cryo-m10c-cue-medium-960.webp",
-					"width": 960,
-					"height": 540,
-					"bytes": 10234,
-					"sha256": "3a49177a22d6e0fd8be09dd5a3bc2690adaca4e954a3916f2a35156ef54577ea",
-					"mean_luminance_0_255": 164.0
-				},
-				{
-					"file": "cryo-m10c-cue-medium-640.webp",
+					"file": "cryo-seam-vapour-leak-poster-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 6098,
-					"sha256": "df141b2c5852038373684e2cef496879b48e179400928d868496adfb48b5be0e",
-					"mean_luminance_0_255": 164.0
+					"bytes": 29656,
+					"sha256": "1fb00ac00a94c3901d4f0d463d7b27c9dea07351de492a1b2ee733499db14195",
+					"mean_luminance_0_255": 94.7
+				},
+				{
+					"file": "cryo-seam-vapour-leak-poster-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 66872,
+					"sha256": "956b38094cfd227641c008ccde306f7ca01e843f3e9474a5261c40d17a20b245",
+					"mean_luminance_0_255": 94.7
+				},
+				{
+					"file": "cryo-seam-vapour-leak-poster-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 115252,
+					"sha256": "8fdb3f7d9c45e232c3aa2e6618fedbdf4a15a7758b142341840774cd45fd8e27",
+					"mean_luminance_0_255": 94.7
+				},
+				{
+					"file": "cryo-seam-vapour-leak-poster-1920.webp",
+					"width": 1920,
+					"height": 1080,
+					"bytes": 253214,
+					"sha256": "bcf129eaf32c5ebaf97f973d688741a5903d1d476b111fe6cea425b0bc2ad3cc",
+					"mean_luminance_0_255": 94.6
 				}
-			],
-			"source_mean_luminance_0_255": 163.8
+			]
 		},
 		{
-			"id": "cryo-m10c-cue-cleared",
-			"source_path": "m10c-adapter/runs-Shipping/good/m10c-index-05.png",
-			"source_sha256": "c51cd9b7a248a452cf16c6ef53b38f9ccab4f5dafb99819fc0ffa01e63f864ca",
-			"source_bytes": 827501,
+			"id": "cryo-cue-cleared",
+			"kind": "image",
+			"source_path": "photoreal-scene/m10c-runs-Shipping/good/m10c-index-05.png",
+			"source_sha256": "f956c317597bdfc979bbb18e1a2224f9173b12868049d9261bf51f4f243a5d29",
+			"source_bytes": 1610907,
 			"source_size": "1280x720",
-			"capture_class": "qualitative visual (Unreal adapter, pinned package)",
+			"source_mean_luminance_0_255": 93.7,
+			"capture_class": "qualitative visual (Unreal adapter, pinned Shipping package)",
 			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
-			"severity_band": "none",
-			"evidence_document": "docs/program/verification/M10C-EXIT-EVIDENCE.md",
-			"decision": "VIS-DEC-014",
+			"severity_band": "cleared",
+			"evidence_document": "docs/program/verification/PHOTOREAL-SCENE-EVIDENCE.md",
+			"decision": "VIS-DEC-021",
 			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
-			"caption": "M10C adapter, sequence index 5: cue cleared after the leak's clear tick. Shipping package.",
+			"alt": "The synthetic yard from the Shipping package after the leak's clear tick: the vapour is gone and the flange is clear again.",
+			"caption": "Read-only adapter on the pinned Shipping package (1280 by 720): cue cleared at the leak's clear tick. Why it matters: a cue that never clears misleads as badly as one that never appears. The adapter hides the plume the moment the projection band returns to none, and a refused or stale document leaves the scene untouched. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
 			"derivatives": [
 				{
-					"file": "cryo-m10c-cue-cleared-1280.webp",
-					"width": 1280,
-					"height": 720,
-					"bytes": 14978,
-					"sha256": "a3fe53f1cae8fbc31733154cc586960a681dc80802a08c6c69413cb72144ad95",
-					"mean_luminance_0_255": 162.9
-				},
-				{
-					"file": "cryo-m10c-cue-cleared-960.webp",
-					"width": 960,
-					"height": 540,
-					"bytes": 10240,
-					"sha256": "afe37a3b988a042b3f89e4a40ac4d295c37643c4d7417a1f88528ab1ca558d71",
-					"mean_luminance_0_255": 162.9
-				},
-				{
-					"file": "cryo-m10c-cue-cleared-640.webp",
+					"file": "cryo-cue-cleared-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 6096,
-					"sha256": "ca5f84de39a8ff0fa4d1a65a93746cb8fc1d33ef84c95b0170ece9a0baa47dca",
-					"mean_luminance_0_255": 162.9
+					"bytes": 29324,
+					"sha256": "87a30fecbd10c528d09768442e8e41ce54327489c69d7d6e3fcc925e5c745d8c",
+					"mean_luminance_0_255": 93.8
+				},
+				{
+					"file": "cryo-cue-cleared-960.webp",
+					"width": 960,
+					"height": 540,
+					"bytes": 65658,
+					"sha256": "d69891d690f652323b6f17e7c9557f604ec36bf76d3438400285fa346b12bd00",
+					"mean_luminance_0_255": 93.9
+				},
+				{
+					"file": "cryo-cue-cleared-1280.webp",
+					"width": 1280,
+					"height": 720,
+					"bytes": 119640,
+					"sha256": "9b1ec198907aa24974dffd28ed6a74fafde87be3a5b217f7df20e2972160ebb7",
+					"mean_luminance_0_255": 93.8
 				}
-			],
-			"source_mean_luminance_0_255": 162.7
+			]
 		}
 	]
 }
