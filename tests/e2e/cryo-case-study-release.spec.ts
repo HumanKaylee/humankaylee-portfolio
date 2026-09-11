@@ -104,15 +104,15 @@ test.describe("CryoSim case study - stage 1 release instruments", () => {
 				}[];
 			}[];
 		};
-		// The 2026-09-11 photoreal family: three stills and one video whose poster
-		// frames are its derivatives. An older manifest (four stills, no video)
-		// must not pass.
-		expect(manifest.schema_version).toBe("2.0.0");
+		// The 2026-09-11 photoreal family (big-cloud revision): three stills and
+		// one video whose poster frames are its derivatives. An older manifest
+		// (four stills, no video; or the first jet-sized clip) must not pass.
+		expect(manifest.schema_version).toBe("2.1.0");
 		expect(manifest.items.map((item) => `${item.kind}:${item.id}`)).toEqual([
 			"image:cryo-field-scene",
 			"image:cryo-cue-none",
-			"video:cryo-seam-vapour-leak",
-			"image:cryo-cue-cleared",
+			"video:cryo-seam-vapour-leak-big",
+			"image:cryo-yard-wide-leak",
 		]);
 		for (const item of manifest.items) {
 			if (item.video) {
