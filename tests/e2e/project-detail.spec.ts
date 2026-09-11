@@ -7,7 +7,7 @@ const workDetails = [
 		slug: "cryo-flow-sim",
 		title: "Cryogenic Flow Simulation",
 		marker: /29,500 entities/i,
-		galleryItems: 2,
+		galleryItems: 6,
 	},
 	{
 		slug: "conformal-cooling-channel-generation",
