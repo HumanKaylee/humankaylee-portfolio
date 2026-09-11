@@ -446,7 +446,7 @@ test.describe("Work routes @work", () => {
 				figure: 4,
 				src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak.mp4",
 				poster:
-					"/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1920.webp",
+					"/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp",
 				width: "1920",
 				height: "1080",
 				alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active.",

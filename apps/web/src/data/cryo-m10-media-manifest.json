@@ -130,32 +130,32 @@
 					"file": "cryo-seam-vapour-leak-poster-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 29656,
-					"sha256": "1fb00ac00a94c3901d4f0d463d7b27c9dea07351de492a1b2ee733499db14195",
-					"mean_luminance_0_255": 94.7
+					"bytes": 19696,
+					"sha256": "377959d8293c0174afae29985cbb5aef9fe8098236709b1414e1918b8fa40b5b",
+					"mean_luminance_0_255": 94.6
 				},
 				{
 					"file": "cryo-seam-vapour-leak-poster-960.webp",
 					"width": 960,
 					"height": 540,
-					"bytes": 66872,
-					"sha256": "956b38094cfd227641c008ccde306f7ca01e843f3e9474a5261c40d17a20b245",
+					"bytes": 44598,
+					"sha256": "a4b87d1356f1b11bf0cf79d2fed0f8050ed38d266ae356ce55aaecda7016e67b",
 					"mean_luminance_0_255": 94.7
 				},
 				{
 					"file": "cryo-seam-vapour-leak-poster-1280.webp",
 					"width": 1280,
 					"height": 720,
-					"bytes": 115252,
-					"sha256": "8fdb3f7d9c45e232c3aa2e6618fedbdf4a15a7758b142341840774cd45fd8e27",
-					"mean_luminance_0_255": 94.7
+					"bytes": 76378,
+					"sha256": "220d4bcfb54c64e9a042126c9a433ad45e973d07f6995a0dad125cc28f311322",
+					"mean_luminance_0_255": 94.6
 				},
 				{
 					"file": "cryo-seam-vapour-leak-poster-1920.webp",
 					"width": 1920,
 					"height": 1080,
-					"bytes": 253214,
-					"sha256": "bcf129eaf32c5ebaf97f973d688741a5903d1d476b111fe6cea425b0bc2ad3cc",
+					"bytes": 171940,
+					"sha256": "fc5db97152ba6ded9c166b22363c26dde355e6e0ebaefb8d8421ecbab99e6c91",
 					"mean_luminance_0_255": 94.6
 				}
 			]

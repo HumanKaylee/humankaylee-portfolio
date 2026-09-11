@@ -141,7 +141,7 @@ evidenceMedia:
     caption: "Read-only adapter on the pinned Shipping package (1280 by 720): cue band none. The committed projection sequence has not yet reached the FLT-315 seam leak's activation tick, so the adapter leaves the flange untouched. Why it matters: the adapter cannot invent a cue, it shows only what the projection document says, and this before frame is the control that gives the leak frame its meaning. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
   - kind: "video"
     src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak.mp4"
-    poster: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1920.webp"
+    poster: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp"
     responsivePosterSources:
       - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-640.webp", width: 640 }
       - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp", width: 960 }
