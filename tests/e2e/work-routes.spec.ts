@@ -444,12 +444,12 @@ test.describe("Work routes @work", () => {
 			},
 			{
 				figure: 4,
-				src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak.mp4",
+				src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-big.mp4",
 				poster:
-					"/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp",
+					"/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-big-poster-960.webp",
 				width: "1920",
 				height: "1080",
-				alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active.",
+				alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour cloud pours from the transfer-line flange at the tank seam, billows along the pipe and spreads across the pad while the simulated leak is active.",
 			},
 		] as const;
 		for (const [index, expectedVideo] of expectedVideos.entries()) {
@@ -503,7 +503,12 @@ test.describe("Work routes @work", () => {
 		);
 		await expect(items.nth(5).locator("img")).toHaveAttribute(
 			"src",
-			"/media/cryo-flow-sim-m10/cryo-cue-cleared-1280.webp",
+			"/media/cryo-flow-sim-m10/cryo-yard-wide-leak-1920.webp",
+		);
+		// The cue-cleared still was visually identical to cue none; the wide yard
+		// view with the cloud replaced it, so figures 3 and 5 must differ.
+		expect(await items.nth(3).locator("img").getAttribute("src")).not.toBe(
+			await items.nth(5).locator("img").getAttribute("src"),
 		);
 		await expect(items.nth(0)).not.toContainText(/live|real-time/i);
 		const fallbackLinks = items.getByRole("link", {

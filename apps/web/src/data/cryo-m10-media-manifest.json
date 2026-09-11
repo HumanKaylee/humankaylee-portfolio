@@ -1,6 +1,6 @@
 {
 	"contract": "cryosim.m11_stage1_media_manifest",
-	"schema_version": "2.0.0",
+	"schema_version": "2.1.0",
 	"created": "2026-09-11",
 	"source_repository": "HumanKaylee/cryo-flow-sim-showcase",
 	"notes": "Photoreal revision of the M11 stage-1 family (program decision VIS-DEC-021, evidence PHOTOREAL-SCENE-EVIDENCE.md). Every derivative binds to its committed source (a still or the encoded video), the evidence document that cites it, its capture class and its SHA-256. All scenes are repository-authored synthetic geometry rendered locally with Unreal Engine 5.8.2 and Blender 4.5; the sky and ground textures are CC0 assets from Poly Haven. The video item carries the mp4's hash under 'video' and its poster frames under 'derivatives'. The cue-medium still of the earlier revision is replaced by the video.",
@@ -60,8 +60,8 @@
 			"id": "cryo-cue-none",
 			"kind": "image",
 			"source_path": "photoreal-scene/m10c-runs-Shipping/good/m10c-index-02.png",
-			"source_sha256": "449538176d6621ea41861903ff78cb61b08323e6fb28c0dfca58f02a87bfa8df",
-			"source_bytes": 1614873,
+			"source_sha256": "2254d7b9c43c2391be626f21362c5209d1d0ce419176aaec3950a1f0bacffafb",
+			"source_bytes": 1614515,
 			"source_size": "1280x720",
 			"source_mean_luminance_0_255": 93.7,
 			"capture_class": "qualitative visual (Unreal adapter, pinned Shipping package)",
@@ -77,129 +77,137 @@
 					"file": "cryo-cue-none-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 29376,
-					"sha256": "fb829142fcabea6d5e43ae2ecdb1de20d171381ff43e52408efd1f931a31576e",
+					"bytes": 29366,
+					"sha256": "98be03e6ad4e518a8f351794b6d5aa7aa577fd7463465540119c3435374a47cd",
 					"mean_luminance_0_255": 93.8
 				},
 				{
 					"file": "cryo-cue-none-960.webp",
 					"width": 960,
 					"height": 540,
-					"bytes": 66270,
-					"sha256": "83d6c7aa69de1b43ebf9838d9c6de7b8f236f509b5dbd15190e0e1378957dc75",
+					"bytes": 66190,
+					"sha256": "a0759f70d81b424292176e016155a84da5dd0c3c70c0700a4b78aa65922ae847",
 					"mean_luminance_0_255": 93.8
 				},
 				{
 					"file": "cryo-cue-none-1280.webp",
 					"width": 1280,
 					"height": 720,
-					"bytes": 120588,
-					"sha256": "191f1562b6caed365905429bd2fd4aa96ca9a1b40b3a9f9033409017d3fa0bef",
+					"bytes": 119806,
+					"sha256": "b6cbf119537abad223998e1252bb082fa6f86641fcab796a1a1acb81040e01a7",
 					"mean_luminance_0_255": 93.8
 				}
 			]
 		},
 		{
-			"id": "cryo-seam-vapour-leak",
+			"id": "cryo-seam-vapour-leak-big",
 			"kind": "video",
-			"source_path": "photoreal-scene/site-media/cryo-seam-vapour-leak.mp4",
-			"source_sha256": "d65bf60096646276191fa09eccbcf1ad93646b4900eba50ca5772ded1481fb22",
-			"source_bytes": 2060367,
+			"source_path": "photoreal-scene/site-media/cryo-seam-vapour-leak-big.mp4",
+			"source_sha256": "d9ae8dde6cb1e8bd894050aff7114cc9e829a5a039a6bc1f04232ec7fae46727",
+			"source_bytes": 2357526,
 			"source_size": "1920x1080",
 			"capture_class": "qualitative visual (Unreal editor -game frame dump at a fixed 30 fps timestep, cue preview; encoded H.264)",
-			"scenario": "photoreal field scene, seam-vapour cue band medium held (flipbook cue), preceded by the cue-hidden still",
+			"scenario": "photoreal field scene, seam-vapour cue band medium held (big-profile flipbook cue: 12 x 6 m card), preceded by the cue-hidden still",
 			"severity_band": "medium",
 			"evidence_document": "docs/program/verification/PHOTOREAL-SCENE-EVIDENCE.md",
 			"decision": "VIS-DEC-021",
 			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
-			"alt": "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active.",
-			"caption": "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the plume shades and drifts like the vapour that boils off a cryogenic spill. It replaces the earlier translucent-sphere cue. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be recognisable at a glance from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
+			"alt": "Video of the synthetic liquid-oxygen yard in which a dense white vapour cloud pours from the transfer-line flange at the tank seam, billows along the pipe and spreads across the pad while the simulated leak is active.",
+			"caption": "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour in a twelve-metre domain, baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the cloud billows out of the flange, rolls along the transfer line and spreads across the pad the way vapour boiling off a cryogenic spill hugs the ground. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be unmistakable from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
 			"video": {
-				"file": "cryo-seam-vapour-leak.mp4",
+				"file": "cryo-seam-vapour-leak-big.mp4",
 				"width": 1920,
 				"height": 1080,
 				"duration_seconds": 9.9,
 				"frames_per_second": 30,
-				"bytes": 2060367,
-				"sha256": "d65bf60096646276191fa09eccbcf1ad93646b4900eba50ca5772ded1481fb22",
+				"bytes": 2357526,
+				"sha256": "d9ae8dde6cb1e8bd894050aff7114cc9e829a5a039a6bc1f04232ec7fae46727",
 				"poster_frame_seconds": 6.0,
-				"poster_frame_mean_luminance_0_255": 94.5
+				"poster_frame_mean_luminance_0_255": 124.3
 			},
 			"derivatives": [
 				{
-					"file": "cryo-seam-vapour-leak-poster-640.webp",
+					"file": "cryo-seam-vapour-leak-big-poster-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 19696,
-					"sha256": "377959d8293c0174afae29985cbb5aef9fe8098236709b1414e1918b8fa40b5b",
-					"mean_luminance_0_255": 94.6
+					"bytes": 17986,
+					"sha256": "e530bc241d6ac21d5afffbc53a6b5d3e3d06f220ac9a165de925bdc58783d891",
+					"mean_luminance_0_255": 124.5
 				},
 				{
-					"file": "cryo-seam-vapour-leak-poster-960.webp",
+					"file": "cryo-seam-vapour-leak-big-poster-960.webp",
 					"width": 960,
 					"height": 540,
-					"bytes": 44598,
-					"sha256": "a4b87d1356f1b11bf0cf79d2fed0f8050ed38d266ae356ce55aaecda7016e67b",
-					"mean_luminance_0_255": 94.7
+					"bytes": 38414,
+					"sha256": "9a7dee2fe5a4fc5e74e33db0cd3dff3e07cd8fda07e008662f3dc71909bc2e7a",
+					"mean_luminance_0_255": 124.5
 				},
 				{
-					"file": "cryo-seam-vapour-leak-poster-1280.webp",
+					"file": "cryo-seam-vapour-leak-big-poster-1280.webp",
 					"width": 1280,
 					"height": 720,
-					"bytes": 76378,
-					"sha256": "220d4bcfb54c64e9a042126c9a433ad45e973d07f6995a0dad125cc28f311322",
-					"mean_luminance_0_255": 94.6
+					"bytes": 64496,
+					"sha256": "20c41328cd4cf8d846ca53b0cc825f719b91f8de8f3500218a8e422bf2a0d6a3",
+					"mean_luminance_0_255": 124.5
 				},
 				{
-					"file": "cryo-seam-vapour-leak-poster-1920.webp",
+					"file": "cryo-seam-vapour-leak-big-poster-1920.webp",
 					"width": 1920,
 					"height": 1080,
-					"bytes": 171940,
-					"sha256": "fc5db97152ba6ded9c166b22363c26dde355e6e0ebaefb8d8421ecbab99e6c91",
-					"mean_luminance_0_255": 94.6
+					"bytes": 145254,
+					"sha256": "ad71c3b42bd71dd533a1076931d415477e633d8a1206b746f7412a3d90bf62cb",
+					"mean_luminance_0_255": 124.5
 				}
 			]
 		},
 		{
-			"id": "cryo-cue-cleared",
+			"id": "cryo-yard-wide-leak",
 			"kind": "image",
-			"source_path": "photoreal-scene/m10c-runs-Shipping/good/m10c-index-05.png",
-			"source_sha256": "f956c317597bdfc979bbb18e1a2224f9173b12868049d9261bf51f4f243a5d29",
-			"source_bytes": 1610907,
-			"source_size": "1280x720",
-			"source_mean_luminance_0_255": 93.7,
-			"capture_class": "qualitative visual (Unreal adapter, pinned Shipping package)",
-			"scenario": "generated:40:20260823 / lifecycle-40 (FLT-315 seam leak, activation 30, clear 90)",
-			"severity_band": "cleared",
+			"source_path": "photoreal-scene/site-media/yard-cam.inspect.wide-1920x1080-editor-game.png",
+			"source_sha256": "50a592ca44066fdc233a85f8064372f9e615059efc301de8105548682b165ab2",
+			"source_bytes": 3296243,
+			"source_size": "1920x1080",
+			"source_mean_luminance_0_255": 110.4,
+			"capture_class": "qualitative visual (Unreal editor -game still, HighResShot, inspection camera, cue preview)",
+			"scenario": "photoreal field scene from the wide inspection camera, seam-vapour cue band medium held (big-profile flipbook cue)",
+			"severity_band": "medium",
 			"evidence_document": "docs/program/verification/PHOTOREAL-SCENE-EVIDENCE.md",
 			"decision": "VIS-DEC-021",
 			"label": "Qualitative visualization only - not consequence analysis. Simulation-only; no live-equipment writes.",
-			"alt": "The synthetic yard from the Shipping package after the leak's clear tick: the vapour is gone and the flange is clear again.",
-			"caption": "Read-only adapter on the pinned Shipping package (1280 by 720): cue cleared at the leak's clear tick. Why it matters: a cue that never clears misleads as badly as one that never appears. The adapter hides the plume the moment the projection band returns to none, and a refused or stale document leaves the scene untouched. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
+			"alt": "Wide view of the whole synthetic liquid-oxygen yard from a raised inspection camera: the tank, transfer line, vaporizer bank, bollards, signage and fence, with the vapour cloud from the seam leak spreading across the pad.",
+			"caption": "The whole yard from the raised inspection camera while the seam leak is active (Unreal Engine 5.8.2, 1920 by 1080): tank, flanged transfer line, globe valve, ambient vaporizer bank, bollards, hazard sign and fence, all repository-authored, with the vapour cloud rolling away from the flange and along the pad. Why it matters: the fixed CCTV camera is one anchor's view; this frame shows the same cue in the context of the equipment around it, which is how an operator would judge where a cloud is heading. It illustrates where and when, never how much. These stills use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes.",
 			"derivatives": [
 				{
-					"file": "cryo-cue-cleared-640.webp",
+					"file": "cryo-yard-wide-leak-640.webp",
 					"width": 640,
 					"height": 360,
-					"bytes": 29324,
-					"sha256": "87a30fecbd10c528d09768442e8e41ce54327489c69d7d6e3fcc925e5c745d8c",
-					"mean_luminance_0_255": 93.8
+					"bytes": 28470,
+					"sha256": "e81df9e41a3d23539f4d48fab05af04dd974740ccfa157d3efe7caebfc84691a",
+					"mean_luminance_0_255": 110.5
 				},
 				{
-					"file": "cryo-cue-cleared-960.webp",
+					"file": "cryo-yard-wide-leak-960.webp",
 					"width": 960,
 					"height": 540,
-					"bytes": 65658,
-					"sha256": "d69891d690f652323b6f17e7c9557f604ec36bf76d3438400285fa346b12bd00",
-					"mean_luminance_0_255": 93.9
+					"bytes": 56910,
+					"sha256": "4732fee81cfb50cfd8bfb60cfd0b89510d6d6941cd4db8e5fd32dd39ce16e1ac",
+					"mean_luminance_0_255": 110.5
 				},
 				{
-					"file": "cryo-cue-cleared-1280.webp",
+					"file": "cryo-yard-wide-leak-1280.webp",
 					"width": 1280,
 					"height": 720,
-					"bytes": 119640,
-					"sha256": "9b1ec198907aa24974dffd28ed6a74fafde87be3a5b217f7df20e2972160ebb7",
-					"mean_luminance_0_255": 93.8
+					"bytes": 93824,
+					"sha256": "fc0b41fc842718544cb0b9fd458c9b286624d38f41bc9639a13244d150bf7d21",
+					"mean_luminance_0_255": 110.5
+				},
+				{
+					"file": "cryo-yard-wide-leak-1920.webp",
+					"width": 1920,
+					"height": 1080,
+					"bytes": 208624,
+					"sha256": "edbe58a9df133320c152846b8bd04d55dda36527fe1e8127b1320ad9550d6224",
+					"mean_luminance_0_255": 110.4
 				}
 			]
 		}
