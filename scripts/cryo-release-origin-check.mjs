@@ -49,6 +49,10 @@ const record = {
 };
 
 for (const url of mediaUrls) {
+	// Cloudflare serves byte ranges from its edge cache: an asset that has never
+	// been requested answers 200 to the first range request (measured 2026-09-11
+	// on a preview deployment). Warm the asset once, then ask for the range.
+	await fetch(`${origin}${url}`);
 	const range = await fetch(`${origin}${url}`, {
 		headers: { Range: "bytes=0-99" },
 	});

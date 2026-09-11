@@ -159,16 +159,14 @@ evidenceMedia:
     alt: "The Unreal scene with the cue cleared after the simulated leak's clear tick."
     caption: "M10C adapter: cue cleared at the leak's clear tick; the scene is untouched by any refused or stale document. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
   reviewedOn: "2026-09-11"
   checklistStatus: "complete"
-  openItems:
-    - "Owner approval of the 2026-09-11 program update (CryoSim program decision SITE-DEC-002 for entry; the merge to main is the publication)."
-    - "One rollback rehearsal on the host recorded before the release is called verified."
-  notes: "The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
+  openItems: []
+  notes: "The 2026-09-11 program update (September 2026 milestones, four synthetic Unreal Engine stills with the qualitative label and the Unreal notice, evidence-bound figures, limitation language) passed the release instruments (no-JavaScript rendering, reduced motion, accessibility scan, forbidden-term scan, overflow, manifest hash) on the local build and agent inspection on the exact Cloudflare provider preview. Joe authorized production publication in the task on 2026-09-11. Earlier revision note: The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -178,6 +176,22 @@ redactionReview:
     publicLinksVerified: "not-applicable"
     claimsHaveSafeEvidence: "yes"
     securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-09-11"
+    decision: "approved"
+    notes: "Joe explicitly authorized production deployment of this revision in the task on 2026-09-11 (\"You can go ahead and deploy it. You have full permission to do that.\") after entering CryoSim program milestone M11 stage 1 on its plan. This records authorization and does not claim he personally inspected the preview."
+  artifactInspection:
+    source: "CryoSim program repository at the M11 stage-1 entry commit; portfolio branch feat/cryo-m11-stage1-20260911; agent inspection in this task"
+    inspectedOn: "2026-09-11"
+    result: "passed"
+    notes: "Local build inspected: lint, typecheck, 76 unit tests, 93 end-to-end tests across the specs that pin the case study (release instruments with negative cases, project detail, work routes, quality gates); desktop screenshot reviewed; every still's luminance recorded so no black frame could pass; no private hostnames, paths, addresses or account identifiers in the rendered page or captions."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://669c7e3e.humankaylee-portfolio.pages.dev; deployment 669c7e3e-66f7-4aad-9f32-af044ee8a3fd; source e0403ac"
+    capturedOn: "2026-09-11"
+    result: "passed"
+    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the new lede rendered; every M10 still served with its manifest SHA-256. Byte-range requests answered 200 on the uncached preview and 206 on the cached production origin; the production origin check runs after the merge."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
   description: "A deterministic Rust process simulator informed by Siemens and Rockwell controls experience, with measured 29,500-entity evidence and a graded September 2026 engineering program through a localhost Unreal Engine camera."
