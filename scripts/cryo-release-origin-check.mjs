@@ -4,7 +4,8 @@
 //   node scripts/cryo-release-origin-check.mjs --origin https://joepoznanski.io
 // For every media URL the case study references it asserts: HTTP 206 with a
 // valid Content-Range for a byte-range request (seekable), and - for the M10
-// stills - the served SHA-256 equals the manifest's. Prints a JSON record the
+// stills, their poster frames and the seam-vapour video - the served SHA-256
+// equals the manifest's. Prints a JSON record the
 // program's exit evidence copies verbatim. Exit 1 on any failure.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -70,7 +71,7 @@ for (const url of mediaUrls) {
 		);
 	}
 	const derivative = manifest.items
-		.flatMap((i) => i.derivatives)
+		.flatMap((i) => [...i.derivatives, ...(i.video ? [i.video] : [])])
 		.find((d) => url.endsWith(`/${d.file}`));
 	if (derivative) {
 		const full = await fetch(`${origin}${url}`);

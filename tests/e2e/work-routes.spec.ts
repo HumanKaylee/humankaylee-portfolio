@@ -422,21 +422,38 @@ test.describe("Work routes @work", () => {
 		await expect(items).toHaveCount(6);
 
 		const videos = items.locator("video");
-		await expect(videos).toHaveCount(2);
+		await expect(videos).toHaveCount(3);
+		// Two scale proofs first, then the photoreal seam-vapour clip at gallery
+		// index 4 (between the cue-none and cue-cleared stills).
 		const expectedVideos = [
 			{
+				figure: 0,
 				src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4",
 				poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp",
+				width: "960",
+				height: "540",
 				alt: "Deterministic Cryogenic flow simulation showing spatial valve-command waves and actual tank, pipe, and sensor response across 29,500 generated entities.",
 			},
 			{
+				figure: 1,
 				src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4",
 				poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.webp",
+				width: "960",
+				height: "540",
 				alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window.",
+			},
+			{
+				figure: 4,
+				src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak.mp4",
+				poster:
+					"/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp",
+				width: "1920",
+				height: "1080",
+				alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active.",
 			},
 		] as const;
 		for (const [index, expectedVideo] of expectedVideos.entries()) {
-			const item = items.nth(index);
+			const item = items.nth(expectedVideo.figure);
 			const video = videos.nth(index);
 			await expect(item).toHaveAttribute("data-evidence-media-kind", "video");
 			await expect(video.locator("source")).toHaveAttribute(
@@ -444,8 +461,8 @@ test.describe("Work routes @work", () => {
 				expectedVideo.src,
 			);
 			await expect(video).toHaveAttribute("poster", expectedVideo.poster);
-			await expect(video).toHaveAttribute("width", "960");
-			await expect(video).toHaveAttribute("height", "540");
+			await expect(video).toHaveAttribute("width", expectedVideo.width);
+			await expect(video).toHaveAttribute("height", expectedVideo.height);
 			await expect(video).toHaveAttribute("aria-label", expectedVideo.alt);
 			await expect(video).toHaveAttribute("controls", "");
 			await expect(video).toHaveAttribute("preload", "none");
@@ -463,7 +480,31 @@ test.describe("Work routes @work", () => {
 			await expect(items.locator("figcaption").nth(index)).toContainText(
 				"Qualitative visualization only",
 			);
+			await expect(items.locator("figcaption").nth(index)).toContainText(
+				"Why it matters",
+			);
 		}
+		// The photoreal family replaced the placeholder cue: no figure may still
+		// describe the translucent sphere, and the stills are the 2026-09-11 family.
+		await expect(gallery).not.toContainText(/translucent sphere/i);
+		for (const index of [2, 3, 5]) {
+			await expect(items.nth(index)).toHaveAttribute(
+				"data-evidence-media-kind",
+				"image",
+			);
+		}
+		await expect(items.nth(2).locator("img")).toHaveAttribute(
+			"src",
+			"/media/cryo-flow-sim-m10/cryo-field-scene-1920.webp",
+		);
+		await expect(items.nth(3).locator("img")).toHaveAttribute(
+			"src",
+			"/media/cryo-flow-sim-m10/cryo-cue-none-1280.webp",
+		);
+		await expect(items.nth(5).locator("img")).toHaveAttribute(
+			"src",
+			"/media/cryo-flow-sim-m10/cryo-cue-cleared-1280.webp",
+		);
 		await expect(items.nth(0)).not.toContainText(/live|real-time/i);
 		const fallbackLinks = items.getByRole("link", {
 			name: "Open the evidence video",
@@ -506,7 +547,9 @@ test.describe("Work routes @work", () => {
 		page,
 	}) => {
 		await page.goto("/work/cryo-flow-sim/");
-		const videos = page.locator("[data-case-study-media-gallery] video");
+		const videos = page.locator(
+			'[data-case-study-media-gallery] video:has(source[src*="/cryo-flow-sim-scale/"])',
+		);
 		await expect(videos).toHaveCount(2);
 
 		for (const video of await videos.all()) {
@@ -552,6 +595,48 @@ test.describe("Work routes @work", () => {
 				)
 				.toBeGreaterThan(30.05);
 		}
+	});
+
+	test("plays and seeks the photoreal seam-vapour clip", async ({ page }) => {
+		await page.goto("/work/cryo-flow-sim/");
+		const video = page.locator(
+			'[data-case-study-media-gallery] video:has(source[src*="/cryo-flow-sim-m10/"])',
+		);
+		await expect(video).toHaveCount(1);
+		await video.scrollIntoViewIfNeeded();
+		await video.evaluate(async (element) => {
+			const media = element as HTMLVideoElement;
+			media.muted = true;
+			await media.play();
+		});
+		// 9.9 s encoded clip: a placeholder or a truncated encode would miss this band.
+		await expect
+			.poll(() =>
+				video.evaluate((element) => (element as HTMLVideoElement).duration),
+			)
+			.toBeGreaterThan(9);
+		expect(
+			await video.evaluate((element) => (element as HTMLVideoElement).duration),
+		).toBeLessThan(11);
+		await video.evaluate(
+			(element) =>
+				new Promise<void>((resolve) => {
+					const media = element as HTMLVideoElement;
+					media.addEventListener("seeked", () => resolve(), { once: true });
+					media.currentTime = 6;
+				}),
+		);
+		expect(
+			await video.evaluate(
+				(element) => (element as HTMLVideoElement).currentTime,
+			),
+		).toBeGreaterThan(5.9);
+		expect(
+			await video.evaluate((element) => {
+				const media = element as HTMLVideoElement;
+				return `${media.videoWidth}x${media.videoHeight}`;
+			}),
+		).toBe("1920x1080");
 	});
 
 	test("uses project-specific semantic evidence flows with record-backed values", async ({
@@ -640,7 +725,7 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-reading-progress]")).toBeHidden();
 		await expect(
 			page.locator("[data-case-study-media-gallery] video"),
-		).toHaveCount(2);
+		).toHaveCount(3);
 		for (const video of await page
 			.locator("[data-case-study-media-gallery] video")
 			.all()) {

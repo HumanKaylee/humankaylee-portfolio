@@ -119,45 +119,48 @@ evidenceMedia:
     alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window."
     caption: "Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window."
   - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-1280.webp"
+    src: "/media/cryo-flow-sim-m10/cryo-field-scene-1920.webp"
     responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10b-field-scene-1280.webp", width: 1280 }
-    width: 1280
-    height: 720
-    alt: "Synthetic Unreal Engine field scene: a single tank with a seam anchor, a transfer line, a valve and sensor markers, from a fixed camera."
-    caption: "Localhost Unreal Engine 5.8.2 scene (program milestone M10B, diagnostic package, 1280 by 720): repository-authored synthetic geometry, no marketplace assets. These stills use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-field-scene-1920.webp", width: 1920 }
+    width: 1920
+    height: 1080
+    alt: "Photoreal synthetic Unreal Engine yard from the fixed CCTV-style camera: a white vertical liquid-oxygen storage tank on a concrete pad, a flanged transfer line with a red globe valve and instrument taps, yellow bollards, a chain-link fence and trees, with no vapour at the seam."
+    caption: "Fixed CCTV-style camera on the synthetic liquid-oxygen yard with no leak (Unreal Engine 5.8.2, 1920 by 1080). Every object is repository-authored: the tank, flanged transfer line, globe valve, instrument taps, bollards, pad and fence were modelled and baked in Blender and placed by the scene builder; Lumen lights the yard under a CC0 Poly Haven sky. Why it matters: this is the baseline the adapter drives. A cue is only readable against equipment an operator recognises, and the flange at the tank seam is the pinned anchor where the fault library's seam leak is projected. These stills use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
   - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-1280.webp"
+    src: "/media/cryo-flow-sim-m10/cryo-cue-none-1280.webp"
     responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-none-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-none-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-none-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-none-1280.webp", width: 1280 }
     width: 1280
     height: 720
-    alt: "The same Unreal scene with no seam-vapour cue shown, before a simulated seam leak activates."
-    caption: "M10C read-only adapter driving the scene from a committed projection sequence: cue band none before the FLT-315 seam leak's activation tick (Shipping package). Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+    alt: "The same synthetic yard rendered by the Shipping package before the simulated seam leak activates: the transfer-line flange is clear and there is no vapour."
+    caption: "Read-only adapter on the pinned Shipping package (1280 by 720): cue band none. The committed projection sequence has not yet reached the FLT-315 seam leak's activation tick, so the adapter leaves the flange untouched. Why it matters: the adapter cannot invent a cue, it shows only what the projection document says, and this before frame is the control that gives the leak frame its meaning. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+  - kind: "video"
+    src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak.mp4"
+    poster: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp"
+    responsivePosterSources:
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-poster-1920.webp", width: 1920 }
+    width: 1920
+    height: 1080
+    alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour jet pours from the transfer-line flange at the tank seam while the simulated leak is active."
+    caption: "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the plume shades and drifts like the vapour that boils off a cryogenic spill. It replaces the earlier translucent-sphere cue. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be recognisable at a glance from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
   - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-1280.webp"
+    src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-1280.webp"
     responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-medium-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-960.webp", width: 960 }
+      - { src: "/media/cryo-flow-sim-m10/cryo-cue-cleared-1280.webp", width: 1280 }
     width: 1280
     height: 720
-    alt: "The Unreal scene with a translucent sphere at the seam anchor while the simulated leak is active."
-    caption: "M10C adapter: cue band medium while the injected seam leak is active - a translucent qualitative cue at the seam anchor. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
-  - kind: "image"
-    src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-1280.webp"
-    responsiveSources:
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-640.webp", width: 640 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-960.webp", width: 960 }
-      - { src: "/media/cryo-flow-sim-m10/cryo-m10c-cue-cleared-1280.webp", width: 1280 }
-    width: 1280
-    height: 720
-    alt: "The Unreal scene with the cue cleared after the simulated leak's clear tick."
-    caption: "M10C adapter: cue cleared at the leak's clear tick; the scene is untouched by any refused or stale document. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+    alt: "The synthetic yard from the Shipping package after the leak's clear tick: the vapour is gone and the flange is clear again."
+    caption: "Read-only adapter on the pinned Shipping package (1280 by 720): cue cleared at the leak's clear tick. Why it matters: a cue that never clears misleads as badly as one that never appears. The adapter hides the plume the moment the projection band returns to none, and a refused or stale document leaves the scene untouched. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
 publicationStatus: "publish"
 redactionStatus: "approved"
 redactionReview:
@@ -166,7 +169,7 @@ redactionReview:
   reviewedOn: "2026-09-11"
   checklistStatus: "complete"
   openItems: []
-  notes: "The 2026-09-11 program update (September 2026 milestones, four synthetic Unreal Engine stills with the qualitative label and the Unreal notice, evidence-bound figures, limitation language) passed the release instruments (no-JavaScript rendering, reduced motion, accessibility scan, forbidden-term scan, overflow, manifest hash) on the local build and agent inspection on the exact Cloudflare provider preview. Joe authorized production publication in the task on 2026-09-11. Earlier revision note: The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
+  notes: "The 2026-09-11 photoreal media revision (three repository-authored synthetic Unreal Engine stills and a ten-second seam-vapour video replacing the four stage-1 stills, each caption carrying the qualitative label, the Unreal notice and the simulation-only language, manifest schema 2.0.0 with the video hashed) passed the same release instruments on the local build and agent inspection on the exact Cloudflare provider preview; no private hostnames, paths, addresses or account identifiers are in the captions, alt text or media paths. Joe instructed the publication in the task on 2026-09-11. Earlier revision note: The 2026-09-11 program update (September 2026 milestones, four synthetic Unreal Engine stills with the qualitative label and the Unreal notice, evidence-bound figures, limitation language) passed the release instruments (no-JavaScript rendering, reduced motion, accessibility scan, forbidden-term scan, overflow, manifest hash) on the local build and agent inspection on the exact Cloudflare provider preview. Joe authorized production publication in the task on 2026-09-11. Earlier revision note: The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -181,17 +184,17 @@ approvalEvidence:
     reviewer: "Joe Poznanski"
     signedOffOn: "2026-09-11"
     decision: "approved"
-    notes: "Joe explicitly authorized production deployment of this revision in the task on 2026-09-11 (\"You can go ahead and deploy it. You have full permission to do that.\") after entering CryoSim program milestone M11 stage 1 on its plan. This records authorization and does not claim he personally inspected the preview."
+    notes: "Joe instructed this revision and its publication in the task on 2026-09-11 (\"make sure there's a video as media of the vapor and put it on my personal site (replacing the original). Make sure the other current images are replaced with these much higher fidelity modeled versions too, and ensure that there are good descriptions on the images\"). This records the instruction and does not claim he personally inspected the preview. The earlier stage-1 authorization of 2026-09-11 (\"You can go ahead and deploy it. You have full permission to do that.\") covered the previous revision."
   artifactInspection:
-    source: "CryoSim program repository at the M11 stage-1 entry commit; portfolio branch feat/cryo-m11-stage1-20260911; agent inspection in this task"
+    source: "CryoSim program repository at the photoreal field-scene increment (decision VIS-DEC-021, evidence PHOTOREAL-SCENE-EVIDENCE.md, site-media sources committed); portfolio branch feat/cryo-photoreal-media-20260911; agent inspection in this task"
     inspectedOn: "2026-09-11"
     result: "passed"
-    notes: "Local build inspected: lint, typecheck, 76 unit tests, 93 end-to-end tests across the specs that pin the case study (release instruments with negative cases, project detail, work routes, quality gates); desktop screenshot reviewed; every still's luminance recorded so no black frame could pass; no private hostnames, paths, addresses or account identifiers in the rendered page or captions."
+    notes: "Local build inspected: lint, typecheck, 76 unit tests and 172 node contract tests, 42 end-to-end tests across the three specs that pin the case study (release instruments with negative cases, including the video's on-disk and served hash; work routes with three gallery videos and a seek test for the clip; project detail); the full Windows visual suite (28) against regenerated cryo baselines; every still and poster frame carries its measured luminance so no black frame could pass; the video was viewed frame by frame before encoding; no private hostnames, paths, addresses or account identifiers in the rendered page, captions or media paths."
   productionOrPreviewEvidence:
-    source: "Cloudflare Pages preview https://669c7e3e.humankaylee-portfolio.pages.dev; deployment 669c7e3e-66f7-4aad-9f32-af044ee8a3fd; source e0403ac"
+    source: "Cloudflare Pages preview https://dc07a2aa.humankaylee-portfolio.pages.dev; deployment dc07a2aa-62b6-4ac4-bf9f-e365cb8d1f1e; source 22d2330 (the branch head adds only this record; rendered output identical)"
     capturedOn: "2026-09-11"
     result: "passed"
-    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the new lede rendered; every M10 still served with its manifest SHA-256. Byte-range requests answered 200 on the uncached preview and 206 on the cached production origin; the production origin check runs after the merge."
+    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the photoreal stills and the seam-vapour video rendered in the gallery with their captions and were served with their manifest SHA-256 (four hash matches, zero mismatches, re-checked on the second preview after the clip poster was re-encoded lighter for the Lighthouse performance gate). Byte-range requests answered 200 on the uncached preview, as on the previous revision, and 206 on the cached production origin; the production origin check runs after the merge."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
   description: "A deterministic Rust process simulator informed by Siemens and Rockwell controls experience, with measured 29,500-entity evidence and a graded September 2026 engineering program through a localhost Unreal Engine camera."

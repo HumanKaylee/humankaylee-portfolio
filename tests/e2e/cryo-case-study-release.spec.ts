@@ -87,12 +87,15 @@ test.describe("CryoSim case study - stage 1 release instruments", () => {
 		).toEqual([String(FORBIDDEN[0]), String(FORBIDDEN[10])]);
 	});
 
-	test("every manifest derivative is served with the manifest's bytes and hash, and no still is black", async ({
+	test("every manifest derivative and the video are served with the manifest's bytes and hash, and no still is black", async ({
 		request,
 	}) => {
 		const manifest = JSON.parse(readFileSync(MANIFEST, "utf8")) as {
+			schema_version: string;
 			items: {
 				id: string;
+				kind: "image" | "video";
+				video?: { file: string; bytes: number; sha256: string };
 				derivatives: {
 					file: string;
 					bytes: number;
@@ -101,8 +104,36 @@ test.describe("CryoSim case study - stage 1 release instruments", () => {
 				}[];
 			}[];
 		};
-		expect(manifest.items.length).toBe(4);
+		// The 2026-09-11 photoreal family: three stills and one video whose poster
+		// frames are its derivatives. An older manifest (four stills, no video)
+		// must not pass.
+		expect(manifest.schema_version).toBe("2.0.0");
+		expect(manifest.items.map((item) => `${item.kind}:${item.id}`)).toEqual([
+			"image:cryo-field-scene",
+			"image:cryo-cue-none",
+			"video:cryo-seam-vapour-leak",
+			"image:cryo-cue-cleared",
+		]);
 		for (const item of manifest.items) {
+			if (item.video) {
+				const onDisk = readFileSync(join(PUBLIC_MEDIA_DIR, item.video.file));
+				expect(
+					createHash("sha256").update(onDisk).digest("hex"),
+					`${item.video.file} on disk`,
+				).toBe(item.video.sha256);
+				expect(onDisk.length).toBe(item.video.bytes);
+				const response = await request.get(
+					`/media/cryo-flow-sim-m10/${item.video.file}`,
+				);
+				expect(response.status(), item.video.file).toBe(200);
+				expect(response.headers()["content-type"]).toContain("video/mp4");
+				expect(
+					createHash("sha256")
+						.update(await response.body())
+						.digest("hex"),
+					`${item.video.file} served`,
+				).toBe(item.video.sha256);
+			}
 			for (const derivative of item.derivatives) {
 				const onDisk = readFileSync(join(PUBLIC_MEDIA_DIR, derivative.file));
 				const diskHash = createHash("sha256").update(onDisk).digest("hex");
