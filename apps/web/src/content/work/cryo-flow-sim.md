@@ -211,7 +211,7 @@ redactionReview:
   reviewedOn: "2026-09-20"
   checklistStatus: "complete"
   openItems: []
-  notes: "The September 20 extension uses repository-authored synthetic equipment, real local-service browser captures and explicitly labeled native replay. Agent inspection found no private paths, hostnames, account identifiers or proprietary employer implementation in visible media or captions. Pure-fluid, saturation-domain, methane-surrogate and qualitative-effect limits are explicit. The older deployment record below remains historical until the new provider preview is inspected."
+  notes: "The September 20 extension uses repository-authored synthetic equipment, real local-service browser captures and explicitly labeled native replay. Agent inspection found no private paths, hostnames, account identifiers or proprietary employer implementation in visible media or captions. Pure-fluid, saturation-domain, methane-surrogate and qualitative-effect limits are explicit. The current provider preview was inspected on desktop and mobile with both new videos playing."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -233,10 +233,10 @@ approvalEvidence:
     result: "passed"
     notes: "All 12 new served media files are hashed. H.264 dimensions and durations were checked; native and browser frames were visually inspected. The portfolio lint, type, 76 unit and 172 passing node-contract checks, build and bundle budget passed; 84 focused browser checks covered media play/seek, manifests, no-JavaScript, reduced motion, mobile overflow and accessibility. Rust workspace checks passed 809 tests with eight existing optional instruments ignored. Historical scale and camera measurements are retained with their original scope."
   productionOrPreviewEvidence:
-    source: "Cloudflare Pages preview https://a1a226d6.humankaylee-portfolio.pages.dev; deployment a1a226d6-00e6-489a-8bc4-a44e71c021ce; source 00aceec (the branch head adds only this record; rendered output identical)"
-    capturedOn: "2026-09-11"
+    source: "Cloudflare Pages preview https://c75d3733.humankaylee-portfolio.pages.dev; source 5148e23bd4536ffd9de0994b3997b20e41b77792 (the follow-up adds inspection metadata and Linux screenshot baselines only; rendered output identical)"
+    capturedOn: "2026-09-20"
     result: "passed"
-    notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the photoreal stills, the wide yard view and the big-cloud clip rendered in the gallery with their captions and were served with their manifest SHA-256 (four hash matches, zero mismatches). Byte-range requests answered 200 on the uncached preview, as on the previous revision, and 206 on the cached production origin; the production origin check runs after the merge."
+    notes: "The page returned HTTP 200; desktop and 390-pixel mobile inspection found no overflow or browser errors, and both new videos played. All 12 new media files matched their manifest SHA-256. Preview byte-range requests returned 200 for both new and retained media, so preview seeking is not claimed: the strict range/seek check remains a production release check. The existing custom-domain video returned 206. Local browser seek/resume tests and all Lighthouse thresholds passed; CryoSim scored 91 performance and 100 accessibility, best practices and SEO."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
   description: "Concurrent nitrogen, argon and methane process pages, mass and energy accounting, cryogenic spill and flare visuals, and retained Rust simulation scale evidence."
