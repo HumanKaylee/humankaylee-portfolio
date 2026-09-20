@@ -22,6 +22,9 @@ const origin = args[originIndex + 1].replace(/\/$/, "");
 const manifest = JSON.parse(
 	readFileSync("apps/web/src/data/cryo-m10-media-manifest.json", "utf8"),
 );
+const processManifest = JSON.parse(
+	readFileSync("apps/web/src/data/cryo-process-media-manifest.json", "utf8"),
+);
 const page = await fetch(`${origin}/work/cryo-flow-sim/`);
 const html = await page.text();
 const mediaUrls = [
@@ -72,6 +75,7 @@ for (const url of mediaUrls) {
 	}
 	const derivative = manifest.items
 		.flatMap((i) => [...i.derivatives, ...(i.video ? [i.video] : [])])
+		.concat(processManifest.items)
 		.find((d) => url.endsWith(`/${d.file}`));
 	if (derivative) {
 		const full = await fetch(`${origin}${url}`);

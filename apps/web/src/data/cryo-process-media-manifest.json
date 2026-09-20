@@ -1,0 +1,131 @@
+{
+	"contract": "cryosim.process_media.v1",
+	"created": "2026-09-20",
+	"source_repository": "HumanKaylee/cryo-flow-sim-showcase",
+	"source_capture_revision": "128a4048d7632b63b907e05bade5263008b2e47d",
+	"source_capture_dirty": true,
+	"model": "pure-fluid-equilibrium-v1;nist-saturation-1.01325-to-8-bar",
+	"live": {
+		"engine_sha256": "d4be1dc67bdce0a2e0ce1b7aa74a3b2bd2eba22a39ce2e8899ff050c3d24ed98",
+		"wall_seconds": 40.058,
+		"measured_tick_hz": 27.83463977233012,
+		"observed_ticks": 1115,
+		"browser_errors": [],
+		"loading_trim_seconds": 2,
+		"note": "Wall-clock recording during concurrent local verification. This is not a fleet performance regrade."
+	},
+	"native": {
+		"engine_sha256": "8ceb7d3c2249ac9792220693380a5abb59dfca0c5debffde3da104c0abd43281",
+		"replay_sha256": "8279037d2c7d65c887c0c1954bc29a19cb970241e19fb01853abad7dcbab10a8",
+		"simulation_seconds": 180,
+		"presentation_seconds": 10,
+		"final_service_identical_snapshots": 41,
+		"note": "All 41 native-source snapshots exactly match a fresh replay on the final service executable. The Unreal map is a separate representative-state scene; the video is rendered in Blender."
+	},
+	"limits": "Pure-fluid reduced-order model; methane is an LNG surrogate. Qualitative frost, pool, condensation and flame appearance. No CFD, dispersion, explosion, safety or plant-validation claim.",
+	"items": [
+		{
+			"file": "argon-pid-1280.webp",
+			"bytes": 57598,
+			"sha256": "dcb005d459bc6edcdfacf43cc540d02e637d9279672270794870d27563119e26",
+			"width": 1280,
+			"height": 720,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "argon-pid-1920.webp",
+			"bytes": 111156,
+			"sha256": "ee2cf102ea477a9971724ef2c4b3ea35f7ef828ef1be40a3667e7390b413135d",
+			"width": 1920,
+			"height": 1080,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "argon-pid-640.webp",
+			"bytes": 18178,
+			"sha256": "606a07f1020793a39831e4955edc5a67a8b15de3707d281d39ce5eeaeb566193",
+			"width": 640,
+			"height": 360,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "nitrogen-pid-1280.webp",
+			"bytes": 58176,
+			"sha256": "0aef4a3fd8fe5867c856f7f52f267150e408f1ebb1f46d9ece945e96341c7161",
+			"width": 1280,
+			"height": 720,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "nitrogen-pid-1920.webp",
+			"bytes": 111600,
+			"sha256": "d0d45d5fc927f21609540f42583d0b8727cba489cfca1c011a3660faba84be8b",
+			"width": 1920,
+			"height": 1080,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "nitrogen-pid-640.webp",
+			"bytes": 18492,
+			"sha256": "e6192daa07cee0badda5e1ba68f89b37f128fda6323fa045a5f72221f79d32fa",
+			"width": 640,
+			"height": 360,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "process-live-poster-1280.webp",
+			"bytes": 58210,
+			"sha256": "a3c0e8f2629e1805be9aa67a6f20eb563c0f3ea4400237218a60d3385edc4999",
+			"width": 1280,
+			"height": 720,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "process-live-poster-640.webp",
+			"bytes": 18372,
+			"sha256": "f96d19b4c5c89419ebfbbed084b7c56c9fe419f67e47c819bdb803c48b389471",
+			"width": 640,
+			"height": 360,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset"
+		},
+		{
+			"file": "process-live.mp4",
+			"bytes": 3200001,
+			"sha256": "c769dbd9bcc86d208b3c6a43f16097509a54a642903d64df7b133558c3257ac2",
+			"width": 1920,
+			"height": 1080,
+			"capture_class": "Actual browser capture of live Rust process plant; qualitative field inset",
+			"duration_seconds": 40.733008,
+			"codec": "h264",
+			"frame_rate": "30/1"
+		},
+		{
+			"file": "process-yard-poster-1280.webp",
+			"bytes": 54590,
+			"sha256": "ea56b75dd6d1620b4d8722626549471cca294ebf3967c1610aa643f9899b37fc",
+			"width": 1280,
+			"height": 720,
+			"capture_class": "Blender recorded-state cinematic; qualitative effects; 180 simulation seconds in 10 seconds"
+		},
+		{
+			"file": "process-yard-poster-640.webp",
+			"bytes": 21548,
+			"sha256": "83a02383ad9ca099188e62d179a4f9780d34b7448bf4c6743f8c4adeab6f8b41",
+			"width": 640,
+			"height": 360,
+			"capture_class": "Blender recorded-state cinematic; qualitative effects; 180 simulation seconds in 10 seconds"
+		},
+		{
+			"file": "process-yard-replay.mp4",
+			"bytes": 3711051,
+			"sha256": "a31e163de54c52d81bac2c04680a7ad10dd27fff2d442c916ed7a898122ed51f",
+			"width": 1600,
+			"height": 900,
+			"capture_class": "Blender recorded-state cinematic; qualitative effects; 180 simulation seconds in 10 seconds",
+			"duration_seconds": 10.0,
+			"codec": "h264",
+			"frame_rate": "24/1"
+		}
+	],
+	"implementation_commit": "d902edc4cae9cb9ad4ca62f00bb11c5f7cfd1ad8"
+}

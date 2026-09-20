@@ -5,10 +5,10 @@ discipline: "simulation"
 year: 2026
 placement: "flagship"
 featuredOrder: 1
-lede: "Rust process simulation informed by Siemens and Rockwell PLC experience: 29,500 entities at 30 Hz with fixed-seed replay, extended in September 2026 into a bounded engineering program with a fault library, two commodities, a software controller, structured import, a browser projection proof and a localhost Unreal Engine camera."
+lede: "Three instrumented process pages share one Rust clock: liquid nitrogen, liquid argon and pure liquid methane. Switch pages while independent inventories keep moving, then trace leaks, boiling pools, frost and flare flameout from process state to the field view."
 problem: "Control sequences are difficult to rehearse when the real facility is unavailable, incomplete, or too costly to place into every fault and boundary condition. The simulator needed reproducible state transitions across valves, tanks, pipes, and instrumentation without depending on live hardware."
 stakes: "A simulation that hides its assumptions can create false confidence at the exact conditions where engineering errors are most costly: low temperatures, pressure differentials, actuator timing, alarms, and recovery sequences."
-role: "Controls-domain translation, Rust workspace architecture, simulation implementation, capture pipeline, and artifact validation."
+role: "Controls-domain translation informed by Siemens and Rockwell PLC experience, Rust workspace architecture, simulation implementation, capture pipeline, and artifact validation."
 constraints:
   - "All behavior must be deterministic from a fixed seed so artifacts are reproducible and auditable."
   - "No live hardware dependency; the simulation must run entirely from a Rust service with a browser-rendered UI."
@@ -16,16 +16,16 @@ constraints:
   - "The current demonstration is not plant-calibrated, connected to PLC or DCS control logic, safety-authoritative, or an operational digital twin."
   - "Every increment is graded against an exit criterion fixed before the work starts; a milestone that misses a clause is recorded as not verified, never softened to pass."
 architecture:
-  overview: "Since September 2026 the workspace also holds a fault library with a declared 13-mode supported set and a connection-seam leak that modifies process truth, a versioned imported-model contract that accepts only repository-authored synthetic sources, a per-commodity liquid property path for oxygen and nitrogen from a pinned MIT-licensed source, a software controller inside the core, a practice engine graded as an engineering demonstration, a renderer-neutral read-only projection contract with a browser 3D proof, and a localhost Unreal Engine 5.8.2 adapter whose WebRTC signalling is relayed by the Rust service. A Rust workspace drives three crates: cryo-core owns the physics domain model, cryo-service exposes an Axum HTTP layer, and cryo-web serves the browser-rendered SVG/HTML/CSS dashboard. Playwright orchestrates the Stage 1 capture scenario and validates the artifact."
-  diagramAlt: "A three-crate Rust workspace with a physics core, Axum service layer, and browser-rendered SVG/HTML/CSS dashboard captured by a Playwright scenario harness."
+  overview: "The new process plant keeps three independent circuits inside the existing Rust simulation actor. Each vessel stores mass, internal energy and volume; a bounded pure-fluid saturation table determines its pressure, temperature and phase inventory. Valve travel, enthalpy transfer, heat ingress, vapor discharge and spill evaporation change that state. A pushed snapshot feeds the browser SVG/HTML/CSS P&IDs and qualitative canvas field view; page selection changes only the view. Blender-authored equipment and a separate Unreal scene provide a native visual presentation of recorded state. The earlier LOX topology, large generated fleet, fault library, controller and Unreal camera retain their own evidence boundaries."
+  diagramAlt: "One Rust simulation clock advances nitrogen, argon and pure methane circuits; snapshots drive instrumented browser pages and recorded Blender and Unreal field effects."
 decisions:
-  - title: "Fixed-seed capture"
-    choice: "Drive the Stage 1 scenario from a fixed seed and scenario name."
+  - title: "One clock, independent circuits"
+    choice: "Keep all three process circuits in the Rust runtime; selecting a page changes only the visible instruments."
     alternatives:
-      - "Depend on live hardware or an unpredictable animation loop."
-    tradeoff: "The capture favors reproducibility and auditability over live-system variability."
-  - title: "Threshold-based validation"
-    choice: "Validate OCR, motion, flow, tank, pipe, telemetry, and clamp thresholds after capture."
+      - "Run a separate animation or reset the model whenever a page opens."
+    tradeoff: "A shared tick makes cross-page behavior reproducible. Separate fluid inventories avoid mixing incompatible commodities, and the bounded new model leaves the historical oxygen and scale contracts intact."
+  - title: "Repeatable captures with measured checks"
+    choice: "Drive the Stage 1 scenario from a fixed seed and scenario name, then validate OCR, motion, flow, tank, pipe, telemetry, and clamp thresholds after capture."
     alternatives:
       - "Rely on visual inspection alone."
     tradeoff: "Thresholds are more trustworthy than inspection alone but require calibration against known-good runs. The September 2026 program generalized this: every milestone's exit criterion, budgets and negative controls were written before building and graded clause by clause with three verdict states (pass, fail, unmeasurable); several milestones were graded not verified on a first pass and re-graded only after the gap was measured and fixed."
@@ -34,8 +34,9 @@ decisions:
     alternatives:
       - "Build a general simulation platform or multi-tenant SaaS before proving paid customer demand."
     tradeoff: "Manual customer translation limits early software scale, but it tests the buyer, inputs, fidelity, acceptance criteria, and delivery economics before making a larger product commitment."
-outcome: "The scaled system ran 29,500 entities at 30 Hz and recovered to 30 Hz after deliberate overload. Its fixed-seed deterministic capture produced 1,800 frames with raw output pinned by SHA-256 inside the same executable, seed, GPU-adapter, and driver scope. Coordinated close, open, and restore waves moved across all 15,000 valves; the shipped video changed 24.3% of label-excluded fleet pixels versus a legacy 1.0% whole-percent comparator. A measured warmed 5.29 MB full JSON state snapshot compared with a 6.8 KB representative warmed binary delta, about 779× smaller, with static layout retained separately. Between 2026-09-07 and 2026-09-11 the project then ran as a milestone program: ten milestones, each with an exit criterion fixed before the work, a pre-registered budget file and negative controls, graded clause by clause with three verdict states (pass, fail, unmeasurable) and recorded in a private program repository with every decision and evidence record. The last graded commit passed 734 workspace tests with the reference run's final state hash unchanged across every increment, and the localhost Unreal Engine camera showed a seam-vapour cue 109 ms after the adapter applied it."
+outcome: "The new circuits run together while the operator changes pages. A nitrogen leak feeds a boiling pool; isolation closes the valve while residual liquid keeps evaporating. Methane pilot loss extinguishes the flare and raises an alarm. Live P&ID footage and an explicitly labeled native replay show those behaviors alongside the project's retained scale and camera evidence."
 lessons:
+  - "A dramatic effect needs a physical cause: nitrogen and argon do not burn, a boiling spill can leave liquid after isolation, and frost belongs on cold exposed surfaces or failed insulation. The UI and native scene consume process state; their appearance does not validate consequence physics."
   - "Deterministic seeds make simulation artifacts auditable in a way that live hardware captures cannot be."
   - "Separating domain logic into a no-I/O core crate forces the physics model to be fully unit-testable before any service or UI code depends on it."
   - "Threshold-based artifact validation is more trustworthy than visual inspection alone, but the thresholds need calibration against known-good runs."
@@ -55,8 +56,8 @@ recruiterSignificance:
     - label: "Evidence boundaries"
       detail: "Offline determinism, live runtime behavior, and future facility integration are reported as separate claims, and the ten September 2026 milestones (control panel and P&ID, fault library, structured import, two commodities, software controller, engineering-practice workflow, browser projection proof and a localhost Unreal Engine camera) each carry a pre-registered budget file, negative controls and a recorded verdict."
 evidence:
-  label: "Scale simulation proof"
-  summary: "Measured scale, real-time recovery, and byte-identical deterministic replay for the 29,500-entity generated plant."
+  label: "Process behavior and retained scale proof"
+  summary: "Three concurrent process circuits extend the project; the figures below retain the scope of the earlier measured scale, replay and camera runs."
   values:
     - label: "System scale"
       value: "29,500 entities"
@@ -73,8 +74,8 @@ evidence:
     - label: "Unreal camera latency"
       value: "109 ms"
       detail: "Glass-to-glass from the adapter applying a seam-vapour cue to the first changed frame in the browser tab, over a localhost WebRTC stream at 1280 by 720 and 30 fps, one viewer (budget 250 ms)."
-  scope: "Generated-scale evidence combines a deterministic offline capture from a fixed seed with a separately measured live real-time run; source commits and measured validation thresholds are recorded. The September 2026 program figures come from its exit-evidence records on a single Windows workstation and one Linux second device; each is a bounded current project claim, not a customer or facility result."
-  limits: "Byte determinism is scoped to the same executable, seed, GPU adapter, and driver; the deterministic offline capture does not claim wall-clock real-time performance. The physical model is a bounded reduced-order model at demonstrator fidelity: two commodities on the liquid saturation path only, a single generated model under every graded scenario, a qualitative seam-vapour cue that is symbolic and not a concentration, release-rate, dispersion or hazard-distance analysis, and a software controller reaching two of four tick loops. The practice workflow is an engineering demonstration, not training, qualification or credit; the public interactive demonstrator is not built (the service shares one run among all clients); the optical-character-recognition ingestion milestone is deferred. Nothing here is consequence analysis or live-equipment control: it is simulation-only, with no write-capable path to live plant, launch hardware or safety systems."
+  scope: "The new process pages are a separate bounded implementation with source-linked properties, mass and energy accounting, targeted fault controls and real-service browser checks. They do not inherit the large-fleet performance result. Generated-scale evidence combines a deterministic offline capture from a fixed seed with a separately measured live real-time run; source commits and measured validation thresholds are recorded. The September 2026 program figures come from its exit-evidence records on a single Windows workstation and one Linux second device; each is a bounded current project claim, not a customer or facility result. In the retained scale capture, coordinated valve waves changed 24.3% of label-excluded fleet pixels versus a legacy 1.0% whole-percent comparator. A 5.29 MB full JSON state snapshot compared with a 6.8 KB representative warmed binary delta, about 779 times smaller, with static layout retained separately."
+  limits: "The new three-circuit plant uses a reduced-order, pure-fluid, two-phase equilibrium model over 1.01325 to 8 bar absolute. Interpolated NIST saturation data supports its property calculations; this is not plant calibration. Pure liquid methane is an LNG surrogate, not a composition-resolved LNG model. Dry-out, compressed all-liquid states, freezing, superheated vapor, detailed two-phase pipe flow and explosion consequences are outside this closure. Frost, fog, pool shape and fire appearance are qualitative: not a concentration, release-rate, dispersion or hazard-distance analysis. The native scene video is a recorded-state replay, not a live camera-latency measurement. Historical scale and 109 ms camera results belong to their earlier workloads and revisions. The practice workflow remains an engineering demonstration, not training, qualification or credit. This public page presents static media; it does not expose an interactive plant backend. Simulation-only, with no write-capable path to live plant, launch hardware or safety systems."
 media:
   kind: "video"
   src: "/media/cryo-flow-sim-stage1.mp4"
@@ -100,6 +101,46 @@ media:
     alt: "Cryogenic flow dashboard showing coordinated valve travel and changing telemetry."
     description: "A ten-second silent loop: the overview transitions into coordinated valve movement, active transfer flow, and changing tank telemetry before returning to a stable frame."
 evidenceMedia:
+  - kind: "video"
+    src: "/media/cryo-flow-sim-process/process-live.mp4"
+    poster: "/media/cryo-flow-sim-process/process-live-poster-1280.webp"
+    responsivePosterSources:
+      - { src: "/media/cryo-flow-sim-process/process-live-poster-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-process/process-live-poster-1280.webp", width: 1280 }
+    width: 1920
+    height: 1080
+    alt: "Live CryoSim process pages switching between nitrogen, argon and methane while independent inventories advance, followed by flare flameout, a cryogenic leak and isolation."
+    caption: "Three pages, one advancing Rust clock. This real-service browser capture switches between liquid nitrogen, liquid argon and pure liquid methane without resetting their inventories. Pilot loss removes the methane flare; nitrogen leak injection creates a modeled liquid pool, and isolation leaves residual evaporation. The field inset is an illustrative model view. Mass and energy are accounted in the reduced-order model; this is an engineering demonstration, not plant or consequence validation."
+  - kind: "image"
+    src: "/media/cryo-flow-sim-process/nitrogen-pid-1920.webp"
+    responsiveSources:
+      - { src: "/media/cryo-flow-sim-process/nitrogen-pid-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-process/nitrogen-pid-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-process/nitrogen-pid-1920.webp", width: 1920 }
+    width: 1920
+    height: 1080
+    alt: "Liquid nitrogen P&ID with source and receiver vessels, live pressure temperature level and flow readings, transfer controls, leak alarm and a residual boiling pool in the illustrative field view."
+    caption: "Nitrogen transfer and leak response. Tagged pressure, temperature, level and flow indications come from the Rust circuit state. A leak removes liquid from the circuit and feeds a boiling pool; the white cloud depicts atmospheric condensation qualitatively. The schematic is synthetic, with passive equipment symbols distinguished from actuated model elements. Nitrogen does not burn."
+  - kind: "image"
+    src: "/media/cryo-flow-sim-process/argon-pid-1920.webp"
+    responsiveSources:
+      - { src: "/media/cryo-flow-sim-process/argon-pid-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-process/argon-pid-1280.webp", width: 1280 }
+      - { src: "/media/cryo-flow-sim-process/argon-pid-1920.webp", width: 1920 }
+    width: 1920
+    height: 1080
+    alt: "Liquid argon gas-supply P&ID showing source and receiver vessels, transfer flow, vaporizer outlet temperature, vent routing and independently advancing level history."
+    caption: "Argon gas supply continues while another page is selected. Its tank equilibrium uses argon-specific saturation properties rather than reusing oxygen constants. The finned vaporizer, instrument tags, vent routing and cold-surface frost provide process context; detailed exchanger sizing and gas-dispersion behavior are outside this demonstration."
+  - kind: "video"
+    src: "/media/cryo-flow-sim-process/process-yard-replay.mp4"
+    poster: "/media/cryo-flow-sim-process/process-yard-poster-1280.webp"
+    responsivePosterSources:
+      - { src: "/media/cryo-flow-sim-process/process-yard-poster-640.webp", width: 640 }
+      - { src: "/media/cryo-flow-sim-process/process-yard-poster-1280.webp", width: 1280 }
+    width: 1600
+    height: 900
+    alt: "Native rendered cryogenic yard with instrumented tanks, frost on cold transfer piping, a contained boiling spill and a separate methane flare driven by recorded process states."
+    caption: "Recorded-state cinematic of a new repository-authored industrial yard: 180 simulated seconds condensed into ten seconds. Blender models show transfer equipment, containment, cold-surface frost and a spatially separate methane flare; the corresponding Unreal scene represents one captured state using the same equipment and process channels. Pool size, evaporation, frost and flame eligibility follow recorded Rust snapshots. Motion and appearance are qualitative; this is not a live Unreal camera-latency measurement, combustion CFD or an explosion model."
   - kind: "video"
     src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4"
     poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp"
@@ -150,7 +191,7 @@ evidenceMedia:
     width: 1920
     height: 1080
     alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour cloud pours from the transfer-line flange at the tank seam, billows along the pipe and spreads across the pad while the simulated leak is active."
-    caption: "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour in a twelve-metre domain, baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the cloud billows out of the flange, rolls along the transfer line and spreads across the pad the way vapour boiling off a cryogenic spill hugs the ground. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be unmistakable from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
+    caption: "Simulated seam leak on the fixed camera (Unreal Engine 5.8.2, 1920 by 1080, 30 frames per second, ten seconds, silent). The view holds with no leak, then the cue appears: a Mantaflow gas simulation of cold vapour in a twelve-metre domain, baked in Blender into a six-direction lit flipbook and lit in the scene by its own sun, so the illustrative cloud billows from the flange and along the transfer line. This earlier clip holds a preview cue and uses an editorial transition; it does not measure ground-level dispersion or a live injected fault. Why it matters: this is cue band medium, the state the adapter switches on at the fault library's activation tick at the pinned seam anchor, and it has to be unmistakable from a camera view. It illustrates where and when, never how much. These frames use Unreal(R) Engine. Unreal(R) is a trademark or registered trademark of Epic Games, Inc. in the United States of America and elsewhere. Unreal(R) Engine, Copyright 1998-2026, Epic Games, Inc. All rights reserved. Qualitative visualization only: a symbolic cue at a synthetic seam anchor, not a concentration, release-rate, dispersion or hazard-distance analysis. Simulation-only; no live-equipment writes."
   - kind: "image"
     src: "/media/cryo-flow-sim-m10/cryo-yard-wide-leak-1920.webp"
     responsiveSources:
@@ -167,10 +208,10 @@ redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "operator"
-  reviewedOn: "2026-09-11"
+  reviewedOn: "2026-09-20"
   checklistStatus: "complete"
   openItems: []
-  notes: "The 2026-09-11 big-cloud revision (the seam-vapour clip re-captured with a twelve-metre Mantaflow cloud that fills the yard, and the cue-cleared still, visually identical to cue none, replaced by the wide inspection-camera view with the cloud) passed the same release instruments on the local build and agent inspection on the exact Cloudflare provider preview; Joe instructed it in the task on 2026-09-11. Earlier revision note: The 2026-09-11 photoreal media revision (three repository-authored synthetic Unreal Engine stills and a ten-second seam-vapour video replacing the four stage-1 stills, each caption carrying the qualitative label, the Unreal notice and the simulation-only language, manifest schema 2.0.0 with the video hashed) passed the same release instruments on the local build and agent inspection on the exact Cloudflare provider preview; no private hostnames, paths, addresses or account identifiers are in the captions, alt text or media paths. Joe instructed the publication in the task on 2026-09-11. Earlier revision note: The 2026-09-11 program update (September 2026 milestones, four synthetic Unreal Engine stills with the qualitative label and the Unreal notice, evidence-bound figures, limitation language) passed the release instruments (no-JavaScript rendering, reduced motion, accessibility scan, forbidden-term scan, overflow, manifest hash) on the local build and agent inspection on the exact Cloudflare provider preview. Joe authorized production publication in the task on 2026-09-11. Earlier revision note: The expanded controls narrative, consulting offer, claim boundaries, and refreshed visual baselines passed public-safety review plus agent and browser inspection on the exact Cloudflare provider preview. Joe authorized production publication in this task on 2026-09-02. This records authorization without claiming he personally inspected the preview. No proprietary employer implementation, private paths, credentials, account identifiers, raw logs, or control-system access details are present."
+  notes: "The September 20 extension uses repository-authored synthetic equipment, real local-service browser captures and explicitly labeled native replay. Agent inspection found no private paths, hostnames, account identifiers or proprietary employer implementation in visible media or captions. Pure-fluid, saturation-domain, methane-surrogate and qualitative-effect limits are explicit. The older deployment record below remains historical until the new provider preview is inspected."
   checklist:
     secretsRemoved: "yes"
     hostnamesAndAccessPathsGeneralized: "yes"
@@ -183,14 +224,14 @@ redactionReview:
 approvalEvidence:
   humanSignoff:
     reviewer: "Joe Poznanski"
-    signedOffOn: "2026-09-11"
+    signedOffOn: "2026-09-20"
     decision: "approved"
-    notes: "Joe instructed this revision and its deployment in the task on 2026-09-11 (\"see if it's possible to do a lot more billowing vapor or smoke coming out of the seam and making a substantial amount of smoke fill the area. Put that on my personal profile again\"; \"replace one of those ... Visually inspect it, verify it, and then go ahead and deploy it to my site when it's ready\"). This records the instruction and does not claim he personally inspected the preview. The earlier same-day instruction (\"make sure there's a video as media of the vapor and put it on my personal site (replacing the original) ...\") covered the previous revision. The earlier stage-1 authorization of 2026-09-11 (\"You can go ahead and deploy it. You have full permission to do that.\") covered the previous revision."
+    notes: "Joe requested implementation, tests and visual inspection, and instructed: \"Once again, post it to my personal site on the existing project and flesh it out even more.\" This records publication authorization, not a claim that Joe personally inspected the preview."
   artifactInspection:
-    source: "CryoSim program repository at the photoreal field-scene increment, big-cloud revision (decision VIS-DEC-021, evidence PHOTOREAL-SCENE-EVIDENCE.md section Big cloud, Shipping evidence re-run PASS, site-media sources committed); portfolio branch feat/cryo-photoreal-media-20260911; agent inspection in this task"
-    inspectedOn: "2026-09-11"
+    source: "CryoSim implementation d902edc4cae9cb9ad4ca62f00bb11c5f7cfd1ad8; independently inspected browser capture, Blender replay and native Unreal scene; process media manifest v1"
+    inspectedOn: "2026-09-20"
     result: "passed"
-    notes: "Local build inspected: lint, typecheck, 76 unit tests and 172 node contract tests, 78 end-to-end tests across the four specs that pin the case study (release instruments with negative cases, including the video's on-disk and served hash and the manifest's item list; work routes with three gallery videos, a seek test for the clip and a check that the two adapter stills differ; project detail; the static shell's forbidden-word scan); the Windows visual suite; the local Lighthouse gate; every still and poster frame carries its measured luminance so no black frame could pass; the clip's frames and both new stills were viewed before encoding; no private hostnames, paths, addresses or account identifiers in the rendered page, captions or media paths."
+    notes: "All 12 new served media files are hashed. H.264 dimensions and durations were checked; native and browser frames were visually inspected. The portfolio lint, type, 76 unit and 172 passing node-contract checks, build and bundle budget passed; 84 focused browser checks covered media play/seek, manifests, no-JavaScript, reduced motion, mobile overflow and accessibility. Rust workspace checks passed 809 tests with eight existing optional instruments ignored. Historical scale and camera measurements are retained with their original scope."
   productionOrPreviewEvidence:
     source: "Cloudflare Pages preview https://a1a226d6.humankaylee-portfolio.pages.dev; deployment a1a226d6-00e6-489a-8bc4-a44e71c021ce; source 00aceec (the branch head adds only this record; rendered output identical)"
     capturedOn: "2026-09-11"
@@ -198,7 +239,7 @@ approvalEvidence:
     notes: "Exact-source provider preview returned HTTP 200 with the expected security headers; the photoreal stills, the wide yard view and the big-cloud clip rendered in the gallery with their captions and were served with their manifest SHA-256 (four hash matches, zero mismatches). Byte-range requests answered 200 on the uncached preview, as on the previous revision, and 206 on the cached production origin; the production origin check runs after the merge."
 seo:
   title: "Cryogenic Flow Simulation | Joe Poznanski"
-  description: "A deterministic Rust process simulator informed by Siemens and Rockwell controls experience, with measured 29,500-entity evidence and a graded September 2026 engineering program through a localhost Unreal Engine camera."
+  description: "Concurrent nitrogen, argon and methane process pages, mass and energy accounting, cryogenic spill and flare visuals, and retained Rust simulation scale evidence."
   canonicalPath: "/work/cryo-flow-sim/"
   ogImage: "/social/default.png"
 ---
