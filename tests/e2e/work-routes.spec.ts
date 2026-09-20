@@ -517,15 +517,15 @@ test.describe("Work routes @work", () => {
 
 		const gallery = page.locator("[data-case-study-media-gallery]");
 		const items = gallery.locator("figure");
-		await expect(items).toHaveCount(6);
+		await expect(items).toHaveCount(10);
 
 		const videos = items.locator("video");
-		await expect(videos).toHaveCount(3);
-		// Two scale proofs first, then the photoreal seam-vapour clip at gallery
-		// index 4 (between the cue-none and cue-cleared stills).
+		await expect(videos).toHaveCount(5);
+		// Four current process entries precede the retained scale proofs.
+		// The earlier seam-vapour clip keeps its relative place between stills.
 		const expectedVideos = [
 			{
-				figure: 0,
+				figure: 4,
 				src: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.mp4",
 				poster: "/media/cryo-flow-sim-scale/cryo-scale-deterministic-960.webp",
 				width: "960",
@@ -533,7 +533,7 @@ test.describe("Work routes @work", () => {
 				alt: "Deterministic Cryogenic flow simulation showing spatial valve-command waves and actual tank, pipe, and sensor response across 29,500 generated entities.",
 			},
 			{
-				figure: 1,
+				figure: 5,
 				src: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.mp4",
 				poster: "/media/cryo-flow-sim-scale/cryo-scale-realtime-960.webp",
 				width: "960",
@@ -541,7 +541,7 @@ test.describe("Work routes @work", () => {
 				alt: "Live Cryogenic flow simulator runtime moving from a normal 30 Hz window through deliberate stress and back to a 30 Hz recovery window.",
 			},
 			{
-				figure: 4,
+				figure: 8,
 				src: "/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-big.mp4",
 				poster:
 					"/media/cryo-flow-sim-m10/cryo-seam-vapour-leak-big-poster-960.webp",
@@ -550,9 +550,9 @@ test.describe("Work routes @work", () => {
 				alt: "Video of the synthetic liquid-oxygen yard in which a dense white vapour cloud pours from the transfer-line flange at the tank seam, billows along the pipe and spreads across the pad while the simulated leak is active.",
 			},
 		] as const;
-		for (const [index, expectedVideo] of expectedVideos.entries()) {
+		for (const expectedVideo of expectedVideos) {
 			const item = items.nth(expectedVideo.figure);
-			const video = videos.nth(index);
+			const video = item.locator("video");
 			await expect(item).toHaveAttribute("data-evidence-media-kind", "video");
 			await expect(video.locator("source")).toHaveAttribute(
 				"src",
@@ -571,10 +571,12 @@ test.describe("Work routes @work", () => {
 			"Live 60-second runtime proof: normal 30 Hz, deliberate stress degradation, then recovery to 30 Hz with zero dropped ticks in the recovery window.",
 		];
 		for (const [index, caption] of scaleCaptions.entries()) {
-			await expect(items.locator("figcaption").nth(index)).toHaveText(caption);
+			await expect(items.locator("figcaption").nth(index + 4)).toHaveText(
+				caption,
+			);
 		}
-		await expect(items.locator("figcaption")).toHaveCount(6);
-		for (const index of [2, 3, 4, 5]) {
+		await expect(items.locator("figcaption")).toHaveCount(10);
+		for (const index of [6, 7, 8, 9]) {
 			await expect(items.locator("figcaption").nth(index)).toContainText(
 				"Qualitative visualization only",
 			);
@@ -585,38 +587,35 @@ test.describe("Work routes @work", () => {
 		// The photoreal family replaced the placeholder cue: no figure may still
 		// describe the translucent sphere, and the stills are the 2026-09-11 family.
 		await expect(gallery).not.toContainText(/translucent sphere/i);
-		for (const index of [2, 3, 5]) {
+		for (const index of [6, 7, 9]) {
 			await expect(items.nth(index)).toHaveAttribute(
 				"data-evidence-media-kind",
 				"image",
 			);
 		}
-		await expect(items.nth(2).locator("img")).toHaveAttribute(
+		await expect(items.nth(6).locator("img")).toHaveAttribute(
 			"src",
 			"/media/cryo-flow-sim-m10/cryo-field-scene-1920.webp",
 		);
-		await expect(items.nth(3).locator("img")).toHaveAttribute(
+		await expect(items.nth(7).locator("img")).toHaveAttribute(
 			"src",
 			"/media/cryo-flow-sim-m10/cryo-cue-none-1280.webp",
 		);
-		await expect(items.nth(5).locator("img")).toHaveAttribute(
+		await expect(items.nth(9).locator("img")).toHaveAttribute(
 			"src",
 			"/media/cryo-flow-sim-m10/cryo-yard-wide-leak-1920.webp",
 		);
 		// The cue-cleared still was visually identical to cue none; the wide yard
-		// view with the cloud replaced it, so figures 3 and 5 must differ.
-		expect(await items.nth(3).locator("img").getAttribute("src")).not.toBe(
-			await items.nth(5).locator("img").getAttribute("src"),
+		// view with the cloud replaced it, so retained figures 7 and 9 must differ.
+		expect(await items.nth(7).locator("img").getAttribute("src")).not.toBe(
+			await items.nth(9).locator("img").getAttribute("src"),
 		);
-		await expect(items.nth(0)).not.toContainText(/live|real-time/i);
-		const fallbackLinks = items.getByRole("link", {
-			name: "Open the evidence video",
-		});
-		for (const [index, expectedVideo] of expectedVideos.entries()) {
-			await expect(fallbackLinks.nth(index)).toHaveAttribute(
-				"href",
-				expectedVideo.src,
-			);
+		await expect(items.nth(4)).not.toContainText(/live|real-time/i);
+		for (const expectedVideo of expectedVideos) {
+			const fallback = items.nth(expectedVideo.figure).getByRole("link", {
+				name: "Open the evidence video",
+			});
+			await expect(fallback).toHaveAttribute("href", expectedVideo.src);
 		}
 	});
 
@@ -631,7 +630,7 @@ test.describe("Work routes @work", () => {
 			await page.setViewportSize(viewport);
 			await page.goto("/work/cryo-flow-sim/");
 			const gallery = page.locator("[data-case-study-media-gallery]");
-			await expect(gallery.locator("figure")).toHaveCount(6);
+			await expect(gallery.locator("figure")).toHaveCount(10);
 			expect(
 				await page.evaluate(
 					() => document.documentElement.scrollWidth - window.innerWidth,
@@ -828,7 +827,7 @@ test.describe("Work routes @work", () => {
 		await expect(page.locator("[data-reading-progress]")).toBeHidden();
 		await expect(
 			page.locator("[data-case-study-media-gallery] video"),
-		).toHaveCount(3);
+		).toHaveCount(5);
 		for (const video of await page
 			.locator("[data-case-study-media-gallery] video")
 			.all()) {
@@ -1038,7 +1037,7 @@ test.describe("Work routes @work @noscript", () => {
 		).toHaveAttribute("preload", "none");
 		await expect(
 			page.locator("[data-case-study-media-gallery] figure"),
-		).toHaveCount(6);
+		).toHaveCount(10);
 		for (const video of await page
 			.locator("[data-case-study-media-gallery] video")
 			.all()) {
