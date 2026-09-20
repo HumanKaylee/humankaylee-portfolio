@@ -24,6 +24,7 @@ const allPublishedWork = [
 		title: "Black-Scholes Options Pricer in Rust and WASM",
 		slug: "black-scholes-wasm",
 	},
+	{ title: /^Goat Bridge/, slug: "goatbridge" },
 	{
 		title: "CLI Fleet Synchronization",
 		slug: "cli-fleet-synchronization-and-mcp-rollout",
@@ -63,7 +64,7 @@ test.describe("Work routes @work", () => {
 			"Read the case study",
 			"Read the case study",
 		]);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(4);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(5);
 		await expect(page.locator("[data-archive-work] article")).toHaveCount(2);
 		await expect(page.locator("[data-flagship-work]")).toContainText(
 			"Cryogenic Flow Simulation",
@@ -76,6 +77,7 @@ test.describe("Work routes @work", () => {
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
+			/^Goat Bridge/,
 		]);
 		await expect(page.locator("[data-archive-work]")).toContainText(
 			"CLI Fleet Synchronization",
@@ -99,6 +101,7 @@ test.describe("Work routes @work", () => {
 			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/openxhc-linuxcnc/",
 			"/work/mac-mini-shelf/",
+			"/work/goatbridge/",
 			"/work/black-scholes-wasm/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
@@ -122,19 +125,20 @@ test.describe("Work routes @work", () => {
 
 		expect(response?.status()).toBe(200);
 		await expect(page.locator(".work-index__header > p:last-child")).toHaveText(
-			"Two flagship engineering systems, four focused technical studies, and an operational archive. Each stays framed by the decisions, evidence, and limits that make the result trustworthy.",
+			"Two flagship engineering systems, five focused technical studies, and an operational archive. Each stays framed by the decisions, evidence, and limits that make the result trustworthy.",
 		);
 		await expect(page.locator("[data-flagship-work] h2")).toHaveText([
 			"Cryogenic Flow Simulation",
 			"Conformal Cooling Channel Generation",
 		]);
 		await expect(page.locator("[data-flagship-work] article")).toHaveCount(2);
-		await expect(page.locator("[data-supporting-work] article")).toHaveCount(4);
+		await expect(page.locator("[data-supporting-work] article")).toHaveCount(5);
 		await expect(page.locator("[data-supporting-work] article h2")).toHaveText([
 			"X-Plane Cabin Camera FOV Trade Study",
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
+			/^Goat Bridge/,
 		]);
 		await expect(
 			page.locator("[data-supporting-work]").getByRole("link", {
@@ -156,6 +160,11 @@ test.describe("Work routes @work", () => {
 				name: "Black-Scholes Options Pricer in Rust and WASM",
 			}),
 		).toHaveAttribute("href", "/work/black-scholes-wasm/");
+		const goatBridgeLink = page
+			.locator("[data-supporting-work]")
+			.getByRole("link", { name: /^Goat Bridge/ });
+		await expect(goatBridgeLink).toBeVisible();
+		await expect(goatBridgeLink).toHaveAttribute("href", "/work/goatbridge/");
 		await expect(page.locator("[data-flagship-work]")).not.toContainText(
 			/Black-Scholes/i,
 		);
@@ -175,6 +184,7 @@ test.describe("Work routes @work", () => {
 			"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			"Black-Scholes Options Pricer in Rust and WASM",
+			/^Next project: Goat Bridge/,
 			"CLI Fleet Synchronization",
 			"Remote Workstation Recovery",
 			"Cryogenic Flow Simulation",
@@ -195,7 +205,10 @@ test.describe("Work routes @work", () => {
 			).toBeVisible();
 			await expect(
 				page.getByRole("link", {
-					name: `Next project: ${expectedNext[index]}`,
+					name:
+						typeof expectedNext[index] === "string"
+							? `Next project: ${expectedNext[index]}`
+							: expectedNext[index],
 				}),
 			).toBeVisible();
 		}
@@ -241,6 +254,91 @@ test.describe("Work routes @work", () => {
 			"border-left-width",
 			"0px",
 		);
+	});
+
+	test("presents Goat Bridge as synthetic integration evidence with playable media and explicit hardware limits", async ({
+		page,
+		request,
+	}) => {
+		await page.goto("/work/goatbridge/");
+		await expect(
+			page.getByRole("heading", { level: 1, name: /^Goat Bridge/ }),
+		).toBeVisible();
+		await expect(page.locator("main")).toContainText(/synthetic/i);
+		await expect(page.locator("main")).toContainText(/captured|repeat|mosaic/i);
+		const limits = page
+			.locator(".proof-boundary > div")
+			.filter({ has: page.locator("dt", { hasText: "Known limits" }) })
+			.locator("dd");
+		await expect(limits).toContainText(/Speedgoat/i);
+		await expect(limits).toContainText(/physical|hardware/i);
+		await expect(limits).toContainText(/not|unverified|no /i);
+		const gallery = page.locator("[data-case-study-media-gallery]");
+		await expect(gallery).toBeVisible();
+		expect(await gallery.locator("video").count()).toBeGreaterThan(0);
+		for (const figure of await gallery.locator("figure").all()) {
+			await expect(figure.locator("figcaption")).toHaveText(/\S/);
+		}
+		const videos = page.locator(".work-detail video");
+		for (const video of await videos.all()) {
+			await expect(video).toHaveAttribute("controls", "");
+			await expect(video).toHaveAttribute("preload", "none");
+			await expect(video).not.toHaveAttribute("autoplay", "");
+			await expect(video).toHaveAttribute("aria-label", /\S/);
+			const source = video.locator("source");
+			await expect(source).toHaveAttribute(
+				"src",
+				/^\/media\/goatbridge\/.+\.mp4$/,
+			);
+			const mediaResponse = await request.get(
+				(await source.getAttribute("src")) ?? "",
+			);
+			expect(mediaResponse.status()).toBe(200);
+			expect(mediaResponse.headers()["content-type"]).toContain("video/mp4");
+			const poster = await video.getAttribute("poster");
+			expect(poster).toMatch(/^\/media\/goatbridge\//);
+			expect((await request.get(poster ?? "")).status()).toBe(200);
+		}
+
+		const heroVideo = page.locator(".work-detail__media video");
+		await heroVideo.evaluate(async (element) => {
+			const video = element as HTMLVideoElement;
+			video.muted = true;
+			await video.play();
+		});
+		await expect
+			.poll(() =>
+				heroVideo.evaluate(
+					(element) => (element as HTMLVideoElement).currentTime,
+				),
+			)
+			.toBeGreaterThan(0.05);
+		await heroVideo.evaluate(
+			(element) =>
+				new Promise<void>((resolve) => {
+					const video = element as HTMLVideoElement;
+					video.pause();
+					video.addEventListener("seeked", () => resolve(), { once: true });
+					video.currentTime = video.duration / 2;
+				}),
+		);
+		const seekTime = await heroVideo.evaluate((element) => {
+			const video = element as HTMLVideoElement;
+			if (Math.abs(video.currentTime - video.duration / 2) > 0.2) {
+				throw new Error("Goat Bridge hero did not seek to the requested frame");
+			}
+			return video.currentTime;
+		});
+		await heroVideo.evaluate(async (element) => {
+			await (element as HTMLVideoElement).play();
+		});
+		await expect
+			.poll(() =>
+				heroVideo.evaluate(
+					(element) => (element as HTMLVideoElement).currentTime,
+				),
+			)
+			.toBeGreaterThan(seekTime + 0.05);
 	});
 
 	test("renders the shelf process component only for the shelf slug", async ({
@@ -856,6 +954,7 @@ test.describe("Work routes @work", () => {
 			"/work/",
 			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/mac-mini-shelf/",
+			"/work/goatbridge/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 		]) {
 			for (const viewport of [

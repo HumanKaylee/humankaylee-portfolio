@@ -29,6 +29,7 @@ const coreRoutes = [
 		path: "/work/black-scholes-wasm/",
 		marker: /Live pricer/i,
 	},
+	{ path: "/work/goatbridge/", marker: /Goat Bridge/i },
 	{ path: "/about/", marker: /Operating principles/i },
 	{ path: "/resume/", marker: /Agentic AI & automation highlights/i },
 	{ path: "/notes/", marker: /Black-Scholes/i },
@@ -89,7 +90,7 @@ test.describe("Signal / Proof quality @quality @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(6);
+				).toHaveCount(7);
 			}
 		});
 	}

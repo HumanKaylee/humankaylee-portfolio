@@ -39,6 +39,7 @@ test.describe("crawler artifacts @metadata", () => {
 			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/openxhc-linuxcnc/",
 			"/work/mac-mini-shelf/",
+			"/work/goatbridge/",
 			"/work/cli-fleet-synchronization-and-mcp-rollout/",
 			"/work/remote-workstation-recovery-and-operational-debugging/",
 			"/work/black-scholes-wasm/",

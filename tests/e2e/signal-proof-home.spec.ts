@@ -112,7 +112,7 @@ for (const viewport of [
 	});
 }
 
-test("Signal / Proof homepage leads with two flagships, four supporting studies, and no archive projects", async ({
+test("Signal / Proof homepage leads with two flagships, five supporting studies, and no archive projects", async ({
 	page,
 }) => {
 	await page.goto("/");
@@ -152,7 +152,7 @@ test("Signal / Proof homepage leads with two flagships, four supporting studies,
 	const flagship = page.locator('[data-proof-placement="flagship"]');
 	const supporting = page.locator('[data-proof-placement="supporting"]');
 	await expect(flagship).toHaveCount(2);
-	await expect(supporting).toHaveCount(4);
+	await expect(supporting).toHaveCount(5);
 	await expect(flagship.locator("h3")).toHaveText([
 		"Cryogenic Flow Simulation",
 		"Conformal Cooling Channel Generation",
@@ -162,6 +162,7 @@ test("Signal / Proof homepage leads with two flagships, four supporting studies,
 		"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 		"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 		"Black-Scholes Options Pricer in Rust and WASM",
+		/^Goat Bridge/,
 	]);
 	await expect(
 		flagship.getByRole("link", { name: "Cryogenic Flow Simulation" }),
@@ -193,8 +194,12 @@ test("Signal / Proof homepage leads with two flagships, four supporting studies,
 		"OpenXHC: Reverse-Engineering a CNC Motion Interface",
 		"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 		"Black-Scholes Options Pricer in Rust and WASM",
+		/^Goat Bridge/,
 	]);
-	await expect(page.locator("[data-proof-placement]")).toHaveCount(6);
+	await expect(page.locator("[data-proof-placement]")).toHaveCount(7);
+	const goatBridgeLink = supporting.getByRole("link", { name: /^Goat Bridge/ });
+	await expect(goatBridgeLink).toBeVisible();
+	await expect(goatBridgeLink).toHaveAttribute("href", "/work/goatbridge/");
 	const shelfProof = supporting.filter({
 		hasText:
 			"Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
@@ -246,7 +251,7 @@ test("stays static and useful during an API outage", async ({ page }) => {
 		2,
 	);
 	await expect(page.locator('[data-proof-placement="supporting"]')).toHaveCount(
-		4,
+		5,
 	);
 	await expect(page.locator("main")).not.toContainText(
 		/Failed to fetch|ECONNREFUSED|TypeError:|API health/i,
@@ -266,9 +271,9 @@ test.describe("static homepage without JavaScript", () => {
 		);
 		await expect(
 			page.locator('[data-proof-placement="supporting"]'),
-		).toHaveCount(4);
+		).toHaveCount(5);
 		const motionLoops = page.locator("[data-motion-loop]");
-		await expect(motionLoops).toHaveCount(4);
+		await expect(motionLoops).toHaveCount(5);
 		await expect(
 			motionLoops.filter({
 				has: page.locator("[data-motion-video][poster]"),
@@ -278,9 +283,9 @@ test.describe("static homepage without JavaScript", () => {
 			motionLoops.filter({
 				has: page.locator('[data-video-poster] img[loading="lazy"]'),
 			}),
-		).toHaveCount(1);
+		).toHaveCount(2);
 		await expect(page.locator("[data-motion-video][src]")).toHaveCount(0);
-		await expect(page.locator("[data-motion-description]")).toHaveCount(4);
+		await expect(page.locator("[data-motion-description]")).toHaveCount(5);
 		await expect(page.locator("[data-motion-toggle]:visible")).toHaveCount(0);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("main")).not.toContainText(internalHomepageCopy);

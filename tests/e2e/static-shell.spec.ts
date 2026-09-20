@@ -43,6 +43,11 @@ const coreRoutes = [
 		copy: /Layered triage matrix/i,
 	},
 	{
+		path: "/work/goatbridge/",
+		heading: /^Goat Bridge/i,
+		copy: /Known limits/i,
+	},
+	{
 		path: "/about/",
 		heading: /Engineering judgment for systems that have to hold up/i,
 		copy: /Operating principles/i,
@@ -168,7 +173,7 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toBeVisible();
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(6);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(7);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator("canvas, svg")).toHaveCount(0);
 		for (const href of [
@@ -177,6 +182,7 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 			"/work/xplane-cabin-camera-fov-trade-study/",
 			"/work/openxhc-linuxcnc/",
 			"/work/black-scholes-wasm/",
+			"/work/goatbridge/",
 		]) {
 			await expect(
 				page.locator(`.proof-gallery a[href="${href}"]`),
@@ -329,9 +335,9 @@ test.describe("Signal / Proof static shell @static-shell", () => {
 					label: element.textContent?.trim(),
 				})),
 			);
-		expect(links).toHaveLength(8);
-		expect(new Set(links.map((link) => link.href)).size).toBe(8);
-		expect(new Set(links.map((link) => link.label)).size).toBe(8);
+		expect(links).toHaveLength(9);
+		expect(new Set(links.map((link) => link.href)).size).toBe(9);
+		expect(new Set(links.map((link) => link.label)).size).toBe(9);
 	});
 });
 
@@ -353,7 +359,7 @@ test.describe("Signal / Proof static shell @noscript", () => {
 			if (route.path === "/") {
 				await expect(
 					page.locator("[data-proof-placement]:visible"),
-				).toHaveCount(6);
+				).toHaveCount(7);
 			}
 		});
 	}
