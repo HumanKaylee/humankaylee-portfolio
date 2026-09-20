@@ -29,7 +29,7 @@ describe("Astro content collection fixtures", () => {
 		expect(contentConfig).not.toMatch(/\bprojects,|\bcaseStudies,/);
 	});
 
-	it("keeps exactly eight unified Work records in published hierarchy order", () => {
+	it("keeps exactly nine unified Work records in published hierarchy order", () => {
 		const entries = readdirSync(join(contentRoot, "work")).filter((file) =>
 			file.endsWith(".md"),
 		);
@@ -46,7 +46,7 @@ describe("Astro content collection fixtures", () => {
 			.sort((left, right) => left.featuredOrder - right.featuredOrder)
 			.map((entry) => entry.slug);
 
-		expect(entries).toHaveLength(8);
+		expect(entries).toHaveLength(9);
 		expect(orderedSlugs).toEqual([
 			"cryo-flow-sim",
 			"conformal-cooling-channel-generation",
@@ -54,6 +54,7 @@ describe("Astro content collection fixtures", () => {
 			"openxhc-linuxcnc",
 			"mac-mini-shelf",
 			"black-scholes-wasm",
+			"goatbridge",
 			"cli-fleet-synchronization-and-mcp-rollout",
 			"remote-workstation-recovery-and-operational-debugging",
 		]);
@@ -75,7 +76,7 @@ describe("Astro content collection fixtures", () => {
 			.map((entry) => readFileSync(join(contentRoot, "work", entry), "utf8"))
 			.filter((contents) => contents.includes('publicationStatus: "publish"'));
 
-		expect(published).toHaveLength(8);
+		expect(published).toHaveLength(9);
 
 		for (const contents of published) {
 			expect(contents).toContain(

@@ -23,6 +23,7 @@ const expectedVisualRoutes = [
 	["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 	["work-openxhc", "/work/openxhc-linuxcnc/"],
 	["work-mac-mini-shelf", "/work/mac-mini-shelf/"],
+	["work-goatbridge", "/work/goatbridge/"],
 	["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 	[
 		"work-remote-recovery",
@@ -112,6 +113,7 @@ test("B-037 visual regression spec exists and backlog tracks the task", () => {
 		["work-xplane-fov", "/work/xplane-cabin-camera-fov-trade-study/"],
 		["work-openxhc", "/work/openxhc-linuxcnc/"],
 		["work-mac-mini-shelf", "/work/mac-mini-shelf/"],
+		["work-goatbridge", "/work/goatbridge/"],
 		["work-cli-fleet", "/work/cli-fleet-synchronization-and-mcp-rollout/"],
 		[
 			"work-remote-recovery",

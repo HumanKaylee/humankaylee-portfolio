@@ -76,6 +76,11 @@ const socialImageRoutes: readonly SocialImageRoute[] = [
 		image: `${expectedSiteUrl}/social/mac-mini-shelf.png`,
 	},
 	{
+		label: "Goat Bridge Work detail",
+		path: "/work/goatbridge/",
+		image: `${expectedSiteUrl}/social/goatbridge.png`,
+	},
+	{
 		label: "note detail",
 		path: "/notes/wasm-black-scholes-options-pricer/",
 	},
@@ -357,6 +362,47 @@ test.describe("page metadata @metadata", () => {
 			name: "Mac mini Wall Shelf: Agentic CAD, FEM, and Manufacturing Preparation",
 			url: canonicalUrl,
 		});
+	});
+
+	test("renders route-specific Goat Bridge metadata and one canonical CreativeWork record", async ({
+		page,
+		request,
+	}) => {
+		const canonicalUrl = `${expectedSiteUrl}/work/goatbridge/`;
+		await page.goto("/work/goatbridge/");
+
+		await expect(page).toHaveTitle(/^Goat Bridge.*Joe Poznanski/i);
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			"href",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+			"content",
+			canonicalUrl,
+		);
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			/\S/,
+		);
+		const records = (
+			await page.locator('script[type="application/ld+json"]').allTextContents()
+		)
+			.flatMap((source) => JSON.parse(source))
+			.filter(
+				(record: { "@type"?: string }) => record["@type"] === "CreativeWork",
+			);
+		expect(records).toHaveLength(1);
+		expect(records[0]).toMatchObject({
+			name: expect.stringMatching(/^Goat Bridge/),
+			url: canonicalUrl,
+			creator: { "@id": expectedPersonId },
+		});
+		expect(JSON.stringify(records)).not.toMatch(
+			/redaction|openItems|checklistStatus|approvalEvidence/i,
+		);
+		const socialImage = await request.get("/social/goatbridge.png");
+		expect(socialImage.status()).toBe(200);
+		expect(socialImage.headers()["content-type"]).toContain("image/png");
 	});
 
 	test("renders route-specific X-Plane metadata and one canonical CreativeWork record", async ({

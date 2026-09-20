@@ -7,6 +7,7 @@ const releaseRoutes = [
 	"/work/conformal-cooling-channel-generation/",
 	"/work/openxhc-linuxcnc/",
 	"/work/mac-mini-shelf/",
+	"/work/goatbridge/",
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/about/",
@@ -69,7 +70,7 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		await page.goto("/");
 
 		await expect(page.locator(".proof-gallery")).toHaveCount(1);
-		await expect(page.locator("[data-proof-placement]")).toHaveCount(6);
+		await expect(page.locator("[data-proof-placement]")).toHaveCount(7);
 		await expect(page.locator("[data-capability-proof]")).toHaveCount(6);
 		await expect(page.locator(".proof-gallery .media-frame")).toHaveCount(3);
 		const xplaneProof = page.locator(".proof-gallery__item").filter({
@@ -77,7 +78,7 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		});
 		await expect(xplaneProof.locator(".media-frame")).toHaveCount(1);
 		await expect(page.locator(".proof-gallery .evidence-flow")).toHaveCount(1);
-		await expect(page.locator("[data-motion-loop]")).toHaveCount(4);
+		await expect(page.locator("[data-motion-loop]")).toHaveCount(5);
 		await expect(
 			page.locator(".project-atlas-shell, .evidence-drawer, .telemetry-strip"),
 		).toHaveCount(0);
@@ -136,6 +137,6 @@ test.describe("Signal / Proof visual surfaces @visual-surfaces", () => {
 		}
 
 		await page.goto("/");
-		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(6);
+		await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(7);
 	});
 });

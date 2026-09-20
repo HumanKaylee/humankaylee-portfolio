@@ -57,6 +57,12 @@ const launchRoutes = [
 		primaryLink: /Next project:/i,
 	},
 	{
+		path: "/work/goatbridge/",
+		heading: /^Goat Bridge/i,
+		marker: /Known limits/i,
+		primaryLink: /Open the project video/i,
+	},
+	{
 		path: "/about/",
 		heading: /Engineering judgment for systems that have to hold up/i,
 		marker: /Operating principles/i,
@@ -180,7 +186,7 @@ test.describe("Signal / Proof responsive cross-browser QA @responsive", () => {
 				/Principal engineer for simulation, controls, and operational software/i,
 			);
 			await expect(page.locator("[data-proof-placement]:visible")).toHaveCount(
-				6,
+				7,
 			);
 			await expect(
 				page.getByRole("link", { name: /View selected work/i }),

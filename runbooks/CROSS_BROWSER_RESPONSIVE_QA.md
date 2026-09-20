@@ -40,6 +40,7 @@ The executable matrix is `tests/e2e/responsive-cross-browser.spec.ts`.
 | `/work/cli-fleet-synchronization-and-mcp-rollout/` | CLI fleet proof and next-Work path |
 | `/work/remote-workstation-recovery-and-operational-debugging/` | Recovery proof and next-Work path |
 | `/work/black-scholes-wasm/` | Black-Scholes live-pricer narrative and next-Work path |
+| `/work/goatbridge/` | Simulator video, readable evidence captions, and explicit synthetic-input and hardware-validation limits |
 | `/about/` | Engineering judgment and selected-Work path |
 | `/resume/` | Résumé evidence and PDF download |
 | `/notes/` | Published Technical Notes and Black-Scholes note path |

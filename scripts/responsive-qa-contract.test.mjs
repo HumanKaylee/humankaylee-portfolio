@@ -20,6 +20,7 @@ const expectedResponsiveRoutes = [
 	"/work/cli-fleet-synchronization-and-mcp-rollout/",
 	"/work/remote-workstation-recovery-and-operational-debugging/",
 	"/work/black-scholes-wasm/",
+	"/work/goatbridge/",
 	"/about/",
 	"/resume/",
 	"/notes/",

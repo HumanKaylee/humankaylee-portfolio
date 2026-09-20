@@ -16,11 +16,12 @@ const expectedPublishedSlugs = [
 	"openxhc-linuxcnc",
 	"mac-mini-shelf",
 	"black-scholes-wasm",
+	"goatbridge",
 	"cli-fleet-synchronization-and-mcp-rollout",
 	"remote-workstation-recovery-and-operational-debugging",
 ];
 
-test("Work content has two flagships, four supporting studies, two archives, and required local assets", () => {
+test("Work content has two flagships, five supporting studies, two archives, and required local assets", () => {
 	const dir = "apps/web/src/content/work";
 	const files = readdirSync(dir).filter((name) => name.endsWith(".md"));
 	const source = files.map((name) =>
@@ -43,10 +44,11 @@ test("Work content has two flagships, four supporting studies, two archives, and
 		"supporting",
 		"supporting",
 		"supporting",
+		"supporting",
 	]);
 	assert.deepEqual(
 		[...featuredOrders].sort((left, right) => left - right),
-		[1, 2, 3, 4, 5, 6, 7, 8],
+		[1, 2, 3, 4, 5, 6, 7, 8, 9],
 	);
 	assert.deepEqual(
 		slugs

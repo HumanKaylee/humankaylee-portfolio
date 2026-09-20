@@ -43,6 +43,11 @@ const implementedRoutes = [
 		marker: /Proof/i,
 	},
 	{
+		path: "/work/goatbridge/",
+		heading: /^Goat Bridge/i,
+		marker: /Known limits/i,
+	},
+	{
 		path: "/about/",
 		heading: /Engineering judgment for systems that have to hold up/i,
 		marker: /How I work/i,
