@@ -19,7 +19,7 @@ architecture:
   diagramAlt: "Flight-state source to Rust service to native X-Plane plugin to simulator. Readback, terrain, and environment data travel back through the service. A separate operator console observes status and submits commands. Synthetic validator modes replace the hardware source for the recorded bench scenarios."
 decisions:
   - title: "Keep the simulator boundary small"
-    choice: "Use a thin native shim for SDK access, with Rust owning the service and plugin behavior and a thread-bound token constraining SDK calls."
+    choice: "Use a thin native shim for SDK access, with Rust owning the service and plugin behavior and thread-affinity guards constraining SDK calls."
     alternatives:
       - "Let the plugin own the inbound socket while a separate application monitors it."
     tradeoff: "Separate components require explicit protocols and lifecycle handling, but keep blocking work away from the simulator's main thread."
@@ -148,15 +148,39 @@ evidenceMedia:
     alt: "Full Goat Bridge console with control ownership, link status, telemetry charts, and diagnostic flags while the bridge is idle."
     caption: "The full operator interface before a run. This original screenshot is IDLE, not a live-traffic claim; the adjacent recordings show the bridge running. Open the full-size image to inspect the console."
 publicationStatus: "publish"
-redactionStatus: "reviewed"
+redactionStatus: "approved"
 redactionReview:
   guidePath: "docs/CONTENT_REDACTION_GUIDE.md"
   reviewer: "Codex"
   reviewedOn: "2026-09-20"
-  checklistStatus: "partial"
-  openItems:
-    - "Complete derivative-media inspection and exact-source provider preview validation."
+  checklistStatus: "complete"
+  openItems: []
   notes: "Joe authorized retrieving the Goatbridge package and creating and publishing a case study on his personal site in this task. This is publication authorization, not a claim that he personally inspected a preview. Private source, operational logs, access details, and original capture configuration stay outside the public site."
+  checklist:
+    secretsRemoved: "yes"
+    hostnamesAndAccessPathsGeneralized: "yes"
+    userAndAccountNamesGeneralized: "yes"
+    screenshotsInspected: "yes"
+    logsSummarizedOrSanitized: "yes"
+    publicLinksVerified: "yes"
+    claimsHaveSafeEvidence: "yes"
+    securitySensitiveProceduresRemoved: "yes"
+approvalEvidence:
+  humanSignoff:
+    reviewer: "Joe Poznanski"
+    signedOffOn: "2026-09-20"
+    decision: "approved"
+    notes: "Joe explicitly authorized transferring the prepared Goatbridge package and creating and publishing its case study on joepoznanski.io in this task. This records publication authorization, not personal inspection of the preview."
+  artifactInspection:
+    source: "Goat Bridge content and media at portfolio source d2537bd250e07ad8bc101158e297a6bd03584465; supplied source revision 3bfa79ffaf2083628f417424fca63e7b2a333ab6"
+    inspectedOn: "2026-09-20"
+    result: "passed"
+    notes: "Source-backed copy, sampled derivative frames, all posters, original IDLE screenshot, and desktop/mobile layouts were inspected. Six clips plus the homepage loop fully decoded; private diagnostic regions are cropped or masked. Local playback, seeking, no-JavaScript, reduced-motion, responsive and accessibility gates passed. No serious or critical Axe finding; the shared recruiter aside retains a moderate landmark advisory. Windows and Linux visual suites each passed 30 checks."
+  productionOrPreviewEvidence:
+    source: "Cloudflare Pages preview https://e331377e.humankaylee-portfolio.pages.dev; portfolio source d2537bd250e07ad8bc101158e297a6bd03584465"
+    capturedOn: "2026-09-20"
+    result: "passed"
+    notes: "Hosted home, Work, case-study and sitemap routes returned 200 with the new entry. All 37 public media files matched local SHA256 hashes. Six case-study clips played; desktop/mobile browser inspection found no broken images, horizontal overflow or console errors. The pages.dev host returned 200 for range requests, so preview playback does not establish production seeking. Custom-domain byte-range and seek/resume checks remain required after deployment. Hardware integration and release qualification remain explicitly unverified."
 seo:
   title: "Goat Bridge: Rust and X-Plane Integration | Joe Poznanski"
   description: "A Rust service, native simulator plugin, and operator console connect flight-state data to X-Plane. Explore real bench captures and explicit hardware-validation limits."
