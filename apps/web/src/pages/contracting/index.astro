@@ -1,0 +1,182 @@
+---
+import DeliveryCycle from "../../components/DeliveryCycle.astro";
+import { profile } from "../../data/profile";
+import { routeInventoryById } from "../../data/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const seo = routeInventoryById.contracting.seo;
+const capabilities = [
+	{
+		title: "Make the problem buildable",
+		copy: "Translate stakeholder conversations into requirements, interfaces, priorities, and acceptance criteria. Make assumptions and tradeoffs visible before they become expensive.",
+		output: "Problem brief · interface map · acceptance plan",
+	},
+	{
+		title: "Work across the boundaries",
+		copy: "Connect software, telemetry, simulators, and operator tools. Trace a failure across the full system, then make the integration understandable to the people who maintain it.",
+		output: "Integration plan · diagnostic tools · recovery behavior",
+	},
+	{
+		title: "Build the means to prove it",
+		copy: "Design repeatable checks, representative scenarios, and useful failure cases. Connect requirements to evidence and keep development results separate from operational acceptance.",
+		output: "Test strategy · automated checks · evidence walkthrough",
+	},
+	{
+		title: "Leave a stronger team",
+		copy: "Pair hands-on delivery with architecture reviews, mentoring, and technical documentation. Explain the decisions so your team can continue the work with confidence.",
+		output: "Decision records · runbooks · knowledge transfer",
+	},
+];
+const engagements = [
+	{
+		name: "Discovery & assessment",
+		fit: "The outcome matters, but the path is unclear.",
+		deliver:
+			"A current-system review, options and risks, and a bounded implementation proposal with success measures.",
+	},
+	{
+		name: "Scoped implementation",
+		fit: "You have a specific capability to deliver.",
+		deliver:
+			"Working software or integration, agreed checks, an acceptance review, and the documentation needed to operate it.",
+	},
+	{
+		name: "Embedded technical support",
+		fit: "Your team needs experienced hands on a difficult problem.",
+		deliver:
+			"Development, diagnosis, architecture review, and mentoring alongside your team, with clear ownership of the work.",
+	},
+];
+const proof = [
+	{
+		name: "Simulation & operational tools",
+		href: "/work/cryo-flow-sim/",
+		image: "/media/cryo-flow-sim-process/nitrogen-pid-640.webp",
+		alt: "CryoSim nitrogen process page with live telemetry and operator controls.",
+		copy: "See a shared Rust runtime, operator interfaces, repeatable scenarios, and explicitly scoped performance evidence.",
+	},
+	{
+		name: "Integration with an existing system",
+		href: "/work/goatbridge/",
+		image: "/media/goatbridge/orbit-views-640.webp",
+		alt: "Four X-Plane simulator views from the recorded Goat Bridge orbit scenario.",
+		copy: "See external flight-state data drive real X-Plane views, with a bridge console and observable system behavior.",
+	},
+];
+---
+
+<BaseLayout title={seo.title} description={seo.description} canonicalPath={seo.canonicalPath} ogImage={seo.ogImage}>
+	<div class="contracting-page">
+		<header class="contracting-hero">
+			<div>
+				<p class="section-kicker">Contracting & technical consulting</p>
+				<h1>From a hard problem to software you can trust.</h1>
+				<p class="contracting-lede">I help teams turn difficult software, simulation, and integration problems into working capabilities with clear evidence and a practical handoff.</p>
+				<a class="signal-action" data-touch-target="true" href="#start">Discuss your project <span aria-hidden="true">↗</span></a>
+			</div>
+			<aside class="fit-note" aria-label="Working with Joe">
+				<p class="fit-label">Work directly with Joe</p>
+				<p>Hands-on development. Clear technical decisions. Customer feedback throughout.</p>
+				<dl>
+					<div><dt>Based in</dt><dd>Florida, United States</dd></div>
+					<div><dt>Focus</dt><dd>Software development, systems integration, simulation, test automation</dd></div>
+					<div><dt>Availability</dt><dd>Open to contracting conversations. Timing and working arrangements agreed per project.</dd></div>
+				</dl>
+				<a data-touch-target="true" href="/resume/">Read my experience & background <span aria-hidden="true">↗</span></a>
+			</aside>
+		</header>
+
+		<section class="contract-section" aria-labelledby="fit-title">
+			<div class="section-heading"><h2 id="fit-title">A good fit when the pieces need to work together.</h2><p>You need more than an isolated feature: an integration that holds up, a prototype ready for its next stage, or a difficult failure made understandable.</p></div>
+			<div class="capability-grid">
+				{capabilities.map((item, index) => <article><span class="capability-number" aria-hidden="true">0{index + 1}</span><h3>{item.title}</h3><p>{item.copy}</p><p class="output"><span>What this produces</span>{item.output}</p></article>)}
+			</div>
+			<p class="tools-note"><strong>Tools follow the problem.</strong> My working background spans Rust, C/C++, Python, TypeScript, Linux, CI/CD, hardware-in-the-loop testing, and human-reviewed AI workflows. <a href="/resume/#skills">See the full technical background</a>.</p>
+		</section>
+
+		<section class="contract-section process-section" aria-labelledby="process-title">
+			<div class="section-heading"><p class="section-kicker">How we get there</p><h2 id="process-title">Your requirements stay in the loop.</h2><p>I start by agreeing what success means and how we will demonstrate it. Regular reviews connect implementation to your users, your constraints, and the outcome you need.</p></div>
+			<DeliveryCycle />
+			<div class="acceptance-pair">
+				<div><h3>Verification</h3><p>Does the implementation meet the agreed requirements? Tests, inspection, analysis, and demonstrations provide the evidence.</p></div>
+				<div><h3>Validation</h3><p>Does it solve the intended user’s problem in the intended environment? We review representative use with the people who will depend on it.</p></div>
+			</div>
+			<p class="process-note">Activities overlap and repeat. We plan verification and validation from the start, scale the documentation to the risk, and revisit scope when feedback changes the requirements.</p>
+		</section>
+
+		<section class="contract-section" aria-labelledby="engagement-title">
+			<div class="section-heading"><h2 id="engagement-title">Start with the right amount of commitment.</h2><p>A focused assessment can clarify an uncertain project. A well-defined problem can move straight into scoped delivery.</p></div>
+			<div class="engagement-list">{engagements.map((item) => <article><h3>{item.name}</h3><p>{item.fit}</p><p>{item.deliver}</p></article>)}</div>
+			<p class="terms-note">Before work begins, we agree scope, deliverables, acceptance criteria, responsibilities, schedule, and commercial terms. Remote collaboration and on-site needs can be discussed together.</p>
+		</section>
+
+		<section class="contract-section" aria-labelledby="proof-title">
+			<div class="section-heading"><h2 id="proof-title">Inspect the work behind the approach.</h2><p>These portfolio projects show the technical reasoning and evidence you can examine before we talk.</p></div>
+			<div class="proof-pair">{proof.map((item) => <article><a href={item.href}><img src={item.image} alt={item.alt} width="640" height="360" loading="lazy" decoding="async" /><h3>{item.name} <span aria-hidden="true">↗</span></h3></a><p>{item.copy}</p></article>)}</div>
+			<a class="signal-link" data-touch-target="true" href="/work/">Explore all case studies</a>
+		</section>
+
+		<section class="contract-section handoff-section" aria-labelledby="handoff-title">
+			<h2 id="handoff-title">A handoff your team can use.</h2>
+			<div><p>The agreed deliverable should include what your team needs to run, understand, and maintain it. We choose the appropriate artifacts at scoping, rather than leave the handoff to the end.</p><ul><li>Source, build instructions, and repeatable setup</li><li>Checks linked to the agreed requirements</li><li>Known limits, dependencies, and unresolved risks</li><li>Deployment, monitoring, and recovery guidance</li><li>A walkthrough and clear ownership of the next steps</li></ul></div>
+		</section>
+
+		<section id="start" class="project-start" aria-labelledby="start-title">
+			<div><p class="section-kicker">Start a conversation</p><h2 id="start-title">Tell me what needs to work.</h2><p>A short project brief is enough to start. We can establish fit, availability, and the next useful step from there.</p><a class="signal-action" data-touch-target="true" href={`mailto:${profile.email}?subject=Contracting%20project%20inquiry`}>Email a project brief <span aria-hidden="true">↗</span></a><p class="email-address">{profile.email}</p><a data-touch-target="true" href={profile.linkedin}>Connect on LinkedIn</a></div>
+			<div class="brief-prompt"><h3>Useful context to include</h3><ol><li>The outcome you want and who will use it</li><li>Your current system and the main obstacle</li><li>Your deadline, constraints, and budget range</li><li>Who will review and accept the work</li></ol><p>Keep the first note high-level. We can agree confidentiality and an appropriate way to share project material before exchanging sensitive details.</p></div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.contracting-page { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+	.contracting-hero { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(18rem, .7fr); gap: clamp(2rem, 7vw, 8rem); align-items: end; padding-block: var(--space-4) var(--space-6); }
+	.contracting-hero > div { display: grid; gap: var(--space-4); justify-items: start; }
+	.contracting-hero h1 { font-size: clamp(3rem, 5.6vw, 6rem); max-width: 15ch; }
+	.contracting-lede { max-width: 45ch; font-size: clamp(1.1rem, 1.7vw, 1.4rem); color: var(--color-muted); }
+	.fit-note { border-top: 3px solid var(--color-ink); padding-top: var(--space-4); display: grid; gap: var(--space-4); }
+	.fit-label { font-family: var(--font-evidence); font-size: .8rem; text-transform: uppercase; }
+	.fit-note > p:nth-child(2) { font-size: 1.5rem; line-height: 1.3; }
+	.fit-note dl { display: grid; gap: var(--space-3); margin: 0; }
+	.fit-note dl > div { display: grid; grid-template-columns: 6rem 1fr; gap: var(--space-2); }
+	.fit-note dt { font-size: .8rem; font-family: var(--font-evidence); }
+	.fit-note dd { margin: 0; color: var(--color-muted); font-size: .95rem; }
+	.contract-section { min-width: 0; border-top: 1px solid var(--line); padding-block: var(--space-6); }
+	.section-heading { max-width: 58rem; display: grid; gap: var(--space-4); margin-bottom: var(--space-5); }
+	.section-heading h2, .handoff-section h2, .project-start h2 { font-size: clamp(2.1rem, 4vw, 4.25rem); max-width: 23ch; }
+	.section-heading > p:last-child { color: var(--color-muted); max-width: 60ch; font-size: 1.15rem; }
+	.capability-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5) clamp(2rem, 6vw, 7rem); }
+	.capability-grid article { display: grid; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--line); }
+	.capability-number { font-family: var(--font-evidence); font-size: .85rem; }
+	.capability-grid h3 { font-size: 1.7rem; }
+	.capability-grid p { max-width: 58ch; color: var(--color-muted); }
+	.capability-grid .output { color: var(--color-ink); font-size: .85rem; font-family: var(--font-evidence); padding-left: 1rem; border-left: 3px solid var(--color-signal); }
+	.output span { display: block; font-family: var(--font-display); font-weight: 700; margin-bottom: .35rem; }
+	.tools-note, .terms-note { margin-top: var(--space-5); max-width: 82ch; color: var(--color-muted); }
+	.acceptance-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-5); }
+	.acceptance-pair > div { border-left: 3px solid var(--color-ink); padding-left: var(--space-4); }
+	.acceptance-pair h3 { margin-bottom: var(--space-2); }
+	.acceptance-pair p, .process-note { color: var(--color-muted); }
+	.process-note { margin-top: var(--space-4); max-width: 90ch; }
+	.engagement-list { display: grid; }
+	.engagement-list article { display: grid; grid-template-columns: 1fr .9fr 1.5fr; gap: var(--space-5); padding-block: var(--space-4); border-top: 1px solid var(--line); }
+	.engagement-list h3 { font-size: 1.4rem; }
+	.engagement-list p:last-child { color: var(--color-muted); }
+	.proof-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); margin-bottom: var(--space-5); }
+	.proof-pair img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); border-radius: var(--radius-media); }
+	.proof-pair h3 { font-size: 1.5rem; margin-block: var(--space-3); }
+	.proof-pair p { max-width: 60ch; color: var(--color-muted); }
+	.handoff-section { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+	.handoff-section p { color: var(--color-muted); }
+	.handoff-section ul { padding-left: 1.2rem; display: grid; gap: var(--space-2); margin-top: var(--space-4); }
+	.project-start { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 7vw, 8rem); background: var(--color-signal); padding: clamp(1.5rem, 4vw, 4rem); scroll-margin-top: 2rem; }
+	.project-start > div { display: grid; gap: var(--space-4); align-content: start; justify-items: start; }
+	.project-start .signal-action { background: var(--color-ink); color: var(--color-canvas); }
+	.project-start p { max-width: 54ch; }
+	.project-start .email-address { overflow-wrap: anywhere; font-size: .9rem; }
+	.brief-prompt { border-top: 2px solid var(--color-ink); padding-top: var(--space-4); }
+	.brief-prompt ol { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--space-3); }
+	.brief-prompt > p { font-size: .9rem; }
+	@media (max-width: 64rem) { .contracting-hero { grid-template-columns: 1fr; } .fit-note { max-width: 44rem; } .engagement-list article { grid-template-columns: 1fr 1.5fr; } .engagement-list article p:last-child { grid-column: 2; } }
+	@media (max-width: 48rem) { .contracting-hero h1 { font-size: clamp(2.8rem, 11vw, 4.5rem); } .capability-grid, .acceptance-pair, .engagement-list article, .proof-pair, .handoff-section, .project-start { grid-template-columns: 1fr; } .engagement-list article p:last-child { grid-column: 1; } .engagement-list article { gap: var(--space-3); } }
+</style>

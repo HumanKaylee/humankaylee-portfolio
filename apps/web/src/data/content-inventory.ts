@@ -22,6 +22,7 @@ export type RouteInventoryEntry = Readonly<{
 		| "notes-build-log"
 		| "resume"
 		| "contact"
+		| "contracting"
 		| "sitemap"
 		| "robots"
 		| "error"
@@ -41,6 +42,7 @@ const routeKindById = {
 	about: "about",
 	resume: "resume",
 	contact: "contact",
+	contracting: "contracting",
 	notes: "notes",
 	"note-detail": "note-detail",
 	sitemap: "sitemap",
@@ -65,6 +67,12 @@ const contentSourcesById = {
 	about: ["resume summary", "current focus", "uses", "reading"],
 	resume: ["resume summary", "downloadable pdf source status"],
 	contact: ["contact CTA", "mailto fallback", "privacy note"],
+	contracting: [
+		"engagement scope",
+		"delivery process",
+		"portfolio evidence",
+		"direct contact",
+	],
 	notes: ["technical notes", "publication status"],
 	"note-detail": ["note body", "publication status"],
 	sitemap: ["route inventory", "published content slugs"],

@@ -17,6 +17,7 @@ const corePaths = [
 	"/reading/",
 	"/resume/",
 	"/contact/",
+	"/contracting/",
 	"/privacy/",
 	"/terms/",
 ] as const;

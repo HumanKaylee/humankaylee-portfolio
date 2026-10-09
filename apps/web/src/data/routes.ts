@@ -24,6 +24,22 @@ const defaultOgImage = "/social/default.png";
 
 export const routeInventory = [
 	{
+		id: "contracting",
+		label: "Contracting",
+		path: "/contracting/",
+		owner: "page-composition",
+		status: "generated",
+		primary: false,
+		seo: {
+			title: "Contracting & Technical Consulting | Joe Poznanski",
+			description:
+				"Work with Joe Poznanski on software development, systems integration, simulation, and test automation. Explore project fit, delivery process, and handoff.",
+			canonicalPath: "/contracting/",
+			ogImage: defaultOgImage,
+			robots: "index,follow",
+		},
+	},
+	{
 		id: "home",
 		label: "Home",
 		path: "/",
