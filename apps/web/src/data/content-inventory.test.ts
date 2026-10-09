@@ -26,6 +26,7 @@ describe("phase 1 content inventory", () => {
 
 	it("lists canonical and secondary content routes without duplicate public story routes", () => {
 		expect(ROUTE_INVENTORY.map((entry) => entry.path)).toEqual([
+			"/contracting/",
 			"/",
 			"/work/",
 			"/work/[slug]/",

@@ -1,0 +1,411 @@
+---
+const stages = [
+	{
+		id: "listen",
+		title: "Listen & observe",
+		lines: ["Listen & observe"],
+		artifacts: ["Workflow observations", "Stakeholder map"],
+		detail:
+			"Understand the people, the current workflow, and the problem worth solving. Surface constraints and assumptions before choosing a solution.",
+		checkpoint: "Agree on the problem",
+		x: 460,
+		y: 30,
+		width: 280,
+		height: 144,
+		connector: "M 600 235 V 190 V 174",
+	},
+	{
+		id: "success",
+		title: "Define success",
+		lines: ["Define success"],
+		artifacts: ["Acceptance criteria", "Verification & validation plan"],
+		detail:
+			"Turn the need into a bounded scope, measurable requirements, and acceptance criteria. Agree early on how to verify the specification and validate the intended use.",
+		checkpoint: "Agree on what good means",
+		x: 906,
+		y: 170,
+		width: 280,
+		height: 144,
+		connector: "M 823 327 L 870 280 H 906",
+	},
+	{
+		id: "design",
+		title: "Design & de-risk",
+		lines: ["Design &", "de-risk"],
+		artifacts: ["Architecture & tradeoffs", "Targeted risk experiments"],
+		detail:
+			"Map interfaces, dependencies, and failure modes. Test the riskiest assumptions with focused experiments before committing to the full implementation.",
+		checkpoint: null,
+		x: 968,
+		y: 462,
+		width: 232,
+		height: 176,
+		connector: "M 915 550 H 968",
+	},
+	{
+		id: "build",
+		title: "Build & integrate",
+		lines: ["Build & integrate"],
+		artifacts: ["Working increments", "Reviewed changes"],
+		detail:
+			"Deliver small, reviewable increments. Integrate with the actual environment and demonstrate progress while changes are still inexpensive to make.",
+		checkpoint: null,
+		x: 906,
+		y: 786,
+		width: 280,
+		height: 144,
+		connector: "M 823 773 L 870 820 H 906",
+	},
+	{
+		id: "verify",
+		title: "Test & verify",
+		lines: ["Test & verify"],
+		artifacts: ["Requirement-linked evidence", "Defects & regression checks"],
+		detail:
+			"Check that the implementation meets its specification. Use tests, inspection, analysis, or demonstration as appropriate; include failure paths and record unresolved limits.",
+		checkpoint: null,
+		x: 460,
+		y: 932,
+		width: 280,
+		height: 144,
+		connector: "M 600 865 V 932",
+	},
+	{
+		id: "validate",
+		title: "Validate together",
+		lines: ["Validate together"],
+		artifacts: ["Representative user scenarios", "Acceptance findings"],
+		detail:
+			"Evaluate the result with the customer and intended users, in representative conditions. Confirm that it solves the intended problem; feed gaps back into the work.",
+		checkpoint: "Confirm it works for your use",
+		x: 14,
+		y: 786,
+		width: 280,
+		height: 144,
+		connector: "M 377 773 L 330 820 H 294",
+	},
+	{
+		id: "release",
+		title: "Release & hand over",
+		lines: ["Release &", "hand over"],
+		artifacts: ["Release & recovery plan", "Runbook & knowledge transfer"],
+		detail:
+			"Agree on readiness, ownership, and remaining risks before release. Hand over the working system, operating guidance, and a practical recovery path.",
+		checkpoint: "Agree on release readiness",
+		x: 0,
+		y: 462,
+		width: 232,
+		height: 176,
+		connector: "M 285 550 H 232",
+	},
+	{
+		id: "improve",
+		title: "Observe & improve",
+		lines: ["Observe & improve"],
+		artifacts: ["Operational observations", "Prioritized improvements"],
+		detail:
+			"Compare real use with the agreed outcomes. Bring customer feedback, operational evidence, and changed needs into the next conversation and the next iteration.",
+		checkpoint: null,
+		x: 14,
+		y: 170,
+		width: 280,
+		height: 144,
+		connector: "M 377 327 L 330 280 H 294",
+	},
+] as const;
+
+function point(radius: number, angle: number) {
+	const radians = (angle * Math.PI) / 180;
+	return {
+		x: 600 + radius * Math.cos(radians),
+		y: 550 + radius * Math.sin(radians),
+	};
+}
+
+function arc(radius: number, startAngle: number, endAngle: number) {
+	const start = point(radius, startAngle);
+	const end = point(radius, endAngle);
+	return `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
+}
+---
+
+<div class="delivery-cycle" data-delivery-cycle>
+	<details class="delivery-cycle__diagram" open data-delivery-diagram>
+		<summary>
+			<span>Explore the delivery loop</span>
+			<span class="delivery-cycle__diagram-hint">Select a stage for the detail <span aria-hidden="true">↗</span></span>
+		</summary>
+		<div class="delivery-cycle__scroll" tabindex="0" role="region" aria-label="Circular delivery process. Scroll horizontally on smaller screens.">
+			<svg class="delivery-cycle__wheel" viewBox="-20 0 1240 1100" role="group" aria-labelledby="delivery-wheel-title delivery-wheel-description">
+				<title id="delivery-wheel-title">The customer stays at the center of delivery</title>
+				<desc id="delivery-wheel-description">Eight stages form a clockwise cycle, from listening through requirements, design, implementation, verification, validation, release, and observation. Customer checkpoints appear at listening, defining success, validation, and release. Feedback can return work to any earlier stage. Each stage links to its description below.</desc>
+				<defs>
+					<marker id="delivery-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+						<path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="currentColor" stroke-width="1.4" />
+					</marker>
+					<pattern id="delivery-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+						<circle cx="1" cy="1" r="0.8" fill="currentColor" opacity="0.12" />
+					</pattern>
+				</defs>
+				<g aria-hidden="true">
+					<circle cx="600" cy="550" r="360" fill="url(#delivery-grid)" />
+					<circle class="delivery-cycle__hairline" cx="600" cy="550" r="340" />
+					<circle class="delivery-cycle__track" cx="600" cy="550" r="275" />
+					{
+						Array.from({ length: 64 }, (_, index) => {
+							const from = point(index % 8 === 0 ? 321 : 331, index * 5.625 - 90);
+							const to = point(340, index * 5.625 - 90);
+							return <line class="delivery-cycle__tick" x1={from.x} y1={from.y} x2={to.x} y2={to.y} />;
+						})
+					}
+					{
+						stages.map((stage, index) => (
+							<>
+								<path class="delivery-cycle__connector" d={stage.connector} />
+								<path class="delivery-cycle__direction" d={arc(275, index * 45 - 82, index * 45 - 56)} marker-end="url(#delivery-arrow)" />
+							</>
+						))
+					}
+					<circle class="delivery-cycle__feedback-orbit" cx="600" cy="550" r="220" />
+					<path class="delivery-cycle__feedback-arrow" d={arc(220, -51, -39)} marker-end="url(#delivery-arrow)" />
+					<path class="delivery-cycle__feedback-arrow" d={arc(220, 129, 141)} marker-end="url(#delivery-arrow)" />
+					<circle class="delivery-cycle__center" cx="600" cy="550" r="181" />
+					<path class="delivery-cycle__center-rule" d="M 470 603 H 730" />
+					<text class="delivery-cycle__eyebrow" x="600" y="443" text-anchor="middle">THE CONSTANT</text>
+					<text class="delivery-cycle__center-title" x="600" y="501" text-anchor="middle">
+						<tspan x="600">Customer</tspan>
+						<tspan x="600" dy="48">outcomes.</tspan>
+					</text>
+					<text class="delivery-cycle__center-subtitle" x="600" y="581" text-anchor="middle">Defined together. Kept in view.</text>
+					<text class="delivery-cycle__eyebrow" x="600" y="633" text-anchor="middle">ACCEPTANCE CRITERIA</text>
+					<text class="delivery-cycle__center-note" x="600" y="659" text-anchor="middle">Trace each decision to the need.</text>
+					<rect class="delivery-cycle__feedback-label-bg" x="465" y="321" width="270" height="23" />
+					<text class="delivery-cycle__feedback-label" x="600" y="337" text-anchor="middle">CONTINUOUS CUSTOMER FEEDBACK</text>
+					<rect class="delivery-cycle__feedback-label-bg" x="459" y="756" width="282" height="25" />
+					<text class="delivery-cycle__feedback-label" x="600" y="773" text-anchor="middle">REVISIT ANY STAGE AS EVIDENCE CHANGES</text>
+				</g>
+				{
+					stages.map((stage, index) => {
+						const node = point(275, index * 45 - 90);
+						const number = String(index + 1).padStart(2, "0");
+						const bodyY = stage.lines.length === 2 ? 110 : 85;
+						return (
+							<a class="delivery-cycle__stage-link" href={`#delivery-${stage.id}`} aria-label={`${number}. ${stage.title}. Read this stage.`}>
+								<circle class:list={["delivery-cycle__node", { "delivery-cycle__node--checkpoint": stage.checkpoint }]} cx={node.x} cy={node.y} r="23" />
+								<text class="delivery-cycle__node-number" x={node.x} y={node.y + 6} text-anchor="middle">{number}</text>
+								<g transform={`translate(${stage.x} ${stage.y})`}>
+									<rect class="delivery-cycle__card" width={stage.width} height={stage.height} rx="2" />
+									<path class="delivery-cycle__card-rule" d={`M 0 0 H ${stage.width}`} />
+									{stage.checkpoint && <rect class="delivery-cycle__checkpoint-mark" x="16" y="18" width="7" height="7" />}
+									<text class="delivery-cycle__stage-kind" x={stage.checkpoint ? 30 : 16} y="25">{stage.checkpoint ? "CUSTOMER CHECKPOINT" : index === 4 ? "MEETS THE SPECIFICATION" : "ENGINEERING & LEARNING"}</text>
+									<text class="delivery-cycle__stage-title" x="16" y="59">
+										{stage.lines.map((line, lineIndex) => <tspan x="16" dy={lineIndex === 0 ? 0 : 25}>{line}</tspan>)}
+									</text>
+									{stage.artifacts.map((artifact, artifactIndex) => <text class="delivery-cycle__artifact" x="16" y={bodyY + artifactIndex * 21}>{artifact}</text>)}
+									<path class="delivery-cycle__card-arrow" d={`M ${stage.width - 26} ${stage.height - 19} l 9 -9 m -9 0 h 9 v 9`} />
+								</g>
+							</a>
+						);
+					})
+				}
+			</svg>
+		</div>
+	</details>
+	<div class="delivery-cycle__key">
+		<p><span class="delivery-cycle__key-dot" aria-hidden="true"></span> Customer checkpoint</p>
+		<p><span class="delivery-cycle__key-line" aria-hidden="true"></span> Feedback throughout; revisit a stage whenever evidence calls for it.</p>
+	</div>
+	<ol class="delivery-cycle__details" aria-label="Delivery stages and outputs">
+		{
+			stages.map((stage, index) => (
+				<li id={`delivery-${stage.id}`} tabindex="-1">
+					<div class="delivery-cycle__detail-heading">
+						<span class:list={["delivery-cycle__detail-number", { "delivery-cycle__detail-number--checkpoint": stage.checkpoint }]} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+						<h3>{stage.title}</h3>
+					</div>
+					<p>{stage.detail}</p>
+					<p class="delivery-cycle__outputs"><strong>Typical outputs</strong><span>{stage.artifacts.join(" · ")}</span></p>
+					{stage.checkpoint && <p class="delivery-cycle__checkpoint"><span aria-hidden="true">↗</span> Together: {stage.checkpoint.toLowerCase()}.</p>}
+				</li>
+			))
+		}
+	</ol>
+</div>
+
+<script>
+	const deliveryDiagram = document.querySelector<HTMLDetailsElement>("[data-delivery-diagram]");
+	if (deliveryDiagram && window.matchMedia("(max-width: 48rem)").matches) {
+		deliveryDiagram.open = false;
+	}
+</script>
+
+<style>
+	.delivery-cycle {
+		min-width: 0;
+		border-top: 1px solid var(--line);
+	}
+
+	.delivery-cycle__diagram summary {
+		display: flex;
+		min-height: 4.5rem;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-3);
+		padding-block: var(--space-3);
+		cursor: pointer;
+		font-family: var(--font-evidence);
+		font-size: 0.76rem;
+	}
+
+	.delivery-cycle__diagram summary::before {
+		content: "+";
+		font-size: 1.25rem;
+	}
+
+	.delivery-cycle__diagram[open] summary::before { content: "−"; }
+	.delivery-cycle__diagram summary > span:first-of-type { margin-right: auto; }
+	.delivery-cycle__diagram summary::-webkit-details-marker { display: none; }
+	.delivery-cycle__diagram-hint { color: var(--color-muted); }
+
+	.delivery-cycle__scroll {
+		max-width: 100%;
+		overflow: auto;
+		overscroll-behavior-inline: contain;
+	}
+
+	.delivery-cycle__wheel {
+		display: block;
+		width: 100%;
+		min-width: 70rem;
+		height: auto;
+		color: var(--color-ink);
+		font-family: var(--font-display);
+	}
+
+	.delivery-cycle__hairline,
+	.delivery-cycle__tick {
+		fill: none;
+		stroke: var(--color-ink);
+		stroke-opacity: 0.15;
+		stroke-width: 1;
+	}
+
+	.delivery-cycle__track {
+		fill: none;
+		stroke: var(--color-ink);
+		stroke-opacity: 0.035;
+		stroke-width: 48;
+	}
+
+	.delivery-cycle__connector {
+		fill: none;
+		stroke: var(--color-ink);
+		stroke-opacity: 0.35;
+		stroke-width: 1.25;
+	}
+
+	.delivery-cycle__direction {
+		fill: none;
+		stroke: var(--color-ink);
+		stroke-width: 1.5;
+	}
+
+	.delivery-cycle__feedback-orbit,
+	.delivery-cycle__feedback-arrow {
+		fill: none;
+		stroke: var(--color-ink);
+		stroke-width: 1;
+	}
+
+	.delivery-cycle__feedback-orbit { stroke-opacity: 0.4; }
+	.delivery-cycle__center { fill: var(--color-signal); }
+	.delivery-cycle__center-rule { stroke: var(--color-ink); stroke-opacity: 0.25; }
+	.delivery-cycle__center-title { fill: var(--color-ink); font-size: 45px; font-weight: 650; letter-spacing: -1.5px; }
+	.delivery-cycle__center-subtitle { fill: var(--color-ink); font-size: 15px; }
+	.delivery-cycle__center-note { fill: var(--color-ink); font-size: 13px; }
+	.delivery-cycle__eyebrow { fill: var(--color-ink); font-family: var(--font-evidence); font-size: 11px; letter-spacing: 1.1px; }
+	.delivery-cycle__feedback-label-bg { fill: var(--color-canvas); }
+	.delivery-cycle__feedback-label { fill: var(--color-muted); font-family: var(--font-evidence); font-size: 10px; }
+	.delivery-cycle__node { fill: var(--color-canvas); stroke: var(--color-ink); stroke-width: 1.2; }
+	.delivery-cycle__node--checkpoint { fill: var(--color-signal); }
+	.delivery-cycle__node-number { fill: var(--color-ink); font-family: var(--font-evidence); font-size: 17px; }
+	.delivery-cycle__card { fill: var(--color-canvas); stroke: var(--line); stroke-width: 1; }
+	.delivery-cycle__card-rule { stroke: var(--color-ink); stroke-width: 2; }
+	.delivery-cycle__checkpoint-mark { fill: var(--color-signal); stroke: var(--color-ink); stroke-width: 0.75; }
+	.delivery-cycle__stage-kind { fill: var(--color-muted); font-family: var(--font-evidence); font-size: 10px; letter-spacing: 0.45px; }
+	.delivery-cycle__stage-title { fill: var(--color-ink); font-size: 24px; font-weight: 600; letter-spacing: -0.35px; }
+	.delivery-cycle__artifact { fill: var(--color-muted); font-size: 15px; }
+	.delivery-cycle__card-arrow { fill: none; stroke: var(--color-muted); stroke-width: 1.25; }
+	.delivery-cycle__stage-link:hover .delivery-cycle__card,
+	.delivery-cycle__stage-link:focus-visible .delivery-cycle__card { fill: var(--color-media); stroke: var(--color-ink); stroke-width: 2; }
+	.delivery-cycle__stage-link:hover .delivery-cycle__node,
+	.delivery-cycle__stage-link:focus-visible .delivery-cycle__node { fill: var(--color-signal); stroke-width: 3; }
+
+	.delivery-cycle__key {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-5);
+		padding-block: var(--space-4);
+		border-block: 1px solid var(--line);
+		font-family: var(--font-evidence);
+		font-size: 0.7rem;
+		color: var(--color-muted);
+	}
+
+	.delivery-cycle__key p { display: flex; align-items: center; gap: var(--space-2); margin: 0; }
+	.delivery-cycle__key-dot { flex: 0 0 auto; width: 0.8rem; height: 0.8rem; border: 1px solid var(--color-ink); border-radius: 50%; background: var(--color-signal); }
+	.delivery-cycle__key-line { flex: 0 0 auto; width: 1.3rem; border-top: 1px solid var(--color-ink); }
+
+	.delivery-cycle__details {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 0 var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.delivery-cycle__details > li {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		padding-block: var(--space-4);
+		border-top: 1px solid var(--line);
+		scroll-margin-top: 7rem;
+	}
+
+	.delivery-cycle__details > li:target {
+		border-top: 3px solid var(--color-ink);
+		background: color-mix(in srgb, var(--color-signal) 13%, transparent);
+	}
+
+	.delivery-cycle__detail-heading { display: flex; align-items: center; gap: var(--space-2); }
+	.delivery-cycle__detail-heading h3 { margin: 0; font-size: 1.12rem; line-height: 1.2; letter-spacing: -0.025em; }
+	.delivery-cycle__detail-number { display: grid; flex: 0 0 auto; width: 2rem; height: 2rem; place-items: center; border: 1px solid var(--line); border-radius: 50%; font-family: var(--font-evidence); font-size: 0.67rem; }
+	.delivery-cycle__detail-number--checkpoint { background: var(--color-signal); border-color: var(--color-ink); }
+	.delivery-cycle__details p { margin: 0; font-size: 0.9rem; line-height: 1.65; color: var(--color-muted); }
+	.delivery-cycle__outputs { display: grid; gap: 0.3rem; }
+	.delivery-cycle__outputs strong { color: var(--color-ink); font-family: var(--font-evidence); font-size: 0.62rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; }
+	.delivery-cycle__outputs span { font-size: 0.8rem; }
+	.delivery-cycle__details .delivery-cycle__checkpoint { margin-top: auto; padding-top: var(--space-1); color: var(--color-ink); font-size: 0.79rem; }
+
+	@media (max-width: 64rem) {
+		.delivery-cycle__details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	}
+
+	@media (max-width: 48rem) {
+		.delivery-cycle__diagram-hint { display: none; }
+		.delivery-cycle__diagram summary > span:first-of-type::after { content: " · pan to explore"; color: var(--color-muted); }
+		.delivery-cycle__scroll { max-height: 38rem; }
+		.delivery-cycle__details { grid-template-columns: minmax(0, 1fr); }
+		.delivery-cycle__details > li { gap: var(--space-2); }
+		.delivery-cycle__detail-heading h3 { font-size: 1.3rem; }
+		.delivery-cycle__details p { font-size: 0.96rem; }
+	}
+
+	@media print {
+		.delivery-cycle__scroll { overflow: visible; max-height: none; }
+		.delivery-cycle__wheel { min-width: 0; }
+		.delivery-cycle__details > li { break-inside: avoid; }
+	}
+</style>
