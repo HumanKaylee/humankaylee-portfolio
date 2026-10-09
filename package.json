@@ -44,12 +44,13 @@
 	},
 	"pnpm": {
 		"overrides": {
-			"fast-uri": "3.1.6",
-			"sharp": "0.35.4",
+			"fast-uri": "3.1.8",
+			"sharp": "0.35.5",
 			"svgo": "4.1.0",
 			"yaml": "2.9.0",
 			"js-yaml": "4.3.2",
-			"smol-toml": "1.7.1"
+			"smol-toml": "1.9.0",
+			"undici@7.29.0": "7.29.1"
 		}
 	}
 }
