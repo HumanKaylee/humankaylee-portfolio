@@ -178,7 +178,7 @@ test.describe("notes and RSS @notes-rss", () => {
 			const response = await page.goto(note.path);
 			expect(response?.status(), note.path).toBe(404);
 			await expect(
-				page.getByRole("heading", { level: 1, name: /404:\s*not found/i }),
+				page.getByRole("heading", { level: 1, name: "Page not found." }),
 			).toBeVisible();
 		}
 	});

@@ -71,24 +71,36 @@ jobs:
         run: pnpm test:e2e -- --grep "@keyboard"
 
       - name: Run accessibility gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@accessibility"
 
       - name: Run security headers gate
         run: pnpm test:e2e -- --grep "@security"
 
       - name: Run API outage resilience gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@api-down"
 
       - name: Run static no-API gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@static-runtime"
 
       - name: Run journey smoke gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@journey"
 
       - name: Run static quality matrix gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@quality"
 
       - name: Run responsive browser/device gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@responsive" --browser=all
 
       - name: Run frontend end-to-end tests

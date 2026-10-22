@@ -1,9 +1,9 @@
 import { defineConfig } from "@playwright/test";
 
 // PLAYWRIGHT_PREVIEW=1 serves the built dist/ via `astro preview` instead of the
-// dev server. The keyboard gate uses it: the astro dev server can navigate on
-// its own after the first load, which flakes that test (issue #81). Requires a
-// prior `pnpm build`. Other gates stay on dev, where middleware sets headers.
+// dev server. CI's navigation gates use it: the astro dev server can navigate on
+// its own after the first load, which flaked them (issue #81). Requires a prior
+// `pnpm build`. @security stays on dev, where middleware sets the headers.
 const usePreview = process.env.PLAYWRIGHT_PREVIEW === "1";
 
 export default defineConfig({

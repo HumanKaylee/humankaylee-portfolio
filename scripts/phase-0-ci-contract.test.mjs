@@ -274,7 +274,7 @@ ${launchGateStepsYaml()}
 	);
 });
 
-test("phase-0 CI runs the keyboard gate against the built preview", () => {
+test("phase-0 CI runs navigation gates against the built preview", () => {
 	const workflow = readWorkflow();
 	const steps = frontendSteps(workflow);
 	const buildIndex = steps.findIndex((step) => step.run === "pnpm build");
@@ -283,11 +283,25 @@ test("phase-0 CI runs the keyboard gate against the built preview", () => {
 	);
 	assert.ok(
 		buildIndex >= 0 && buildIndex < keyboardIndex,
-		"expected pnpm build before the keyboard gate (it serves dist/ via astro preview)",
+		"expected pnpm build before the gates (they serve dist/ via astro preview)",
 	);
-	assert.match(
-		workflow,
-		/- name: Run keyboard navigation gate\r?\n\s+env:\r?\n\s+PLAYWRIGHT_PREVIEW: "1"\r?\n/,
-		"expected the keyboard gate to set PLAYWRIGHT_PREVIEW=1 (astro dev server flakes it, issue #81)",
-	);
+	// The astro dev server can navigate on its own after first load (issue #81).
+	// @security stays on dev: it reads headers set by the dev middleware.
+	for (const name of [
+		"Run keyboard navigation gate",
+		"Run accessibility gate",
+		"Run API outage resilience gate",
+		"Run static no-API gate",
+		"Run journey smoke gate",
+		"Run static quality matrix gate",
+		"Run responsive browser/device gate",
+	]) {
+		assert.match(
+			workflow,
+			new RegExp(
+				`- name: ${name.replace(/[/]/g, "\\/")}\\r?\\n\\s+env:\\r?\\n\\s+PLAYWRIGHT_PREVIEW: "1"\\r?\\n`,
+			),
+			`expected "${name}" to set PLAYWRIGHT_PREVIEW=1`,
+		);
+	}
 });
