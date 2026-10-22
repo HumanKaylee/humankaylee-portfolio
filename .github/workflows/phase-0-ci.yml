@@ -62,38 +62,52 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit
 
+      - name: Build frontend
+        run: pnpm build
+
       - name: Run keyboard navigation gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@keyboard"
 
       - name: Run accessibility gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@accessibility"
 
       - name: Run security headers gate
         run: pnpm test:e2e -- --grep "@security"
 
       - name: Run API outage resilience gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@api-down"
 
       - name: Run static no-API gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@static-runtime"
 
       - name: Run journey smoke gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@journey"
 
       - name: Run static quality matrix gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@quality"
 
       - name: Run responsive browser/device gate
+        env:
+          PLAYWRIGHT_PREVIEW: "1"
         run: pnpm test:e2e -- --grep "@responsive" --browser=all
 
       - name: Run frontend end-to-end tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- --grep-invert "@keyboard"
 
       - name: Run visual regression gate
         run: pnpm test:visual
-
-      - name: Build frontend
-        run: pnpm build
 
       - name: Run bundle budget gate
         run: pnpm bundle:budget

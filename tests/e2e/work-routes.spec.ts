@@ -1004,12 +1004,11 @@ test.describe("Work routes @work", () => {
 		}
 
 		const unknownWork = await request.get("/work/not-a-real-project/");
-		expect(await unknownWork.text()).toMatch(
-			/<h1><span class="statusCode">404:\s*<\/span>\s*<span class="statusMessage">Not found<\/span><\/h1>/,
+		const unknownWorkHtml = await unknownWork.text();
+		expect(unknownWorkHtml).toMatch(
+			/<h1 id="not-found-title">Page not found\.<\/h1>/,
 		);
-		expect(await unknownWork.text()).toContain(
-			"Path: /work/not-a-real-project/",
-		);
+		expect(unknownWorkHtml).toContain('<meta name="robots" content="noindex">');
 	});
 });
 

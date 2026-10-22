@@ -172,7 +172,7 @@ function expectLaunchGateSteps(workflow) {
 	const fullE2eStepIndex = steps.findIndex(
 		(step) =>
 			step.name === "Run frontend end-to-end tests" &&
-			step.run === "pnpm test:e2e",
+			step.run === 'pnpm test:e2e -- --grep-invert "@keyboard"',
 	);
 
 	assert.ok(
@@ -243,7 +243,7 @@ jobs:
         run: |
 ${launchGateRunLines()}
       - name: Run frontend end-to-end tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- --grep-invert "@keyboard"
 `;
 
 	assert.throws(
@@ -262,7 +262,7 @@ jobs:
   frontend:
     steps:
       - name: Run frontend end-to-end tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- --grep-invert "@keyboard"
   backend:
     steps:
 ${launchGateStepsYaml()}
@@ -272,4 +272,36 @@ ${launchGateStepsYaml()}
 		() => expectLaunchGateSteps(misplacedWorkflow),
 		/expected frontend job to include dedicated @keyboard gate step/,
 	);
+});
+
+test("phase-0 CI runs navigation gates against the built preview", () => {
+	const workflow = readWorkflow();
+	const steps = frontendSteps(workflow);
+	const buildIndex = steps.findIndex((step) => step.run === "pnpm build");
+	const keyboardIndex = steps.findIndex(
+		(step) => step.name === "Run keyboard navigation gate",
+	);
+	assert.ok(
+		buildIndex >= 0 && buildIndex < keyboardIndex,
+		"expected pnpm build before the gates (they serve dist/ via astro preview)",
+	);
+	// The astro dev server can navigate on its own after first load (issue #81).
+	// @security stays on dev: it reads headers set by the dev middleware.
+	for (const name of [
+		"Run keyboard navigation gate",
+		"Run accessibility gate",
+		"Run API outage resilience gate",
+		"Run static no-API gate",
+		"Run journey smoke gate",
+		"Run static quality matrix gate",
+		"Run responsive browser/device gate",
+	]) {
+		assert.match(
+			workflow,
+			new RegExp(
+				`- name: ${name.replace(/[/]/g, "\\/")}\\r?\\n\\s+env:\\r?\\n\\s+PLAYWRIGHT_PREVIEW: "1"\\r?\\n`,
+			),
+			`expected "${name}" to set PLAYWRIGHT_PREVIEW=1`,
+		);
+	}
 });
