@@ -172,7 +172,7 @@ function expectLaunchGateSteps(workflow) {
 	const fullE2eStepIndex = steps.findIndex(
 		(step) =>
 			step.name === "Run frontend end-to-end tests" &&
-			step.run === "pnpm test:e2e",
+			step.run === 'pnpm test:e2e -- --grep-invert "@keyboard"',
 	);
 
 	assert.ok(
@@ -243,7 +243,7 @@ jobs:
         run: |
 ${launchGateRunLines()}
       - name: Run frontend end-to-end tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- --grep-invert "@keyboard"
 `;
 
 	assert.throws(
@@ -262,7 +262,7 @@ jobs:
   frontend:
     steps:
       - name: Run frontend end-to-end tests
-        run: pnpm test:e2e
+        run: pnpm test:e2e -- --grep-invert "@keyboard"
   backend:
     steps:
 ${launchGateStepsYaml()}
@@ -271,5 +271,23 @@ ${launchGateStepsYaml()}
 	assert.throws(
 		() => expectLaunchGateSteps(misplacedWorkflow),
 		/expected frontend job to include dedicated @keyboard gate step/,
+	);
+});
+
+test("phase-0 CI runs the keyboard gate against the built preview", () => {
+	const workflow = readWorkflow();
+	const steps = frontendSteps(workflow);
+	const buildIndex = steps.findIndex((step) => step.run === "pnpm build");
+	const keyboardIndex = steps.findIndex(
+		(step) => step.name === "Run keyboard navigation gate",
+	);
+	assert.ok(
+		buildIndex >= 0 && buildIndex < keyboardIndex,
+		"expected pnpm build before the keyboard gate (it serves dist/ via astro preview)",
+	);
+	assert.match(
+		workflow,
+		/- name: Run keyboard navigation gate\r?\n\s+env:\r?\n\s+PLAYWRIGHT_PREVIEW: "1"\r?\n/,
+		"expected the keyboard gate to set PLAYWRIGHT_PREVIEW=1 (astro dev server flakes it, issue #81)",
 	);
 });

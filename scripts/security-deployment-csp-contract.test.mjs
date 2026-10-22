@@ -209,3 +209,11 @@ test("middleware and static host CSP directive semantics stay aligned", () => {
 		),
 	);
 });
+
+test("static headers send HSTS for at least one year", () => {
+	const headers = readRequiredFile(files.headers);
+	const hsts = headers.match(/^\s*Strict-Transport-Security:\s*(.+)$/m)?.[1];
+	assert.ok(hsts, "_headers must define Strict-Transport-Security");
+	const maxAge = Number(hsts.match(/max-age=(\d+)/)?.[1]);
+	assert.ok(maxAge >= 31536000, `HSTS max-age too short: ${hsts}`);
+});

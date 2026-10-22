@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+	title="Page not found | Joe Poznanski"
+	description="The page you were looking for does not exist."
+	canonicalPath="/404/"
+	ogImage="/social/default.png"
+	robots="noindex"
+>
+	<section class="page-shell" aria-labelledby="not-found-title">
+		<header class="page-header">
+			<p class="section-kicker">404</p>
+			<h1 id="not-found-title">Page not found.</h1>
+			<p class="page-intro">
+				That address doesn't match anything here. Try the <a href="/work/">work index</a>, the <a href="/notes/">notes</a>, or the <a href="/">home page</a>.
+			</p>
+		</header>
+	</section>
+</BaseLayout>
