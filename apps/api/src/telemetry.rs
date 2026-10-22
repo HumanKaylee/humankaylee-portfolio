@@ -60,14 +60,15 @@ pub fn init_sentry() -> Option<sentry::ClientInitGuard> {
 
     let sentry_env = env::var("SENTRY_ENV").unwrap_or_else(|_| "production".to_string());
 
-    let guard = sentry::init(sentry::ClientOptions {
-        dsn: dsn.parse().ok(),
-        release: Some(env!("CARGO_PKG_VERSION").into()),
-        environment: Some(sentry_env.clone().into()),
-        traces_sample_rate: 0.1,
-        attach_stacktrace: true,
-        ..sentry::ClientOptions::default()
-    });
+    // ClientOptions is #[non_exhaustive] since sentry 0.49: build via builders.
+    // The DSN is set as a field so an unparsable value stays a silent no-op (builder `dsn` panics).
+    let mut options = sentry::ClientOptions::new()
+        .release(env!("CARGO_PKG_VERSION"))
+        .environment(sentry_env.clone())
+        .traces_sample_rate(0.1)
+        .attach_stacktrace(true);
+    options.dsn = dsn.parse().ok();
+    let guard = sentry::init(options);
 
     tracing::info!(environment = %sentry_env, "sentry_enabled");
     Some(guard)
